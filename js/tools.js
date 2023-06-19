@@ -1,7 +1,6 @@
-async function loadMCParticles(infoBoxes, parentLinks, childrenLinks) {
+function loadMCParticles(jsonData,
+                         infoBoxes, parentLinks, childrenLinks) {
   const eventNum = 3;
-  const response = await fetch("./p8_ee_ZH_ecm240_edm4hep.edm4hep.json");
-  const jsonData = await response.json();
   const eventData = jsonData["Event " + eventNum];
   // console.log(eventData);
   const mcParticles = Object.values(eventData).find(element => element.collType == "edm4hep::MCParticleCollection");

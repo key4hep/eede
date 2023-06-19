@@ -8,13 +8,14 @@ let draggedInfoBox = -1;
 let isDragging = false;
 let prevMouseX = 0;
 let prevMouseY = 0;
-let visibleBoxes = [];
-let visibleParentLinks = [];
-let visibleChildrenLinks = [];
 
 const infoBoxes = [];
 const parentLinks = [];
 const childrenLinks = [];
+let visibleBoxes = [];
+let visibleParentLinks = [];
+let visibleChildrenLinks = [];
+
 
 const mouseDown = function(event) {
   event.preventDefault();
@@ -35,6 +36,7 @@ const mouseDown = function(event) {
   }
 }
 
+
 const mouseUp = function(event) {
   if (!isDragging) {
     return;
@@ -46,6 +48,7 @@ const mouseUp = function(event) {
   drawAll();
 }
 
+
 const mouseOut = function(event) {
   if (!isDragging) {
     return;
@@ -54,6 +57,7 @@ const mouseOut = function(event) {
   event.preventDefault();
   isDragging = false;
 }
+
 
 const mouseMove = function(event) {
   if (!isDragging) {
@@ -79,24 +83,30 @@ const mouseMove = function(event) {
   prevMouseY = mouseY;
 }
 
-const getVisible = function(event) {
+
+const onScroll = function() {
+  getVisible();
+}
+
+
+const getVisible = function() {
   const boundigClientRect = canvas.getBoundingClientRect();
 
-  visibleBoxes = [];
-  for (box of infoBoxes) {
+  visibleBoxes.lenght = 0;
+  for (const box of infoBoxes) {
     if (box.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
                       window.innerWidth, window.innerHeight)) {
       visibleBoxes.push(box.id);
     }
   }
 
-  visibleParentLinks = [];
+  visibleParentLinks.lenght = 0;
   for (const boxId of visibleBoxes) {
-    for (linkId of infoBoxes[boxId].parentLinks) {
+    for (const linkId of infoBoxes[boxId].parentLinks) {
       visibleParentLinks.push(linkId);
     }
   }
-  for (link of parentLinks) {
+  for (const link of parentLinks) {
     if (link.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
                        window.innerWidth, window.innerHeight, infoBoxes)) {
       visibleParentLinks.push(link.id);
@@ -104,13 +114,13 @@ const getVisible = function(event) {
   }
   visibleParentLinks = [...new Set(visibleParentLinks)];
 
-  visibleChildrenLinks = [];
+  visibleChildrenLinks.lenght = 0;
   for (const boxId of visibleBoxes) {
-    for (linkId of infoBoxes[boxId].childrenLinks) {
+    for (const linkId of infoBoxes[boxId].childrenLinks) {
       visibleChildrenLinks.push(linkId);
     }
   }
-  for (link of childrenLinks) {
+  for (const link of childrenLinks) {
     if (link.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
                        window.innerWidth, window.innerHeight, infoBoxes)) {
       visibleChildrenLinks.push(link.id);
@@ -119,15 +129,6 @@ const getVisible = function(event) {
   visibleChildrenLinks = [...new Set(visibleChildrenLinks)];
 }
 
-const onScroll = function(event) {
-  getVisible();
-}
-
-canvas.onmousedown = mouseDown;
-canvas.onmouseup = mouseUp;
-canvas.onmouseout = mouseOut;
-canvas.onmousemove = mouseMove;
-window.onscroll = onScroll;
 
 const drawVisible = function() {
   const boundigClientRect = canvas.getBoundingClientRect();
@@ -144,6 +145,7 @@ const drawVisible = function() {
   }
 }
 
+
 const drawAll = function() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (const link of parentLinks) {
@@ -157,9 +159,8 @@ const drawAll = function() {
   }
 }
 
-async function start() {
-  await loadMCParticles(infoBoxes, parentLinks, childrenLinks);
 
+function start() {
   if (!infoBoxes) {
     return;
   }
@@ -171,7 +172,7 @@ async function start() {
   const maxRow = Math.max(...rows);
 
   // Order infoBoxes into rows
-  boxRows = [];
+  const boxRows = [];
   for (let i = 0; i <= maxRow; i++) {
     boxRows.push([]);
   }
@@ -222,4 +223,62 @@ async function start() {
   drawAll();
 
   getVisible();
-};
+}
+
+
+canvas.onmousedown = mouseDown;
+canvas.onmouseup = mouseUp;
+canvas.onmouseout = mouseOut;
+canvas.onmousemove = mouseMove;
+window.onscroll = onScroll;
+
+
+/*
+function showInputModal() {
+  const modal = document.getElementById("input-modal");
+
+  modal.style.display = "block";
+}
+*/
+
+function hideInputModal() {
+  const modal = document.getElementById("input-modal");
+
+  modal.style.display = "none";
+}
+
+const fileSelector = document.getElementById("input-file");
+const messageDiv = document.getElementById("input-message");
+fileSelector.addEventListener("change", (event) => {
+  messageDiv.innerHTML = "";
+  for (const file of event.target.files) {
+    if (!file.name.endsWith("edm4hep.json")) {
+      messageDiv.innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
+    }
+
+    if (!file.type.endsWith("/json")) {
+      messageDiv.innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener("load", (event) => {
+      const fileText = event.target.result;
+      const jsonData = JSON.parse(fileText);
+      loadMCParticles(jsonData, infoBoxes, parentLinks, childrenLinks);
+      start();
+      hideInputModal();
+    });
+    reader.readAsText(file);
+    break;
+  }
+});
+
+/*
+document.getElementById("upload-button")
+        .addEventListener("click", async() => {
+  let [fileHandle] = await window.showOpenFilePicker();
+  const file = await fileHandle.getFile();
+  const fileContents = await file.text();
+  console.log(fileContents);
+});
+*/
