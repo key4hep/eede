@@ -1,4 +1,6 @@
-class InfoBox {
+import { drawTex, drawRoundedRect } from "./graphic-primitives.js";
+
+export class InfoBox {
   constructor(id) {
     this.id = parseInt(id);
 
@@ -39,7 +41,6 @@ class InfoBox {
     // drawCross(ctx, this.x, this.y);
 
     const boxCenterX = this.x + this.width / 2;
-    const boxCenterY = this.y + this.height / 2;
 
     drawRoundedRect(ctx,
                     this.x, this.y, this.width, this.height,
@@ -50,7 +51,7 @@ class InfoBox {
 
     ctx.save();
     ctx.font = "18px sans-serif";
-    const momText = "p = " + Math.round(this.momentum * 100.) / 100. + " GeV";
+    const momText = "p = " + Math.round(this.momentum * 100) / 100 + " GeV";
     ctx.fillText(momText,
                  boxCenterX - ctx.measureText(momText).width/2,
                  this.y + this.height * .65);
@@ -86,12 +87,13 @@ class InfoBox {
 }
 
 
-class Link {
+export class Link {
   constructor(id, boxFrom, boxTo) {
     this.id = parseInt(id);
     this.from = boxFrom;
     this.to = boxTo;
     this.color = "#A00";
+    this.xShift = 0;
 
     this.fromX = 0;
     this.fromY = 0;
@@ -108,20 +110,20 @@ class Link {
     const boxFrom = infoBoxes[this.from];
     const boxTo = infoBoxes[this.to];
 
-    this.getEndpoints();
+    this.getEndpoints(infoBoxes);
 
     const linkLenght = Math.sqrt(Math.pow(this.fromX - this.toX, 2) +
                                  Math.pow(this.fromY - this.toY, 2));
     if (this.toX > this.fromX) {
       var cpFromX = this.fromX + Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
     } else {
-      var cpFromX = this.fromX - Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
+      cpFromX = this.fromX - Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
     }
     const cpFromY = this.fromY + (boxFrom.height / 2) * linkLenght / window.innerHeight;
     if (this.toX > this.fromX) {
       var cpToX = this.toX - Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
     } else {
-      var cpToX = this.toX + Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
+      cpToX = this.toX + Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
     }
     const cpToY = this.toY - (boxTo.height / 2) * linkLenght / window.innerHeight;
 
@@ -144,15 +146,17 @@ class Link {
                       this.toX, this.toY);
     ctx.stroke();
 
+    /*
     ctx.font = "14px sans-serif";
     ctx.fillStyle = this.color;
     const idText = "ID: " + this.id;
     ctx.fillText(idText,
                  cpToX, cpToY);
     ctx.restore();
+    */
   }
 
-  getEndpoints() {
+  getEndpoints(infoBoxes) {
     const boxFrom = infoBoxes[this.from];
     const boxTo = infoBoxes[this.to];
 
@@ -165,6 +169,9 @@ class Link {
     this.boxWidth = Math.abs(this.fromX - this.toX);
     this.boxY = Math.min(this.fromY, this.toY);
     this.boxHeight = Math.abs(this.fromY - this.toY);
+
+    this.fromX += this.xShift;
+    this.toX += this.xShift;
   }
 
   isVisible(x, y, width, height) {

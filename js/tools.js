@@ -1,12 +1,14 @@
-function loadMCParticles(jsonData,
-                         infoBoxes, parentLinks, childrenLinks) {
+import { InfoBox, Link } from "./objects.js";
+
+
+export function loadMCParticles(jsonData,
+                                infoBoxes, parentLinks, childrenLinks) {
   const eventNum = 3;
   const eventData = jsonData["Event " + eventNum];
   // console.log(eventData);
   const mcParticles = Object.values(eventData).find(element => element.collType == "edm4hep::MCParticleCollection");
 
-  for (i in mcParticles.collection) {
-    const particle = mcParticles.collection[i];
+  for (const [i, particle] of mcParticles.collection.entries()) {
     const box = new InfoBox(i);
     box.pdg = particle.PDG;
     box.genStatus = particle.generatorStatus;
@@ -14,6 +16,7 @@ function loadMCParticles(jsonData,
                              Math.pow(particle.momentum.y, 2),
                              Math.pow(particle.momentum.z, 2));
     box.name = getName(particle.PDG);
+    box.updateTexImg();
 
     if (particle.parents.length === 0 && particle.daughters.length === 0) {
       box.row = -1;
@@ -24,21 +27,23 @@ function loadMCParticles(jsonData,
       box.row = 0;
     }
 
-    for (j in particle.parents) {
+    for (const j in particle.parents) {
       const parentId = particle.parents[j].index;
       box.parents.push(parentId);
       box.row = infoBoxes[parentId].row + 1;
-      link = new Link(parseInt(parentLinks.length), parentId, i);
+      const link = new Link(parseInt(parentLinks.length), parentId, i);
       link.color = "#A00";  // Darkish red
+      link.xShift = 3;
       parentLinks.push(link);
       box.parentLinks.push(link.id);
     }
 
-    for (j in particle.daughters) {
-      childrenId = particle.daughters[j].index;
+    for (const j in particle.daughters) {
+      const childrenId = particle.daughters[j].index;
       box.children.push(childrenId);
-      link = new Link(parseInt(childrenLinks.length), i, childrenId);
+      const link = new Link(parseInt(childrenLinks.length), i, childrenId);
       link.color = "#0A0";  // Darkish green
+      link.xShift = -3;
       childrenLinks.push(link);
       box.childrenLinks.push(link.id);
     }
@@ -47,56 +52,6 @@ function loadMCParticles(jsonData,
   }
 }
 
-function drawLine(ctx, startX, startY, endX, endY, color) {
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(endX, endY);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function drawCross(ctx, x, y, color = "#F00") {
-  const crossLenght = 6;
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(x - crossLenght, y - crossLenght);
-  ctx.lineTo(x + crossLenght, y + crossLenght);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x + crossLenght, y - crossLenght);
-  ctx.lineTo(x - crossLenght, y + crossLenght);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function drawRoundedRect(ctx, x, y, width, height, fillColor) {
-  ctx.save();
-
-  ctx.fillStyle = fillColor;
-  ctx.beginPath();
-  ctx.roundRect(x, y, width, height, 15);
-  ctx.fill();
-
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.roundRect(x, y, width, height, 15);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function drawTex(ctx, x, y, texImg) {
-  const tempWidth = texImg.naturalWidth * 2;
-  const tempHeight = texImg.naturalHeight * 2;
-
-  ctx.save();
-  ctx.drawImage(texImg,
-                x - tempWidth / 2, y - tempHeight / 2,
-                tempWidth, tempHeight);
-  ctx.restore();
-}
 
 function getName(pdg) {
   switch (pdg) {
@@ -253,7 +208,7 @@ function getName(pdg) {
     case -4222:
       return "\\Sigma^{--}";
     default:
-      console.log("PDG: " + particle.PDG.toString());
-      return "PDG: " + particle.PDG.toString();
+      console.log("PDG: " + pdg.toString());
+      return "PDG: " + pdg.toString();
   }
 }

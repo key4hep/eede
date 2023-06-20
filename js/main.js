@@ -1,3 +1,5 @@
+import { loadMCParticles } from "./tools.js";
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -92,7 +94,7 @@ const onScroll = function() {
 const getVisible = function() {
   const boundigClientRect = canvas.getBoundingClientRect();
 
-  visibleBoxes.lenght = 0;
+  visibleBoxes = [];
   for (const box of infoBoxes) {
     if (box.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
                       window.innerWidth, window.innerHeight)) {
@@ -100,7 +102,7 @@ const getVisible = function() {
     }
   }
 
-  visibleParentLinks.lenght = 0;
+  visibleParentLinks = [];
   for (const boxId of visibleBoxes) {
     for (const linkId of infoBoxes[boxId].parentLinks) {
       visibleParentLinks.push(linkId);
@@ -114,7 +116,7 @@ const getVisible = function() {
   }
   visibleParentLinks = [...new Set(visibleParentLinks)];
 
-  visibleChildrenLinks.lenght = 0;
+  visibleChildrenLinks = [];
   for (const boxId of visibleBoxes) {
     for (const linkId of infoBoxes[boxId].childrenLinks) {
       visibleChildrenLinks.push(linkId);
@@ -127,6 +129,12 @@ const getVisible = function() {
     }
   }
   visibleChildrenLinks = [...new Set(visibleChildrenLinks)];
+
+  /*
+  console.log("Visible boxes: ", visibleBoxes);
+  console.log("Visible parentLinks: ", visibleParentLinks);
+  console.log("Visible childrenLinks: ", visibleChildrenLinks);
+  */
 }
 
 
@@ -214,10 +222,6 @@ function start() {
       }
       box.y = i * verticalGap + verticalGap + i * boxHeight;
     }
-  }
-
-  for (const box of infoBoxes) {
-    box.updateTexImg();
   }
 
   drawAll();
