@@ -1,4 +1,4 @@
-import { drawTex, drawRoundedRect } from "./graphic-primitives.js";
+import { drawLine, drawCross, drawTex, drawRoundedRect } from "./graphic-primitives.js";
 
 export class InfoBox {
   constructor(id) {
@@ -47,7 +47,7 @@ export class InfoBox {
                     "#f5f5f5");
     drawTex(ctx,
             boxCenterX, this.y + this.height * .35,
-            this.texImg);
+            this.texImg, this.width);
 
     ctx.save();
     ctx.font = "18px sans-serif";
@@ -94,59 +94,55 @@ export class Link {
     this.to = boxTo;
     this.color = "#A00";
     this.xShift = 0;
-
-    this.fromX = 0;
-    this.fromY = 0;
-    this.toX = 0;
-    this.toY = 0;
-
-    this.boxX = 0;
-    this.boxWidth = 0;
-    this.boxY = 0;
-    this.boxHeight = 0;
   }
 
   draw(ctx, infoBoxes) {
     const boxFrom = infoBoxes[this.from];
     const boxTo = infoBoxes[this.to];
 
-    this.getEndpoints(infoBoxes);
+    const fromX = boxFrom.x + boxFrom.width / 2;
+    const fromY = boxFrom.y + boxFrom.height;
+    const toX = boxTo.x + boxTo.width / 2;
+    const toY = boxTo.y;
 
-    const linkLenght = Math.sqrt(Math.pow(this.fromX - this.toX, 2) +
-                                 Math.pow(this.fromY - this.toY, 2));
-    if (this.toX > this.fromX) {
-      var cpFromX = this.fromX + Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
+    if (toY > fromY) {
+      var cpFromY = (toY - fromY) / 2 + fromY;
+      var cpToY = cpFromY;
     } else {
-      cpFromX = this.fromX - Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
+      cpFromY = (fromY - toY) / 2 + fromY;
+      cpToY = toY - (fromY - toY) / 2;
     }
-    const cpFromY = this.fromY + (boxFrom.height / 2) * linkLenght / window.innerHeight;
-    if (this.toX > this.fromX) {
-      var cpToX = this.toX - Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
+
+    if (toX > fromX) {
+      var cpFromX = (toX - fromX) / 4 + fromX;
+      var cpToX = 3 * (toX - fromX) / 4 + fromX;
     } else {
-      cpToX = this.toX + Math.abs(this.fromX - this.toX) * linkLenght / window.innerWidth;
+      cpFromX = 3 * (fromX - toX) / 4 + toX;
+      cpToX = (fromX - toX) / 4 + toX;
     }
-    const cpToY = this.toY - (boxTo.height / 2) * linkLenght / window.innerHeight;
 
     /*
-    drawCross(ctx, this.fromX, this.fromY, "blue");
-    drawCross(ctx, this.toX, this.toY, "green");
+    drawCross(ctx, fromX, fromY, "blue");
+    drawCross(ctx, toX, toY, "green");
     drawCross(ctx, cpFromX, cpFromY, "yellow");
-    drawLine(ctx, this.fromX, this.fromY, cpFromX, cpFromY, "yellow")
+    drawLine(ctx, fromX, fromY, cpFromX, cpFromY, "yellow")
     drawCross(ctx, cpToX, cpToY, "orange");
-    drawLine(ctx, this.toX, this.toY, cpToX, cpToY, "orange")
+    drawLine(ctx, toX, toY, cpToX, cpToY, "orange")
     */
 
     ctx.save();
     ctx.strokeStyle = this.color;
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(this.fromX, this.fromY);
-    ctx.bezierCurveTo(cpFromX, cpFromY,
-                      cpToX, cpToY,
-                      this.toX, this.toY);
+    ctx.moveTo(fromX + this.xShift, fromY);
+    ctx.bezierCurveTo(cpFromX + this.xShift, cpFromY,
+                      cpToX + this.xShift, cpToY,
+                      toX + this.xShift, toY);
     ctx.stroke();
+    ctx.restore();
 
     /*
+    ctx.save();
     ctx.font = "14px sans-serif";
     ctx.fillStyle = this.color;
     const idText = "ID: " + this.id;
@@ -156,25 +152,20 @@ export class Link {
     */
   }
 
-  getEndpoints(infoBoxes) {
+  isVisible(x, y, width, height, infoBoxes) {
     const boxFrom = infoBoxes[this.from];
     const boxTo = infoBoxes[this.to];
 
-    this.fromX = boxFrom.x + boxFrom.width / 2;
-    this.fromY = boxFrom.y + boxFrom.height;
-    this.toX = boxTo.x + boxTo.width / 2;
-    this.toY = boxTo.y;
+    const fromX = boxFrom.x + boxFrom.width / 2;
+    const fromY = boxFrom.y + boxFrom.height;
+    const toX = boxTo.x + boxTo.width / 2;
+    const toY = boxTo.y;
 
-    this.boxX = Math.min(this.fromX, this.toX);
-    this.boxWidth = Math.abs(this.fromX - this.toX);
-    this.boxY = Math.min(this.fromY, this.toY);
-    this.boxHeight = Math.abs(this.fromY - this.toY);
+    const boxX = Math.min(fromX, toX);
+    const boxWidth = Math.abs(fromX - toX);
+    const boxY = Math.min(fromY, toY);
+    const boxHeight = Math.abs(fromY - toY);
 
-    this.fromX += this.xShift;
-    this.toX += this.xShift;
-  }
-
-  isVisible(x, y, width, height) {
     /*
     console.log("boxX: ", this.boxX);
     console.log("boxY: ", this.boxY);
@@ -182,8 +173,8 @@ export class Link {
     console.log("boxHeight: ", this.boxHeight);
     */
 
-    if (x + width > this.boxX && x < this.boxX + this.boxWidth &&
-        y + height > this.boxY && y < this.boxY + this.boxHeight) {
+    if (x + width > boxX && x < boxX + boxWidth &&
+        y + height > boxY && y < boxY + boxHeight) {
       return true;
     }
 

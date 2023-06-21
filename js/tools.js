@@ -1,11 +1,9 @@
 import { InfoBox, Link } from "./objects.js";
 
 
-export function loadMCParticles(jsonData,
+export function loadMCParticles(jsonData, eventNum,
                                 infoBoxes, parentLinks, childrenLinks) {
-  const eventNum = 3;
   const eventData = jsonData["Event " + eventNum];
-  // console.log(eventData);
   const mcParticles = Object.values(eventData).find(element => element.collType == "edm4hep::MCParticleCollection");
 
   for (const [i, particle] of mcParticles.collection.entries()) {
@@ -30,7 +28,6 @@ export function loadMCParticles(jsonData,
     for (const j in particle.parents) {
       const parentId = particle.parents[j].index;
       box.parents.push(parentId);
-      box.row = infoBoxes[parentId].row + 1;
       const link = new Link(parseInt(parentLinks.length), parentId, i);
       link.color = "#A00";  // Darkish red
       link.xShift = 3;
@@ -49,6 +46,37 @@ export function loadMCParticles(jsonData,
     }
 
     infoBoxes.push(box);
+  }
+
+  const getMaxRow = function(parentIds) {
+    let maxRow = -1;
+    for (const parentId of parentIds) {
+      if (infoBoxes[parentId].row === -1) {
+        return -1;
+      }
+
+      if (infoBoxes[parentId].row > maxRow) {
+        maxRow = infoBoxes[parentId].row;
+      }
+    }
+
+    return maxRow;
+  }
+
+  let repeat = true;
+  while(repeat) {
+    repeat = false;
+    for (const infoBox of infoBoxes) {
+      if (infoBox.row >= 0) {
+        continue;
+      }
+      const parentRow = getMaxRow(infoBox.parents);
+      if (parentRow >= 0) {
+        infoBox.row = parentRow + 1;
+      } else {
+        repeat = true;
+      }
+    }
   }
 }
 
@@ -111,6 +139,8 @@ function getName(pdg) {
       return "\\pi^{0}";
     case 113:
       return "\\rho^{0}(770)";
+    case 130:
+      return "K^{0}_{L}";
     case 211:
       return "\\pi^{+}";
     case 213:
@@ -141,10 +171,18 @@ function getName(pdg) {
       return "K^{*}(892)^{+}";
     case -323:
       return "K^{*}(892)^{-}";
+    case 331:
+      return "\\eta^{\\prime}(958)"
+    case -331:
+      return "{\\bar \\eta}^{\\prime}(958)"
     case 411:
       return "D^{+}";
     case -411:
       return "d^{-}";
+    case 413:
+      return "D^{*}(2010)^{+}";
+    case -413:
+      return "{\\bar D}^{*}(2010)^{+}";
     case 415:
       return "D^{*}_{2}(2460)^{+}";
     case 421:
@@ -175,14 +213,20 @@ function getName(pdg) {
       return "n";
     case -2112:
       return "{\\bar n}";
+    case 2114:
+      return "\\Delta^{0}";
     case 2212:
       return "p";
     case -2212:
       return "{\\bar p}";
+    case 2214:
+      return "\\Delta^{+}";
+    case -2214:
+      return "{\\bar \\Delta}^{+}";
     case 2224:
       return "\\Delta^{++}";
     case -2224:
-      return "\\Delta^{--}";
+      return "{\\bar \\Delta}^{++}";
     case 3122:
       return "\\Lambda";
     case -3122:
@@ -195,6 +239,12 @@ function getName(pdg) {
       return "\\Sigma^{+}";
     case -3222:
       return "\\Sigma^{-}";
+    case 3224:
+      return "\\Sigma^{*+}";
+    case -3224:
+      return "{\\bar \\Sigma}^{*+}";
+    case 4114:
+      return "\\Sigma^{*0}_{c}";
     case 4122:
       return "\\Lambda^{+}_{c}";
     case -4122:
@@ -207,6 +257,12 @@ function getName(pdg) {
       return "\\Sigma^{++}";
     case -4222:
       return "\\Sigma^{--}";
+    case 5122:
+      return "\\Lambda^{0}_{b}";
+    case 20213:
+      return "a_{1}(1260)^{+}";
+    case -20213:
+      return "{\\bar a}_{1}(1260)^{+}";
     default:
       console.log("PDG: " + pdg.toString());
       return "PDG: " + pdg.toString();

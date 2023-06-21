@@ -17,6 +17,8 @@
 
         <p>Welcome to mdX!</p>
 
+        <div id="input-message">
+        </div>
         <form>
           <label for="input-file">EDM4hep JSON:</label>
           <br>
@@ -25,10 +27,18 @@
                  type="file"
                  accept=".json">
           <br>
-          <button id="upload-button" class="upload-button">Upload</button>
+          <div id="event-selector">
+            <label for="event-number">Event number:</label>
+            <br>
+            <input id="event-number"
+                   name="event-number"
+                   type="number"
+                   value="0"
+                   min="0">
+          </div>
+          <br>
+          <button id="visualize-button">Visualize</button>
         </form>
-        <div id="input-message">
-        </div>
         <div class="file-overview">
         </div>
       </div>

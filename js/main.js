@@ -11,6 +11,7 @@ let isDragging = false;
 let prevMouseX = 0;
 let prevMouseY = 0;
 
+let jsonData = {};
 const infoBoxes = [];
 const parentLinks = [];
 const childrenLinks = [];
@@ -47,7 +48,9 @@ const mouseUp = function(event) {
   event.preventDefault();
   isDragging = false;
 
+  // console.time("drawAll");
   drawAll();
+  // console.timeEnd("drawAll");
 }
 
 
@@ -65,7 +68,6 @@ const mouseMove = function(event) {
   if (!isDragging) {
     return;
   }
-
   event.preventDefault();
 
   const boundigClientRect = canvas.getBoundingClientRect();
@@ -79,7 +81,9 @@ const mouseMove = function(event) {
   infoBox.x += dx;
   infoBox.y += dy;
 
+  // console.time("drawVisible");
   drawVisible();
+  // console.timeEnd("drawVisible");
 
   prevMouseX = mouseX;
   prevMouseY = mouseY;
@@ -156,15 +160,21 @@ const drawVisible = function() {
 
 const drawAll = function() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // console.time("drawParentLinks");
   for (const link of parentLinks) {
     link.draw(ctx, infoBoxes);
   }
+  // console.timeEnd("drawParentLinks");
+  // console.time("drawChildrenLinks");
   for (const link of childrenLinks) {
     link.draw(ctx, infoBoxes);
   }
+  // console.timeEnd("drawChildrenLinks");
+  // console.time("drawBoxes");
   for (const infoBox of infoBoxes) {
     infoBox.draw(ctx);
   }
+  // console.timeEnd("drawBoxes");
 }
 
 
@@ -197,7 +207,8 @@ function start() {
   const horizontalGap = boxWidth * 0.4;
   const verticalGap = boxHeight * 0.3;
 
-  canvas.width = boxWidth * maxRowWidth + horizontalGap * (maxRowWidth + 1);
+  canvas.width = boxWidth * (maxRowWidth + 1) +
+                 horizontalGap * (maxRowWidth + 1);
   canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
 
   for (const [i, row] of boxRows.entries()) {
@@ -251,38 +262,44 @@ function hideInputModal() {
   modal.style.display = "none";
 }
 
-const fileSelector = document.getElementById("input-file");
-const messageDiv = document.getElementById("input-message");
-fileSelector.addEventListener("change", (event) => {
-  messageDiv.innerHTML = "";
+document.getElementById("input-file")
+        .addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
-      messageDiv.innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
+      document.getElementById("input-message")
+              .innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
     }
 
     if (!file.type.endsWith("/json")) {
-      messageDiv.innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
+      document.getElementById("input-message")
+              .innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
     }
 
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
       const fileText = event.target.result;
-      const jsonData = JSON.parse(fileText);
-      loadMCParticles(jsonData, infoBoxes, parentLinks, childrenLinks);
-      start();
-      hideInputModal();
+      jsonData = JSON.parse(fileText);
+
+      const eventNumberInput = document.getElementById("event-number");
+      eventNumberInput.max = Object.keys(jsonData).length - 1;
+      document.getElementById("event-selector")
+              .style.display = "block";
     });
     reader.readAsText(file);
     break;
   }
 });
 
-/*
-document.getElementById("upload-button")
-        .addEventListener("click", async() => {
-  let [fileHandle] = await window.showOpenFilePicker();
-  const file = await fileHandle.getFile();
-  const fileContents = await file.text();
-  console.log(fileContents);
+
+document.getElementById("visualize-button")
+        .addEventListener("click", (event) => {
+  event.preventDefault();
+  const eventNum = document.getElementById("event-number").value;
+  loadMCParticles(jsonData, eventNum,
+                  infoBoxes, parentLinks, childrenLinks);
+  for (const eventNum in jsonData) {
+    delete jsonData[eventNum];
+  }
+  start();
+  hideInputModal();
 });
-*/

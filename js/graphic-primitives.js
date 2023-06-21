@@ -39,9 +39,13 @@ export function drawRoundedRect(ctx, x, y, width, height, fillColor) {
   ctx.restore();
 }
 
-export function drawTex(ctx, x, y, texImg) {
-  const tempWidth = texImg.naturalWidth * 2;
-  const tempHeight = texImg.naturalHeight * 2;
+export function drawTex(ctx, x, y, texImg, maxWidth) {
+  let scale = (maxWidth * 0.9) / texImg.naturalWidth;
+  if (scale > 2) {
+    scale = 2;
+  }
+  const tempHeight = texImg.naturalHeight * scale;
+  const tempWidth = texImg.naturalWidth * scale;
 
   ctx.save();
   ctx.drawImage(texImg,
