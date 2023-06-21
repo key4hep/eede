@@ -103,6 +103,10 @@ function getName(pdg) {
       return "b";
     case -5:
       return "{\\bar b}";
+    case 6:
+      return "t";
+    case -6:
+      return "{\\bar t}";
     case 11:
       return "e^{-}";
     case -11:
@@ -132,7 +136,11 @@ function getName(pdg) {
     case 22:
       return "\\gamma";
     case 23:
-      return "Z";
+      return "Z^{0}";
+    case 24:
+      return "W^{+}";
+    case -24:
+      return "W^{-}";
     case 25:
       return "H";
     case 111:
@@ -172,9 +180,11 @@ function getName(pdg) {
     case -323:
       return "K^{*}(892)^{-}";
     case 331:
-      return "\\eta^{\\prime}(958)"
+      return "\\eta^{\\prime}(958)";
     case -331:
-      return "{\\bar \\eta}^{\\prime}(958)"
+      return "{\\bar \\eta}^{\\prime}(958)";
+    case 333:
+      return "\\phi(1020)";
     case 411:
       return "D^{+}";
     case -411:
@@ -193,6 +203,10 @@ function getName(pdg) {
       return "D^{*}(2007)^{0}";
     case -423:
       return "{\\bar D}^{*}(2007)^{0}";
+    case 431:
+      return "D^{+}_{s}";
+    case -431:
+      return "{\\bar D}^{+}_{s}";
     case 511:
       return "B^{0}";
     case -511:
@@ -209,6 +223,14 @@ function getName(pdg) {
       return "B^{*+}";
     case -523:
       return "B^{*-}";
+    case 531:
+      return "B^{0}_{s}";
+    case -531:
+      return "{\\bar B}^{0}_{s}";
+    case 1114:
+      return "\\Delta^{-}";
+    case -1114:
+      return "{\\bar \\Delta}^{-}";
     case 2112:
       return "n";
     case -2112:
@@ -227,6 +249,10 @@ function getName(pdg) {
       return "\\Delta^{++}";
     case -2224:
       return "{\\bar \\Delta}^{++}";
+    case 3112:
+      return "\\Sigma^{-}";
+    case 3114:
+      return "\\Sigma^{*-}";
     case 3122:
       return "\\Lambda";
     case -3122:
@@ -243,6 +269,10 @@ function getName(pdg) {
       return "\\Sigma^{*+}";
     case -3224:
       return "{\\bar \\Sigma}^{*+}";
+    case 3312:
+      return "\\Xi^{-}";
+    case -3312:
+      return "{\\bar \\Xi}^{-}";
     case 4114:
       return "\\Sigma^{*0}_{c}";
     case 4122:

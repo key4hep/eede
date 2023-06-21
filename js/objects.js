@@ -50,7 +50,7 @@ export class InfoBox {
             this.texImg, this.width);
 
     ctx.save();
-    ctx.font = "18px sans-serif";
+    ctx.font = "16px sans-serif";
     const momText = "p = " + Math.round(this.momentum * 100) / 100 + " GeV";
     ctx.fillText(momText,
                  boxCenterX - ctx.measureText(momText).width/2,
