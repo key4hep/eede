@@ -20,16 +20,15 @@
         <div id="input-message">
         </div>
         <form>
-          <label for="input-file">EDM4hep JSON:</label>
-          <br>
-          <input id="input-file"
-                 name="input-file"
-                 type="file"
-                 accept=".json">
-          <br>
+          <div class="mb-20">
+            <label class="mr-10" for="input-file">Select EDM4hep JSON:</label>
+            <input id="input-file"
+                   name="input-file"
+                   type="file"
+                   accept=".json">
+          </div>
           <div id="event-selector">
-            <label for="event-number">Event number:</label>
-            <br>
+            <label class="mr-10" for="event-number">Select event number:</label>
             <input id="event-number"
                    name="event-number"
                    type="number"
@@ -37,7 +36,9 @@
                    min="0">
           </div>
           <br>
-          <button id="visualize-button">Visualize</button>
+          <div class="align-right">
+            <button id="visualize-button">Visualize</button>
+          </div>
         </form>
         <div class="file-overview">
         </div>

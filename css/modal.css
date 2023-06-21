@@ -17,8 +17,9 @@
   margin: auto;
   padding: 20px;
   border: 2px solid #888;
-  width: 80%;
+  width: 50%;
   border-radius: 15px;
+  font-family: Arial, sans-serif;
 }
 
 .close-button {
@@ -36,7 +37,6 @@
 }
 
 #visualize-button {
-  float: right;
   border: 2px solid #4caf50;
   border-radius: 15px;
   color: black;
@@ -57,4 +57,17 @@
 
 #event-selector {
   display: none;
+}
+
+div.align-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mr-10 {
+  margin-right: 10px;
 }
