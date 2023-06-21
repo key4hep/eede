@@ -19,8 +19,19 @@ export class InfoBox {
     // Physics data
     this.name = "";
     this.momentum = 0.;  // GeV
+    this.px = 0.;  // GeV
+    this.py = 0.;  // GeV
+    this.pz = 0.;  // GeV
+    this.vertex = 0.;  // mm, distance from 0, 0, 0
+    this.vx = 0.;  // mm
+    this.vy = 0.;  // mm
+    this.vz = 0.;  // mm
+    this.time = 0.;  // ns
+    this.mass = 0.;  // GeV
+    this.charge = 0;  // e
     this.pdg = 0;
     this.genStatus = 0;
+    this.simStatus = 0;
     this.parents = [];
     this.children = [];
 
@@ -45,25 +56,39 @@ export class InfoBox {
     drawRoundedRect(ctx,
                     this.x, this.y, this.width, this.height,
                     "#f5f5f5");
+
+
     drawTex(ctx,
-            boxCenterX, this.y + this.height * .35,
+            boxCenterX, this.y + this.height * .4,
             this.texImg, this.width);
+
+    const topY = this.y + 20;
+    const topLines = [];
+    topLines.push("ID: " + this.id);
+    topLines.push("Gen. stat.: " + this.genStatus);
+    topLines.push("Sim. stat.: " + this.simStatus);
+
+    const bottomY = this.y + this.height * 0.6;
+    const bottomLines = [];
+    bottomLines.push("p = " + this.momentum + " GeV");
+    bottomLines.push("d = " + this.vertex + " mm");
+    bottomLines.push("t = " + this.time + " ns");
+    bottomLines.push("m = " + this.mass + " GeV");
+    bottomLines.push("q = " + this.charge + " e");
 
     ctx.save();
     ctx.font = "16px sans-serif";
-    const momText = "p = " + Math.round(this.momentum * 100) / 100 + " GeV";
-    ctx.fillText(momText,
-                 boxCenterX - ctx.measureText(momText).width/2,
-                 this.y + this.height * .65);
+    for (const [i, lineText] of topLines.entries()) {
+      ctx.fillText(lineText,
+                   boxCenterX - ctx.measureText(lineText).width / 2,
+                   topY + i * 23);
+    }
 
-    const idText = "ID: " + this.id;
-    ctx.fillText(idText,
-                 boxCenterX - ctx.measureText(idText).width/2,
-                 this.y + 20);
-    const statusText = "Gen. stat.: " + this.genStatus;
-    ctx.fillText(statusText,
-                 boxCenterX - ctx.measureText(statusText).width/2,
-                 this.y + 40);
+    for (const [i, lineText] of bottomLines.entries()) {
+      ctx.fillText(lineText,
+                   boxCenterX - ctx.measureText(lineText).width/2,
+                   bottomY + i * 22);
+    }
     ctx.restore();
   }
 

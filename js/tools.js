@@ -10,9 +10,27 @@ export function loadMCParticles(jsonData, eventNum,
     const box = new InfoBox(i);
     box.pdg = particle.PDG;
     box.genStatus = particle.generatorStatus;
+    box.simStatus = particle.simulatorStatus;
     box.momentum = Math.sqrt(Math.pow(particle.momentum.x, 2),
                              Math.pow(particle.momentum.y, 2),
                              Math.pow(particle.momentum.z, 2));
+    box.momentum = Math.round(box.momentum * 100) / 100;
+    box.vertex = Math.sqrt(Math.pow(particle.vertex.x, 2),
+                           Math.pow(particle.vertex.y, 2),
+                           Math.pow(particle.vertex.z, 2));
+    box.vertex = Math.round(box.vertex * 100) / 100;
+    box.px = Math.round(particle.momentum.x * 100) / 100;
+    box.py = Math.round(particle.momentum.y * 100) / 100;
+    box.pz = Math.round(particle.momentum.z * 100) / 100;
+
+    box.vx = particle.vertex.x;
+    box.vy = particle.vertex.y;
+    box.vz = particle.vertex.z;
+
+    box.charge = particle.charge;
+    box.time = Math.round(particle.time * 100) / 100;
+    box.mass = Math.round(particle.mass * 100) / 100;
+
     box.name = getName(particle.PDG);
     box.updateTexImg();
 
