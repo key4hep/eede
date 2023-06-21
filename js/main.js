@@ -99,6 +99,9 @@ const getVisible = function() {
   const boundigClientRect = canvas.getBoundingClientRect();
 
   visibleBoxes = [];
+  visibleParentLinks = [];
+  visibleChildrenLinks = [];
+
   for (const box of infoBoxes) {
     if (box.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
                       window.innerWidth, window.innerHeight)) {
@@ -106,10 +109,14 @@ const getVisible = function() {
     }
   }
 
-  visibleParentLinks = [];
   for (const boxId of visibleBoxes) {
     for (const linkId of infoBoxes[boxId].parentLinks) {
       visibleParentLinks.push(linkId);
+    }
+    for (const parentBoxId of infoBoxes[boxId].parents) {
+      for (const linkId of infoBoxes[parentBoxId].childrenLinks) {
+        visibleChildrenLinks.push(linkId);
+      }
     }
   }
   for (const link of parentLinks) {
@@ -118,12 +125,15 @@ const getVisible = function() {
       visibleParentLinks.push(link.id);
     }
   }
-  visibleParentLinks = [...new Set(visibleParentLinks)];
 
-  visibleChildrenLinks = [];
   for (const boxId of visibleBoxes) {
     for (const linkId of infoBoxes[boxId].childrenLinks) {
       visibleChildrenLinks.push(linkId);
+    }
+    for (const childrenBoxId of infoBoxes[boxId].children){
+      for (const linkId of infoBoxes[childrenBoxId].parentLinks) {
+        visibleParentLinks.push(linkId);
+      }
     }
   }
   for (const link of childrenLinks) {
@@ -132,6 +142,8 @@ const getVisible = function() {
       visibleChildrenLinks.push(link.id);
     }
   }
+
+  visibleParentLinks = [...new Set(visibleParentLinks)];
   visibleChildrenLinks = [...new Set(visibleChildrenLinks)];
 
   /*
