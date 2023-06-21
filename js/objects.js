@@ -1,4 +1,4 @@
-import { drawLine, drawCross, drawTex, drawRoundedRect } from "./graphic-primitives.js";
+import { drawTex, drawRoundedRect } from "./graphic-primitives.js";
 
 export class InfoBox {
   constructor(id) {
@@ -141,6 +141,7 @@ export class Link {
     ctx.stroke();
     ctx.restore();
 
+    /*
     ctx.save();
     ctx.font = "14px sans-serif";
     ctx.fillStyle = this.color;
@@ -148,6 +149,7 @@ export class Link {
     ctx.fillText(idText,
                  cpToX, cpToY);
     ctx.restore();
+    */
   }
 
   isVisible(x, y, width, height, infoBoxes) {

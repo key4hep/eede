@@ -314,4 +314,7 @@ document.getElementById("visualize-button")
   }
   start();
   hideInputModal();
+  setTimeout(function() {
+    drawAll();
+  }, 500);
 });
