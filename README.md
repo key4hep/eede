@@ -1,6 +1,8 @@
 # dmX
 Data Model eXplorer
 
+Warning: **Experimental**
+
 Explore your events at [dmX](https://kjvbrt.github.io/dmx/).
 
 ## Development
