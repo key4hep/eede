@@ -5,6 +5,17 @@ Warning: **Experimental**
 
 Explore your events at [dmX](https://key4hep.github.io/dmx/).
 
+To generate your `.json` file use `edm4hep2json` available in the Key4hep stack.
+Example usage for the events from FCC `winter2023` campaign:
+```
+source /cvmfs/sw.hsf.org/key4hep/setup.sh
+edm4hep2json -l Particle \
+             -n 10 \
+             -o p8_ee_WW_ecm240.json \
+             /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_WW_ecm240/events_059793334.root
+```
+
+
 ## Development
 
 The tool is written in pure JS and draws on HTML Cavas.
