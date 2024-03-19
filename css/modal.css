@@ -95,3 +95,12 @@ div.align-right {
 #logo-background {
   background-color: "#a6a6a6";
 }
+
+.small-text {
+  font-size: 80%;
+  color: grey;
+}
+
+.ml-20 {
+  margin-left: 20px;
+}
