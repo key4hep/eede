@@ -75,10 +75,10 @@ export class InfoBox {
     bottomLines.push("t = " + this.time + " ns");
     bottomLines.push("m = " + this.mass + " GeV");
     if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
-      if (Math.round(this.charge * 1000) === 666) {
+      if (Math.round(this.charge * 1000) === 667) {
         bottomLines.push("q = 2/3 e");
       }
-      if (Math.round(this.charge * 1000) === -666) {
+      if (Math.round(this.charge * 1000) === -667) {
         bottomLines.push("q = -2/3 e");
       }
       if (Math.round(this.charge * 1000) === 333) {
