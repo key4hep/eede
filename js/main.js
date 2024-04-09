@@ -319,4 +319,5 @@ document.getElementById("visualize-button")
   setTimeout(function() {
     drawAll();
   }, 500);
+  window.scroll((canvas.width - window.innerWidth) / 2, 0);
 });
