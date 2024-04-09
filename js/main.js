@@ -1,4 +1,4 @@
-import { loadMCParticles } from "./tools.js";
+import { errorMsg, loadMCParticles } from "./tools.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -278,13 +278,11 @@ document.getElementById("input-file")
         .addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
-      document.getElementById("input-message")
-              .innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
+      errorMsg("Provided file is not EDM4hep JSON!");
     }
 
     if (!file.type.endsWith("/json")) {
-      document.getElementById("input-message")
-              .innerHTML = "ERROR: Provided file is not EDM4hep JSON!";
+      errorMsg("ERROR: Provided file is not EDM4hep JSON!");
     }
 
     const reader = new FileReader();
@@ -309,6 +307,10 @@ document.getElementById("visualize-button")
   const eventNum = document.getElementById("event-number").value;
   loadMCParticles(jsonData, eventNum,
                   infoBoxes, parentLinks, childrenLinks);
+  if (infoBoxes.length === 0) {
+    errorMsg("Provided file does not contain any MC particle tree!");
+    return;
+  }
   for (const eventNum in jsonData) {
     delete jsonData[eventNum];
   }
