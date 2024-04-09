@@ -1,5 +1,5 @@
 # dmX
-Data Model eXplorer
+*data model eXplorer*
 
 Warning: **Experimental**
 
