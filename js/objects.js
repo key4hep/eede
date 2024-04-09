@@ -74,7 +74,22 @@ export class InfoBox {
     bottomLines.push("d = " + this.vertex + " mm");
     bottomLines.push("t = " + this.time + " ns");
     bottomLines.push("m = " + this.mass + " GeV");
-    bottomLines.push("q = " + this.charge + " e");
+    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
+      if (Math.round(this.charge * 1000) === 666) {
+        bottomLines.push("q = 2/3 e");
+      }
+      if (Math.round(this.charge * 1000) === -666) {
+        bottomLines.push("q = -2/3 e");
+      }
+      if (Math.round(this.charge * 1000) === 333) {
+        bottomLines.push("q = 1/3 e");
+      }
+      if (Math.round(this.charge * 1000) === -333) {
+        bottomLines.push("q = -1/3 e");
+      }
+    } else {
+      bottomLines.push("q = " + this.charge + " e");
+    }
 
     ctx.save();
     ctx.font = "16px sans-serif";
