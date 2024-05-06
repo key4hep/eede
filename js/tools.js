@@ -121,7 +121,10 @@ export function loadMCParticles(jsonData, eventNum,
 function getName(pdg) {
   const particle = mappings[pdg];
 
-  if (particle !== undefined) return particle;
+  if (particle !== undefined) {
+    console.log("Name: " + particle);
+    return particle
+  };
 
   console.log("PDG: " + pdg.toString());
   return "PDG: " + pdg.toString();
