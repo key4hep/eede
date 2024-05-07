@@ -48,8 +48,12 @@ export function drawTex(ctx, x, y, texImg, maxWidth) {
   const tempWidth = texImg.naturalWidth * scale;
 
   ctx.save();
-  ctx.drawImage(texImg,
-                x - tempWidth / 2, y - tempHeight / 2,
-                tempWidth, tempHeight);
+  ctx.drawImage(
+    texImg,
+    x - tempWidth / 2,
+    y - tempHeight / 2,
+    tempWidth,
+    tempHeight
+  );
   ctx.restore();
 }

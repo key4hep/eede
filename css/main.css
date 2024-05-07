@@ -3,3 +3,7 @@ body {
   padding: 0;
   /* overflow: hidden; */
 }
+
+.manipulation-tool {
+  display: none;
+}

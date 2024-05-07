@@ -1,4 +1,7 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
+import Toggle from "./menu/toggle.js";
+
+const toggle = new Toggle();
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -19,8 +22,7 @@ let visibleBoxes = [];
 let visibleParentLinks = [];
 let visibleChildrenLinks = [];
 
-
-const mouseDown = function(event) {
+const mouseDown = function (event) {
   event.preventDefault();
 
   const boundigClientRect = canvas.getBoundingClientRect();
@@ -37,10 +39,9 @@ const mouseDown = function(event) {
       return;
     }
   }
-}
+};
 
-
-const mouseUp = function(event) {
+const mouseUp = function (event) {
   if (!isDragging) {
     return;
   }
@@ -51,20 +52,18 @@ const mouseUp = function(event) {
   // console.time("drawAll");
   drawAll();
   // console.timeEnd("drawAll");
-}
+};
 
-
-const mouseOut = function(event) {
+const mouseOut = function (event) {
   if (!isDragging) {
     return;
   }
 
   event.preventDefault();
   isDragging = false;
-}
+};
 
-
-const mouseMove = function(event) {
+const mouseMove = function (event) {
   if (!isDragging) {
     return;
   }
@@ -87,15 +86,13 @@ const mouseMove = function(event) {
 
   prevMouseX = mouseX;
   prevMouseY = mouseY;
-}
+};
 
-
-const onScroll = function() {
+const onScroll = function () {
   getVisible();
-}
+};
 
-
-const getVisible = function() {
+const getVisible = function () {
   const boundigClientRect = canvas.getBoundingClientRect();
 
   visibleBoxes = [];
@@ -103,8 +100,14 @@ const getVisible = function() {
   visibleChildrenLinks = [];
 
   for (const box of infoBoxes) {
-    if (box.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
-                      window.innerWidth, window.innerHeight)) {
+    if (
+      box.isVisible(
+        0 - boundigClientRect.x,
+        0 - boundigClientRect.y,
+        window.innerWidth,
+        window.innerHeight
+      )
+    ) {
       visibleBoxes.push(box.id);
     }
   }
@@ -120,8 +123,15 @@ const getVisible = function() {
     }
   }
   for (const link of parentLinks) {
-    if (link.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
-                       window.innerWidth, window.innerHeight, infoBoxes)) {
+    if (
+      link.isVisible(
+        0 - boundigClientRect.x,
+        0 - boundigClientRect.y,
+        window.innerWidth,
+        window.innerHeight,
+        infoBoxes
+      )
+    ) {
       visibleParentLinks.push(link.id);
     }
   }
@@ -130,15 +140,22 @@ const getVisible = function() {
     for (const linkId of infoBoxes[boxId].childrenLinks) {
       visibleChildrenLinks.push(linkId);
     }
-    for (const childrenBoxId of infoBoxes[boxId].children){
+    for (const childrenBoxId of infoBoxes[boxId].children) {
       for (const linkId of infoBoxes[childrenBoxId].parentLinks) {
         visibleParentLinks.push(linkId);
       }
     }
   }
   for (const link of childrenLinks) {
-    if (link.isVisible(0 - boundigClientRect.x, 0 - boundigClientRect.y,
-                       window.innerWidth, window.innerHeight, infoBoxes)) {
+    if (
+      link.isVisible(
+        0 - boundigClientRect.x,
+        0 - boundigClientRect.y,
+        window.innerWidth,
+        window.innerHeight,
+        infoBoxes
+      )
+    ) {
       visibleChildrenLinks.push(link.id);
     }
   }
@@ -151,13 +168,16 @@ const getVisible = function() {
   console.log("Visible parentLinks: ", visibleParentLinks);
   console.log("Visible childrenLinks: ", visibleChildrenLinks);
   */
-}
+};
 
-
-const drawVisible = function() {
+const drawVisible = function () {
   const boundigClientRect = canvas.getBoundingClientRect();
-  ctx.clearRect(0 - boundigClientRect.x, 0 - boundigClientRect.y,
-                window.innerWidth, window.innerHeight);
+  ctx.clearRect(
+    0 - boundigClientRect.x,
+    0 - boundigClientRect.y,
+    window.innerWidth,
+    window.innerHeight
+  );
   for (const linkId of visibleParentLinks) {
     parentLinks[linkId].draw(ctx, infoBoxes);
   }
@@ -167,10 +187,9 @@ const drawVisible = function() {
   for (const boxId of visibleBoxes) {
     infoBoxes[boxId].draw(ctx);
   }
-}
+};
 
-
-const drawAll = function() {
+const drawAll = function () {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // console.time("drawParentLinks");
   for (const link of parentLinks) {
@@ -187,8 +206,7 @@ const drawAll = function() {
     infoBox.draw(ctx);
   }
   // console.timeEnd("drawBoxes");
-}
-
+};
 
 function start() {
   if (!infoBoxes) {
@@ -196,7 +214,7 @@ function start() {
   }
 
   // Get How many rows
-  const rows = infoBoxes.map(obj => {
+  const rows = infoBoxes.map((obj) => {
     return obj.row;
   });
   const maxRow = Math.max(...rows);
@@ -209,7 +227,7 @@ function start() {
   for (const box of infoBoxes) {
     boxRows[box.row].push(box.id);
   }
-  const rowWidths = boxRows.map(obj => {
+  const rowWidths = boxRows.map((obj) => {
     return obj.length;
   });
   const maxRowWidth = Math.max(...rowWidths);
@@ -219,8 +237,8 @@ function start() {
   const horizontalGap = boxWidth * 0.4;
   const verticalGap = boxHeight * 0.3;
 
-  canvas.width = boxWidth * (maxRowWidth + 1) +
-                 horizontalGap * (maxRowWidth + 1);
+  canvas.width =
+    boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
   canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
 
   for (const [i, row] of boxRows.entries()) {
@@ -230,18 +248,26 @@ function start() {
       if (row.length % 2 === 0) {
         const distanceFromCenter = j - row.length / 2;
         if (distanceFromCenter < 0) {
-          box.x = canvas.width/2 - boxWidth - horizontalGap/2
-                  + (distanceFromCenter + 1) * boxWidth
-                  + (distanceFromCenter + 1) * horizontalGap;
+          box.x =
+            canvas.width / 2 -
+            boxWidth -
+            horizontalGap / 2 +
+            (distanceFromCenter + 1) * boxWidth +
+            (distanceFromCenter + 1) * horizontalGap;
         } else {
-          box.x = canvas.width/2 + horizontalGap/2 +
-                  distanceFromCenter * boxWidth +
-                  distanceFromCenter * horizontalGap;
+          box.x =
+            canvas.width / 2 +
+            horizontalGap / 2 +
+            distanceFromCenter * boxWidth +
+            distanceFromCenter * horizontalGap;
         }
       } else {
         const distanceFromCenter = j - row.length / 2;
-        box.x = canvas.width/2 - boxWidth / 2 + distanceFromCenter * boxWidth
-                + distanceFromCenter * horizontalGap;
+        box.x =
+          canvas.width / 2 -
+          boxWidth / 2 +
+          distanceFromCenter * boxWidth +
+          distanceFromCenter * horizontalGap;
       }
       box.y = i * verticalGap + verticalGap + i * boxHeight;
     }
@@ -252,13 +278,11 @@ function start() {
   getVisible();
 }
 
-
 canvas.onmousedown = mouseDown;
 canvas.onmouseup = mouseUp;
 canvas.onmouseout = mouseOut;
 canvas.onmousemove = mouseMove;
 window.onscroll = onScroll;
-
 
 /*
 function showInputModal() {
@@ -274,8 +298,7 @@ function hideInputModal() {
   modal.style.display = "none";
 }
 
-document.getElementById("input-file")
-        .addEventListener("change", (event) => {
+document.getElementById("input-file").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
       errorMsg("Provided file is not EDM4hep JSON!");
@@ -292,32 +315,31 @@ document.getElementById("input-file")
 
       const eventNumberInput = document.getElementById("event-number");
       eventNumberInput.max = Object.keys(jsonData).length - 1;
-      document.getElementById("event-selector")
-              .style.display = "block";
+      document.getElementById("event-selector").style.display = "block";
     });
     reader.readAsText(file);
     break;
   }
 });
 
-
-document.getElementById("visualize-button")
-        .addEventListener("click", (event) => {
-  event.preventDefault();
-  const eventNum = document.getElementById("event-number").value;
-  loadMCParticles(jsonData, eventNum,
-                  infoBoxes, parentLinks, childrenLinks);
-  if (infoBoxes.length === 0) {
-    errorMsg("Provided file does not contain any MC particle tree!");
-    return;
-  }
-  for (const eventNum in jsonData) {
-    delete jsonData[eventNum];
-  }
-  start();
-  hideInputModal();
-  setTimeout(function() {
-    drawAll();
-  }, 500);
-  window.scroll((canvas.width - window.innerWidth) / 2, 0);
-});
+document
+  .getElementById("visualize-button")
+  .addEventListener("click", (event) => {
+    event.preventDefault();
+    const eventNum = document.getElementById("event-number").value;
+    loadMCParticles(jsonData, eventNum, infoBoxes, parentLinks, childrenLinks);
+    if (infoBoxes.length === 0) {
+      errorMsg("Provided file does not contain any MC particle tree!");
+      return;
+    }
+    for (const eventNum in jsonData) {
+      delete jsonData[eventNum];
+    }
+    start();
+    hideInputModal();
+    setTimeout(() => {
+      drawAll();
+      toggle.init(infoBoxes, drawAll);
+    }, 500);
+    window.scroll((canvas.width - window.innerWidth) / 2, 0);
+  });
