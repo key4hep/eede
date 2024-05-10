@@ -18,17 +18,17 @@ export class InfoBox {
 
     // Physics data
     this.name = "";
-    this.momentum = 0.;  // GeV
-    this.px = 0.;  // GeV
-    this.py = 0.;  // GeV
-    this.pz = 0.;  // GeV
-    this.vertex = 0.;  // mm, distance from 0, 0, 0
-    this.vx = 0.;  // mm
-    this.vy = 0.;  // mm
-    this.vz = 0.;  // mm
-    this.time = 0.;  // ns
-    this.mass = 0.;  // GeV
-    this.charge = 0;  // e
+    this.momentum = 0; // GeV
+    this.px = 0; // GeV
+    this.py = 0; // GeV
+    this.pz = 0; // GeV
+    this.vertex = 0; // mm, distance from 0, 0, 0
+    this.vx = 0; // mm
+    this.vy = 0; // mm
+    this.vz = 0; // mm
+    this.time = 0; // ns
+    this.mass = 0; // GeV
+    this.charge = 0; // e
     this.pdg = 0;
     this.genStatus = 0;
     this.simStatus = 0;
@@ -39,13 +39,16 @@ export class InfoBox {
     this.childrenLinks = [];
   }
 
-  updateTexImg() {
-    let svg = MathJax.tex2svg(this.name).firstElementChild;
+  updateTexImg(text) {
+    let svg = MathJax.tex2svg(text).firstElementChild;
 
-    this.texImg = document.createElement('img');
-    this.texImg.src = 'data:image/svg+xml;base64,' +
-                      btoa('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n' +
-                           svg.outerHTML);
+    this.texImg = document.createElement("img");
+    this.texImg.src =
+      "data:image/svg+xml;base64," +
+      btoa(
+        '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n' +
+          svg.outerHTML
+      );
   }
 
   draw(ctx) {
@@ -53,14 +56,27 @@ export class InfoBox {
 
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(ctx,
-                    this.x, this.y, this.width, this.height,
-                    "#f5f5f5");
+    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
 
-
-    drawTex(ctx,
-            boxCenterX, this.y + this.height * .4,
-            this.texImg, this.width);
+    if (this.texImg.complete) {
+      drawTex(
+        ctx,
+        boxCenterX,
+        this.y + this.height * 0.4,
+        this.texImg,
+        this.width
+      );
+    } else {
+      this.texImg.onload = () => {
+        drawTex(
+          ctx,
+          boxCenterX,
+          this.y + this.height * 0.4,
+          this.texImg,
+          this.width
+        );
+      };
+    }
 
     const topY = this.y + 20;
     const topLines = [];
@@ -94,22 +110,30 @@ export class InfoBox {
     ctx.save();
     ctx.font = "16px sans-serif";
     for (const [i, lineText] of topLines.entries()) {
-      ctx.fillText(lineText,
-                   boxCenterX - ctx.measureText(lineText).width / 2,
-                   topY + i * 23);
+      ctx.fillText(
+        lineText,
+        boxCenterX - ctx.measureText(lineText).width / 2,
+        topY + i * 23
+      );
     }
 
     for (const [i, lineText] of bottomLines.entries()) {
-      ctx.fillText(lineText,
-                   boxCenterX - ctx.measureText(lineText).width/2,
-                   bottomY + i * 22);
+      ctx.fillText(
+        lineText,
+        boxCenterX - ctx.measureText(lineText).width / 2,
+        bottomY + i * 22
+      );
     }
     ctx.restore();
   }
 
   isHere(mouseX, mouseY) {
-    if (mouseX > this.x && mouseX < (this.x + this.width) &&
-        mouseY > this.y && mouseY < (this.y + this.height)) {
+    if (
+      mouseX > this.x &&
+      mouseX < this.x + this.width &&
+      mouseY > this.y &&
+      mouseY < this.y + this.height
+    ) {
       return true;
     }
 
@@ -117,15 +141,18 @@ export class InfoBox {
   }
 
   isVisible(x, y, width, height) {
-    if (x + width > this.x && x < this.x + this.width &&
-        y + height > this.y && y < this.y + this.height) {
+    if (
+      x + width > this.x &&
+      x < this.x + this.width &&
+      y + height > this.y &&
+      y < this.y + this.height
+    ) {
       return true;
     }
 
     return false;
   }
 }
-
 
 export class Link {
   constructor(id, boxFrom, boxTo) {
@@ -155,9 +182,9 @@ export class Link {
 
     if (toX > fromX) {
       var cpFromX = (toX - fromX) / 4 + fromX;
-      var cpToX = 3 * (toX - fromX) / 4 + fromX;
+      var cpToX = (3 * (toX - fromX)) / 4 + fromX;
     } else {
-      cpFromX = 3 * (fromX - toX) / 4 + toX;
+      cpFromX = (3 * (fromX - toX)) / 4 + toX;
       cpToX = (fromX - toX) / 4 + toX;
     }
 
@@ -175,9 +202,14 @@ export class Link {
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(fromX + this.xShift, fromY);
-    ctx.bezierCurveTo(cpFromX + this.xShift, cpFromY,
-                      cpToX + this.xShift, cpToY,
-                      toX + this.xShift, toY);
+    ctx.bezierCurveTo(
+      cpFromX + this.xShift,
+      cpFromY,
+      cpToX + this.xShift,
+      cpToY,
+      toX + this.xShift,
+      toY
+    );
     ctx.stroke();
     ctx.restore();
 
@@ -213,8 +245,12 @@ export class Link {
     console.log("boxHeight: ", this.boxHeight);
     */
 
-    if (x + width > boxX && x < boxX + boxWidth &&
-        y + height > boxY && y < boxY + boxHeight) {
+    if (
+      x + width > boxX &&
+      x < boxX + boxWidth &&
+      y + height > boxY &&
+      y < boxY + boxHeight
+    ) {
       return true;
     }
 
