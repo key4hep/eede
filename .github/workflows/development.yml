@@ -1,7 +1,7 @@
-name: Deploy dmX beta to GitHub Pages
+name: Release version of dmX in GitHub Pages
 on:
     push:
-        branches: [beta]
+        branches: [release]
 
 permissions:
     contents: write
@@ -9,12 +9,14 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout 🛎️
+            - name: Checkout
               uses: actions/checkout@v3
 
-            - name: Deploy 🚀
+            - name: Deploy
               uses: JamesIves/github-pages-deploy-action@v4
               with:
                   folder: .
-                  clean-exclude: pr-preview/
-                  target-folder: beta/
+                  clean-exclude: |
+                      pr-preview/
+                      main/
+                  target-folder: release/
