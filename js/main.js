@@ -337,9 +337,6 @@ document
     }
     start();
     hideInputModal();
-    setTimeout(() => {
-      drawAll();
-      toggle.init(infoBoxes, drawAll);
-    }, 500);
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
+    toggle.init(infoBoxes, drawAll);
   });
