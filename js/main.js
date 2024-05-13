@@ -50,7 +50,7 @@ const mouseUp = function (event) {
   isDragging = false;
 
   // console.time("drawAll");
-  drawAll();
+  drawAll(parentLinks, childrenLinks, infoBoxes);
   // console.timeEnd("drawAll");
 };
 
@@ -81,7 +81,7 @@ const mouseMove = function (event) {
   infoBox.y += dy;
 
   // console.time("drawVisible");
-  drawVisible();
+  drawVisible(visibleParentLinks, visibleChildrenLinks, visibleBoxes);
   // console.timeEnd("drawVisible");
 
   prevMouseX = mouseX;
@@ -170,7 +170,11 @@ const getVisible = function () {
   */
 };
 
-const drawVisible = function () {
+const drawVisible = function (
+  visibleParentLinks,
+  visibleChildrenLinks,
+  visibleBoxes
+) {
   const boundigClientRect = canvas.getBoundingClientRect();
   ctx.clearRect(
     0 - boundigClientRect.x,
@@ -189,7 +193,7 @@ const drawVisible = function () {
   }
 };
 
-const drawAll = function () {
+const drawAll = function (parentLinks, childrenLinks, infoBoxes) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // console.time("drawParentLinks");
   for (const link of parentLinks) {
@@ -273,7 +277,7 @@ function start() {
     }
   }
 
-  drawAll();
+  drawAll(parentLinks, childrenLinks, infoBoxes);
 
   getVisible();
 }
@@ -338,5 +342,7 @@ document
     start();
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
-    toggle.init(infoBoxes, drawAll);
+    toggle.init(infoBoxes, () => {
+      drawAll(parentLinks, childrenLinks, infoBoxes);
+    });
   });
