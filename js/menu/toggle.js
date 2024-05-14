@@ -1,5 +1,5 @@
 const toggle = document.getElementById("toggle");
-const slider = document.getElementsByClassName("slider")[0];
+const slider = document.getElementById("show-pdg");
 
 class Toggle {
   constructor() {

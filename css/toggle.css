@@ -9,8 +9,9 @@
   z-index: 1;
 }
 
-#toggle-label {
+.toggle-label {
   margin-right: 10px;
+  margin-left: 10px;
   font-family: sans-serif;
 }
 

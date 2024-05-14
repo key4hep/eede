@@ -1,10 +1,13 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
+import { reconnect } from "./menu/filter.js";
 import Toggle from "./menu/toggle.js";
 
 const toggle = new Toggle();
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+const filterToggle = document.getElementById("filter");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -207,7 +210,7 @@ const drawAll = function (parentLinks, childrenLinks, infoBoxes) {
   // console.timeEnd("drawChildrenLinks");
   // console.time("drawBoxes");
   for (const infoBox of infoBoxes) {
-    infoBox.draw(ctx);
+    if (infoBox !== null) infoBox.draw(ctx);
   }
   // console.timeEnd("drawBoxes");
 };
@@ -344,5 +347,20 @@ document
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
     toggle.init(infoBoxes, () => {
       drawAll(parentLinks, childrenLinks, infoBoxes);
+    });
+
+    filterToggle.addEventListener("click", () => {
+      const filteringFunction = (particle) => {
+        return particle.charge === 0;
+      };
+
+      const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
+        filteringFunction,
+        parentLinks,
+        childrenLinks,
+        infoBoxes
+      );
+
+      drawAll(newParentLinks, newChildrenLinks, filteredParticles);
     });
   });

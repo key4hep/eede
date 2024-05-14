@@ -1,4 +1,4 @@
-import { Link } from "./objects.js";
+import { Link } from "../objects.js";
 
 export function reconnect(
   criteriaFunction,
@@ -6,12 +6,14 @@ export function reconnect(
   childrenLinks,
   particles
 ) {
-  const filteredParticles = [];
   const newParentLinks = [];
   const newChildrenLinks = [];
+  const filteredParticles = [];
 
   for (const particle of particles) {
     if (!criteriaFunction(particle)) {
+      filteredParticles.push(null);
+
       const parentParticles = [];
       const childrenParticles = [];
 
@@ -29,8 +31,14 @@ export function reconnect(
 
       for (const parent of parentParticles) {
         for (const child of childrenParticles) {
-          const link = new Link(newParentLinks.length, parent, child);
-          newParentLinks.push(link);
+          const linkToParent = new Link(newParentLinks.length, child, parent);
+          linkToParent.xShift = 3;
+          const linkToChild = new Link(newChildrenLinks.length, parent, child);
+          linkToChild.color = "#0A0";
+          linkToChild.xShift = -3;
+
+          newParentLinks.push(linkToParent);
+          newChildrenLinks.push(linkToChild);
         }
       }
     } else {
@@ -40,9 +48,7 @@ export function reconnect(
         const parentLink = parentLinks[parentLinkId];
         const parent = particles[parentLink.from];
         if (criteriaFunction(parent)) {
-          newParentLinks.push(
-            new Link(newParentLinks.length, parentLink.from, parentLink.to)
-          );
+          newParentLinks.push(parentLink);
         }
       }
 
@@ -50,17 +56,11 @@ export function reconnect(
         const childrenLink = childrenLinks[childrenLinkId];
         const child = particles[childrenLink.to];
         if (criteriaFunction(child)) {
-          newChildrenLinks.push(
-            new Link(
-              newChildrenLinks.length,
-              childrenLink.from,
-              childrenLink.to
-            )
-          );
+          newChildrenLinks.push(childrenLink);
         }
       }
     }
   }
 
-  return [filteredParticles, newParentLinks, newChildrenLinks];
+  return [newParentLinks, newChildrenLinks, filteredParticles];
 }
