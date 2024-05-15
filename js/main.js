@@ -1,13 +1,11 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
-import { reconnect } from "./menu/filter.js";
-import Toggle from "./menu/toggle.js";
-
-const toggle = new Toggle();
+import { PdgToggle } from "./menu/show-pdg.js";
+import { Filter } from "./menu/filter.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const filterToggle = document.getElementById("filter");
+const toggleMenu = document.getElementById("toggle");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -345,22 +343,27 @@ document
     start();
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
-    toggle.init(infoBoxes, () => {
-      drawAll(parentLinks, childrenLinks, infoBoxes);
+
+    toggleMenu.style.display = "flex";
+
+    const pdgToggle = new PdgToggle("show-pdg");
+    pdgToggle.init(() => {
+      pdgToggle.toggle(infoBoxes, () => {
+        drawAll(parentLinks, childrenLinks, infoBoxes);
+      });
     });
 
-    filterToggle.addEventListener("click", () => {
-      const filteringFunction = (particle) => {
-        return particle.charge === 0;
-      };
-
-      const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
+    const filteringFunction = (particle) => {
+      return particle.charge === 0;
+    };
+    const filter = new Filter("filter");
+    filter.init(() => {
+      filter.toggle(
         filteringFunction,
         parentLinks,
         childrenLinks,
-        infoBoxes
+        infoBoxes,
+        drawAll
       );
-
-      drawAll(newParentLinks, newChildrenLinks, filteredParticles);
     });
   });

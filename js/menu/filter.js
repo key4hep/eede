@@ -1,11 +1,27 @@
 import { Link } from "../objects.js";
+import { Toggle } from "./toggle.js";
 
-export function reconnect(
-  criteriaFunction,
-  parentLinks,
-  childrenLinks,
-  particles
-) {
+export class Filter extends Toggle {
+  constructor(id) {
+    super(id);
+  }
+
+  toggle(criteriaFunction, parentLinks, childrenLinks, particles, drawAll) {
+    if (this.isSliderActive) {
+      const [newParentLinks, newChildrenLinks, newParticles] = reconnect(
+        criteriaFunction,
+        parentLinks,
+        childrenLinks,
+        particles
+      );
+      drawAll(newParentLinks, newChildrenLinks, newParticles);
+    } else {
+      drawAll(parentLinks, childrenLinks, particles);
+    }
+  }
+}
+
+function reconnect(criteriaFunction, parentLinks, childrenLinks, particles) {
   const newParentLinks = [];
   const newChildrenLinks = [];
   const filteredParticles = [];
@@ -31,7 +47,7 @@ export function reconnect(
 
       for (const parent of parentParticles) {
         for (const child of childrenParticles) {
-          const linkToParent = new Link(newParentLinks.length, child, parent);
+          const linkToParent = new Link(newParentLinks.length, parent, child);
           linkToParent.xShift = 3;
           const linkToChild = new Link(newChildrenLinks.length, parent, child);
           linkToChild.color = "#0A0";
