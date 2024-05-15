@@ -1,0 +1,30 @@
+name: Deploy PR previews to GitHub Pages
+concurrency: preview-${{ github.ref }}
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - synchronize
+            - closed
+permissions:
+    contents: write
+jobs:
+    deploy-preview:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: rossjrw/pr-preview-action@v1
+              if: contains(['opened', 'reopened', 'synchronize'], ${{ github.event.action }})
+              with:
+                  source-dir: .
+                  preview-branch: gh-pages
+                  umbrella-dir: pr-preview
+                  action: auto
+            - uses: rossjrw/pr-preview-action@v1
+              if: github.event.action == 'closed' && !github.event.pull_request.merged
+              with:
+                  source-dir: .
+                  preview-branch: gh-pages
+                  umbrella-dir: pr-preview
+                  action: remove
