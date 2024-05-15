@@ -1,30 +1,13 @@
-const toggle = document.getElementById("toggle");
-const slider = document.getElementById("show-pdg");
-
-class Toggle {
-  constructor() {
+export class Toggle {
+  constructor(id) {
     this.isSliderActive = false;
+    this.slider = document.getElementById(id);
   }
 
-  init(infoBoxes, drawAll) {
-    toggle.style.display = "flex";
-
-    slider.addEventListener("click", () => {
+  init(callback) {
+    this.slider.addEventListener("click", () => {
       this.isSliderActive = !this.isSliderActive;
-
-      if (this.isSliderActive) {
-        for (const infoBox of infoBoxes) {
-          infoBox.updateTexImg(`${infoBox.pdg}`);
-        }
-      } else {
-        for (const infoBox of infoBoxes) {
-          infoBox.updateTexImg(infoBox.name);
-        }
-      }
-
-      drawAll();
+      callback();
     });
   }
 }
-
-export default Toggle;
