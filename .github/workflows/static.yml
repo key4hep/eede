@@ -20,3 +20,4 @@ jobs:
                       pr-preview/
                       beta/
                   target-folder: main/
+                  force: false
