@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8" />
+  <title>dmX</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/canvas.css">
+  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/toggle.css">
+</head>
+
+<body>
+  <div id="input-modal" class="modal-background">
+    <div class="modal-content">
+
+      <p>Welcome to <span id="logo">
+          <span id="logo-d">d</span><span id="logo-m">m</span><span id="logo-x">X</span>
+        </span></p>
+
+      <div id="input-message">
+      </div>
+      <form>
+        <div class="mb-20">
+          <label class="mr-10" for="input-file">Select EDM4hep JSON:</label>
+          <input id="input-file" name="input-file" type="file" accept=".json">
+          <p class="small-text ml-20">Example input file (right click to save): <a
+              href="https://fccsw.web.cern.ch/fccsw/dmx/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a>
+          </p>
+        </div>
+        <div id="event-selector">
+          <label class="mr-10" for="event-number">Select event number:</label>
+          <input id="event-number" name="event-number" type="number" value="0" min="0">
+        </div>
+        <br>
+        <div class="align-right">
+          <button id="visualize-button">VISUALIZE</button>
+        </div>
+      </form>
+      <div class="file-overview">
+      </div>
+    </div>
+  </div>
+
+  <div id="toggle" class="manipulation-tool">
+    <span id="toggle-label">Show PDG IDs</span>
+    <label class="switch">
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <canvas id="canvas" width="100vw" height="100vh"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" type="text/javascript"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
