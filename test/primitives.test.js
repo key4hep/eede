@@ -14,7 +14,6 @@ describe("drawRoundedRect", () => {
       stroke: jest.fn(),
       restore: jest.fn(),
     };
-
     drawRoundedRect(ctx, 10, 20, 100, 200, "red");
 
     expect(ctx.save).toHaveBeenCalled();
@@ -38,12 +37,10 @@ describe("drawTex", () => {
       drawImage: jest.fn(),
       restore: jest.fn(),
     };
-
     const texImg = {
       naturalWidth: 200,
       naturalHeight: 100,
     };
-
     drawTex(ctx, 10, 20, texImg, 50);
 
     expect(ctx.save).toHaveBeenCalled();
@@ -57,12 +54,10 @@ describe("drawTex", () => {
       drawImage: jest.fn(),
       restore: jest.fn(),
     };
-
     const texImg = {
       naturalWidth: 200,
       naturalHeight: 100,
     };
-
     drawTex(ctx, 10, 20, texImg, 500);
 
     expect(ctx.save).toHaveBeenCalled();

@@ -3,7 +3,6 @@ import { InfoBox, Link } from "../js/objects";
 describe("InfoBox", () => {
   it("should initialize with correct values", () => {
     const id = 1;
-
     const infoBox = new InfoBox(id);
 
     expect(infoBox.id).toBe(id);
@@ -42,9 +41,7 @@ describe("InfoBox", () => {
     const x = 60;
     const y = 120;
 
-    const result = infoBox.isHere(x, y);
-
-    expect(result).toBe(true);
+    expect(infoBox.isHere(x, y)).toBe(true);
   });
 
   it("should return false if x coordinate is outside the box", () => {
@@ -52,9 +49,7 @@ describe("InfoBox", () => {
     const x = 200;
     const y = 120;
 
-    const result = infoBox.isHere(x, y);
-
-    expect(result).toBe(false);
+    expect(infoBox.isHere(x, y)).toBe(false);
   });
 
   it("should return false if y coordinate is outside the box", () => {
@@ -62,9 +57,7 @@ describe("InfoBox", () => {
     const x = 50;
     const y = -1;
 
-    const result = infoBox.isHere(x, y);
-
-    expect(result).toBe(false);
+    expect(infoBox.isHere(x, y)).toBe(false);
   });
 
   it("should return true if box is visible within the given area", () => {
@@ -74,9 +67,7 @@ describe("InfoBox", () => {
     const width = 200;
     const height = 200;
 
-    const result = infoBox.isVisible(x, y, width, height);
-
-    expect(result).toBe(true);
+    expect(infoBox.isVisible(x, y, width, height)).toBe(true);
   });
 
   it("should return false if the box is to the right of the area", () => {
@@ -87,9 +78,7 @@ describe("InfoBox", () => {
     const width = 200;
     const height = 200;
 
-    const result = infoBox.isVisible(x, y, width, height);
-
-    expect(result).toBe(false);
+    expect(infoBox.isVisible(x, y, width, height)).toBe(false);
   });
 
   it("should return false if the box is to the left of the area", () => {
@@ -100,9 +89,7 @@ describe("InfoBox", () => {
     const width = 200;
     const height = 200;
 
-    const result = infoBox.isVisible(x, y, width, height);
-
-    expect(result).toBe(false);
+    expect(infoBox.isVisible(x, y, width, height)).toBe(false);
   });
 
   it("should return false if the box is below the area", () => {
@@ -113,9 +100,7 @@ describe("InfoBox", () => {
     const width = 200;
     const height = 200;
 
-    const result = infoBox.isVisible(x, y, width, height);
-
-    expect(result).toBe(false);
+    expect(infoBox.isVisible(x, y, width, height)).toBe(false);
   });
 
   it("should return false if the box is above the area", () => {
@@ -126,9 +111,7 @@ describe("InfoBox", () => {
     const width = 200;
     const height = 200;
 
-    const result = infoBox.isVisible(x, y, width, height);
-
-    expect(result).toBe(false);
+    expect(infoBox.isVisible(x, y, width, height)).toBe(false);
   });
 });
 
@@ -151,9 +134,7 @@ describe("Link", () => {
     const infoBoxes = [firstInfoBox, secondInfoBox];
     const link = new Link(1, 0, 1);
 
-    const result = link.isVisible(0, 0, 250, 250, infoBoxes);
-
-    expect(result).toBe(true);
+    expect(link.isVisible(0, 0, 250, 250, infoBoxes)).toBe(true);
   });
 
   it("should return false if the link is not visible", () => {
@@ -162,8 +143,6 @@ describe("Link", () => {
     const infoBoxes = [firstInfoBox, secondInfoBox];
     const link = new Link(1, 0, 1);
 
-    const result = link.isVisible(10, 10, 50, 50, infoBoxes);
-
-    expect(result).toBe(false);
+    expect(link.isVisible(10, 10, 50, 50, infoBoxes)).toBe(false);
   });
 });

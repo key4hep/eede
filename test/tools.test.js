@@ -3,7 +3,6 @@ import { infoMsg, errorMsg } from "../js/tools";
 describe("infoMsg", () => {
   it("should add a message to the input-message div", () => {
     document.body.innerHTML = '<div id="input-message"></div>';
-
     infoMsg("Test message");
     const msgDiv = document.getElementById("input-message");
 
@@ -15,7 +14,6 @@ describe("infoMsg", () => {
 
 describe("errorMsg", () => {
   document.body.innerHTML = '<div id="input-message"></div>';
-
   errorMsg("Test error message");
   const msgDiv = document.getElementById("input-message");
 
