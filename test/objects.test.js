@@ -1,11 +1,18 @@
 import { InfoBox, Link } from "../js/objects";
 
 describe("InfoBox", () => {
-  it("should initialize with correct values", () => {
-    const id = 1;
-    const infoBox = new InfoBox(id);
+  let infoBox;
 
-    expect(infoBox.id).toBe(id);
+  beforeEach(() => {
+    infoBox = new InfoBox(1);
+  });
+
+  afterEach(() => {
+    infoBox = null;
+  });
+
+  it("should initialize with correct values", () => {
+    expect(infoBox.id).toBe(1);
     expect(infoBox.x).toBe(0);
     expect(infoBox.y).toBe(0);
     expect(infoBox.width).toBe(120);
@@ -37,7 +44,6 @@ describe("InfoBox", () => {
   });
 
   it("should return true if (x, y) coordinates are within the box", () => {
-    const infoBox = new InfoBox(1);
     const x = 60;
     const y = 120;
 
@@ -45,7 +51,6 @@ describe("InfoBox", () => {
   });
 
   it("should return false if x coordinate is outside the box", () => {
-    const infoBox = new InfoBox(1);
     const x = 200;
     const y = 120;
 
@@ -53,7 +58,6 @@ describe("InfoBox", () => {
   });
 
   it("should return false if y coordinate is outside the box", () => {
-    const infoBox = new InfoBox(1);
     const x = 50;
     const y = -1;
 
@@ -61,7 +65,6 @@ describe("InfoBox", () => {
   });
 
   it("should return true if box is visible within the given area", () => {
-    const infoBox = new InfoBox(1);
     const x = 0;
     const y = 0;
     const width = 200;
@@ -71,7 +74,6 @@ describe("InfoBox", () => {
   });
 
   it("should return false if the box is to the right of the area", () => {
-    const infoBox = new InfoBox(1);
     infoBox.x = 300;
     const x = 0;
     const y = 0;
@@ -82,7 +84,6 @@ describe("InfoBox", () => {
   });
 
   it("should return false if the box is to the left of the area", () => {
-    const infoBox = new InfoBox(1);
     infoBox.x = -300;
     const x = 0;
     const y = 0;
@@ -93,7 +94,6 @@ describe("InfoBox", () => {
   });
 
   it("should return false if the box is below the area", () => {
-    const infoBox = new InfoBox(1);
     infoBox.y = 300;
     const x = 0;
     const y = 0;
@@ -104,7 +104,6 @@ describe("InfoBox", () => {
   });
 
   it("should return false if the box is above the area", () => {
-    const infoBox = new InfoBox(1);
     infoBox.y = -300;
     const x = 0;
     const y = 0;
@@ -116,9 +115,17 @@ describe("InfoBox", () => {
 });
 
 describe("Link", () => {
-  it("should construct correctly", () => {
-    const link = new Link(1, 0, 1);
+  let link;
 
+  beforeEach(() => {
+    link = new Link(1, 0, 1);
+  });
+
+  afterEach(() => {
+    link = null;
+  });
+
+  it("should construct correctly", () => {
     expect(link.id).toBe(1);
     expect(link.from).toBe(0);
     expect(link.to).toBe(1);
@@ -126,23 +133,22 @@ describe("Link", () => {
     expect(link.xShift).toBe(0);
   });
 
+  let firstInfoBox, secondInfoBox, infoBoxes;
+
+  beforeEach(() => {
+    firstInfoBox = new InfoBox(0);
+    secondInfoBox = new InfoBox(1);
+    infoBoxes = [firstInfoBox, secondInfoBox];
+  });
+
   it("should return true if the link is visible", () => {
-    const firstInfoBox = new InfoBox(0);
-    const secondInfoBox = new InfoBox(1);
     secondInfoBox.x = 140;
     secondInfoBox.y = 250;
-    const infoBoxes = [firstInfoBox, secondInfoBox];
-    const link = new Link(1, 0, 1);
 
     expect(link.isVisible(0, 0, 250, 250, infoBoxes)).toBe(true);
   });
 
   it("should return false if the link is not visible", () => {
-    const firstInfoBox = new InfoBox(0);
-    const secondInfoBox = new InfoBox(1);
-    const infoBoxes = [firstInfoBox, secondInfoBox];
-    const link = new Link(1, 0, 1);
-
     expect(link.isVisible(10, 10, 50, 50, infoBoxes)).toBe(false);
   });
 });

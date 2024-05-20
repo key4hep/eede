@@ -1,10 +1,15 @@
 import { infoMsg, errorMsg } from "../js/tools";
 
+let msgDiv;
+
+beforeEach(() => {
+  document.body.innerHTML = "<div id='input-message'></div>";
+  msgDiv = document.getElementById("input-message");
+});
+
 describe("infoMsg", () => {
   it("should add a message to the input-message div", () => {
-    document.body.innerHTML = '<div id="input-message"></div>';
     infoMsg("Test message");
-    const msgDiv = document.getElementById("input-message");
 
     expect(msgDiv.classList.contains("mb-20")).toBe(true);
     expect(msgDiv.style.color).toBe("gray");
@@ -13,11 +18,11 @@ describe("infoMsg", () => {
 });
 
 describe("errorMsg", () => {
-  document.body.innerHTML = '<div id="input-message"></div>';
-  errorMsg("Test error message");
-  const msgDiv = document.getElementById("input-message");
+  it("should add an error message to the input-message div", () => {
+    errorMsg("Test error message");
 
-  expect(msgDiv.classList.contains("mb-20")).toBe(true);
-  expect(msgDiv.style.color).toBe("red");
-  expect(msgDiv.innerHTML).toBe("<p>ERROR: Test error message</p>");
+    expect(msgDiv.classList.contains("mb-20")).toBe(true);
+    expect(msgDiv.style.color).toBe("red");
+    expect(msgDiv.innerHTML).toBe("<p>ERROR: Test error message</p>");
+  });
 });

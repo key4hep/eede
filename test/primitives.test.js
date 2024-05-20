@@ -1,19 +1,29 @@
 import { jest } from "@jest/globals";
 import { drawRoundedRect, drawTex } from "../js/graphic-primitives.js";
 
+let ctx;
+
+beforeEach(() => {
+  ctx = {
+    save: jest.fn(),
+    fillStyle: null,
+    beginPath: jest.fn(),
+    roundRect: jest.fn(),
+    fill: jest.fn(),
+    strokeStyle: null,
+    lineWidth: null,
+    stroke: jest.fn(),
+    restore: jest.fn(),
+    drawImage: jest.fn(),
+  };
+});
+
+afterEach(() => {
+  ctx = null;
+});
+
 describe("drawRoundedRect", () => {
   it("should draw a rounded rectangle with the correct properties", () => {
-    const ctx = {
-      save: jest.fn(),
-      fillStyle: null,
-      beginPath: jest.fn(),
-      roundRect: jest.fn(),
-      fill: jest.fn(),
-      strokeStyle: null,
-      lineWidth: null,
-      stroke: jest.fn(),
-      restore: jest.fn(),
-    };
     drawRoundedRect(ctx, 10, 20, 100, 200, "red");
 
     expect(ctx.save).toHaveBeenCalled();
@@ -31,16 +41,20 @@ describe("drawRoundedRect", () => {
 });
 
 describe("drawTex", () => {
-  it("should draw an image with the correct properties", () => {
-    const ctx = {
-      save: jest.fn(),
-      drawImage: jest.fn(),
-      restore: jest.fn(),
-    };
-    const texImg = {
+  let texImg;
+
+  beforeEach(() => {
+    texImg = {
       naturalWidth: 200,
       naturalHeight: 100,
     };
+  });
+
+  afterEach(() => {
+    texImg = null;
+  });
+
+  it("should draw an image with the correct properties", () => {
     drawTex(ctx, 10, 20, texImg, 50);
 
     expect(ctx.save).toHaveBeenCalled();
@@ -49,15 +63,6 @@ describe("drawTex", () => {
   });
 
   it("should draw an image scaled to 2 if the scale is greater than 2", () => {
-    const ctx = {
-      save: jest.fn(),
-      drawImage: jest.fn(),
-      restore: jest.fn(),
-    };
-    const texImg = {
-      naturalWidth: 200,
-      naturalHeight: 100,
-    };
     drawTex(ctx, 10, 20, texImg, 500);
 
     expect(ctx.save).toHaveBeenCalled();
