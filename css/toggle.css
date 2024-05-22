@@ -1,6 +1,5 @@
 #toggle {
   position: fixed;
-  display: none;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -12,7 +11,6 @@
 .toggle-label {
   margin-right: 10px;
   margin-left: 10px;
-  font-family: sans-serif;
 }
 
 .switch {

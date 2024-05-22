@@ -1,11 +1,11 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
-import { Filter } from "./menu/filter.js";
+import { drawAll } from "./draw.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const toggleMenu = document.getElementById("toggle");
+const manipulationTools = document.getElementsByClassName("manipulation-tool");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -51,7 +51,7 @@ const mouseUp = function (event) {
   isDragging = false;
 
   // console.time("drawAll");
-  drawAll(parentLinks, childrenLinks, infoBoxes);
+  drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
   // console.timeEnd("drawAll");
 };
 
@@ -194,25 +194,6 @@ const drawVisible = function (
   }
 };
 
-const drawAll = function (parentLinks, childrenLinks, infoBoxes) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // console.time("drawParentLinks");
-  for (const link of parentLinks) {
-    link.draw(ctx, infoBoxes);
-  }
-  // console.timeEnd("drawParentLinks");
-  // console.time("drawChildrenLinks");
-  for (const link of childrenLinks) {
-    link.draw(ctx, infoBoxes);
-  }
-  // console.timeEnd("drawChildrenLinks");
-  // console.time("drawBoxes");
-  for (const infoBox of infoBoxes) {
-    if (infoBox !== null) infoBox.draw(ctx);
-  }
-  // console.timeEnd("drawBoxes");
-};
-
 function start() {
   if (!infoBoxes) {
     return;
@@ -278,7 +259,7 @@ function start() {
     }
   }
 
-  drawAll(parentLinks, childrenLinks, infoBoxes);
+  drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
 
   getVisible();
 }
@@ -344,26 +325,16 @@ document
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
 
-    toggleMenu.style.display = "flex";
+    for (const tool of manipulationTools) {
+      tool.style.display = "flex";
+    }
 
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
       pdgToggle.toggle(infoBoxes, () => {
-        drawAll(parentLinks, childrenLinks, infoBoxes);
+        drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
       });
     });
-
-    const filteringFunction = (particle) => {
-      return particle.charge === 0;
-    };
-    const filter = new Filter("filter");
-    filter.init(() => {
-      filter.toggle(
-        filteringFunction,
-        parentLinks,
-        childrenLinks,
-        infoBoxes,
-        drawAll
-      );
-    });
   });
+
+export { parentLinks, childrenLinks, infoBoxes, ctx };
