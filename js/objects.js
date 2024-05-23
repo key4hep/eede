@@ -128,29 +128,21 @@ export class InfoBox {
   }
 
   isHere(mouseX, mouseY) {
-    if (
+    return (
       mouseX > this.x &&
       mouseX < this.x + this.width &&
       mouseY > this.y &&
       mouseY < this.y + this.height
-    ) {
-      return true;
-    }
-
-    return false;
+    );
   }
 
   isVisible(x, y, width, height) {
-    if (
+    return (
       x + width > this.x &&
       x < this.x + this.width &&
       y + height > this.y &&
       y < this.y + this.height
-    ) {
-      return true;
-    }
-
-    return false;
+    );
   }
 }
 
@@ -254,15 +246,11 @@ export class Link {
     console.log("boxHeight: ", this.boxHeight);
     */
 
-    if (
+    return (
       x + width > boxX &&
       x < boxX + boxWidth &&
       y + height > boxY &&
       y < boxY + boxHeight
-    ) {
-      return true;
-    }
-
-    return false;
+    );
   }
 }
