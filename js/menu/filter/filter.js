@@ -49,12 +49,17 @@ apply.addEventListener("click", () => {
 
   let bitsFunction = bitsCheckbox.map((checkbox) => checkbox.buildCondition());
   bitsFunction = bitsFunction.filter((fn) => fn);
-  bitsFunction = bitsFunction.reduce(
-    (acc, fn) => {
-      return (particle) => acc(particle) || fn(particle);
-    },
-    () => false
-  );
+
+  if (bitsFunction.length === 0) {
+    bitsFunction = true;
+  } else {
+    bitsFunction = bitsFunction.reduce(
+      (acc, fn) => {
+        return (particle) => acc(particle) || fn(particle);
+      },
+      () => false
+    );
+  }
 
   function criteriaFunction(particle) {
     if (
@@ -68,7 +73,11 @@ apply.addEventListener("click", () => {
       return bitsFunction(particle);
     }
 
-    return rangeFunctions(particle);
+    if (typeof rangeFunctions === "function") {
+      return rangeFunctions(particle);
+    }
+
+    return true;
   }
 
   const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
