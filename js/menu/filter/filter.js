@@ -1,7 +1,8 @@
 import { Link } from "../../objects.js";
 import { drawAll } from "../../draw.js";
 import { parentLinks, childrenLinks, infoBoxes, ctx } from "../../main.js";
-import { Range, Checkbox } from "./parameters.js";
+import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
+import { reconnect } from "./reconnect.js";
 
 const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
@@ -36,49 +37,18 @@ parametersRange.forEach((parameter) => parameter.render(filters));
 
 let bitsCheckbox = [23, 24, 25, 26, 27, 28, 29, 30];
 
-bitsCheckbox = bitsCheckbox.map((bit) => new Checkbox(bit));
+bitsCheckbox = bitsCheckbox.map((bit) => new Checkbox("simStatus", bit));
 
 bitsCheckbox.forEach((checkbox) => checkbox.render(filters));
 
 apply.addEventListener("click", () => {
-  let rangeFunctions = parametersRange.map((parameter) =>
-    parameter.buildCondition()
+  const rangeFunctions = Range.buildFilter(parametersRange);
+  const checkboxFunctions = Checkbox.buildFilter(bitsCheckbox);
+
+  const criteriaFunction = buildCriteriaFunction(
+    rangeFunctions,
+    checkboxFunctions
   );
-  rangeFunctions = rangeFunctions.filter((fn) => fn);
-  rangeFunctions = rangeFunctions.reduce((acc, fn) => acc && fn, true);
-
-  let bitsFunction = bitsCheckbox.map((checkbox) => checkbox.buildCondition());
-  bitsFunction = bitsFunction.filter((fn) => fn);
-
-  if (bitsFunction.length === 0) {
-    bitsFunction = true;
-  } else {
-    bitsFunction = bitsFunction.reduce(
-      (acc, fn) => {
-        return (particle) => acc(particle) || fn(particle);
-      },
-      () => false
-    );
-  }
-
-  function criteriaFunction(particle) {
-    if (
-      typeof bitsFunction === "function" &&
-      typeof rangeFunctions === "function"
-    ) {
-      return rangeFunctions(particle) && bitsFunction(particle);
-    }
-
-    if (typeof bitsFunction === "function") {
-      return bitsFunction(particle);
-    }
-
-    if (typeof rangeFunctions === "function") {
-      return rangeFunctions(particle);
-    }
-
-    return true;
-  }
 
   const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
     criteriaFunction,
@@ -106,67 +76,3 @@ reset.addEventListener("click", () => {
     checkbox.render(filters);
   });
 });
-
-function reconnect(criteriaFunction, parentLinks, childrenLinks, particles) {
-  const newParentLinks = [];
-  const newChildrenLinks = [];
-  const filteredParticles = [];
-
-  for (const particle of particles) {
-    if (!particle) continue;
-
-    if (!criteriaFunction(particle)) {
-      filteredParticles.push(null);
-
-      const parentParticles = [];
-      const childrenParticles = [];
-
-      for (const parent of particle.parents) {
-        if (criteriaFunction(particles[parent])) {
-          parentParticles.push(parent);
-        }
-      }
-
-      for (const child of particle.children) {
-        if (criteriaFunction(particles[child])) {
-          childrenParticles.push(child);
-        }
-      }
-
-      for (const parent of parentParticles) {
-        for (const child of childrenParticles) {
-          const linkToParent = new Link(newParentLinks.length, parent, child);
-          linkToParent.xShift = 3;
-          const linkToChild = new Link(newChildrenLinks.length, parent, child);
-          linkToChild.color = "#0A0";
-          linkToChild.xShift = -3;
-
-          newParentLinks.push(linkToParent);
-          newChildrenLinks.push(linkToChild);
-        }
-      }
-    } else {
-      filteredParticles.push(particle);
-
-      for (const parentLinkId of particle.parentLinks) {
-        const parentLink = parentLinks[parentLinkId];
-        if (!parentLink) continue;
-        const parent = particles[parentLink.from];
-        if (criteriaFunction(parent)) {
-          newParentLinks.push(parentLink);
-        }
-      }
-
-      for (const childrenLinkId of particle.childrenLinks) {
-        const childrenLink = childrenLinks[childrenLinkId];
-        if (!childrenLink) continue;
-        const child = particles[childrenLink.to];
-        if (criteriaFunction(child)) {
-          newChildrenLinks.push(childrenLink);
-        }
-      }
-    }
-  }
-
-  return [newParentLinks, newChildrenLinks, filteredParticles];
-}

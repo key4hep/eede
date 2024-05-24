@@ -1,21 +1,31 @@
 class FilterParameter {
-  constructor(name) {
-    this.name = name;
+  property;
+
+  constructor(property) {
+    this.property = property;
   }
 
   render(container) {}
 
   buildCondition() {}
+
+  static parametersFunctions(parameters) {
+    const functions = parameters.map((parameter) => parameter.buildCondition());
+    return functions.filter((fn) => fn);
+  }
 }
 
 export class Range extends FilterParameter {
-  constructor(name) {
-    super(name);
+  min;
+  max;
+
+  constructor(property) {
+    super(property);
   }
 
   render(container) {
     const label = document.createElement("label");
-    label.textContent = this.name;
+    label.textContent = this.property;
     container.appendChild(label);
 
     const inputMin = document.createElement("input");
@@ -45,11 +55,11 @@ export class Range extends FilterParameter {
 
     return (particle) => {
       if (particle) {
-        if (particle[this.name] < this.min) {
+        if (particle[this.property] < this.min) {
           return false;
         }
 
-        if (particle[this.name] > this.max) {
+        if (particle[this.property] > this.max) {
           return false;
         }
 
@@ -57,11 +67,27 @@ export class Range extends FilterParameter {
       }
     };
   }
+
+  static buildFilter(parametersRange) {
+    const rangeFunctions = Range.parametersFunctions(parametersRange);
+
+    const func = rangeFunctions.reduce(
+      (acc, fn) => {
+        return (particle) => acc(particle) && fn(particle);
+      },
+      () => true
+    );
+
+    return func;
+  }
 }
 
 export class Checkbox extends FilterParameter {
-  constructor(name) {
-    super(name);
+  value;
+
+  constructor(property, value) {
+    super(property);
+    this.value = value;
   }
 
   render(container) {
@@ -69,7 +95,7 @@ export class Checkbox extends FilterParameter {
     container.appendChild(div);
 
     const label = document.createElement("label");
-    label.textContent = `Sim Status: ${this.name}`;
+    label.textContent = `${this.property}: ${this.value}`;
     div.appendChild(label);
 
     const input = document.createElement("input");
@@ -88,6 +114,34 @@ export class Checkbox extends FilterParameter {
   buildCondition() {
     if (!this.checked) return null;
 
-    return (particle) => particle.simStatus === this.name;
+    return (particle) => particle[this.property] === this.value;
   }
+
+  static buildFilter(parametersCheckbox) {
+    const checkboxFunctions = Checkbox.parametersFunctions(parametersCheckbox);
+
+    if (checkboxFunctions.length === 0) return () => true;
+
+    const func = checkboxFunctions.reduce(
+      (acc, fn) => {
+        return (particle) => acc(particle) || fn(particle);
+      },
+      () => false
+    );
+
+    return func;
+  }
+}
+
+export function buildCriteriaFunction(...functions) {
+  const filterFunctions = functions.filter((fn) => typeof fn === "function");
+
+  const finalFunction = filterFunctions.reduce(
+    (acc, fn) => {
+      return (particle) => acc(particle) && fn(particle);
+    },
+    () => true
+  );
+
+  return (particle) => finalFunction(particle);
 }
