@@ -23,7 +23,8 @@ beforeAll(() => {
   parentLinks.push(new Link(0, 0, 1));
   parentLinks.push(new Link(1, 0, 2));
   parentLinks.push(new Link(2, 2, 4));
-  parentLinks.push(new Link(3, 0, 4));
+  parentLinks.push(new Link(3, 1, 3));
+  parentLinks.push(new Link(4, 3, 4));
 
   childrenLinks.push(new Link(0, 0, 1));
   childrenLinks.push(new Link(1, 0, 2));
@@ -31,8 +32,8 @@ beforeAll(() => {
   childrenLinks.push(new Link(3, 2, 4));
   childrenLinks.push(new Link(4, 3, 4));
 
-  particles[0].children = [1, 2, 4];
-  particles[0].childrenLinks = [0, 1, 3];
+  particles[0].children = [1, 2];
+  particles[0].childrenLinks = [0, 1];
 
   particles[1].parents = [0];
   particles[1].children = [3];
@@ -46,28 +47,17 @@ beforeAll(() => {
 
   particles[3].parents = [1];
   particles[3].children = [4];
+  particles[3].parentLinks = [3];
+  particles[3].childrenLinks = [4];
 
-  particles[4].parents = [0, 2, 3];
-  particles[4].parentLinks = [3, 2, 4];
+  particles[4].parents = [2, 3];
+  particles[4].parentLinks = [2, 4];
 });
 
 describe("filter by ranges", () => {
-  it("show all particles when no range filter is applied", () => {
-    const time = new Range("time");
-    const rangeFilters = Range.buildFilter([time]);
-    const criteriaFunction = buildCriteriaFunction(rangeFilters);
-
-    const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
-      criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
-    );
-  });
-
   it("filter by a single range parameter", () => {
     const momentum = new Range("momentum");
-    momentum.min = 10;
+    momentum.min = 300;
     momentum.max = 1000;
     const rangeFilters = Range.buildFilter([momentum]);
     const criteriaFunction = buildCriteriaFunction(rangeFilters);
@@ -78,14 +68,20 @@ describe("filter by ranges", () => {
       childrenLinks,
       particles
     );
+
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([4]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([4]);
+    expect(
+      filteredParticles.filter((p) => p).map((particle) => particle.id)
+    ).toEqual([3, 4]);
   });
 
   it("filter by a combination of ranges", () => {
     const charge = new Range("charge");
-    charge.min = 0;
+    charge.min = 3;
     const mass = new Range("mass");
-    mass.min = 1;
-    mass.max = 1000;
+    mass.min = 20;
+    mass.max = 40;
     const rangeFilters = Range.buildFilter([mass, charge]);
     const criteriaFunction = buildCriteriaFunction(rangeFilters);
 
@@ -95,23 +91,16 @@ describe("filter by ranges", () => {
       childrenLinks,
       particles
     );
+
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([4]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([4]);
+    expect(
+      filteredParticles.filter((p) => p).map((particle) => particle.id)
+    ).toEqual([3, 4]);
   });
 });
 
 describe("filter by checkboxes", () => {
-  it("show all particles when no checkbox filter is applied", () => {
-    const simulatorStatus = new Checkbox("simStatus", 26);
-    const checkboxFilters = Checkbox.buildFilter([simulatorStatus]);
-    const criteriaFunction = buildCriteriaFunction(checkboxFilters);
-
-    const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
-      criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
-    );
-  });
-
   it("filter by a single checkbox", () => {
     const simulatorStatus = new Checkbox("simStatus", 23);
     simulatorStatus.checked = true;
@@ -124,16 +113,25 @@ describe("filter by checkboxes", () => {
       childrenLinks,
       particles
     );
+
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([]);
+    expect(
+      filteredParticles.filter((p) => p).map((particle) => particle.id)
+    ).toEqual([0]);
   });
 
   it("filter by a combination of checkboxes", () => {
-    const simulatorStatus1 = new Checkbox("simStatus", 24);
+    const simulatorStatus1 = new Checkbox("simStatus", 23);
     simulatorStatus1.checked = true;
-    const simulatorStatus2 = new Checkbox("simStatus", 25);
+    const simulatorStatus2 = new Checkbox("simStatus", 26);
     simulatorStatus2.checked = true;
+    const simulatorStatus3 = new Checkbox("simStatus", 27);
+    simulatorStatus3.checked = true;
     const checkboxFilters = Checkbox.buildFilter([
       simulatorStatus1,
       simulatorStatus2,
+      simulatorStatus3,
     ]);
     const criteriaFunction = buildCriteriaFunction(checkboxFilters);
 
@@ -143,6 +141,12 @@ describe("filter by checkboxes", () => {
       childrenLinks,
       particles
     );
+
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([0, 1, 4]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([0, 1, 4]);
+    expect(
+      filteredParticles.filter((p) => p).map((particle) => particle.id)
+    ).toEqual([0, 3, 4]);
   });
 });
 
@@ -163,11 +167,21 @@ describe("filter by ranges and checkboxes", () => {
       childrenLinks,
       particles
     );
+
+    expect(newParentLinks.map((link) => link.id).sort()).toEqual([
+      0, 1, 2, 3, 4,
+    ]);
+    expect(newChildrenLinks.map((link) => link.id).sort()).toEqual([
+      0, 1, 2, 3, 4,
+    ]);
+    expect(filteredParticles.map((particle) => particle.id)).toEqual([
+      0, 1, 2, 3, 4,
+    ]);
   });
 
   it("filter by a combination of ranges and checkboxes", () => {
     const charge = new Range("charge");
-    charge.min = 0;
+    charge.max = 3;
     const simulatorStatus = new Checkbox("simStatus", 23);
     simulatorStatus.checked = true;
     const rangeFilters = Range.buildFilter([charge]);
@@ -183,5 +197,11 @@ describe("filter by ranges and checkboxes", () => {
       childrenLinks,
       particles
     );
+
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([]);
+    expect(
+      filteredParticles.filter((p) => p).map((particle) => particle.id)
+    ).toEqual([0]);
   });
 });

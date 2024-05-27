@@ -1,3 +1,5 @@
+import { Link } from "../../objects";
+
 export function reconnect(
   criteriaFunction,
   parentLinks,
