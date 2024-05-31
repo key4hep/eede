@@ -15,6 +15,16 @@ class FilterParameter {
   }
 }
 
+function createNumberInput(container, placeholder) {
+  const input = document.createElement("input");
+  input.type = "number";
+  input.placeholder = placeholder;
+  input.style.width = "50px";
+
+  container.appendChild(input);
+  return input;
+}
+
 export class Range extends FilterParameter {
   min;
   max;
@@ -24,22 +34,24 @@ export class Range extends FilterParameter {
   }
 
   render(container) {
+    const title = document.createElement("div");
     const label = document.createElement("label");
     label.textContent = this.property;
-    container.appendChild(label);
+    title.appendChild(label);
 
-    const inputMin = document.createElement("input");
-    inputMin.type = "number";
-    inputMin.placeholder = "min";
-    container.appendChild(inputMin);
-
+    const content = document.createElement("div");
+    const inputMin = createNumberInput(container, "min");
     const separator = document.createTextNode(" - ");
-    container.appendChild(separator);
+    const inputMax = createNumberInput(container, "max");
+    content.appendChild(inputMin);
+    content.appendChild(separator);
+    content.appendChild(inputMax);
+    content.style.display = "flex";
+    content.style.flexDirection = "row";
+    content.style.justifyContent = "space-around";
 
-    const inputMax = document.createElement("input");
-    inputMax.type = "number";
-    inputMax.placeholder = "max";
-    container.appendChild(inputMax);
+    container.appendChild(title);
+    container.appendChild(content);
 
     inputMin.addEventListener("input", () => {
       this.min = inputMin.value;
