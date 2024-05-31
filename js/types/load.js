@@ -23,32 +23,47 @@ const loadersConfig = [
   "Cluster",
 ];
 
-function selectedParticles(loaders, particles) {
-  let newLoader = {};
+export function buildLoader(config) {
+  let newLoader = {
+    types: {},
+    getLoader: (name) => {
+      if (newLoader.types.hasOwnProperty(name)) {
+        return newLoader.types[name];
+      }
+      return false;
+    },
+    getAllLoaders: () => {
+      return newLoader.types;
+    },
+  };
 
-  for (const particle of particles) {
+  for (const particle of config) {
     if (loaders.hasOwnProperty(particle)) {
-      newLoader[particle] = loaders[particle];
+      newLoader.types[particle] = loaders[particle];
     }
   }
 
   return newLoader;
 }
 
-export function loadParticles(event, loadersConfig) {
+export function loadParticles(jsonData, event, loadersConfig) {
   const eventData = Object.values(jsonData["Event " + event]);
 
-  const particles = [];
+  const particles = {};
 
-  const loader = selectedParticles(loaders, loadersConfig);
+  if (typeof loadersConfig === "string") loadersConfig = [loadersConfig];
+  const loader = buildLoader(loadersConfig);
 
-  for (const [type, loadFunction] of Object.entries(loader)) {
+  Object.keys(loader.getAllLoaders()).forEach((key) => (particles[key] = []));
+
+  for (const [type, loadFunction] of Object.entries(loader.getAllLoaders())) {
     const particlesType = eventData.filter(
       (element) => element.collType === `edm4hep::${type}Collection`
     );
 
     particlesType.forEach((collection) => {
       const loadedParticles = loadFunction(collection.collection);
+      particles[type] = loadedParticles;
     });
   }
   try {
@@ -59,4 +74,4 @@ export function loadParticles(event, loadersConfig) {
   return particles;
 }
 
-loadParticles(4, loadersConfig);
+loadParticles(jsonData, 4, loadersConfig);
