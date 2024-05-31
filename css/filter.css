@@ -1,0 +1,36 @@
+#filter {
+  width: 16%;
+  position: fixed;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 10px;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+#filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#filter-button {
+  cursor: pointer;
+}
+
+#close-filter {
+  display: none;
+}
+
+#filter-content {
+  display: none;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+#filters {
+  display: flex;
+  flex-direction: column;
+}
