@@ -1,10 +1,11 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
-import Toggle from "./menu/toggle.js";
-
-const toggle = new Toggle();
+import { PdgToggle } from "./menu/show-pdg.js";
+import { drawAll } from "./draw.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+const manipulationTools = document.getElementsByClassName("manipulation-tool");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -50,7 +51,7 @@ const mouseUp = function (event) {
   isDragging = false;
 
   // console.time("drawAll");
-  drawAll();
+  drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
   // console.timeEnd("drawAll");
 };
 
@@ -81,7 +82,7 @@ const mouseMove = function (event) {
   infoBox.y += dy;
 
   // console.time("drawVisible");
-  drawVisible();
+  drawVisible(visibleParentLinks, visibleChildrenLinks, visibleBoxes);
   // console.timeEnd("drawVisible");
 
   prevMouseX = mouseX;
@@ -170,7 +171,11 @@ const getVisible = function () {
   */
 };
 
-const drawVisible = function () {
+const drawVisible = function (
+  visibleParentLinks,
+  visibleChildrenLinks,
+  visibleBoxes
+) {
   const boundigClientRect = canvas.getBoundingClientRect();
   ctx.clearRect(
     0 - boundigClientRect.x,
@@ -187,25 +192,6 @@ const drawVisible = function () {
   for (const boxId of visibleBoxes) {
     infoBoxes[boxId].draw(ctx);
   }
-};
-
-const drawAll = function () {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // console.time("drawParentLinks");
-  for (const link of parentLinks) {
-    link.draw(ctx, infoBoxes);
-  }
-  // console.timeEnd("drawParentLinks");
-  // console.time("drawChildrenLinks");
-  for (const link of childrenLinks) {
-    link.draw(ctx, infoBoxes);
-  }
-  // console.timeEnd("drawChildrenLinks");
-  // console.time("drawBoxes");
-  for (const infoBox of infoBoxes) {
-    infoBox.draw(ctx);
-  }
-  // console.timeEnd("drawBoxes");
 };
 
 function start() {
@@ -273,7 +259,7 @@ function start() {
     }
   }
 
-  drawAll();
+  drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
 
   getVisible();
 }
@@ -338,5 +324,17 @@ document
     start();
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
-    toggle.init(infoBoxes, drawAll);
+
+    for (const tool of manipulationTools) {
+      tool.style.display = "flex";
+    }
+
+    const pdgToggle = new PdgToggle("show-pdg");
+    pdgToggle.init(() => {
+      pdgToggle.toggle(infoBoxes, () => {
+        drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
+      });
+    });
   });
+
+export { parentLinks, childrenLinks, infoBoxes, ctx };
