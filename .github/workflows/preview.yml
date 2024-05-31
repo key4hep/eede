@@ -8,25 +8,37 @@ on:
             - synchronize
             - closed
 
-permissions:
-    contents: write
-    pull-requests: write
 jobs:
     deploy-preview:
+        environment: github-pages
         runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
         steps:
-            - uses: actions/checkout@v3
-            - uses: rossjrw/pr-preview-action@v1
+            - name: Checkout PR
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Deploy to GH-Pages
+              uses: rossjrw/pr-preview-action@v1
+              id: preview_step
               if: contains(['opened', 'reopened', 'synchronize'], ${{ github.event.action }})
               with:
                   source-dir: .
                   preview-branch: gh-pages
                   umbrella-dir: pr-preview
+                  deploy-repository: "key4hep/dmx"
+                  token: ${{ secrets.PR_TOKEN }}
                   action: auto
-            - uses: rossjrw/pr-preview-action@v1
+
+            - name: Remove preview
+              uses: rossjrw/pr-preview-action@v1
               if: github.event.action == 'closed' && !github.event.pull_request.merged
               with:
                   source-dir: .
                   preview-branch: gh-pages
                   umbrella-dir: pr-preview
+                  deploy-repository: "key4hep/dmx"
+                  token: ${{ secrets.PR_TOKEN }}
                   action: remove
