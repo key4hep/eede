@@ -1,4 +1,3 @@
-import { Link } from "../../objects.js";
 import { drawAll } from "../../draw.js";
 import { parentLinks, childrenLinks, infoBoxes, ctx } from "../../main.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
