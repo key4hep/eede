@@ -2,11 +2,6 @@ import { buildLoader, loadParticles } from "../js/types/load";
 
 const data = {
   "Event 0": {
-    "AllMuon": {
-      "collID": 12,
-      "collType": "edm4hep::ReconstructedParticleCollection",
-      "collection": [],
-    },
     "EFlowPhoton": {
       "collID": 7,
       "collType": "edm4hep::ClusterCollection",
@@ -32,6 +27,72 @@ const data = {
           "positionError": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
           "shapeParameters": [],
           "subdetectorEnergies": [],
+          "type": 0,
+        },
+      ],
+    },
+    "Jet": {
+      "collID": 13,
+      "collType": "edm4hep::ReconstructedParticleCollection",
+      "collection": [
+        {
+          "charge": 1.0,
+          "clusters": [],
+          "covMatrix": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+          "energy": 12.062528610229492,
+          "goodnessOfPID": 0.0,
+          "mass": 2.315242290496826,
+          "momentum": {
+            "x": 11.738886833190918,
+            "y": 1.2114704847335815,
+            "z": 0.9354811906814575,
+          },
+          "particleIDUsed": {
+            "collectionID": -2,
+            "index": -2,
+          },
+          "particleIDs": [
+            {
+              "collectionID": 4,
+              "index": 45,
+            },
+          ],
+          "particles": [
+            {
+              "collectionID": 14,
+              "index": 24,
+            },
+            {
+              "collectionID": 14,
+              "index": 22,
+            },
+            {
+              "collectionID": 14,
+              "index": 74,
+            },
+            {
+              "collectionID": 14,
+              "index": 23,
+            },
+            {
+              "collectionID": 14,
+              "index": 25,
+            },
+            {
+              "collectionID": 14,
+              "index": 26,
+            },
+          ],
+          "referencePoint": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+          },
+          "startVertex": {
+            "collectionID": -2,
+            "index": -2,
+          },
+          "tracks": [],
           "type": 0,
         },
       ],
