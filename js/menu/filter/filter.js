@@ -34,15 +34,19 @@ parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
 parametersRange.forEach((parameter) => parameter.render(filters));
 
-let bitsCheckbox = [23, 24, 25, 26, 27, 28, 29, 30];
-
-bitsCheckbox = bitsCheckbox.map((bit) => new Checkbox("simStatus", bit));
-
-bitsCheckbox.forEach((checkbox) => checkbox.render(filters));
+let bits = {
+  simStatuses: new Set(),
+  add: (simStatus) => bits.simStatuses.add(simStatus),
+  checkBoxes: [],
+  toCheckBox: () =>
+    Array.from(bits.simStatuses).map((bit) => new Checkbox("simStatus", bit)),
+  setCheckBoxes: () => (bits.checkBoxes = bits.toCheckBox()),
+  render: () => bits.checkBoxes.forEach((checkbox) => checkbox.render(filters)),
+};
 
 apply.addEventListener("click", () => {
   const rangeFunctions = Range.buildFilter(parametersRange);
-  const checkboxFunctions = Checkbox.buildFilter(bitsCheckbox);
+  const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
 
   const criteriaFunction = buildCriteriaFunction(
     rangeFunctions,
@@ -70,8 +74,10 @@ reset.addEventListener("click", () => {
     parameter.render(filters);
   });
 
-  bitsCheckbox.forEach((checkbox) => {
+  bits.checkBoxes.forEach((checkbox) => {
     checkbox.checked = false;
     checkbox.render(filters);
   });
 });
+
+export { bits };

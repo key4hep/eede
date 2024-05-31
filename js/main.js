@@ -1,6 +1,7 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
+import { bits } from "./menu/filter/filter.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -328,6 +329,10 @@ document
     for (const tool of manipulationTools) {
       tool.style.display = "flex";
     }
+
+    infoBoxes.forEach((infoBox) => bits.add(infoBox.simStatus));
+    bits.setCheckBoxes();
+    bits.render();
 
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
