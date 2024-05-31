@@ -1,4 +1,4 @@
-import { Link } from "../../objects";
+import { Link } from "../../objects.js";
 
 export function reconnect(
   criteriaFunction,
