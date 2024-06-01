@@ -44,7 +44,7 @@ let bits = {
   render: () => bits.checkBoxes.forEach((checkbox) => checkbox.render(filters)),
 };
 
-apply.addEventListener("click", () => {
+function applyFilter(particlesHandler) {
   const rangeFunctions = Range.buildFilter(parametersRange);
   const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
 
@@ -67,9 +67,9 @@ apply.addEventListener("click", () => {
     childrenLinks: newChildrenLinks,
     infoBoxes: filteredParticles,
   });
-});
+}
 
-reset.addEventListener("click", () => {
+function removeFilter(particlesHandler) {
   drawAll(ctx, particlesHandler);
 
   filters.innerHTML = "";
@@ -84,6 +84,9 @@ reset.addEventListener("click", () => {
     checkbox.checked = false;
     checkbox.render(filters);
   });
-});
+}
+
+apply.addEventListener("click", () => applyFilter(particlesHandler));
+reset.addEventListener("click", () => removeFilter(particlesHandler));
 
 export { bits };
