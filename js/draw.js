@@ -1,4 +1,8 @@
-export function drawAll(ctx, parentLinks, childrenLinks, infoBoxes) {
+import { canvas, ctx } from "./main.js";
+
+export function drawAll(ctx, particlesHandler) {
+  const { parentLinks, childrenLinks, infoBoxes } = particlesHandler;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // console.time("drawParentLinks");
   for (const link of parentLinks) {
@@ -15,4 +19,31 @@ export function drawAll(ctx, parentLinks, childrenLinks, infoBoxes) {
     if (infoBox !== null) infoBox.draw(ctx);
   }
   // console.timeEnd("drawBoxes");
+}
+
+export function drawVisible(visibleParticles, particlesHandler) {
+  const {
+    infoBoxes: visibleBoxes,
+    parentLinks: visibleParentLinks,
+    childrenLinks: visibleChildrenLinks,
+  } = visibleParticles;
+
+  const { parentLinks, childrenLinks, infoBoxes } = particlesHandler;
+
+  const boundigClientRect = canvas.getBoundingClientRect();
+  ctx.clearRect(
+    0 - boundigClientRect.x,
+    0 - boundigClientRect.y,
+    window.innerWidth,
+    window.innerHeight
+  );
+  for (const linkId of visibleParentLinks) {
+    parentLinks[linkId].draw(ctx, infoBoxes);
+  }
+  for (const linkId of visibleChildrenLinks) {
+    childrenLinks[linkId].draw(ctx, infoBoxes);
+  }
+  for (const boxId of visibleBoxes) {
+    infoBoxes[boxId].draw(ctx);
+  }
 }

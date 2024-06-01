@@ -1,5 +1,5 @@
 import { drawAll } from "../../draw.js";
-import { parentLinks, childrenLinks, infoBoxes, ctx } from "../../main.js";
+import { ctx, particlesHandler } from "../../main.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
 
@@ -53,6 +53,8 @@ apply.addEventListener("click", () => {
     checkboxFunctions
   );
 
+  const { parentLinks, childrenLinks, infoBoxes } = particlesHandler;
+
   const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
     criteriaFunction,
     parentLinks,
@@ -60,11 +62,15 @@ apply.addEventListener("click", () => {
     infoBoxes
   );
 
-  drawAll(ctx, newParentLinks, newChildrenLinks, filteredParticles);
+  drawAll(ctx, {
+    parentLinks: newParentLinks,
+    childrenLinks: newChildrenLinks,
+    infoBoxes: filteredParticles,
+  });
 });
 
 reset.addEventListener("click", () => {
-  drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
+  drawAll(ctx, particlesHandler);
 
   filters.innerHTML = "";
 
