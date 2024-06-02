@@ -19,47 +19,31 @@ const manipulationTools = document.getElementsByClassName("manipulation-tool");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let draggedInfoBox = -1;
-let isDragging = false;
-let prevMouseX = 0;
-let prevMouseY = 0;
-
 let jsonData = {};
-const infoBoxes = [];
-const parentLinks = [];
-const childrenLinks = [];
-
-let currentInfoBoxes = [];
-let currentParentLinks = [];
-let currentChildrenLinks = [];
-
-let visibleBoxes = [];
-let visibleParentLinks = [];
-let visibleChildrenLinks = [];
 
 const dragTools = {
-  draggedInfoBox: draggedInfoBox,
-  isDragging: isDragging,
-  prevMouseX: prevMouseX,
-  prevMouseY: prevMouseY,
+  draggedInfoBox: -1,
+  isDragging: false,
+  prevMouseX: 0,
+  prevMouseY: 0,
 };
 
 const particlesHandler = {
-  infoBoxes: infoBoxes,
-  parentLinks: parentLinks,
-  childrenLinks: childrenLinks,
+  infoBoxes: [],
+  parentLinks: [],
+  childrenLinks: [],
 };
 
 const currentParticles = {
-  infoBoxes: currentInfoBoxes,
-  parentLinks: currentParentLinks,
-  childrenLinks: currentChildrenLinks,
+  infoBoxes: [],
+  parentLinks: [],
+  childrenLinks: [],
 };
 
 const visibleParticles = {
-  infoBoxes: visibleBoxes,
-  parentLinks: visibleParentLinks,
-  childrenLinks: visibleChildrenLinks,
+  infoBoxes: [],
+  parentLinks: [],
+  childrenLinks: [],
 };
 
 function start(particlesHandler, visibleParticles) {
@@ -135,19 +119,19 @@ function start(particlesHandler, visibleParticles) {
 }
 
 canvas.onmousedown = (event) => {
-  mouseDown(event, particlesHandler, visibleParticles, dragTools);
+  mouseDown(event, currentParticles, visibleParticles, dragTools);
 };
 canvas.onmouseup = (event) => {
-  mouseUp(event, dragTools, particlesHandler);
+  mouseUp(event, currentParticles, dragTools);
 };
 canvas.onmouseout = (event) => {
   mouseOut(event, dragTools);
 };
 canvas.onmousemove = (event) => {
-  mouseMove(event, particlesHandler, visibleParticles, dragTools);
+  mouseMove(event, currentParticles, visibleParticles, dragTools);
 };
 window.onscroll = () => {
-  onScroll(particlesHandler, visibleParticles);
+  onScroll(currentParticles, visibleParticles);
 };
 
 /*
@@ -194,23 +178,28 @@ document
     event.preventDefault();
     const eventNum = document.getElementById("event-number").value;
 
-    const { infoBoxes, parentLinks, childrenLinks } = particlesHandler;
+    loadMCParticles(jsonData, eventNum, particlesHandler);
 
-    loadMCParticles(jsonData, eventNum, infoBoxes, parentLinks, childrenLinks);
-    if (infoBoxes.length === 0) {
+    currentParticles.infoBoxes = particlesHandler.infoBoxes;
+    currentParticles.parentLinks = particlesHandler.parentLinks;
+    currentParticles.childrenLinks = particlesHandler.childrenLinks;
+
+    if (particlesHandler.infoBoxes.length === 0) {
       errorMsg("Provided file does not contain any MC particle tree!");
       return;
     }
     for (const eventNum in jsonData) {
       delete jsonData[eventNum];
     }
-    start(particlesHandler, visibleParticles);
+    start(currentParticles, visibleParticles);
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
 
     for (const tool of manipulationTools) {
       tool.style.display = "flex";
     }
+
+    const { infoBoxes } = currentParticles;
 
     infoBoxes.forEach((infoBox) => bits.add(infoBox.simStatus));
     bits.setCheckBoxes();
@@ -219,16 +208,9 @@ document
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
       pdgToggle.toggle(infoBoxes, () => {
-        drawAll(ctx, particlesHandler);
+        drawAll(ctx, currentParticles);
       });
     });
   });
 
-export {
-  canvas,
-  ctx,
-  dragTools,
-  visibleParticles,
-  particlesHandler,
-  currentParticles,
-};
+export { canvas, ctx, visibleParticles, particlesHandler, currentParticles };

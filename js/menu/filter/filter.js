@@ -1,7 +1,13 @@
 import { drawAll } from "../../draw.js";
-import { ctx, particlesHandler } from "../../main.js";
+import {
+  ctx,
+  particlesHandler,
+  currentParticles,
+  visibleParticles,
+} from "../../main.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
+import { getVisible } from "../../events.js";
 
 const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
@@ -44,7 +50,7 @@ let bits = {
   render: () => bits.checkBoxes.forEach((checkbox) => checkbox.render(filters)),
 };
 
-function applyFilter(particlesHandler) {
+function applyFilter(particlesHandler, currentParticles, visibleParticles) {
   const rangeFunctions = Range.buildFilter(parametersRange);
   const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
 
@@ -53,24 +59,28 @@ function applyFilter(particlesHandler) {
     checkboxFunctions
   );
 
-  const { parentLinks, childrenLinks, infoBoxes } = particlesHandler;
-
   const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
     criteriaFunction,
-    parentLinks,
-    childrenLinks,
-    infoBoxes
+    particlesHandler
   );
 
-  drawAll(ctx, {
-    parentLinks: newParentLinks,
-    childrenLinks: newChildrenLinks,
-    infoBoxes: filteredParticles,
-  });
+  currentParticles.parentLinks = newParentLinks;
+  currentParticles.childrenLinks = newChildrenLinks;
+  currentParticles.infoBoxes = filteredParticles;
+
+  drawAll(ctx, currentParticles);
+
+  getVisible(currentParticles, visibleParticles);
 }
 
-function removeFilter(particlesHandler) {
-  drawAll(ctx, particlesHandler);
+function removeFilter(particlesHandler, currentParticles, visibleParticles) {
+  currentParticles.parentLinks = particlesHandler.parentLinks;
+  currentParticles.childrenLinks = particlesHandler.childrenLinks;
+  currentParticles.infoBoxes = particlesHandler.infoBoxes;
+
+  drawAll(ctx, currentParticles);
+
+  getVisible(currentParticles, visibleParticles);
 
   filters.innerHTML = "";
 
@@ -86,7 +96,11 @@ function removeFilter(particlesHandler) {
   });
 }
 
-apply.addEventListener("click", () => applyFilter(particlesHandler));
-reset.addEventListener("click", () => removeFilter(particlesHandler));
+apply.addEventListener("click", () =>
+  applyFilter(particlesHandler, currentParticles, visibleParticles)
+);
+reset.addEventListener("click", () =>
+  removeFilter(particlesHandler, currentParticles, visibleParticles)
+);
 
 export { bits };

@@ -3,7 +3,7 @@ import { drawAll, drawVisible } from "./draw.js";
 
 const mouseDown = function (
   event,
-  particlesHandler,
+  currentParticles,
   visibleParticles,
   dragTools
 ) {
@@ -15,8 +15,8 @@ const mouseDown = function (
   dragTools.prevMouseX = mouseX;
   dragTools.prevMouseY = mouseY;
 
+  const infoBoxes = currentParticles.infoBoxes;
   const visibleBoxes = visibleParticles.infoBoxes;
-  const infoBoxes = particlesHandler.infoBoxes;
   for (let i = visibleBoxes.length - 1; i >= 0; i--) {
     if (infoBoxes[visibleBoxes[i]].isHere(mouseX, mouseY)) {
       dragTools.draggedInfoBox = visibleBoxes[i];
@@ -26,7 +26,7 @@ const mouseDown = function (
   }
 };
 
-const mouseUp = function (event, dragTools, particlesHandler) {
+const mouseUp = function (event, particlesHandler, dragTools) {
   if (!dragTools.isDragging) {
     return;
   }
@@ -50,7 +50,7 @@ const mouseOut = function (event, dragTools) {
 
 const mouseMove = function (
   event,
-  particlesHandler,
+  currentParticles,
   visibleParticles,
   dragTools
 ) {
@@ -66,28 +66,29 @@ const mouseMove = function (
   const dx = mouseX - dragTools.prevMouseX;
   const dy = mouseY - dragTools.prevMouseY;
 
-  const infoBox = particlesHandler.infoBoxes[dragTools.draggedInfoBox];
+  const infoBox = currentParticles.infoBoxes[dragTools.draggedInfoBox];
   infoBox.x += dx;
   infoBox.y += dy;
 
   // console.time("drawVisible");
-  drawVisible(visibleParticles, particlesHandler);
+  drawVisible(currentParticles, visibleParticles);
   // console.timeEnd("drawVisible");
 
   dragTools.prevMouseX = mouseX;
   dragTools.prevMouseY = mouseY;
 };
 
-const getVisible = function (particlesHandler, visibleParticles) {
+const getVisible = function (currentParticles, visibleParticles) {
   const boundigClientRect = canvas.getBoundingClientRect();
 
-  const { infoBoxes, parentLinks, childrenLinks } = particlesHandler;
+  const { infoBoxes, parentLinks, childrenLinks } = currentParticles;
 
-  let visibleBoxes = [];
-  let visibleParentLinks = [];
-  let visibleChildrenLinks = [];
+  const visibleBoxes = [];
+  const visibleParentLinks = [];
+  const visibleChildrenLinks = [];
 
   for (const box of infoBoxes) {
+    if (box === null) continue;
     if (
       box.isVisible(
         0 - boundigClientRect.x,
@@ -100,16 +101,6 @@ const getVisible = function (particlesHandler, visibleParticles) {
     }
   }
 
-  for (const boxId of visibleBoxes) {
-    for (const linkId of infoBoxes[boxId].parentLinks) {
-      visibleParentLinks.push(linkId);
-    }
-    for (const parentBoxId of infoBoxes[boxId].parents) {
-      for (const linkId of infoBoxes[parentBoxId].childrenLinks) {
-        visibleChildrenLinks.push(linkId);
-      }
-    }
-  }
   for (const link of parentLinks) {
     if (
       link.isVisible(
@@ -124,16 +115,6 @@ const getVisible = function (particlesHandler, visibleParticles) {
     }
   }
 
-  for (const boxId of visibleBoxes) {
-    for (const linkId of infoBoxes[boxId].childrenLinks) {
-      visibleChildrenLinks.push(linkId);
-    }
-    for (const childrenBoxId of infoBoxes[boxId].children) {
-      for (const linkId of infoBoxes[childrenBoxId].parentLinks) {
-        visibleParentLinks.push(linkId);
-      }
-    }
-  }
   for (const link of childrenLinks) {
     if (
       link.isVisible(
@@ -148,9 +129,6 @@ const getVisible = function (particlesHandler, visibleParticles) {
     }
   }
 
-  visibleParentLinks = [...new Set(visibleParentLinks)];
-  visibleChildrenLinks = [...new Set(visibleChildrenLinks)];
-
   /*
   console.log("Visible boxes: ", visibleBoxes);
   console.log("Visible parentLinks: ", visibleParentLinks);
@@ -162,8 +140,8 @@ const getVisible = function (particlesHandler, visibleParticles) {
   visibleParticles.childrenLinks = visibleChildrenLinks;
 };
 
-const onScroll = function (particlesHandler, visibleParticles) {
-  getVisible(particlesHandler, visibleParticles);
+const onScroll = function (currentParticles, visibleParticles) {
+  getVisible(currentParticles, visibleParticles);
 };
 
 export { mouseDown, mouseUp, mouseOut, mouseMove, getVisible, onScroll };

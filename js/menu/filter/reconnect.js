@@ -1,18 +1,13 @@
 import { Link } from "../../objects.js";
 
-export function reconnect(
-  criteriaFunction,
-  parentLinks,
-  childrenLinks,
-  particles
-) {
+export function reconnect(criteriaFunction, particlesHandler) {
+  const { parentLinks, childrenLinks, infoBoxes: particles } = particlesHandler;
+
   const newParentLinks = [];
   const newChildrenLinks = [];
   const filteredParticles = [];
 
   for (const particle of particles) {
-    if (!particle) continue;
-
     if (!criteriaFunction(particle)) {
       filteredParticles.push(null);
 
@@ -48,19 +43,30 @@ export function reconnect(
 
       for (const parentLinkId of particle.parentLinks) {
         const parentLink = parentLinks[parentLinkId];
-        if (!parentLink) continue;
         const parent = particles[parentLink.from];
         if (criteriaFunction(parent)) {
-          newParentLinks.push(parentLink);
+          const parentLinkCopy = new Link(
+            newParentLinks.length,
+            parentLink.from,
+            parentLink.to
+          );
+          parentLinkCopy.xShift = 3;
+          newParentLinks.push(parentLinkCopy);
         }
       }
 
       for (const childrenLinkId of particle.childrenLinks) {
         const childrenLink = childrenLinks[childrenLinkId];
-        if (!childrenLink) continue;
         const child = particles[childrenLink.to];
         if (criteriaFunction(child)) {
-          newChildrenLinks.push(childrenLink);
+          const childrenLinkCopy = new Link(
+            newChildrenLinks.length,
+            childrenLink.from,
+            childrenLink.to
+          );
+          childrenLinkCopy.color = "#0A0";
+          childrenLinkCopy.xShift = -3;
+          newChildrenLinks.push(childrenLinkCopy);
         }
       }
     }

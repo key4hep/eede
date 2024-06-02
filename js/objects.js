@@ -159,15 +159,6 @@ export class Link {
     const boxFrom = infoBoxes[this.from];
     const boxTo = infoBoxes[this.to];
 
-    if (
-      boxFrom === null ||
-      boxTo === null ||
-      boxFrom === undefined ||
-      boxTo === undefined
-    ) {
-      return;
-    }
-
     const fromX = boxFrom.x + boxFrom.width / 2;
     const fromY = boxFrom.y + boxFrom.height;
     const toX = boxTo.x + boxTo.width / 2;
