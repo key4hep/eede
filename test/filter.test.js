@@ -8,7 +8,7 @@ import {
 
 const parentLinks = [];
 const childrenLinks = [];
-const particles = [];
+const infoBoxes = [];
 
 beforeAll(() => {
   for (let i = 0; i < 5; i++) {
@@ -17,7 +17,7 @@ beforeAll(() => {
     particle.charge = i;
     particle.mass = i * 10;
     particle.simStatus = i + 23;
-    particles.push(particle);
+    infoBoxes.push(particle);
   }
 
   parentLinks.push(new Link(0, 0, 1));
@@ -32,27 +32,33 @@ beforeAll(() => {
   childrenLinks.push(new Link(3, 2, 4));
   childrenLinks.push(new Link(4, 3, 4));
 
-  particles[0].children = [1, 2];
-  particles[0].childrenLinks = [0, 1];
+  infoBoxes[0].children = [1, 2];
+  infoBoxes[0].childrenLinks = [0, 1];
 
-  particles[1].parents = [0];
-  particles[1].children = [3];
-  particles[1].parentLinks = [0];
-  particles[1].childrenLinks = [2];
+  infoBoxes[1].parents = [0];
+  infoBoxes[1].children = [3];
+  infoBoxes[1].parentLinks = [0];
+  infoBoxes[1].childrenLinks = [2];
 
-  particles[2].parents = [0];
-  particles[2].children = [4];
-  particles[2].parentLinks = [1];
-  particles[2].childrenLinks = [3];
+  infoBoxes[2].parents = [0];
+  infoBoxes[2].children = [4];
+  infoBoxes[2].parentLinks = [1];
+  infoBoxes[2].childrenLinks = [3];
 
-  particles[3].parents = [1];
-  particles[3].children = [4];
-  particles[3].parentLinks = [3];
-  particles[3].childrenLinks = [4];
+  infoBoxes[3].parents = [1];
+  infoBoxes[3].children = [4];
+  infoBoxes[3].parentLinks = [3];
+  infoBoxes[3].childrenLinks = [4];
 
-  particles[4].parents = [2, 3];
-  particles[4].parentLinks = [2, 4];
+  infoBoxes[4].parents = [2, 3];
+  infoBoxes[4].parentLinks = [2, 4];
 });
+
+const particlesHandler = {
+  parentLinks,
+  childrenLinks,
+  infoBoxes,
+};
 
 describe("filter by ranges", () => {
   it("filter by a single range parameter", () => {
@@ -64,13 +70,11 @@ describe("filter by ranges", () => {
 
     const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
       criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
+      particlesHandler
     );
 
-    expect(newChildrenLinks.map((link) => link.id)).toEqual([4]);
-    expect(newParentLinks.map((link) => link.id)).toEqual([4]);
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([0]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([0]);
     expect(
       filteredParticles.filter((p) => p).map((particle) => particle.id)
     ).toEqual([3, 4]);
@@ -87,13 +91,11 @@ describe("filter by ranges", () => {
 
     const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
       criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
+      particlesHandler
     );
 
-    expect(newChildrenLinks.map((link) => link.id)).toEqual([4]);
-    expect(newParentLinks.map((link) => link.id)).toEqual([4]);
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([0]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([0]);
     expect(
       filteredParticles.filter((p) => p).map((particle) => particle.id)
     ).toEqual([3, 4]);
@@ -109,9 +111,7 @@ describe("filter by checkboxes", () => {
 
     const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
       criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
+      particlesHandler
     );
 
     expect(newChildrenLinks.map((link) => link.id)).toEqual([]);
@@ -137,13 +137,11 @@ describe("filter by checkboxes", () => {
 
     const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
       criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
+      particlesHandler
     );
 
-    expect(newChildrenLinks.map((link) => link.id)).toEqual([0, 1, 4]);
-    expect(newParentLinks.map((link) => link.id)).toEqual([0, 1, 4]);
+    expect(newChildrenLinks.map((link) => link.id)).toEqual([0, 1, 2]);
+    expect(newParentLinks.map((link) => link.id)).toEqual([0, 1, 2]);
     expect(
       filteredParticles.filter((p) => p).map((particle) => particle.id)
     ).toEqual([0, 3, 4]);
@@ -163,9 +161,7 @@ describe("filter by ranges and checkboxes", () => {
 
     const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
       criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
+      particlesHandler
     );
 
     expect(newParentLinks.map((link) => link.id).sort()).toEqual([
@@ -193,9 +189,7 @@ describe("filter by ranges and checkboxes", () => {
 
     const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
       criteriaFunction,
-      parentLinks,
-      childrenLinks,
-      particles
+      particlesHandler
     );
 
     expect(newChildrenLinks.map((link) => link.id)).toEqual([]);

@@ -1,13 +1,13 @@
 import { Link } from "../../objects.js";
 
 export function reconnect(criteriaFunction, particlesHandler) {
-  const { parentLinks, childrenLinks, infoBoxes: particles } = particlesHandler;
+  const { parentLinks, childrenLinks, infoBoxes } = particlesHandler;
 
   const newParentLinks = [];
   const newChildrenLinks = [];
   const filteredParticles = [];
 
-  for (const particle of particles) {
+  for (const particle of infoBoxes) {
     if (!criteriaFunction(particle)) {
       filteredParticles.push(null);
 
@@ -15,13 +15,13 @@ export function reconnect(criteriaFunction, particlesHandler) {
       const childrenParticles = [];
 
       for (const parent of particle.parents) {
-        if (criteriaFunction(particles[parent])) {
+        if (criteriaFunction(infoBoxes[parent])) {
           parentParticles.push(parent);
         }
       }
 
       for (const child of particle.children) {
-        if (criteriaFunction(particles[child])) {
+        if (criteriaFunction(infoBoxes[child])) {
           childrenParticles.push(child);
         }
       }
@@ -43,7 +43,7 @@ export function reconnect(criteriaFunction, particlesHandler) {
 
       for (const parentLinkId of particle.parentLinks) {
         const parentLink = parentLinks[parentLinkId];
-        const parent = particles[parentLink.from];
+        const parent = infoBoxes[parentLink.from];
         if (criteriaFunction(parent)) {
           const parentLinkCopy = new Link(
             newParentLinks.length,
@@ -57,7 +57,7 @@ export function reconnect(criteriaFunction, particlesHandler) {
 
       for (const childrenLinkId of particle.childrenLinks) {
         const childrenLink = childrenLinks[childrenLinkId];
-        const child = particles[childrenLink.to];
+        const child = infoBoxes[childrenLink.to];
         if (criteriaFunction(child)) {
           const childrenLinkCopy = new Link(
             newChildrenLinks.length,
