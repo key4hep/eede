@@ -34,7 +34,32 @@ const filters = document.getElementById("filters");
 const apply = document.getElementById("filter-apply");
 const reset = document.getElementById("filter-reset");
 
-let parametersRange = ["momentum", "vertex", "time", "mass", "charge"];
+let parametersRange = [
+  {
+    property: "momentum",
+    unit: "GeV",
+  },
+  {
+    property: "mass",
+    unit: "GeV",
+  },
+  {
+    property: "charge",
+    unit: "e",
+  },
+  {
+    property: "vertex",
+    unit: "mm",
+  },
+  {
+    property: "time",
+    unit: "ns",
+  },
+];
+
+parametersRange = parametersRange.sort((a, b) =>
+  a.property.localeCompare(b.property)
+);
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 

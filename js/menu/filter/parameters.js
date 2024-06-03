@@ -29,14 +29,15 @@ export class Range extends FilterParameter {
   min;
   max;
 
-  constructor(property) {
+  constructor({ property, unit }) {
     super(property);
+    this.unit = unit;
   }
 
   render(container) {
     const title = document.createElement("div");
     const label = document.createElement("label");
-    label.textContent = this.property;
+    label.textContent = `${this.property} (${this.unit})`;
     title.appendChild(label);
 
     const content = document.createElement("div");
