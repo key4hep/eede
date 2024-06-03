@@ -1,4 +1,19 @@
+function dynamicLoad(object, data, ignore = null) {
+  if (ignore !== null) {
+    for (const key of ignore) {
+      delete data[key];
+    }
+  }
+
+  for (const [key, value] of Object.entries(data)) {
+    object[key] = value;
+  }
+}
+
 export class Cluster {
+  static MIN_VERSION = "0.7.0"; // may vary per type of particle
+  static MAX_VERSION = "1.0.0";
+
   constructor() {
     // Physics properties
     this.type = 0;
@@ -22,18 +37,7 @@ export class Cluster {
       const cluster = new Cluster();
       cluster.index = index;
 
-      cluster.type = particle.type;
-      cluster.energy = particle.energy;
-      cluster.energyError = particle.energyError;
-      cluster.position = particle.position;
-      cluster.positionError = particle.positionError;
-      cluster.iTheta = particle.iTheta;
-      cluster.phi = particle.phi;
-      cluster.directionError = particle.directionError;
-      cluster.shapeParameters = particle.shapeParameters;
-      cluster.subdetectorEnergies = particle.subdetectorEnergies;
-      cluster.clusters = particle.clusters;
-      cluster.hits = particle.hits;
+      dynamicLoad(cluster, particle);
 
       particles.push(cluster);
     }
@@ -43,6 +47,9 @@ export class Cluster {
 }
 
 export class ParticleID {
+  static MIN_VERSION = "0.7.0";
+  static MAX_VERSION = "1.0.0";
+
   constructor() {
     // Physics properties
     this.type = 0;
@@ -60,11 +67,7 @@ export class ParticleID {
       const particleID = new ParticleID();
       particleID.index = index;
 
-      particleID.type = particle.type;
-      particleID.pdg = particle.pdg;
-      particleID.algorithmType = particle.algorithmType;
-      particleID.likelihood = particle.likelihood;
-      particleID.parameters = particle.parameters;
+      dynamicLoad(particleID, particle);
 
       particles.push(particleID);
     }
@@ -74,6 +77,9 @@ export class ParticleID {
 }
 
 export class ReconstructedParticle {
+  static MIN_VERSION = "0.7.0";
+  static MAX_VERSION = "1.0.0";
+
   constructor() {
     // Physics properties
     this.pdg = 0;
@@ -97,17 +103,7 @@ export class ReconstructedParticle {
       const reconstructedParticle = new ReconstructedParticle();
       reconstructedParticle.index = index;
 
-      reconstructedParticle.energy = particle.energy;
-      reconstructedParticle.momentum = particle.momentum;
-      reconstructedParticle.referencePoint = particle.referencePoint;
-      reconstructedParticle.charge = particle.charge;
-      reconstructedParticle.mass = particle.mass;
-      reconstructedParticle.goodnessOfPID = particle.goodnessOfPID;
-      reconstructedParticle.covMatrix = particle.covMatrix;
-      reconstructedParticle.startVertex = particle.startVertex;
-      reconstructedParticle.clusters = particle.clusters;
-      reconstructedParticle.tracks = particle.tracks;
-      reconstructedParticle.particles = particle.particles;
+      dynamicLoad(reconstructedParticle, particle);
 
       particles.push(reconstructedParticle);
     }
@@ -117,6 +113,9 @@ export class ReconstructedParticle {
 }
 
 export class Vertex {
+  static MIN_VERSION = "0.7.0";
+  static MAX_VERSION = "1.0.0";
+
   constructor() {
     // Physics properties
     this.primary = 0;
@@ -133,6 +132,9 @@ export class Vertex {
 }
 
 export class Track {
+  static MIN_VERSION = "0.7.0";
+  static MAX_VERSION = "1.0.0";
+
   constructor() {
     // Physics properties
     this.type = 0;
@@ -155,17 +157,7 @@ export class Track {
       const track = new Track();
       track.index = index;
 
-      track.type = particle.type;
-      track.chi2 = particle.chi2;
-      track.ndf = particle.ndf;
-      track.dEdx = particle.dEdx;
-      track.dEdxError = particle.dEdxError;
-      track.radiusOfInnermostHit = particle.radiusOfInnermostHit;
-      track.subdetectorHitNumbers = particle.subdetectorHitNumbers;
-      track.trackStates = particle.trackStates;
-      track.dxQuantities = particle.dxQuantities;
-      track.trackerHits = particle.trackerHits;
-      track.tracks = particle.tracks;
+      dynamicLoad(track, particle);
 
       particles.push(track);
     }
