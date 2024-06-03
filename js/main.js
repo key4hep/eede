@@ -1,7 +1,7 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
-import { bits } from "./menu/filter/filter.js";
+import { bits, genStatus } from "./menu/filter/filter.js";
 import {
   mouseDown,
   mouseUp,
@@ -201,9 +201,14 @@ document
 
     const { infoBoxes } = currentParticles;
 
-    infoBoxes.forEach((infoBox) => bits.add(infoBox.simStatus));
+    infoBoxes.forEach((infoBox) => {
+      bits.add(infoBox.simStatus);
+      genStatus.add(infoBox.genStatus);
+    });
     bits.setCheckBoxes();
+    genStatus.setCheckBoxes();
     bits.render();
+    genStatus.render();
 
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {

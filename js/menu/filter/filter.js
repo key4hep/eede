@@ -40,23 +40,40 @@ parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
 parametersRange.forEach((parameter) => parameter.render(filters));
 
-let bits = {
-  simStatuses: new Set(),
-  add: (simStatus) => bits.simStatuses.add(simStatus),
-  checkBoxes: [],
-  toCheckBox: () =>
-    Array.from(bits.simStatuses).map((bit) => new Checkbox("simStatus", bit)),
-  setCheckBoxes: () => (bits.checkBoxes = bits.toCheckBox()),
-  render: () => bits.checkBoxes.forEach((checkbox) => checkbox.render(filters)),
-};
+class CheckboxBuilder {
+  constructor(name) {
+    this.uniqueValues = new Set();
+    this.checkBoxes = [];
+    this.name = name;
+  }
+
+  add(val) {
+    this.uniqueValues.add(val);
+  }
+
+  setCheckBoxes() {
+    this.checkBoxes = Array.from(this.uniqueValues).map(
+      (option) => new Checkbox(this.name, option)
+    );
+  }
+
+  render() {
+    this.checkBoxes.forEach((checkbox) => checkbox.render(filters));
+  }
+}
+
+const bits = new CheckboxBuilder("simStatus");
+const genStatus = new CheckboxBuilder("genStatus");
 
 function applyFilter(particlesHandler, currentParticles, visibleParticles) {
   const rangeFunctions = Range.buildFilter(parametersRange);
   const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
+  const genStatusFunctions = Checkbox.buildFilter(genStatus.checkBoxes);
 
   const criteriaFunction = buildCriteriaFunction(
     rangeFunctions,
-    checkboxFunctions
+    checkboxFunctions,
+    genStatusFunctions
   );
 
   const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
@@ -103,4 +120,4 @@ reset.addEventListener("click", () =>
   removeFilter(particlesHandler, currentParticles, visibleParticles)
 );
 
-export { bits };
+export { bits, genStatus };
