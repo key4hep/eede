@@ -49,7 +49,6 @@ export function buildLoader(config, version) {
 export function loadParticles(jsonData, event, loadersConfig) {
   const eventData = jsonData["Event " + event];
   const version = eventData.edm4hepVersion;
-  delete eventData["edm4hepVersion"];
 
   const loader = buildLoader(loadersConfig, version);
 

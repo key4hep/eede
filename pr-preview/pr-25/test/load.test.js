@@ -97,23 +97,18 @@ const data = {
         },
       ],
     },
+    "edm4hepVersion": "0.7.0",
   },
 };
 
 describe("build loader", () => {
   it("should create a loader with a set of types", () => {
     const loadersConfig = ["ReconstructedParticle", "ParticleID"];
-    const loader = buildLoader(loadersConfig);
-    const loaderFunctions = loadersConfig.map((type) => loader.getLoader(type));
+    const loader = buildLoader(loadersConfig, "0.7.0");
 
-    expect(loaderFunctions.every((f) => typeof f === "function")).toBe(true);
-  });
-
-  it("should fail when requesting a loader that doesn't exist", () => {
-    const loadersConfig = ["ReconstructedParticle", "ParticleID"];
-    const loader = buildLoader(loadersConfig);
-
-    expect(loader.getLoader("Vertex")).toBe(false);
+    expect(Object.values(loader).every((f) => typeof f === "function")).toBe(
+      true
+    );
   });
 });
 
