@@ -66,10 +66,6 @@ export function loadParticles(jsonData, event, loadersConfig) {
       particles[type] = loadedParticles;
     });
   }
-  try {
-  } catch (error) {
-    console.error(error);
-  }
 
   return particles;
 }
