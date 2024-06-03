@@ -6,13 +6,14 @@ import {
   Vertex,
   Track,
 } from "./reconstruction.js";
+import { compatible } from "./version.js";
 
-const loaders = {
-  ReconstructedParticle: ReconstructedParticle.load,
-  ParticleID: ParticleID.load,
-  Vertex: Vertex.load,
-  Track: Track.load,
-  Cluster: Cluster.load,
+const types = {
+  "Cluster": Cluster,
+  "ParticleID": ParticleID,
+  "ReconstructedParticle": ReconstructedParticle,
+  "Vertex": Vertex,
+  "Track": Track,
 };
 
 const loadersConfig = [
@@ -23,23 +24,22 @@ const loadersConfig = [
   "Cluster",
 ];
 
-export function buildLoader(config) {
-  let newLoader = {
-    types: {},
-    getLoader: (name) => {
-      if (newLoader.types.hasOwnProperty(name)) {
-        return newLoader.types[name];
-      }
-      return false;
-    },
-    getAllLoaders: () => {
-      return newLoader.types;
-    },
-  };
+export function buildLoader(config, version) {
+  const newLoader = {};
+
+  if (typeof config === "string") config = [config];
 
   for (const particle of config) {
-    if (loaders.hasOwnProperty(particle)) {
-      newLoader.types[particle] = loaders[particle];
+    if (types.hasOwnProperty(particle)) {
+      const isCompatible = compatible(types[particle], version);
+
+      if (isCompatible) {
+        newLoader[particle] = types[particle].load;
+      } else {
+        newLoader[particle] = () => {
+          return [];
+        };
+      }
     }
   }
 
@@ -47,23 +47,22 @@ export function buildLoader(config) {
 }
 
 export function loadParticles(jsonData, event, loadersConfig) {
-  const eventData = Object.values(jsonData["Event " + event]);
+  const eventData = jsonData["Event " + event];
+  const version = eventData.edm4hepVersion;
+  delete eventData["edm4hepVersion"];
+
+  const loader = buildLoader(loadersConfig, version);
 
   const particles = {};
+  Object.keys(loader).forEach((key) => (particles[key] = []));
 
-  if (typeof loadersConfig === "string") loadersConfig = [loadersConfig];
-  const loader = buildLoader(loadersConfig);
-
-  Object.keys(loader.getAllLoaders()).forEach((key) => (particles[key] = []));
-
-  for (const [type, loadFunction] of Object.entries(loader.getAllLoaders())) {
-    const particlesType = eventData.filter(
+  for (const [type, loadFunction] of Object.entries(loader)) {
+    const particlesType = Object.values(eventData).filter(
       (element) => element.collType === `edm4hep::${type}Collection`
     );
 
-    particlesType.forEach((collection) => {
-      const loadedParticles = loadFunction(collection.collection);
-      particles[type] = loadedParticles;
+    particlesType.forEach(({ collection }) => {
+      const loadedParticles = loadFunction(collection);
     });
   }
 
