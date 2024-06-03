@@ -62,7 +62,10 @@ const particlesHandler = {
 
 describe("filter by ranges", () => {
   it("filter by a single range parameter", () => {
-    const momentum = new Range("momentum");
+    const momentum = new Range({
+      property: "momentum",
+      unit: "GeV",
+    });
     momentum.min = 300;
     momentum.max = 1000;
     const rangeFilters = Range.buildFilter([momentum]);
@@ -81,9 +84,15 @@ describe("filter by ranges", () => {
   });
 
   it("filter by a combination of ranges", () => {
-    const charge = new Range("charge");
+    const charge = new Range({
+      property: "charge",
+      unit: "e",
+    });
     charge.min = 3;
-    const mass = new Range("mass");
+    const mass = new Range({
+      property: "mass",
+      unit: "GeV",
+    });
     mass.min = 20;
     mass.max = 40;
     const rangeFilters = Range.buildFilter([mass, charge]);
@@ -150,7 +159,10 @@ describe("filter by checkboxes", () => {
 
 describe("filter by ranges and checkboxes", () => {
   it("show all particles when no kind of filter is applied", () => {
-    const charge = new Range("charge");
+    const charge = new Range({
+      property: "charge",
+      unit: "e",
+    });
     const simulatorStatus = new Checkbox("simStatus", 26);
     const rangeFilters = Range.buildFilter([charge]);
     const checkboxFilters = Checkbox.buildFilter([simulatorStatus]);
@@ -176,7 +188,10 @@ describe("filter by ranges and checkboxes", () => {
   });
 
   it("filter by a combination of ranges and checkboxes", () => {
-    const charge = new Range("charge");
+    const charge = new Range({
+      property: "charge",
+      unit: "e",
+    });
     charge.max = 3;
     const simulatorStatus = new Checkbox("simStatus", 23);
     simulatorStatus.checked = true;
