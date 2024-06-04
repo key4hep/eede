@@ -31,21 +31,21 @@ const data = {
         },
       ],
     },
-    "Jet": {
-      "collID": 13,
+    "ReconstructedParticles": {
+      "collID": 14,
       "collType": "edm4hep::ReconstructedParticleCollection",
       "collection": [
         {
           "charge": 1.0,
           "clusters": [],
           "covMatrix": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-          "energy": 12.062528610229492,
+          "energy": 0.358455091714859,
           "goodnessOfPID": 0.0,
-          "mass": 2.315242290496826,
+          "mass": 0.13957038521766663,
           "momentum": {
-            "x": 11.738886833190918,
-            "y": 1.2114704847335815,
-            "z": 0.9354811906814575,
+            "x": 0.09558331221342087,
+            "y": -0.11288221180438995,
+            "z": -0.2951807975769043,
           },
           "particleIDUsed": {
             "collectionID": -2,
@@ -54,35 +54,10 @@ const data = {
           "particleIDs": [
             {
               "collectionID": 4,
-              "index": 45,
+              "index": 0,
             },
           ],
-          "particles": [
-            {
-              "collectionID": 14,
-              "index": 24,
-            },
-            {
-              "collectionID": 14,
-              "index": 22,
-            },
-            {
-              "collectionID": 14,
-              "index": 74,
-            },
-            {
-              "collectionID": 14,
-              "index": 23,
-            },
-            {
-              "collectionID": 14,
-              "index": 25,
-            },
-            {
-              "collectionID": 14,
-              "index": 26,
-            },
-          ],
+          "particles": [],
           "referencePoint": {
             "x": 0.0,
             "y": 0.0,
@@ -92,7 +67,12 @@ const data = {
             "collectionID": -2,
             "index": -2,
           },
-          "tracks": [],
+          "tracks": [
+            {
+              "collectionID": 3,
+              "index": 0,
+            },
+          ],
           "type": 0,
         },
       ],
