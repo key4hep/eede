@@ -141,6 +141,13 @@ function removeFilter(particlesHandler, currentParticles, visibleParticles) {
 apply.addEventListener("click", () =>
   applyFilter(particlesHandler, currentParticles, visibleParticles)
 );
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && active) {
+    applyFilter(particlesHandler, currentParticles, visibleParticles);
+  }
+});
+
 reset.addEventListener("click", () =>
   removeFilter(particlesHandler, currentParticles, visibleParticles)
 );
