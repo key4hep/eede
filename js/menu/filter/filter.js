@@ -13,6 +13,7 @@ const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
 const closeFilter = document.getElementById("close-filter");
 const filterContent = document.getElementById("filter-content");
+const filter = document.getElementById("filter");
 
 let active = false;
 
@@ -23,6 +24,9 @@ filterButton.addEventListener("click", () => {
     openFilter.style.display = "none";
     closeFilter.style.display = "block";
     filterContent.style.display = "flex";
+    const rangeFiltersWidth =
+      document.getElementById("range-filters").offsetWidth;
+    filter.style.width = `${rangeFiltersWidth}px`;
   } else {
     openFilter.style.display = "block";
     closeFilter.style.display = "none";
@@ -63,7 +67,15 @@ parametersRange = parametersRange.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-parametersRange.forEach((parameter) => parameter.render(filters));
+const rangeFilters = document.createElement("div");
+filters.appendChild(rangeFilters);
+rangeFilters.style.display = "grid";
+rangeFilters.id = "range-filters";
+rangeFilters.style.width = "fit-content";
+rangeFilters.style.columnGap = "10px";
+rangeFilters.style.gridTemplateColumns = "fit-content(100%) fit-content(100%)";
+
+parametersRange.forEach((parameter) => parameter.render(rangeFilters));
 
 class CheckboxBuilder {
   constructor(name) {

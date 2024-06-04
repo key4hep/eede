@@ -1,5 +1,5 @@
 #filter {
-  width: 16%;
+  min-width: 100px;
   position: fixed;
   flex-direction: column;
   background-color: #f5f5f5;

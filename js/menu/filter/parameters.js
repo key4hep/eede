@@ -35,14 +35,8 @@ export class Range extends FilterParameter {
   }
 
   render(container) {
-    // const div = document.createElement("div");
-    // div.style.display = "flex";
-    // div.style.flexDirection = "row";
-
-    const title = document.createElement("div");
     const label = document.createElement("label");
-    label.textContent = `${this.property} (${this.unit})`;
-    title.appendChild(label);
+    label.textContent = `${this.property} `;
 
     const content = document.createElement("div");
     const inputMin = createNumberInput(container, "min");
@@ -51,14 +45,15 @@ export class Range extends FilterParameter {
     content.appendChild(inputMin);
     content.appendChild(separator);
     content.appendChild(inputMax);
-    // content.appendChild(document.createTextNode(` ${this.unit}`));
+    content.appendChild(document.createTextNode(` ${this.unit}`));
+    content.style.display = "grid";
+    content.style.gridAutoFlow = "column";
+    content.style.columnGap = "5px";
     content.style.display = "flex";
     content.style.flexDirection = "row";
-    content.style.justifyContent = "space-around";
+    content.style.justifyContent = "flex-start";
 
-    // div.appendChild(title);
-    // div.appendChild(content);
-    container.appendChild(title);
+    container.appendChild(label);
     container.appendChild(content);
 
     inputMin.addEventListener("input", () => {
