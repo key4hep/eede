@@ -83,7 +83,15 @@ class CheckboxBuilder {
   }
 
   render() {
-    this.checkBoxes.forEach((checkbox) => checkbox.render(filters));
+    if (this.checkBoxes.length !== 0)
+      this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
+    filters.innerHTML += `<p>${this.name}</p>`;
+    const options = document.createElement("div");
+    options.style.display = "flex";
+    options.style.flexDirection = "row";
+    options.style.flexWrap = "wrap";
+    filters.appendChild(options);
+    this.checkBoxes.forEach((checkbox) => checkbox.render(options));
   }
 }
 
@@ -132,10 +140,8 @@ function removeFilter(particlesHandler, currentParticles, visibleParticles) {
     parameter.render(filters);
   });
 
-  bits.checkBoxes.forEach((checkbox) => {
-    checkbox.checked = false;
-    checkbox.render(filters);
-  });
+  bits.render();
+  genStatus.render();
 }
 
 apply.addEventListener("click", () =>

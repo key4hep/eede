@@ -19,7 +19,7 @@ function createNumberInput(container, placeholder) {
   const input = document.createElement("input");
   input.type = "number";
   input.placeholder = placeholder;
-  input.style.width = "50px";
+  input.style.width = "35px";
 
   container.appendChild(input);
   return input;
@@ -35,6 +35,10 @@ export class Range extends FilterParameter {
   }
 
   render(container) {
+    // const div = document.createElement("div");
+    // div.style.display = "flex";
+    // div.style.flexDirection = "row";
+
     const title = document.createElement("div");
     const label = document.createElement("label");
     label.textContent = `${this.property} (${this.unit})`;
@@ -47,10 +51,13 @@ export class Range extends FilterParameter {
     content.appendChild(inputMin);
     content.appendChild(separator);
     content.appendChild(inputMax);
+    // content.appendChild(document.createTextNode(` ${this.unit}`));
     content.style.display = "flex";
     content.style.flexDirection = "row";
     content.style.justifyContent = "space-around";
 
+    // div.appendChild(title);
+    // div.appendChild(content);
     container.appendChild(title);
     container.appendChild(content);
 
@@ -108,7 +115,7 @@ export class Checkbox extends FilterParameter {
     container.appendChild(div);
 
     const label = document.createElement("label");
-    label.textContent = `${this.property}: ${this.value}`;
+    label.textContent = `${this.value}`;
     div.appendChild(label);
 
     const input = document.createElement("input");
@@ -116,8 +123,11 @@ export class Checkbox extends FilterParameter {
     div.appendChild(input);
 
     div.style.display = "flex";
+    div.style.flexDirection = "row";
     div.style.alignItems = "center";
-    div.style.justifyContent = "space-between";
+    div.style.backgroundColor = "#dddddd";
+    div.style.borderRadius = "5px";
+    div.style.margin = "3px";
 
     input.addEventListener("change", () => {
       this.checked = input.checked;
