@@ -18,10 +18,10 @@ const types = {
 
 const loadersConfig = [
   "ReconstructedParticle",
-  "ParticleID",
-  "Vertex",
-  "Track",
-  "Cluster",
+  // "ParticleID",
+  // "Vertex",
+  // "Track",
+  // "Cluster",
 ];
 
 export function buildLoader(config, version) {
@@ -61,11 +61,27 @@ export function loadParticles(jsonData, event, loadersConfig) {
     );
 
     particlesType.forEach(({ collection }) => {
-      const loadedParticles = loadFunction(collection);
+      const [particles, links] = loadFunction(collection);
     });
   }
 
   return particles;
 }
 
-loadParticles(jsonData, 4, loadersConfig);
+export function dynamicLoad(object, data, ignore = null) {
+  let filteredData = {};
+
+  if (ignore !== null) {
+    for (const key in data) {
+      if (!ignore.has(key)) filteredData[key] = data[key];
+    }
+  } else {
+    filteredData = data;
+  }
+
+  for (const [key, value] of Object.entries(data)) {
+    object[key] = value;
+  }
+}
+
+loadParticles(jsonData, 0, loadersConfig);

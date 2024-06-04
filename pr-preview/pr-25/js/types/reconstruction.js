@@ -1,14 +1,4 @@
-function dynamicLoad(object, data, ignore = null) {
-  if (ignore !== null) {
-    for (const key of ignore) {
-      delete data[key];
-    }
-  }
-
-  for (const [key, value] of Object.entries(data)) {
-    object[key] = value;
-  }
-}
+import { dynamicLoad } from "./load.js";
 
 export class Cluster {
   static MIN_VERSION = "0.7.0"; // may vary per type of particle
@@ -98,17 +88,34 @@ export class ReconstructedParticle {
 
   static load(collection) {
     const particles = [];
+    const links = createLinksManager([
+      "tracks",
+      "clusters",
+      "particles",
+      "startVertex",
+    ]);
 
     for (const [index, particle] of collection.entries()) {
       const reconstructedParticle = new ReconstructedParticle();
       reconstructedParticle.index = index;
 
-      dynamicLoad(reconstructedParticle, particle);
+      extractOneToManyLinks(
+        links,
+        ["tracks", "clusters", "particles"],
+        particle
+      );
+      extractOneToOneLinks(links, "startVertex", particle);
+
+      dynamicLoad(
+        reconstructedParticle,
+        particle,
+        new Set(["tracks", "clusters", "particles", "startVertex"])
+      );
 
       particles.push(reconstructedParticle);
     }
 
-    return particles;
+    return [particles, links];
   }
 }
 
@@ -164,4 +171,49 @@ export class Track {
 
     return particles;
   }
+}
+
+export class GenericLink {
+  // we may create a specific class for each type if needed
+  constructor(id, from, to) {
+    this.id = id;
+    this.from = from;
+    this.to = to;
+  }
+}
+
+function createLinksManager(types) {
+  const links = {};
+  types.forEach((type) => (links[type] = []));
+  return links;
+}
+
+export function createGenericLink(id, from, { collectionID, index }) {
+  const genericLink = new GenericLink(id, from, index);
+  genericLink.collectionID = collectionID;
+  return genericLink;
+}
+
+function extractOneToManyLinks(linksManager, keys, particle) {
+  for (const key of keys) {
+    particle[key].map((val) => {
+      const link = createGenericLink(
+        linksManager[key].length,
+        particle.index,
+        val
+      );
+      linksManager[key].push(link);
+      particle[key].push(link.id);
+    });
+  }
+}
+
+function extractOneToOneLinks(linksManager, key, particle) {
+  const link = createGenericLink(
+    linksManager[key].length,
+    particle.index,
+    particle[key]
+  );
+  linksManager[key].push(link);
+  particle[key] = link.id;
 }
