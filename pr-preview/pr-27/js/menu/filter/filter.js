@@ -6,13 +6,7 @@ import {
   visibleParticles,
 } from "../../main.js";
 import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
-import {
-  Range,
-  Checkbox,
-  BitfieldCheckbox,
-  ValueCheckBox,
-  buildCriteriaFunction,
-} from "./parameters.js";
+import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
 import { getVisible } from "../../events.js";
 
