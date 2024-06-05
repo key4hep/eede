@@ -96,6 +96,7 @@ class CheckboxBuilder {
     this.checkBoxes = Array.from(this.uniqueValues).map(
       (option) => new Checkbox(this.name, option)
     );
+    this.checkBoxes.sort((a, b) => a.value - b.value);
   }
 
   render(container) {
