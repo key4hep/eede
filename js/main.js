@@ -20,6 +20,9 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const manipulationTools = document.getElementsByClassName("manipulation-tool");
+const filterContent = document.getElementById("filter-content");
+const filter = document.getElementById("filter");
+const filters = document.getElementById("filters");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -153,6 +156,14 @@ function hideInputModal() {
   modal.style.display = "none";
 }
 
+function getWidthFilterContent() {
+  filterContent.style.display = "flex";
+  const rangeFilters = document.getElementById("range-filters");
+  const width = rangeFilters.offsetWidth;
+  filterContent.style.display = "none";
+  return `${width}px`;
+}
+
 document.getElementById("input-file").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
@@ -213,6 +224,9 @@ document
     bits.setCheckBoxes();
     genStatus.setCheckBoxes();
     renderRangeParameters(filters, parametersRange);
+    const width = getWidthFilterContent();
+    filter.style.width = width;
+
     bits.render(filters);
     genStatus.render(filters);
 

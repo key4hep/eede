@@ -27,9 +27,6 @@ filterButton.addEventListener("click", () => {
     openFilter.style.display = "none";
     closeFilter.style.display = "block";
     filterContent.style.display = "flex";
-    const rangeFiltersWidth =
-      document.getElementById("range-filters").offsetWidth;
-    filter.style.width = `${rangeFiltersWidth}px`;
   } else {
     openFilter.style.display = "block";
     closeFilter.style.display = "none";
