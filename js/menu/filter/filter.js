@@ -14,7 +14,6 @@ const openFilter = document.getElementById("open-filter");
 const closeFilter = document.getElementById("close-filter");
 const filterContent = document.getElementById("filter-content");
 const filters = document.getElementById("filters");
-const filter = document.getElementById("filter");
 const apply = document.getElementById("filter-apply");
 const reset = document.getElementById("filter-reset");
 
@@ -82,10 +81,11 @@ parametersRange = parametersRange.sort((a, b) =>
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
 class CheckboxBuilder {
-  constructor(name) {
+  constructor(name, fullName) {
     this.uniqueValues = new Set();
     this.checkBoxes = [];
     this.name = name;
+    this.fullName = fullName;
   }
 
   add(val) {
@@ -101,7 +101,7 @@ class CheckboxBuilder {
   render(container) {
     this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
     const title = document.createElement("p");
-    title.textContent = this.name;
+    title.textContent = this.fullName;
     container.appendChild(title);
     const options = document.createElement("div");
     options.style.display = "flex";
@@ -112,8 +112,8 @@ class CheckboxBuilder {
   }
 }
 
-const bits = new CheckboxBuilder("simStatus");
-const genStatus = new CheckboxBuilder("genStatus");
+const bits = new CheckboxBuilder("simStatus", "Simulator status");
+const genStatus = new CheckboxBuilder("genStatus", "Generator status");
 
 function applyFilter(particlesHandler, currentParticles, visibleParticles) {
   const rangeFunctions = Range.buildFilter(parametersRange);
