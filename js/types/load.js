@@ -1,4 +1,4 @@
-import jsonData from "../../input/p8_ee_ZH_ecm240_edm4hep.edm4hep.json" assert { type: "json" }; // node 20
+import jsonData from "../../input/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json" assert { type: "json" }; // node 20
 import {
   Cluster,
   ParticleID,
@@ -18,10 +18,10 @@ const types = {
 
 const loadersConfig = [
   "ReconstructedParticle",
-  // "ParticleID",
-  // "Vertex",
-  // "Track",
-  // "Cluster",
+  "ParticleID",
+  "Vertex",
+  "Track",
+  "Cluster",
 ];
 
 export function buildLoader(config, version) {
@@ -79,7 +79,7 @@ export function dynamicLoad(object, data, ignore = null) {
     filteredData = data;
   }
 
-  for (const [key, value] of Object.entries(data)) {
+  for (const [key, value] of Object.entries(filteredData)) {
     object[key] = value;
   }
 }
