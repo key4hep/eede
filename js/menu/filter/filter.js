@@ -5,7 +5,7 @@ import {
   currentParticles,
   visibleParticles,
 } from "../../main.js";
-import { CheckboxBuilder } from "./builders.js";
+import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import {
   Range,
   Checkbox,
@@ -109,16 +109,23 @@ parametersRange = parametersRange.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-const bits = new CheckboxBuilder(
+const bitFieldDisplayValues = {
+  23: "Overlay",
+  24: "Stopped",
+  25: "LeftDetector",
+  26: "DecayedInCalorimeter",
+  27: "DecayedInTracker",
+  28: "VertexIsNotEndpointOfParent",
+  29: "Backscatter",
+  30: "CreatedInSimulation",
+};
+
+const bits = new BitFieldBuilder(
   "simStatus",
   "Simulator status",
-  ValueCheckBox
+  bitFieldDisplayValues
 );
-const genStatus = new CheckboxBuilder(
-  "genStatus",
-  "Generator status",
-  BitfieldCheckbox
-);
+const genStatus = new CheckboxBuilder("genStatus", "Generator status");
 
 function applyFilter(particlesHandler, currentParticles, visibleParticles) {
   const rangeFunctions = Range.buildFilter(parametersRange);

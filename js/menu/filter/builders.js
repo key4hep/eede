@@ -1,10 +1,11 @@
+import { ValueCheckBox, BitfieldCheckbox } from "./parameters.js";
+
 export class CheckboxBuilder {
-  constructor(name, fullName, classType) {
+  constructor(name, fullName) {
     this.uniqueValues = new Set();
     this.checkBoxes = [];
     this.name = name;
     this.fullName = fullName;
-    this.classType = classType;
   }
 
   add(val) {
@@ -13,7 +14,7 @@ export class CheckboxBuilder {
 
   setCheckBoxes() {
     this.checkBoxes = Array.from(this.uniqueValues).map(
-      (option) => new this.classType(this.name, option)
+      (option) => new ValueCheckBox(this.name, option)
     );
     this.checkBoxes.sort((a, b) => a.value - b.value);
   }
@@ -31,5 +32,24 @@ export class CheckboxBuilder {
     section.appendChild(options);
     container.appendChild(section);
     this.checkBoxes.forEach((checkbox) => checkbox.render(options));
+  }
+}
+
+export class BitFieldBuilder extends CheckboxBuilder {
+  constructor(name, fullName, dictionary) {
+    super(name, fullName);
+    this.dictionary = dictionary;
+  }
+
+  setCheckBoxes() {
+    this.checkBoxes = Array.from(this.uniqueValues).map(
+      (option) =>
+        new BitfieldCheckbox(
+          this.name,
+          option,
+          BitfieldCheckbox.getDisplayValue(this.dictionary, option)
+        )
+    );
+    this.checkBoxes.sort((a, b) => a.value - b.value);
   }
 }
