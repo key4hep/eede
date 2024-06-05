@@ -112,7 +112,8 @@ export class Checkbox extends FilterParameter {
     container.appendChild(div);
 
     const label = document.createElement("label");
-    label.textContent = `${this.value}`;
+    const text = this.getDisplayValue();
+    label.textContent = text;
     div.appendChild(label);
 
     const input = document.createElement("input");
@@ -129,6 +130,10 @@ export class Checkbox extends FilterParameter {
     input.addEventListener("change", () => {
       this.checked = input.checked;
     });
+  }
+
+  getDisplayValue() {
+    return this.displayValue ?? this.value;
   }
 
   buildCondition() {
@@ -150,6 +155,42 @@ export class Checkbox extends FilterParameter {
     );
 
     return func;
+  }
+}
+
+export class ValueCheckBox extends Checkbox {
+  // Classic checkbox
+  constructor(property, value) {
+    super(property, value);
+  }
+}
+
+const bitFieldDisplayValues = {
+  23: "BitOverlay",
+  24: "BitStopped",
+  25: "BitLeftDetector",
+  26: "BitDecayedInCalorimeter",
+  27: "BitDecayedInTracker",
+  28: "BitVertexIsNotEndpointOfParent",
+  29: "BitBackscatter",
+  30: "BitCreatedInSimulation",
+};
+
+export class BitfieldCheckbox extends Checkbox {
+  // Bit manipulation EDM4hep
+  constructor(property, value) {
+    super(property, value);
+  }
+
+  buildCondition() {
+    if (!this.checked) return null;
+
+    return (particle) =>
+      (parseInt(particle[this.property]) & (1 << parseInt(this.value))) !== 0;
+  }
+
+  getDisplayValue() {
+    return bitFieldDisplayValues[this.value] ?? this.value;
   }
 }
 

@@ -6,7 +6,13 @@ import {
   visibleParticles,
 } from "../../main.js";
 import { CheckboxBuilder } from "./builders.js";
-import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
+import {
+  Range,
+  Checkbox,
+  BitfieldCheckbox,
+  ValueCheckBox,
+  buildCriteriaFunction,
+} from "./parameters.js";
 import { reconnect } from "./reconnect.js";
 import { getVisible } from "../../events.js";
 
@@ -103,8 +109,16 @@ parametersRange = parametersRange.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-const bits = new CheckboxBuilder("simStatus", "Simulator status");
-const genStatus = new CheckboxBuilder("genStatus", "Generator status");
+const bits = new CheckboxBuilder(
+  "simStatus",
+  "Simulator status",
+  ValueCheckBox
+);
+const genStatus = new CheckboxBuilder(
+  "genStatus",
+  "Generator status",
+  BitfieldCheckbox
+);
 
 function applyFilter(particlesHandler, currentParticles, visibleParticles) {
   const rangeFunctions = Range.buildFilter(parametersRange);
