@@ -1,11 +1,10 @@
-import { Checkbox } from "./parameters.js";
-
 export class CheckboxBuilder {
-  constructor(name, fullName) {
+  constructor(name, fullName, classType) {
     this.uniqueValues = new Set();
     this.checkBoxes = [];
     this.name = name;
     this.fullName = fullName;
+    this.classType = classType;
   }
 
   add(val) {
@@ -14,7 +13,7 @@ export class CheckboxBuilder {
 
   setCheckBoxes() {
     this.checkBoxes = Array.from(this.uniqueValues).map(
-      (option) => new Checkbox(this.name, option)
+      (option) => new this.classType(this.name, option)
     );
     this.checkBoxes.sort((a, b) => a.value - b.value);
   }
