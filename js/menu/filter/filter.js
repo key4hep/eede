@@ -5,6 +5,7 @@ import {
   currentParticles,
   visibleParticles,
 } from "../../main.js";
+import { CheckboxBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
 import { getVisible } from "../../events.js";
@@ -51,6 +52,28 @@ export function renderRangeParameters(container, rangeParameters) {
   container.appendChild(rangeFilters);
 }
 
+export function getWidthFilterContent() {
+  const filterContent = document.getElementById("filter-content");
+  filterContent.style.display = "flex";
+  const rangeFilters = document.getElementById("range-filters");
+  const width = rangeFilters.offsetWidth;
+  filterContent.style.display = "none";
+  return `${width}px`;
+}
+
+export function renderGenSim(sim, gen, container) {
+  const div = document.createElement("div");
+  div.style.display = "grid";
+  div.style.width = "fit-content";
+  div.style.columnGap = "10px";
+  div.style.rowGap = "5px";
+  div.style.alignItems = "start";
+  div.style.gridTemplateColumns = "fit-content(100%) fit-content(100%)";
+  sim.render(div);
+  gen.render(div);
+  container.appendChild(div);
+}
+
 let parametersRange = [
   {
     property: "momentum",
@@ -79,39 +102,6 @@ parametersRange = parametersRange.sort((a, b) =>
 );
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
-
-class CheckboxBuilder {
-  constructor(name, fullName) {
-    this.uniqueValues = new Set();
-    this.checkBoxes = [];
-    this.name = name;
-    this.fullName = fullName;
-  }
-
-  add(val) {
-    this.uniqueValues.add(val);
-  }
-
-  setCheckBoxes() {
-    this.checkBoxes = Array.from(this.uniqueValues).map(
-      (option) => new Checkbox(this.name, option)
-    );
-    this.checkBoxes.sort((a, b) => a.value - b.value);
-  }
-
-  render(container) {
-    this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
-    const title = document.createElement("p");
-    title.textContent = this.fullName;
-    container.appendChild(title);
-    const options = document.createElement("div");
-    options.style.display = "flex";
-    options.style.flexDirection = "row";
-    options.style.flexWrap = "wrap";
-    container.appendChild(options);
-    this.checkBoxes.forEach((checkbox) => checkbox.render(options));
-  }
-}
 
 const bits = new CheckboxBuilder("simStatus", "Simulator status");
 const genStatus = new CheckboxBuilder("genStatus", "Generator status");
@@ -153,8 +143,7 @@ function removeFilter(particlesHandler, currentParticles, visibleParticles) {
   filters.innerHTML = "";
 
   renderRangeParameters(filters, parametersRange);
-  bits.render(filters);
-  genStatus.render(filters);
+  renderGenSim(bits, genStatus, filters);
 }
 
 apply.addEventListener("click", () =>
