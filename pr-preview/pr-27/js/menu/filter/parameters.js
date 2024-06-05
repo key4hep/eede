@@ -15,13 +15,12 @@ class FilterParameter {
   }
 }
 
-function createNumberInput(container, placeholder) {
+function createNumberInput(placeholder) {
   const input = document.createElement("input");
   input.type = "number";
   input.placeholder = placeholder;
   input.style.width = "35px";
 
-  container.appendChild(input);
   return input;
 }
 
@@ -36,16 +35,27 @@ export class Range extends FilterParameter {
 
   render(container) {
     const label = document.createElement("label");
-    label.textContent = `${this.property} `;
+    label.textContent = `${this.property}`;
+
+    const inputMin = createNumberInput("min");
+    inputMin.addEventListener("input", (e) => {
+      this.min = e.target.value;
+    });
+
+    const separator = document.createTextNode("-");
+
+    const inputMax = createNumberInput("max");
+    inputMax.addEventListener("input", (e) => {
+      this.max = e.target.value;
+    });
+
+    const unitElement = document.createTextNode(`${this.unit}`);
 
     const content = document.createElement("div");
-    const inputMin = createNumberInput(container, "min");
-    const separator = document.createTextNode(" - ");
-    const inputMax = createNumberInput(container, "max");
     content.appendChild(inputMin);
     content.appendChild(separator);
     content.appendChild(inputMax);
-    content.appendChild(document.createTextNode(` ${this.unit}`));
+    content.appendChild(unitElement);
     content.style.display = "grid";
     content.style.gridAutoFlow = "column";
     content.style.columnGap = "5px";
@@ -55,14 +65,6 @@ export class Range extends FilterParameter {
 
     container.appendChild(label);
     container.appendChild(content);
-
-    inputMin.addEventListener("input", () => {
-      this.min = inputMin.value;
-    });
-
-    inputMax.addEventListener("input", () => {
-      this.max = inputMax.value;
-    });
   }
 
   buildCondition() {

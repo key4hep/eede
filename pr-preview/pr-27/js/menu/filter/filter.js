@@ -13,7 +13,10 @@ const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
 const closeFilter = document.getElementById("close-filter");
 const filterContent = document.getElementById("filter-content");
+const filters = document.getElementById("filters");
 const filter = document.getElementById("filter");
+const apply = document.getElementById("filter-apply");
+const reset = document.getElementById("filter-reset");
 
 let active = false;
 
@@ -34,9 +37,23 @@ filterButton.addEventListener("click", () => {
   }
 });
 
-const filters = document.getElementById("filters");
-const apply = document.getElementById("filter-apply");
-const reset = document.getElementById("filter-reset");
+export function renderRangeParameters(container, rangeParameters) {
+  const rangeFilters = document.createElement("div");
+  rangeFilters.id = "range-filters";
+  rangeFilters.style.display = "grid";
+  rangeFilters.style.width = "fit-content";
+  rangeFilters.style.columnGap = "10px";
+  rangeFilters.style.rowGap = "5px";
+  rangeFilters.style.alignItems = "center";
+  rangeFilters.style.gridTemplateColumns =
+    "fit-content(100%) fit-content(100%)";
+  rangeParameters.forEach((parameter) => {
+    parameter.min = undefined;
+    parameter.max = undefined;
+    parameter.render(rangeFilters);
+  });
+  container.appendChild(rangeFilters);
+}
 
 let parametersRange = [
   {
@@ -67,16 +84,6 @@ parametersRange = parametersRange.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-const rangeFilters = document.createElement("div");
-filters.appendChild(rangeFilters);
-rangeFilters.style.display = "grid";
-rangeFilters.id = "range-filters";
-rangeFilters.style.width = "fit-content";
-rangeFilters.style.columnGap = "10px";
-rangeFilters.style.gridTemplateColumns = "fit-content(100%) fit-content(100%)";
-
-parametersRange.forEach((parameter) => parameter.render(rangeFilters));
-
 class CheckboxBuilder {
   constructor(name) {
     this.uniqueValues = new Set();
@@ -94,15 +101,16 @@ class CheckboxBuilder {
     );
   }
 
-  render() {
-    if (this.checkBoxes.length !== 0)
-      this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
-    filters.innerHTML += `<p>${this.name}</p>`;
+  render(container) {
+    this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
+    const title = document.createElement("p");
+    title.textContent = this.name;
+    container.appendChild(title);
     const options = document.createElement("div");
     options.style.display = "flex";
     options.style.flexDirection = "row";
     options.style.flexWrap = "wrap";
-    filters.appendChild(options);
+    container.appendChild(options);
     this.checkBoxes.forEach((checkbox) => checkbox.render(options));
   }
 }
@@ -146,14 +154,9 @@ function removeFilter(particlesHandler, currentParticles, visibleParticles) {
 
   filters.innerHTML = "";
 
-  parametersRange.forEach((parameter) => {
-    parameter.min = undefined;
-    parameter.max = undefined;
-    parameter.render(filters);
-  });
-
-  bits.render();
-  genStatus.render();
+  renderRangeParameters(filters, parametersRange);
+  bits.render(filters);
+  genStatus.render(filters);
 }
 
 apply.addEventListener("click", () =>
@@ -170,4 +173,4 @@ reset.addEventListener("click", () =>
   removeFilter(particlesHandler, currentParticles, visibleParticles)
 );
 
-export { bits, genStatus };
+export { bits, genStatus, parametersRange };
