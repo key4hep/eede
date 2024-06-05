@@ -1,7 +1,12 @@
 import { errorMsg, loadMCParticles } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
-import { bits, genStatus } from "./menu/filter/filter.js";
+import {
+  bits,
+  genStatus,
+  renderRangeParameters,
+  parametersRange,
+} from "./menu/filter/filter.js";
 import {
   mouseDown,
   mouseUp,
@@ -207,8 +212,9 @@ document
     });
     bits.setCheckBoxes();
     genStatus.setCheckBoxes();
-    bits.render();
-    genStatus.render();
+    renderRangeParameters(filters, parametersRange);
+    bits.render(filters);
+    genStatus.render(filters);
 
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
