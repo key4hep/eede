@@ -6,6 +6,8 @@ import {
   genStatus,
   renderRangeParameters,
   parametersRange,
+  getWidthFilterContent,
+  renderGenSim,
 } from "./menu/filter/filter.js";
 import {
   mouseDown,
@@ -20,6 +22,8 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const manipulationTools = document.getElementsByClassName("manipulation-tool");
+const filter = document.getElementById("filter");
+const filters = document.getElementById("filters");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -213,8 +217,10 @@ document
     bits.setCheckBoxes();
     genStatus.setCheckBoxes();
     renderRangeParameters(filters, parametersRange);
-    bits.render(filters);
-    genStatus.render(filters);
+    const width = getWidthFilterContent();
+    filter.style.width = width;
+
+    renderGenSim(bits, genStatus, filters);
 
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
