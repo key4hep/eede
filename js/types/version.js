@@ -12,18 +12,18 @@ export class Version {
 
   greaterOrEqualThan(version) {
     return (
-      this.major >= version.major ||
+      this.major > version.major ||
       (this.major === version.major &&
-        (this.minor >= version.minor ||
+        (this.minor > version.minor ||
           (this.minor === version.minor && this.patch >= version.patch)))
     );
   }
 
   lessOrEqualThan(version) {
     return (
-      this.major <= version.major ||
+      this.major < version.major ||
       (this.major === version.major &&
-        (this.minor <= version.minor ||
+        (this.minor < version.minor ||
           (this.minor === version.minor && this.patch <= version.patch)))
     );
   }

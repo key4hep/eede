@@ -1,4 +1,5 @@
-import { buildLoader, loadParticles, dynamicLoad } from "../js/types/load";
+import { buildLoader, loadParticles } from "../js/types/load";
+import { dynamicLoad } from "../js/types/dynamic.js";
 import { ReconstructedParticle } from "../js/types/reconstruction";
 
 describe("build loader", () => {
