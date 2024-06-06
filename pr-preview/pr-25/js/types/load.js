@@ -1,20 +1,6 @@
 import jsonData from "../../input/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json" assert { type: "json" }; // node 20
-import {
-  Cluster,
-  ParticleID,
-  ReconstructedParticle,
-  Vertex,
-  Track,
-} from "./reconstruction.js";
+import { types } from "./reconstruction.js";
 import { compatible } from "./version.js";
-
-const types = {
-  "Cluster": Cluster,
-  "ParticleID": ParticleID,
-  "ReconstructedParticle": ReconstructedParticle,
-  "Vertex": Vertex,
-  "Track": Track,
-};
 
 const loadersConfig = [
   "ReconstructedParticle",
@@ -66,22 +52,6 @@ export function loadParticles(jsonData, event, loadersConfig) {
   }
 
   return particles;
-}
-
-export function dynamicLoad(object, data, ignore = null) {
-  let filteredData = {};
-
-  if (ignore !== null) {
-    for (const key in data) {
-      if (!ignore.has(key)) filteredData[key] = data[key];
-    }
-  } else {
-    filteredData = data;
-  }
-
-  for (const [key, value] of Object.entries(filteredData)) {
-    object[key] = value;
-  }
 }
 
 loadParticles(jsonData, 0, loadersConfig);

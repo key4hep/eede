@@ -1,4 +1,4 @@
-import { dynamicLoad } from "./load.js";
+import { dynamicLoad } from "./dynamic.js";
 
 export class Cluster {
   static MIN_VERSION = "0.7.0"; // may vary per type of particle
@@ -46,7 +46,7 @@ export class ParticleID {
   constructor() {
     // Physics properties
     this.type = 0;
-    this.pdg = 0;
+    this.PDG = 0;
     this.algorithmType = 0;
     this.likelihood = 0;
     this.parameters = [];
@@ -78,7 +78,7 @@ export class ReconstructedParticle {
 
   constructor() {
     // Physics properties
-    this.pdg = 0;
+    this.PDG = 0;
     this.energy = 0; // GeV
     this.momentum = {}; // GeV
     this.referencePoint = {}; // mm
@@ -213,7 +213,7 @@ export class GenericLink {
   }
 }
 
-function createLinksManager(types) {
+export function createLinksManager(types) {
   const links = {};
   types.forEach((type) => (links[type] = []));
   return links;
@@ -225,7 +225,12 @@ export function createGenericLink(id, from, { collectionID, index }) {
   return genericLink;
 }
 
-function extractOneToManyLinks(linksManager, keys, newParticle, particleData) {
+export function extractOneToManyLinks(
+  linksManager,
+  keys,
+  newParticle,
+  particleData
+) {
   for (const key of keys) {
     particleData[key].map((val) => {
       const link = createGenericLink(
@@ -239,7 +244,12 @@ function extractOneToManyLinks(linksManager, keys, newParticle, particleData) {
   }
 }
 
-function extractOneToOneLink(linksManager, key, newParticle, particleData) {
+export function extractOneToOneLink(
+  linksManager,
+  key,
+  newParticle,
+  particleData
+) {
   const link = createGenericLink(
     linksManager[key].length,
     newParticle.index,
@@ -248,3 +258,11 @@ function extractOneToOneLink(linksManager, key, newParticle, particleData) {
   linksManager[key].push(link);
   newParticle[key] = link.id;
 }
+
+export const types = {
+  "Cluster": Cluster,
+  "ParticleID": ParticleID,
+  "ReconstructedParticle": ReconstructedParticle,
+  "Vertex": Vertex,
+  "Track": Track,
+};
