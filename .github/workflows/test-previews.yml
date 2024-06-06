@@ -1,14 +1,20 @@
-name: Build and test
+name: Test previews
 on:
-    push:
-        branches: [main, release]
+    workflow_call:
+        inputs:
+            repository:
+                required: true
+                type: string
 
 jobs:
     test:
+        environment: github-pages
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+            - name: Checkout PR
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ inputs.repository }}
             - name: Use Node.js
               uses: actions/setup-node@v4
               with:

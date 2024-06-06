@@ -9,7 +9,13 @@ on:
             - closed
 
 jobs:
+    test:
+        uses: key4hep/dmx/.github/workflows/test-previews.yml@main
+        with:
+            repository: ${{ github.event.pull_request.head.sha }}
+
     deploy-preview:
+        needs: test
         environment: github-pages
         runs-on: ubuntu-latest
         permissions:
