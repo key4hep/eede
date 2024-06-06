@@ -63,17 +63,16 @@ export function getWidthFilterContent() {
 
 export function renderGenSim(sim, gen, container) {
   const div = document.createElement("div");
-  div.style.display = "grid";
+  div.style.display = "flex";
+  div.style.flexDirection = "column";
   div.style.width = "fit-content";
-  div.style.columnGap = "10px";
-  div.style.rowGap = "5px";
   div.style.alignItems = "start";
-  div.style.gridTemplateColumns = "fit-content(100%) fit-content(100%)";
   sim.render(div);
   gen.render(div);
   container.appendChild(div);
 }
 
+// TODO: Check in the future for other types of particles
 let parametersRange = [
   {
     property: "momentum",
@@ -103,7 +102,7 @@ parametersRange = parametersRange.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-const bitFieldDisplayValues = {
+const SimStatusBitFieldDisplayValues = {
   23: "Overlay",
   24: "Stopped",
   25: "LeftDetector",
@@ -116,9 +115,11 @@ const bitFieldDisplayValues = {
 
 const bits = new BitFieldBuilder(
   "simStatus",
-  "Simulator status",
-  bitFieldDisplayValues
+  "Simulation status",
+  SimStatusBitFieldDisplayValues
 );
+bits.setCheckBoxes();
+
 const genStatus = new CheckboxBuilder("genStatus", "Generator status");
 
 function applyFilter(particlesHandler, currentParticles, visibleParticles) {
