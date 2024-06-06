@@ -211,10 +211,8 @@ document
     const { infoBoxes } = currentParticles;
 
     infoBoxes.forEach((infoBox) => {
-      bits.add(infoBox.simStatus);
       genStatus.add(infoBox.genStatus);
     });
-    bits.setCheckBoxes();
     genStatus.setCheckBoxes();
     renderRangeParameters(filters, parametersRange);
     const width = getWidthFilterContent();

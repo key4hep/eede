@@ -21,6 +21,7 @@ export class CheckboxBuilder {
 
   render(container) {
     const section = document.createElement("div");
+    section.style.maxWidth = "fit-content";
     this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
     const title = document.createElement("p");
     title.textContent = this.fullName;
@@ -42,13 +43,8 @@ export class BitFieldBuilder extends CheckboxBuilder {
   }
 
   setCheckBoxes() {
-    this.checkBoxes = Array.from(this.uniqueValues).map(
-      (option) =>
-        new BitfieldCheckbox(
-          this.name,
-          option,
-          BitfieldCheckbox.getDisplayValue(this.dictionary, option)
-        )
+    this.checkBoxes = Object.entries(this.dictionary).map(
+      ([key, value]) => new BitfieldCheckbox(this.name, key, value)
     );
     this.checkBoxes.sort((a, b) => a.value - b.value);
   }
