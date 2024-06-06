@@ -46,7 +46,7 @@ export class ParticleID {
   constructor() {
     // Physics properties
     this.type = 0;
-    this.pdg = 0;
+    this.PDG = 0;
     this.algorithmType = 0;
     this.likelihood = 0;
     this.parameters = [];
@@ -78,7 +78,7 @@ export class ReconstructedParticle {
 
   constructor() {
     // Physics properties
-    this.pdg = 0;
+    this.PDG = 0;
     this.energy = 0; // GeV
     this.momentum = {}; // GeV
     this.referencePoint = {}; // mm
