@@ -116,13 +116,13 @@ export class Checkbox extends FilterParameter {
     const div = document.createElement("div");
     container.appendChild(div);
 
-    const label = document.createElement("label");
-    label.textContent = this.displayValue;
-    div.appendChild(label);
-
     const input = document.createElement("input");
     input.type = "checkbox";
     div.appendChild(input);
+
+    const label = document.createElement("label");
+    label.textContent = this.displayValue;
+    div.appendChild(label);
 
     div.style.display = "flex";
     div.style.flexDirection = "row";
