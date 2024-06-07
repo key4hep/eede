@@ -24,6 +24,7 @@ export class CheckboxBuilder {
     section.style.maxWidth = "fit-content";
     this.checkBoxes.forEach((checkbox) => (checkbox.checked = false));
     const title = document.createElement("p");
+    title.style.fontWeight = "bold";
     title.textContent = this.fullName;
     section.appendChild(title);
     const options = document.createElement("div");
