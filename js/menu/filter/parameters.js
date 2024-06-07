@@ -116,13 +116,13 @@ export class Checkbox extends FilterParameter {
     const div = document.createElement("div");
     container.appendChild(div);
 
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    div.appendChild(input);
-
     const label = document.createElement("label");
     label.textContent = this.displayValue;
     div.appendChild(label);
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    div.appendChild(input);
 
     div.style.display = "flex";
     div.style.flexDirection = "row";
@@ -176,6 +176,30 @@ export class BitfieldCheckbox extends Checkbox {
 
     return (particle) =>
       (parseInt(particle[this.property]) & (1 << parseInt(this.value))) !== 0;
+  }
+
+  render(container) {
+    const div = document.createElement("div");
+    container.appendChild(div);
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    div.appendChild(input);
+
+    const label = document.createElement("label");
+    label.textContent = this.displayValue;
+    div.appendChild(label);
+
+    div.style.display = "flex";
+    div.style.flexDirection = "row";
+    div.style.alignItems = "center";
+    div.style.backgroundColor = "#dddddd";
+    div.style.borderRadius = "5px";
+    div.style.margin = "3px";
+
+    input.addEventListener("change", () => {
+      this.checked = input.checked;
+    });
   }
 
   static getDisplayValue(dictionary, option) {
