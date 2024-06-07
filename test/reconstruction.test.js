@@ -3,7 +3,6 @@ import {
   extractOneToOneLink,
   createLinksManager,
   createGenericLink,
-  GenericLink,
 } from "../js/types/reconstruction.js";
 
 test("it should create a generic link", () => {

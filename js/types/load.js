@@ -1,14 +1,5 @@
-import jsonData from "../../input/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json" assert { type: "json" }; // node 20
 import { types } from "./reconstruction.js";
 import { compatible } from "./version.js";
-
-const loadersConfig = [
-  "ReconstructedParticle",
-  "ParticleID",
-  "Vertex",
-  "Track",
-  "Cluster",
-];
 
 export function buildLoader(config, version) {
   const newLoader = {};
@@ -53,5 +44,3 @@ export function loadParticles(jsonData, event, loadersConfig) {
 
   return particles;
 }
-
-loadParticles(jsonData, 0, loadersConfig);
