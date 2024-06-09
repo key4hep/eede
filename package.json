@@ -3,9 +3,10 @@
 	"type": "module",
 	"version": "1.0.0",
 	"scripts": {
-		"test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
 		"build": "node ./model/index.js",
-		"download": "node ./model/download.js"
+		"download": "node ./model/download.js",
+		"update": "npm run download && npm run build",
+		"test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
 	},
 	"devDependencies": {
 		"jest": "^29.7.0",

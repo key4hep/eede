@@ -1,17 +1,5 @@
-import { buildLoader, loadParticles } from "../js/types/load";
-import { dynamicLoad } from "../js/types/dynamic.js";
+import { loadParticles } from "../js/types/load";
 import { ReconstructedParticle } from "../js/types/reconstruction";
-
-describe("build loader", () => {
-  it("should create a loader with a set of types", () => {
-    const loadersConfig = ["ReconstructedParticle", "ParticleID"];
-    const loader = buildLoader(loadersConfig, "0.7.0");
-
-    expect(Object.values(loader).every((f) => typeof f === "function")).toBe(
-      true
-    );
-  });
-});
 
 describe("load different types of particles", () => {
   let data = {};

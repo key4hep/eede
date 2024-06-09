@@ -1,46 +1,62 @@
-import { types } from "./reconstruction.js";
-import { compatible } from "./version.js";
+import { reconstructionTypes } from "./reconstruction.js";
+import { datatypes } from "../../output/datatypes.js";
+import {
+  loadMembers,
+  loadOneToOneRelations,
+  loadOneToManyRelations,
+} from "./dynamic.js";
+import json from "../../input/p8_ee_ZH_ecm240_edm4hep.edm4hep.json" assert { type: "json" };
 
-export function buildLoader(config, version) {
-  const newLoader = {};
+export function loadParticleType(collection, datatype, type) {
+  const particles = [];
 
-  if (typeof config === "string") config = [config];
+  for (const [index, particle] of collection.entries()) {
+    const newParticle = new type();
+    newParticle.id = index;
 
-  for (const particle of config) {
-    if (types.hasOwnProperty(particle)) {
-      const isCompatible = compatible(types[particle], version);
+    loadMembers(newParticle, particle, datatype.members);
 
-      if (isCompatible) {
-        newLoader[particle] = types[particle].load;
-      } else {
-        newLoader[particle] = () => {
-          return [];
-        };
-      }
-    }
+    if (datatype.oneToOneRelations)
+      loadOneToOneRelations(newParticle, particle, datatype.oneToOneRelations);
+
+    if (datatype.oneToManyRelations)
+      loadOneToManyRelations(
+        newParticle,
+        particle,
+        datatype.oneToManyRelations
+      );
+
+    particles.push(newParticle);
   }
 
-  return newLoader;
+  return particles;
 }
 
-export function loadParticles(jsonData, event, loadersConfig) {
+export function loadParticles(jsonData, event, particlesToLoad) {
   const eventData = jsonData["Event " + event];
-  const version = eventData.edm4hepVersion;
-
-  const loader = buildLoader(loadersConfig, version);
 
   const particles = {};
-  Object.keys(loader).forEach((key) => (particles[key] = []));
 
-  for (const [type, loadFunction] of Object.entries(loader)) {
+  for (const type of particlesToLoad) {
     const particlesType = Object.values(eventData).filter(
-      (element) => element.collType === `edm4hep::${type}Collection`
+      (element) => element.collType === `${type}Collection`
     );
 
     particlesType.forEach(({ collection }) => {
-      const [particles, links] = loadFunction(collection);
+      loadParticleType(collection, datatypes[type], reconstructionTypes[type]);
     });
   }
 
   return particles;
 }
+
+const particlesToLoad = [
+  // subset of types
+  "edm4hep::Cluster",
+  "edm4hep::ReconstructedParticle",
+  "edm4hep::Vertex",
+  "edm4hep::Track",
+  "edm4hep::ParticleID",
+];
+
+loadParticles(json, 0, particlesToLoad);

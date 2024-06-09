@@ -65,7 +65,10 @@ const parseDatatypesMembers = (members) => {
 };
 
 const parseRelation = (relations) => {
-  return relations.map((relation) => new Relation(parseString(relation)));
+  return relations.map((relation) => {
+    const [type, name] = parseString(relation);
+    return new Relation(type, name);
+  });
 };
 
 selectedTypes.forEach(([name, values]) => {
