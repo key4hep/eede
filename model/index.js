@@ -29,16 +29,16 @@ const datatypesDefinition = {};
 class Component {}
 
 class DataTypeMember {
-  constructor(type, name, unit = null) {
-    this.type = type;
+  constructor(type = null, name, unit = null) {
+    if (type) this.type = type;
     this.name = name;
     if (unit) this.unit = unit;
   }
 }
 
 class Relation {
-  constructor(type, name) {
-    this.type = type;
+  constructor(type = null, name) {
+    if (type) this.type = type;
     this.name = name;
   }
 }
@@ -57,8 +57,11 @@ const parseDatatypesMembers = (members) => {
   for (const member of members) {
     let [type, name, unit] = parseString(member);
     if (unit) unit = unit.replace("[", "").replace("]", "");
-    const newMember = new DataTypeMember(type, name, unit);
-    newMembers.push(newMember);
+    if (type.includes("edm4hep::")) {
+      newMembers.push(new DataTypeMember(type, name, unit));
+    } else {
+      newMembers.push(new DataTypeMember(null, name, unit));
+    }
   }
 
   return newMembers;
@@ -67,7 +70,11 @@ const parseDatatypesMembers = (members) => {
 const parseRelation = (relations) => {
   return relations.map((relation) => {
     const [type, name] = parseString(relation);
-    return new Relation(type, name);
+    if (type.includes("edm4hep::")) {
+      return new Relation(type, name);
+    } else {
+      return new Relation(null, name);
+    }
   });
 };
 

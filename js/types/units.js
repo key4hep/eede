@@ -3,5 +3,5 @@ export const units = {
   "mass": "GeV",
   "time": "ns",
   "momentum": "GeV",
-  "vertex": "mm",
+  "position": "mm", // more to come
 };

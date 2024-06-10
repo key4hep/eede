@@ -1,36 +1,30 @@
-import { Particle } from "./particle.js";
+import { EDMObject } from "./edmobject.js";
 
-class Reconstruction extends Particle {
+export class Cluster extends EDMObject {
   constructor() {
     super();
   }
 }
 
-export class Cluster extends Reconstruction {
+export class ParticleID extends EDMObject {
   constructor() {
     super();
   }
 }
 
-export class ParticleID extends Reconstruction {
+export class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
   }
 }
 
-export class ReconstructedParticle extends Reconstruction {
+export class Vertex extends EDMObject {
   constructor() {
     super();
   }
 }
 
-export class Vertex extends Reconstruction {
-  constructor() {
-    super();
-  }
-}
-
-export class Track extends Reconstruction {
+export class Track extends EDMObject {
   constructor() {
     super();
   }

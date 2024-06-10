@@ -5,7 +5,6 @@ import {
   loadOneToOneRelations,
   loadOneToManyRelations,
 } from "./dynamic.js";
-import json from "../../input/p8_ee_ZH_ecm240_edm4hep.edm4hep.json" assert { type: "json" };
 
 export function loadParticleType(collection, datatype, type) {
   const particles = [];
@@ -51,12 +50,10 @@ export function loadParticles(jsonData, event, particlesToLoad) {
 }
 
 const particlesToLoad = [
-  // subset of types
+  // subset of datatypes
   "edm4hep::Cluster",
   "edm4hep::ReconstructedParticle",
   "edm4hep::Vertex",
   "edm4hep::Track",
   "edm4hep::ParticleID",
 ];
-
-loadParticles(json, 0, particlesToLoad);

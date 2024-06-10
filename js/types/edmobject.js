@@ -1,4 +1,4 @@
-export class Particle {
+export class EDMObject {
   constructor() {
     this.members = {};
   }

@@ -2,28 +2,22 @@ export const datatypes = {
   "edm4hep::MCParticle": {
     "members": [
       {
-        "type": "int32_t",
         "name": "PDG"
       },
       {
-        "type": "int32_t",
         "name": "generatorStatus"
       },
       {
-        "type": "int32_t",
         "name": "simulatorStatus"
       },
       {
-        "type": "float",
         "name": "charge"
       },
       {
-        "type": "float",
         "name": "time",
         "unit": "ns"
       },
       {
-        "type": "double",
         "name": "mass",
         "unit": "GeV"
       },
@@ -70,19 +64,15 @@ export const datatypes = {
   "edm4hep::ParticleID": {
     "members": [
       {
-        "type": "int32_t",
         "name": "type"
       },
       {
-        "type": "int32_t",
         "name": "PDG"
       },
       {
-        "type": "int32_t",
         "name": "algorithmType"
       },
       {
-        "type": "float",
         "name": "likelihood"
       }
     ],
@@ -96,16 +86,13 @@ export const datatypes = {
   "edm4hep::Cluster": {
     "members": [
       {
-        "type": "int32_t",
         "name": "type"
       },
       {
-        "type": "float",
         "name": "energy",
         "unit": "GeV"
       },
       {
-        "type": "float",
         "name": "energyError",
         "unit": "GeV"
       },
@@ -119,11 +106,9 @@ export const datatypes = {
         "name": "positionError"
       },
       {
-        "type": "float",
         "name": "iTheta"
       },
       {
-        "type": "float",
         "name": "phi"
       },
       {
@@ -146,27 +131,21 @@ export const datatypes = {
   "edm4hep::Track": {
     "members": [
       {
-        "type": "int32_t",
         "name": "type"
       },
       {
-        "type": "float",
         "name": "chi2"
       },
       {
-        "type": "int32_t",
         "name": "ndf"
       },
       {
-        "type": "float",
         "name": "dEdx"
       },
       {
-        "type": "float",
         "name": "dEdxError"
       },
       {
-        "type": "float",
         "name": "radiusOfInnermostHit"
       }
     ],
@@ -184,15 +163,12 @@ export const datatypes = {
   "edm4hep::Vertex": {
     "members": [
       {
-        "type": "int32_t",
         "name": "primary"
       },
       {
-        "type": "float",
         "name": "chi2"
       },
       {
-        "type": "float",
         "name": "probability"
       },
       {
@@ -204,7 +180,6 @@ export const datatypes = {
         "name": "covMatrix"
       },
       {
-        "type": "int32_t",
         "name": "algorithmType"
       }
     ],
@@ -218,11 +193,9 @@ export const datatypes = {
   "edm4hep::ReconstructedParticle": {
     "members": [
       {
-        "type": "int32_t",
         "name": "PDG"
       },
       {
-        "type": "float",
         "name": "energy",
         "unit": "GeV"
       },
@@ -237,16 +210,13 @@ export const datatypes = {
         "unit": "mm"
       },
       {
-        "type": "float",
         "name": "charge"
       },
       {
-        "type": "float",
         "name": "mass",
         "unit": "GeV"
       },
       {
-        "type": "float",
         "name": "goodnessOfPID"
       },
       {
