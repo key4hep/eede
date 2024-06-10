@@ -1,0 +1,29 @@
+{
+	"name": "dmx",
+	"type": "module",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "node ./model/index.js",
+		"download": "node ./model/download.js",
+		"update": "npm run download && npm run build",
+		"test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
+	},
+	"devDependencies": {
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/key4hep/dmx.git"
+	},
+	"keywords": [
+		"dmx",
+		"HEP",
+		"key4hep"
+	],
+	"license": "BSD-2-Clause",
+	"homepage": "https://key4hep.github.io/dmx/",
+	"dependencies": {
+		"js-yaml": "^4.1.0"
+	}
+}
