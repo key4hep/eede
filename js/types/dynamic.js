@@ -1,4 +1,4 @@
-import { createLink } from "./reconstruction.js";
+import { createLink } from "./objects.js";
 
 export function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {

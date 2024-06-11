@@ -1,4 +1,4 @@
-import { reconstructionTypes } from "./reconstruction.js";
+import { objectTypes } from "./objects.js";
 import { datatypes } from "../../output/datatypes.js";
 import {
   loadMembers,
@@ -6,54 +6,52 @@ import {
   loadOneToManyRelations,
 } from "./dynamic.js";
 
-export function loadParticleType(collection, datatype, type) {
-  const particles = [];
+export function loadObjectType(collection, datatype, type) {
+  const objects = [];
 
   for (const [index, particle] of collection.entries()) {
-    const newParticle = new type();
-    newParticle.id = index;
+    const newObject = new type();
+    newObject.id = index;
 
-    loadMembers(newParticle, particle, datatype.members);
+    loadMembers(newObject, particle, datatype.members);
 
     if (datatype.oneToOneRelations)
-      loadOneToOneRelations(newParticle, particle, datatype.oneToOneRelations);
+      loadOneToOneRelations(newObject, particle, datatype.oneToOneRelations);
 
     if (datatype.oneToManyRelations)
-      loadOneToManyRelations(
-        newParticle,
-        particle,
-        datatype.oneToManyRelations
-      );
+      loadOneToManyRelations(newObject, particle, datatype.oneToManyRelations);
 
-    particles.push(newParticle);
+    objects.push(newObject);
   }
 
-  return particles;
+  return objects;
 }
 
-export function loadParticles(jsonData, event, particlesToLoad) {
+export function loadObjects(jsonData, event, objectsToLoad) {
   const eventData = jsonData["Event " + event];
 
-  const particles = {};
+  const objects = {};
 
-  for (const type of particlesToLoad) {
-    const particlesType = Object.values(eventData).filter(
+  for (const type of objectsToLoad) {
+    const objectsType = Object.values(eventData).filter(
       (element) => element.collType === `${type}Collection`
     );
 
-    particlesType.forEach(({ collection }) => {
-      loadParticleType(collection, datatypes[type], reconstructionTypes[type]);
+    objectsType.forEach(({ collection }) => {
+      loadObjectType(collection, datatypes[type], objectTypes[type]);
     });
   }
 
-  return particles;
+  return objects;
 }
 
-const particlesToLoad = [
+const objectsToLoad = [
   // subset of datatypes
+  // should be changes dynamically by the user
   "edm4hep::Cluster",
   "edm4hep::ReconstructedParticle",
   "edm4hep::Vertex",
   "edm4hep::Track",
   "edm4hep::ParticleID",
+  "edm4hep::MCParticle",
 ];
