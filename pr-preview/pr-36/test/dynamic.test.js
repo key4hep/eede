@@ -2,7 +2,7 @@ import {
   loadMembers,
   loadOneToOneRelations,
   loadOneToManyRelations,
-} from "../js/types/dynamic";
+} from "../js/types/dynamic.js";
 
 let object;
 let data;

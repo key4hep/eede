@@ -22,41 +22,33 @@ export const datatypes = {
         "unit": "GeV"
       },
       {
-        "type": "edm4hep::Vector3d",
         "name": "vertex",
         "unit": "mm"
       },
       {
-        "type": "edm4hep::Vector3d",
         "name": "endpoint",
         "unit": "mm"
       },
       {
-        "type": "edm4hep::Vector3d",
         "name": "momentum",
         "unit": "GeV"
       },
       {
-        "type": "edm4hep::Vector3d",
         "name": "momentumAtEndpoint",
         "unit": "GeV"
       },
       {
-        "type": "edm4hep::Vector3f",
         "name": "spin"
       },
       {
-        "type": "edm4hep::Vector2i",
         "name": "colorFlow"
       }
     ],
     "oneToManyRelations": [
       {
-        "type": "edm4hep::MCParticle",
         "name": "parents"
       },
       {
-        "type": "edm4hep::MCParticle",
         "name": "daughters"
       }
     ]
@@ -78,7 +70,6 @@ export const datatypes = {
     ],
     "oneToOneRelations": [
       {
-        "type": "edm4hep::ReconstructedParticle",
         "name": "particle"
       }
     ]
@@ -97,12 +88,10 @@ export const datatypes = {
         "unit": "GeV"
       },
       {
-        "type": "edm4hep::Vector3f",
         "name": "position",
         "unit": "mm"
       },
       {
-        "type": "edm4hep::CovMatrix3f",
         "name": "positionError"
       },
       {
@@ -112,18 +101,15 @@ export const datatypes = {
         "name": "phi"
       },
       {
-        "type": "edm4hep::Vector3f",
         "name": "directionError",
         "unit": "mm**2"
       }
     ],
     "oneToManyRelations": [
       {
-        "type": "edm4hep::Cluster",
         "name": "clusters"
       },
       {
-        "type": "edm4hep::CalorimeterHit",
         "name": "hits"
       }
     ]
@@ -151,11 +137,9 @@ export const datatypes = {
     ],
     "oneToManyRelations": [
       {
-        "type": "edm4hep::TrackerHit",
         "name": "trackerHits"
       },
       {
-        "type": "edm4hep::Track",
         "name": "tracks"
       }
     ]
@@ -172,11 +156,9 @@ export const datatypes = {
         "name": "probability"
       },
       {
-        "type": "edm4hep::Vector3f",
         "name": "position"
       },
       {
-        "type": "edm4hep::CovMatrix3f",
         "name": "covMatrix"
       },
       {
@@ -185,7 +167,6 @@ export const datatypes = {
     ],
     "oneToOneRelations": [
       {
-        "type": "edm4hep::ReconstructedParticle",
         "name": "associatedParticle"
       }
     ]
@@ -200,12 +181,10 @@ export const datatypes = {
         "unit": "GeV"
       },
       {
-        "type": "edm4hep::Vector3f",
         "name": "momentum",
         "unit": "GeV"
       },
       {
-        "type": "edm4hep::Vector3f",
         "name": "referencePoint",
         "unit": "mm"
       },
@@ -220,27 +199,22 @@ export const datatypes = {
         "name": "goodnessOfPID"
       },
       {
-        "type": "edm4hep::CovMatrix4f",
         "name": "covMatrix"
       }
     ],
     "oneToManyRelations": [
       {
-        "type": "edm4hep::Cluster",
         "name": "clusters"
       },
       {
-        "type": "edm4hep::Track",
         "name": "tracks"
       },
       {
-        "type": "edm4hep::ReconstructedParticle",
         "name": "particles"
       }
     ],
     "oneToOneRelations": [
       {
-        "type": "edm4hep::Vertex",
         "name": "startVertex"
       }
     ]

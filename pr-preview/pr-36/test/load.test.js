@@ -1,6 +1,6 @@
-import { loadParticleType } from "../js/types/load";
-import { datatypes } from "../output/datatypes";
-import { reconstructionTypes } from "../js/types/reconstruction";
+import { loadObjectType } from "../js/types/load.js";
+import { datatypes } from "../output/datatypes.js";
+import { objectTypes } from "../js/types/objects.js";
 
 test("load a collection of particles", () => {
   const type = "edm4hep::Track";
@@ -160,10 +160,10 @@ test("load a collection of particles", () => {
       "type": 0,
     },
   ];
-  const particles = loadParticleType(
+  const particles = loadObjectType(
     collection,
     datatypes[type],
-    reconstructionTypes[type]
+    objectTypes[type]
   );
   expect(particles).toEqual([
     {
