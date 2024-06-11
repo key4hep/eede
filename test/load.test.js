@@ -1,6 +1,6 @@
-import { loadObjectType } from "../js/types/load";
-import { datatypes } from "../output/datatypes";
-import { objectTypes } from "../js/types/reconstruction";
+import { loadObjectType } from "../js/types/load.js";
+import { datatypes } from "../output/datatypes.js";
+import { objectTypes } from "../js/types/objects.js";
 
 test("load a collection of particles", () => {
   const type = "edm4hep::Track";
