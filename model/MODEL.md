@@ -26,7 +26,7 @@ You can also run
 npm run update
 ```
 
-to run both processes at once and inmediatly update the dmx application.
+to run both processes at once and immediatly update the dmx application.
 
 ## Further improvements
 
