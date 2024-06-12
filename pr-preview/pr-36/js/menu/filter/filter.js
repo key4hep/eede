@@ -1,13 +1,22 @@
-import { Link } from "../../objects.js";
 import { drawAll } from "../../draw.js";
-import { parentLinks, childrenLinks, infoBoxes, ctx } from "../../main.js";
+import {
+  ctx,
+  particlesHandler,
+  currentParticles,
+  visibleParticles,
+} from "../../main.js";
+import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
+import { getVisible } from "../../events.js";
 
 const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
 const closeFilter = document.getElementById("close-filter");
 const filterContent = document.getElementById("filter-content");
+const filters = document.getElementById("filters");
+const apply = document.getElementById("filter-apply");
+const reset = document.getElementById("filter-reset");
 
 let active = false;
 
@@ -25,54 +34,146 @@ filterButton.addEventListener("click", () => {
   }
 });
 
-const filters = document.getElementById("filters");
-const apply = document.getElementById("filter-apply");
-const reset = document.getElementById("filter-reset");
+export function renderRangeParameters(container, rangeParameters) {
+  const rangeFilters = document.createElement("div");
+  rangeFilters.id = "range-filters";
+  rangeFilters.style.display = "grid";
+  rangeFilters.style.width = "fit-content";
+  rangeFilters.style.columnGap = "10px";
+  rangeFilters.style.rowGap = "5px";
+  rangeFilters.style.alignItems = "center";
+  rangeFilters.style.gridTemplateColumns =
+    "fit-content(100%) fit-content(100%)";
+  rangeParameters.forEach((parameter) => {
+    parameter.min = undefined;
+    parameter.max = undefined;
+    parameter.render(rangeFilters);
+  });
+  container.appendChild(rangeFilters);
+}
 
-let parametersRange = ["momentum", "vertex", "time", "mass", "charge"];
+export function getWidthFilterContent() {
+  const filterContent = document.getElementById("filter-content");
+  filterContent.style.display = "flex";
+  const rangeFilters = document.getElementById("range-filters");
+  const width = rangeFilters.offsetWidth;
+  filterContent.style.display = "none";
+  return `${width}px`;
+}
+
+export function renderGenSim(sim, gen, container) {
+  const div = document.createElement("div");
+  div.style.display = "flex";
+  div.style.flexDirection = "column";
+  div.style.width = "fit-content";
+  div.style.alignItems = "start";
+  sim.render(div);
+  gen.render(div);
+  container.appendChild(div);
+}
+
+// TODO: Check in the future for other types of particles
+let parametersRange = [
+  {
+    property: "momentum",
+    unit: "GeV",
+  },
+  {
+    property: "mass",
+    unit: "GeV",
+  },
+  {
+    property: "charge",
+    unit: "e",
+  },
+  {
+    property: "vertex",
+    unit: "mm",
+  },
+  {
+    property: "time",
+    unit: "ns",
+  },
+];
+
+parametersRange = parametersRange.sort((a, b) =>
+  a.property.localeCompare(b.property)
+);
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-parametersRange.forEach((parameter) => parameter.render(filters));
+const SimStatusBitFieldDisplayValues = {
+  23: "Overlay",
+  24: "Stopped",
+  25: "LeftDetector",
+  26: "DecayedInCalorimeter",
+  27: "DecayedInTracker",
+  28: "VertexIsNotEndpointOfParent",
+  29: "Backscatter",
+  30: "CreatedInSimulation",
+};
 
-let bitsCheckbox = [23, 24, 25, 26, 27, 28, 29, 30];
+const bits = new BitFieldBuilder(
+  "simStatus",
+  "Simulation status",
+  SimStatusBitFieldDisplayValues
+);
+bits.setCheckBoxes();
 
-bitsCheckbox = bitsCheckbox.map((bit) => new Checkbox("simStatus", bit));
+const genStatus = new CheckboxBuilder("genStatus", "Generator status");
 
-bitsCheckbox.forEach((checkbox) => checkbox.render(filters));
-
-apply.addEventListener("click", () => {
+function applyFilter(particlesHandler, currentParticles, visibleParticles) {
   const rangeFunctions = Range.buildFilter(parametersRange);
-  const checkboxFunctions = Checkbox.buildFilter(bitsCheckbox);
+  const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
+  const genStatusFunctions = Checkbox.buildFilter(genStatus.checkBoxes);
 
   const criteriaFunction = buildCriteriaFunction(
     rangeFunctions,
-    checkboxFunctions
+    checkboxFunctions,
+    genStatusFunctions
   );
 
   const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
     criteriaFunction,
-    parentLinks,
-    childrenLinks,
-    infoBoxes
+    particlesHandler
   );
 
-  drawAll(ctx, newParentLinks, newChildrenLinks, filteredParticles);
-});
+  currentParticles.parentLinks = newParentLinks;
+  currentParticles.childrenLinks = newChildrenLinks;
+  currentParticles.infoBoxes = filteredParticles;
 
-reset.addEventListener("click", () => {
-  drawAll(ctx, parentLinks, childrenLinks, infoBoxes);
+  drawAll(ctx, currentParticles);
+
+  getVisible(currentParticles, visibleParticles);
+}
+
+function removeFilter(particlesHandler, currentParticles, visibleParticles) {
+  currentParticles.parentLinks = particlesHandler.parentLinks;
+  currentParticles.childrenLinks = particlesHandler.childrenLinks;
+  currentParticles.infoBoxes = particlesHandler.infoBoxes;
+
+  drawAll(ctx, currentParticles);
+
+  getVisible(currentParticles, visibleParticles);
 
   filters.innerHTML = "";
 
-  parametersRange.forEach((parameter) => {
-    parameter.min = undefined;
-    parameter.max = undefined;
-    parameter.render(filters);
-  });
+  renderRangeParameters(filters, parametersRange);
+  renderGenSim(bits, genStatus, filters);
+}
 
-  bitsCheckbox.forEach((checkbox) => {
-    checkbox.checked = false;
-    checkbox.render(filters);
-  });
+apply.addEventListener("click", () =>
+  applyFilter(particlesHandler, currentParticles, visibleParticles)
+);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && active) {
+    applyFilter(particlesHandler, currentParticles, visibleParticles);
+  }
 });
+
+reset.addEventListener("click", () =>
+  removeFilter(particlesHandler, currentParticles, visibleParticles)
+);
+
+export { bits, genStatus, parametersRange };
