@@ -15,39 +15,56 @@ class FilterParameter {
   }
 }
 
+function createNumberInput(placeholder) {
+  const input = document.createElement("input");
+  input.type = "number";
+  input.placeholder = placeholder;
+  input.style.width = "35px";
+
+  return input;
+}
+
 export class Range extends FilterParameter {
   min;
   max;
 
-  constructor(property) {
+  constructor({ property, unit }) {
     super(property);
+    this.unit = unit;
   }
 
   render(container) {
     const label = document.createElement("label");
-    label.textContent = this.property;
+    label.textContent = `${this.property}`;
+
+    const inputMin = createNumberInput("min");
+    inputMin.addEventListener("input", (e) => {
+      this.min = e.target.value;
+    });
+
+    const separator = document.createTextNode("-");
+
+    const inputMax = createNumberInput("max");
+    inputMax.addEventListener("input", (e) => {
+      this.max = e.target.value;
+    });
+
+    const unitElement = document.createTextNode(`${this.unit}`);
+
+    const content = document.createElement("div");
+    content.appendChild(inputMin);
+    content.appendChild(separator);
+    content.appendChild(inputMax);
+    content.appendChild(unitElement);
+    content.style.display = "grid";
+    content.style.gridAutoFlow = "column";
+    content.style.columnGap = "5px";
+    content.style.display = "flex";
+    content.style.flexDirection = "row";
+    content.style.justifyContent = "flex-start";
+
     container.appendChild(label);
-
-    const inputMin = document.createElement("input");
-    inputMin.type = "number";
-    inputMin.placeholder = "min";
-    container.appendChild(inputMin);
-
-    const separator = document.createTextNode(" - ");
-    container.appendChild(separator);
-
-    const inputMax = document.createElement("input");
-    inputMax.type = "number";
-    inputMax.placeholder = "max";
-    container.appendChild(inputMax);
-
-    inputMin.addEventListener("input", () => {
-      this.min = inputMin.value;
-    });
-
-    inputMax.addEventListener("input", () => {
-      this.max = inputMax.value;
-    });
+    container.appendChild(content);
   }
 
   buildCondition() {
@@ -85,9 +102,14 @@ export class Range extends FilterParameter {
 export class Checkbox extends FilterParameter {
   value;
 
-  constructor(property, value) {
+  constructor(property, value, displayValue = null) {
     super(property);
     this.value = value;
+    if (displayValue) {
+      this.displayValue = displayValue;
+    } else {
+      this.displayValue = value;
+    }
   }
 
   render(container) {
@@ -95,7 +117,7 @@ export class Checkbox extends FilterParameter {
     container.appendChild(div);
 
     const label = document.createElement("label");
-    label.textContent = `${this.property}: ${this.value}`;
+    label.textContent = this.displayValue;
     div.appendChild(label);
 
     const input = document.createElement("input");
@@ -103,8 +125,11 @@ export class Checkbox extends FilterParameter {
     div.appendChild(input);
 
     div.style.display = "flex";
+    div.style.flexDirection = "row";
     div.style.alignItems = "center";
-    div.style.justifyContent = "space-between";
+    div.style.backgroundColor = "#dddddd";
+    div.style.borderRadius = "5px";
+    div.style.margin = "3px";
 
     input.addEventListener("change", () => {
       this.checked = input.checked;
@@ -130,6 +155,55 @@ export class Checkbox extends FilterParameter {
     );
 
     return func;
+  }
+}
+
+export class ValueCheckBox extends Checkbox {
+  // Classic checkbox
+  constructor(property, value, displayValue) {
+    super(property, value, displayValue);
+  }
+}
+
+export class BitfieldCheckbox extends Checkbox {
+  // Bit manipulation EDM4hep
+  constructor(property, value, displayValue) {
+    super(property, value, displayValue);
+  }
+
+  buildCondition() {
+    if (!this.checked) return null;
+
+    return (particle) =>
+      (parseInt(particle[this.property]) & (1 << parseInt(this.value))) !== 0;
+  }
+
+  render(container) {
+    const div = document.createElement("div");
+    container.appendChild(div);
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    div.appendChild(input);
+
+    const label = document.createElement("label");
+    label.textContent = this.displayValue;
+    div.appendChild(label);
+
+    div.style.display = "flex";
+    div.style.flexDirection = "row";
+    div.style.alignItems = "center";
+    div.style.backgroundColor = "#dddddd";
+    div.style.borderRadius = "5px";
+    div.style.margin = "3px";
+
+    input.addEventListener("change", () => {
+      this.checked = input.checked;
+    });
+  }
+
+  static getDisplayValue(dictionary, option) {
+    return dictionary[option] ?? option;
   }
 }
 

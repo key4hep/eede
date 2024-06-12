@@ -15,13 +15,9 @@ export function errorMsg(msg) {
   msgDiv.innerHTML = "<p>ERROR: " + msg + "</p>";
 }
 
-export function loadMCParticles(
-  jsonData,
-  eventNum,
-  infoBoxes,
-  parentLinks,
-  childrenLinks
-) {
+export function loadMCParticles(jsonData, eventNum, particlesHandler) {
+  const { infoBoxes, parentLinks, childrenLinks } = particlesHandler;
+
   const eventData = jsonData["Event " + eventNum];
   try {
     const mcParticles = Object.values(eventData).find(
