@@ -17,9 +17,9 @@ export class Link {
     this.xShift = 0;
   }
 
-  draw(ctx, infoBoxes) {
-    const boxFrom = infoBoxes[this.from];
-    const boxTo = infoBoxes[this.to];
+  draw(ctx) {
+    const boxFrom = this.from;
+    const boxTo = this.to;
 
     const fromX = boxFrom.x + boxFrom.width / 2;
     const fromY = boxFrom.y + boxFrom.height;
@@ -78,9 +78,9 @@ export class Link {
     */
   }
 
-  isVisible(x, y, width, height, infoBoxes) {
-    const boxFrom = infoBoxes[this.from];
-    const boxTo = infoBoxes[this.to];
+  isVisible(x, y, width, height) {
+    const boxFrom = this.from;
+    const boxTo = this.to;
 
     const fromX = boxFrom.x + boxFrom.width / 2;
     const fromY = boxFrom.y + boxFrom.height;

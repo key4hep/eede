@@ -94,6 +94,3 @@ const objectsToLoad = [
   // "edm4hep::ParticleID",
   "edm4hep::MCParticle",
 ];
-
-const res = loadObjects(json, 0, objectsToLoad);
-console.log(res);

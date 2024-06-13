@@ -17,6 +17,8 @@ import {
   getVisible,
   onScroll,
 } from "./events.js";
+import { loadObjects } from "./types/load.js";
+import { objectTypes } from "./types/objects.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -31,117 +33,107 @@ canvas.height = window.innerHeight;
 let jsonData = {};
 
 const dragTools = {
-  draggedInfoBox: -1,
+  draggedInfoBox: null,
   isDragging: false,
   prevMouseX: 0,
   prevMouseY: 0,
 };
 
-const particlesHandler = {
-  infoBoxes: [],
-  parentLinks: [],
-  childrenLinks: [],
-};
+let loadedObjects = {};
 
-const currentParticles = {
-  infoBoxes: [],
-  parentLinks: [],
-  childrenLinks: [],
-};
+let currentObjects = {};
 
-const visibleParticles = {
-  infoBoxes: [],
-  parentLinks: [],
-  childrenLinks: [],
-};
+let visibleObjects = {};
 
-function start(particlesHandler, visibleParticles) {
-  const { infoBoxes } = particlesHandler;
-
-  if (!infoBoxes) {
-    return;
+function start(loadedObjects, visibleObjects) {
+  for (const [key, value] of Object.entries(loadedObjects)) {
+    const classType = objectTypes[key];
+    const collection = value.collection;
+    classType.setup(collection);
   }
 
-  // Get How many rows
-  const rows = infoBoxes.map((obj) => {
-    return obj.row;
-  });
-  const maxRow = Math.max(...rows);
+  // const { infoBoxes } = particlesHandler;
 
-  // Order infoBoxes into rows
-  const boxRows = [];
-  for (let i = 0; i <= maxRow; i++) {
-    boxRows.push([]);
-  }
-  for (const box of infoBoxes) {
-    boxRows[box.row].push(box.id);
-  }
-  const rowWidths = boxRows.map((obj) => {
-    return obj.length;
-  });
-  const maxRowWidth = Math.max(...rowWidths);
+  // // Get How many rows
+  // const rows = infoBoxes.map((obj) => {
+  //   return obj.row;
+  // });
+  // const maxRow = Math.max(...rows);
 
-  const boxWidth = infoBoxes[0].width;
-  const boxHeight = infoBoxes[0].height;
-  const horizontalGap = boxWidth * 0.4;
-  const verticalGap = boxHeight * 0.3;
+  // // Order infoBoxes into rows
+  // const boxRows = [];
+  // for (let i = 0; i <= maxRow; i++) {
+  //   boxRows.push([]);
+  // }
+  // for (const box of infoBoxes) {
+  //   boxRows[box.row].push(box.id);
+  // }
+  // const rowWidths = boxRows.map((obj) => {
+  //   return obj.length;
+  // });
+  // const maxRowWidth = Math.max(...rowWidths);
 
-  canvas.width =
-    boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
-  canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
+  // const boxWidth = infoBoxes[0].width;
+  // const boxHeight = infoBoxes[0].height;
+  // const horizontalGap = boxWidth * 0.4;
+  // const verticalGap = boxHeight * 0.3;
 
-  for (const [i, row] of boxRows.entries()) {
-    for (const [j, boxId] of row.entries()) {
-      const box = infoBoxes[boxId];
+  // canvas.width =
+  //   boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
+  // canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
 
-      if (row.length % 2 === 0) {
-        const distanceFromCenter = j - row.length / 2;
-        if (distanceFromCenter < 0) {
-          box.x =
-            canvas.width / 2 -
-            boxWidth -
-            horizontalGap / 2 +
-            (distanceFromCenter + 1) * boxWidth +
-            (distanceFromCenter + 1) * horizontalGap;
-        } else {
-          box.x =
-            canvas.width / 2 +
-            horizontalGap / 2 +
-            distanceFromCenter * boxWidth +
-            distanceFromCenter * horizontalGap;
-        }
-      } else {
-        const distanceFromCenter = j - row.length / 2;
-        box.x =
-          canvas.width / 2 -
-          boxWidth / 2 +
-          distanceFromCenter * boxWidth +
-          distanceFromCenter * horizontalGap;
-      }
-      box.y = i * verticalGap + verticalGap + i * boxHeight;
-    }
-  }
+  // for (const [i, row] of boxRows.entries()) {
+  //   for (const [j, boxId] of row.entries()) {
+  //     const box = infoBoxes[boxId];
 
-  drawAll(ctx, particlesHandler);
+  //     if (row.length % 2 === 0) {
+  //       const distanceFromCenter = j - row.length / 2;
+  //       if (distanceFromCenter < 0) {
+  //         box.x =
+  //           canvas.width / 2 -
+  //           boxWidth -
+  //           horizontalGap / 2 +
+  //           (distanceFromCenter + 1) * boxWidth +
+  //           (distanceFromCenter + 1) * horizontalGap;
+  //       } else {
+  //         box.x =
+  //           canvas.width / 2 +
+  //           horizontalGap / 2 +
+  //           distanceFromCenter * boxWidth +
+  //           distanceFromCenter * horizontalGap;
+  //       }
+  //     } else {
+  //       const distanceFromCenter = j - row.length / 2;
+  //       box.x =
+  //         canvas.width / 2 -
+  //         boxWidth / 2 +
+  //         distanceFromCenter * boxWidth +
+  //         distanceFromCenter * horizontalGap;
+  //     }
+  //     box.y = i * verticalGap + verticalGap + i * boxHeight;
+  //   }
+  // }
 
-  getVisible(particlesHandler, visibleParticles);
+  drawAll(ctx, loadedObjects);
+
+  // getVisible(loadedObjects, visibleObjects);
 }
 
-canvas.onmousedown = (event) => {
-  mouseDown(event, currentParticles, visibleParticles, dragTools);
-};
-canvas.onmouseup = (event) => {
-  mouseUp(event, currentParticles, dragTools);
-};
-canvas.onmouseout = (event) => {
-  mouseOut(event, dragTools);
-};
-canvas.onmousemove = (event) => {
-  mouseMove(event, currentParticles, visibleParticles, dragTools);
-};
-window.onscroll = () => {
-  onScroll(currentParticles, visibleParticles);
-};
+// canvas.onmousedown = (event) => {
+//   mouseDown(event, currentParticles, visibleParticles, dragTools);
+// };
+// canvas.onmouseup = (event) => {
+//   mouseUp(event, currentParticles, dragTools);
+// };
+// canvas.onmouseout = (event) => {
+//   mouseOut(event, dragTools);
+// };
+// canvas.onmousemove = (event) => {
+//   mouseMove(event, currentParticles, visibleParticles, dragTools);
+// };
+// window.onscroll = () => {
+//   onScroll(currentParticles, visibleParticles);
+// };
 
 /*
 function showInputModal() {
@@ -187,45 +179,51 @@ document
     event.preventDefault();
     const eventNum = document.getElementById("event-number").value;
 
-    loadMCParticles(jsonData, eventNum, particlesHandler);
+    const objects = loadObjects(jsonData, eventNum, ["edm4hep::MCParticle"]);
 
-    currentParticles.infoBoxes = particlesHandler.infoBoxes;
-    currentParticles.parentLinks = particlesHandler.parentLinks;
-    currentParticles.childrenLinks = particlesHandler.childrenLinks;
+    for (const [key, value] of Object.entries(objects))
+      loadedObjects[key] = value;
 
-    if (particlesHandler.infoBoxes.length === 0) {
+    for (const [key, value] of Object.entries(loadedObjects))
+      currentObjects[key] = value;
+
+    const length = Object.values(loadedObjects)
+      .map((obj) => obj.collection.length)
+      .reduce((a, b) => a + b, 0);
+
+    if (length === 0) {
       errorMsg("Provided file does not contain any MC particle tree!");
       return;
     }
     for (const eventNum in jsonData) {
       delete jsonData[eventNum];
     }
-    start(currentParticles, visibleParticles);
+    start(currentObjects, visibleObjects);
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
 
-    for (const tool of manipulationTools) {
-      tool.style.display = "flex";
-    }
+    // for (const tool of manipulationTools) {
+    //   tool.style.display = "flex";
+    // }
 
-    const { infoBoxes } = currentParticles;
+    // const { infoBoxes } = currentParticles;
 
-    infoBoxes.forEach((infoBox) => {
-      genStatus.add(infoBox.genStatus);
-    });
-    genStatus.setCheckBoxes();
-    renderRangeParameters(filters, parametersRange);
-    const width = getWidthFilterContent();
-    filter.style.width = width;
+    // infoBoxes.forEach((infoBox) => {
+    //   genStatus.add(infoBox.genStatus);
+    // });
+    // genStatus.setCheckBoxes();
+    // renderRangeParameters(filters, parametersRange);
+    // const width = getWidthFilterContent();
+    // filter.style.width = width;
 
-    renderGenSim(bits, genStatus, filters);
+    // renderGenSim(bits, genStatus, filters);
 
-    const pdgToggle = new PdgToggle("show-pdg");
-    pdgToggle.init(() => {
-      pdgToggle.toggle(infoBoxes, () => {
-        drawAll(ctx, currentParticles);
-      });
-    });
+    // const pdgToggle = new PdgToggle("show-pdg");
+    // pdgToggle.init(() => {
+    //   pdgToggle.toggle(infoBoxes, () => {
+    //     drawAll(ctx, currentParticles);
+    //   });
+    // });
   });
 
-export { canvas, ctx, visibleParticles, particlesHandler, currentParticles };
+export { canvas, ctx, loadedObjects, currentObjects, visibleObjects };

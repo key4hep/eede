@@ -1,9 +1,9 @@
 import { drawAll } from "../../draw.js";
 import {
   ctx,
-  particlesHandler,
-  currentParticles,
-  visibleParticles,
+  loadedObjects,
+  currentObjects,
+  visibleObjects,
 } from "../../main.js";
 import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
