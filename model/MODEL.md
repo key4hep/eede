@@ -10,7 +10,7 @@ In the root directory, there are two commands in `package-json` that can be used
 npm run download
 ```
 
-will download the latest information from the edm4hep, by using the file called `edm4hep.yaml` under `model` directory, containg up to date information about `edm4hep`. The second command
+will download the latest information from the edm4hep, by using the file called `edm4hep.yaml` under `model` directory, containing up to date information about `edm4hep`. The second command
 
 ```bash
 npm run build
@@ -26,9 +26,9 @@ You can also run
 npm run update
 ```
 
-to run both processes at once and immediatly update the dmx application.
+to run both processes at once and immediately update the dmx application.
 
 ## Further improvements
 
 -   We could trigger the update process automatically when a new release of edm4hep is published, but for now, we will keep it simple and run the update process manually.
--   To maitain backward compatibility, we could add a versioning system so we can later load different versions of the edm4hep data model into dmx, however we currrently load the latest version.
+-   To maintain backward compatibility, we could add a versioning system so we can later load different versions of the edm4hep data model into dmx, however we currently load the latest version.
