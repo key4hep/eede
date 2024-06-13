@@ -1,5 +1,6 @@
 export class EDMObject {
-  constructor() {
+  constructor(id) {
+    this.id = id;
     this.members = {};
   }
 

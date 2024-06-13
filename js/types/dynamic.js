@@ -1,4 +1,4 @@
-import { createLink } from "./objects.js";
+import { Link, colors } from "./links.js";
 
 export function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {
@@ -7,18 +7,35 @@ export function loadMembers(object, data, membersToLoad) {
   }
 }
 
-export function loadOneToOneRelations(object, data, relationsToLoad) {
+export function loadOneToOneRelations(
+  object,
+  data,
+  relationsToLoad = [],
+  oneToOne,
+  objects
+) {
   object.oneToOneRelations = {};
   for (const relation of relationsToLoad) {
-    const relationData = data[relation.name];
+    const name = relation.name;
+    const relationData = data[name];
     if (relationData === undefined) continue;
 
-    const link = createLink(object.id, object.id, relationData);
-    object.oneToOneRelations[relation.name] = link;
+    const toObject = objects[relationData.index];
+    const link = new Link(object, toObject);
+    link.color = colors[name];
+
+    oneToOne[name].push(link);
+    object.oneToOneRelations[name] = link;
   }
 }
 
-export function loadOneToManyRelations(object, data, relationsToLoad) {
+export function loadOneToManyRelations(
+  object,
+  data,
+  relationsToLoad = [],
+  oneToMany,
+  objects
+) {
   object.oneToManyRelations = {};
   for (const relation of relationsToLoad) {
     const name = relation.name;
@@ -27,8 +44,11 @@ export function loadOneToManyRelations(object, data, relationsToLoad) {
     if (relationData === undefined) continue;
     object.oneToManyRelations[name] = [];
 
-    for (const [index, relationElement] of relationData.entries()) {
-      const link = createLink(index + object.id, object.id, relationElement);
+    for (const relationElement of relationData) {
+      const toObject = objects[relationElement.index];
+      const link = new Link(object, toObject);
+      link.color = colors[name];
+      oneToMany[name].push(link);
       object.oneToManyRelations[name].push(link);
     }
   }

@@ -124,7 +124,7 @@ export function loadMCParticles(jsonData, eventNum, particlesHandler) {
   }
 }
 
-function getName(pdg) {
+export function getName(pdg) {
   const particle = mappings[pdg];
 
   if (particle !== undefined) {
