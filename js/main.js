@@ -33,45 +33,45 @@ canvas.height = window.innerHeight;
 let jsonData = {};
 
 const dragTools = {
-  draggedInfoBox: null,
+  draggedObject: null,
   isDragging: false,
   prevMouseX: 0,
   prevMouseY: 0,
 };
 
-let loadedObjects = {};
+const loadedObjects = {};
 
-let currentObjects = {};
+const currentObjects = {};
 
-let visibleObjects = {};
+const visibleObjects = {};
 
-function start(loadedObjects, visibleObjects) {
-  for (const [key, value] of Object.entries(loadedObjects)) {
+function start(currentObjects, visibleObjects) {
+  for (const [key, value] of Object.entries(currentObjects)) {
     const classType = objectTypes[key];
     const collection = value.collection;
     classType.setup(collection);
   }
 
-  drawAll(ctx, loadedObjects);
+  drawAll(ctx, currentObjects);
 
-  // getVisible(loadedObjects, visibleObjects);
+  getVisible(currentObjects, visibleObjects);
 }
 
-// canvas.onmousedown = (event) => {
-//   mouseDown(event, currentParticles, visibleParticles, dragTools);
-// };
-// canvas.onmouseup = (event) => {
-//   mouseUp(event, currentParticles, dragTools);
-// };
-// canvas.onmouseout = (event) => {
-//   mouseOut(event, dragTools);
-// };
-// canvas.onmousemove = (event) => {
-//   mouseMove(event, currentParticles, visibleParticles, dragTools);
-// };
-// window.onscroll = () => {
-//   onScroll(currentParticles, visibleParticles);
-// };
+canvas.onmousedown = (event) => {
+  mouseDown(event, visibleObjects, dragTools);
+};
+canvas.onmouseup = (event) => {
+  mouseUp(event, currentObjects, dragTools);
+};
+canvas.onmouseout = (event) => {
+  mouseOut(event, dragTools);
+};
+canvas.onmousemove = (event) => {
+  mouseMove(event, visibleObjects, dragTools);
+};
+window.onscroll = () => {
+  onScroll(currentObjects, visibleObjects);
+};
 
 /*
 function showInputModal() {

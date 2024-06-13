@@ -89,49 +89,43 @@ export class MCParticle extends EDMObject {
       };
     }
 
-    const {
-      generatorStatus,
-      simulatorStatus,
-      momentum,
-      vertex,
-      time,
-      mass,
-      charge,
-    } = this.members;
-
     const topY = this.y + 20;
     const topLines = [];
     topLines.push("ID: " + this.id);
-    topLines.push("Gen. stat.: " + generatorStatus);
-    topLines.push("Sim. stat.: " + simulatorStatus);
+    topLines.push("Gen. stat.: " + this.generatorStatus);
+    topLines.push("Sim. stat.: " + this.simulatorStatus);
 
     const bottomY = this.y + this.height * 0.6;
     const bottomLines = [];
-    let moment = Math.sqrt(momentum.x ** 2 + momentum.y ** 2 + momentum.z ** 2);
+    let moment = Math.sqrt(
+      this.momentum.x ** 2 + this.momentum.y ** 2 + this.momentum.z ** 2
+    );
     moment = Math.round(moment * 100) / 100;
     bottomLines.push("p = " + moment + " GeV");
-    let v = Math.sqrt(vertex.x ** 2 + vertex.y ** 2 + vertex.z ** 2);
+    let v = Math.sqrt(
+      this.vertex.x ** 2 + this.vertex.y ** 2 + this.vertex.z ** 2
+    );
     v = Math.round(v * 100) / 100;
     bottomLines.push("d = " + v + " mm");
-    const t = Math.round(time * 100) / 100;
+    const t = Math.round(this.time * 100) / 100;
     bottomLines.push("t = " + t + " ns");
-    let m = Math.round(mass * 100) / 100;
+    let m = Math.round(this.mass * 100) / 100;
     bottomLines.push("m = " + m + " GeV");
-    if (Math.abs(charge) < 1.0 && charge != 0) {
-      if (Math.round(charge * 1000) === 667) {
+    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
+      if (Math.round(this.charge * 1000) === 667) {
         bottomLines.push("q = 2/3 e");
       }
-      if (Math.round(charge * 1000) === -667) {
+      if (Math.round(this.charge * 1000) === -667) {
         bottomLines.push("q = -2/3 e");
       }
-      if (Math.round(charge * 1000) === 333) {
+      if (Math.round(this.charge * 1000) === 333) {
         bottomLines.push("q = 1/3 e");
       }
-      if (Math.round(charge * 1000) === -333) {
+      if (Math.round(this.charge * 1000) === -333) {
         bottomLines.push("q = -1/3 e");
       }
     } else {
-      bottomLines.push("q = " + charge + " e");
+      bottomLines.push("q = " + this.charge + " e");
     }
 
     ctx.save();
@@ -186,7 +180,7 @@ export class MCParticle extends EDMObject {
         mcParticle.row = 0;
       }
 
-      const name = getName(mcParticle.members.PDG);
+      const name = getName(mcParticle.PDG);
       mcParticle.name = name;
       mcParticle.updateTexImg(name);
     }

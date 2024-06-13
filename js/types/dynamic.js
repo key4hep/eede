@@ -2,8 +2,9 @@ import { linkTypes } from "./links.js";
 
 export function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {
-    if (data[member.name] === undefined) continue; // load up to date data
-    object.members[member.name] = data[member.name];
+    const name = member.name;
+    if (data[name] === undefined) continue; // load up to date data
+    object[name] = data[name];
   }
 }
 
