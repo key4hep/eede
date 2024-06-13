@@ -6,14 +6,13 @@ import {
   loadOneToManyRelations,
 } from "./dynamic.js";
 import { generateRandomColor, colors } from "./links.js";
-import json from "../../input/p8_ee_ZH_ecm240_edm4hep.edm4hep.json" assert { type: "json" };
 
 export function loadObjectType(collection, datatype, type) {
   const objects = [];
   let oneToOne = {};
   if (datatype.oneToOneRelations)
     datatype.oneToOneRelations.forEach((relation) => {
-      oneToOne[relation.name] = [];
+      oneToOne[relation.name] = null;
       if (colors[relation.name] === undefined) {
         colors[relation.name] = generateRandomColor();
       }
@@ -33,6 +32,12 @@ export function loadObjectType(collection, datatype, type) {
 
     loadMembers(newObject, particle, datatype.members);
 
+    objects.push(newObject);
+  }
+
+  for (const [index, particle] of collection.entries()) {
+    const newObject = objects[index];
+
     loadOneToOneRelations(
       newObject,
       particle,
@@ -48,8 +53,6 @@ export function loadObjectType(collection, datatype, type) {
       oneToMany,
       objects
     );
-
-    objects.push(newObject);
   }
 
   return [objects, oneToOne, oneToMany];
@@ -83,14 +86,3 @@ export function loadObjects(jsonData, event, objectsToLoad) {
 
   return objects;
 }
-
-const objectsToLoad = [
-  // subset of datatypes
-  // should be changed dynamically by the user
-  // "edm4hep::Cluster",
-  // "edm4hep::ReconstructedParticle",
-  // "edm4hep::Vertex",
-  // "edm4hep::Track",
-  // "edm4hep::ParticleID",
-  "edm4hep::MCParticle",
-];

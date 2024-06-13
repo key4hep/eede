@@ -2,23 +2,18 @@ import { canvas, ctx } from "./main.js";
 
 export function drawAll(ctx, loadedObjects) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // console.time("drawParentLinks");
 
   for (const elements of Object.values(loadedObjects)) {
     const { collection, oneToMany, oneToOne } = elements;
 
-    for (const object of collection) object.draw(ctx);
     for (const links of Object.values(oneToMany)) {
       for (const link of links) link.draw(ctx);
     }
-    for (const link of Object.values(oneToOne)) link.draw(ctx);
-  }
 
-  // console.timeEnd("drawParentLinks");
-  // console.time("drawChildrenLinks");
-  // console.timeEnd("drawChildrenLinks");
-  // console.time("drawBoxes");
-  // console.timeEnd("drawBoxes");
+    for (const link of Object.values(oneToOne)) link.draw(ctx);
+
+    for (const object of collection) object.draw(ctx);
+  }
 }
 
 export function drawVisible(currentParticles, visibleParticles) {

@@ -194,7 +194,7 @@ export class MCParticle extends EDMObject {
     const getMaxRow = (parentLinks) => {
       let maxRow = -1;
       for (const parentLink of parentLinks) {
-        const parent = parentLink.to;
+        const parent = parentLink.from;
         if (parent.row === -1) {
           return -1;
         }

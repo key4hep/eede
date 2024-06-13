@@ -52,68 +52,6 @@ function start(loadedObjects, visibleObjects) {
     classType.setup(collection);
   }
 
-  // const { infoBoxes } = particlesHandler;
-
-  // // Get How many rows
-  // const rows = infoBoxes.map((obj) => {
-  //   return obj.row;
-  // });
-  // const maxRow = Math.max(...rows);
-
-  // // Order infoBoxes into rows
-  // const boxRows = [];
-  // for (let i = 0; i <= maxRow; i++) {
-  //   boxRows.push([]);
-  // }
-  // for (const box of infoBoxes) {
-  //   boxRows[box.row].push(box.id);
-  // }
-  // const rowWidths = boxRows.map((obj) => {
-  //   return obj.length;
-  // });
-  // const maxRowWidth = Math.max(...rowWidths);
-
-  // const boxWidth = infoBoxes[0].width;
-  // const boxHeight = infoBoxes[0].height;
-  // const horizontalGap = boxWidth * 0.4;
-  // const verticalGap = boxHeight * 0.3;
-
-  // canvas.width =
-  //   boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
-  // canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
-
-  // for (const [i, row] of boxRows.entries()) {
-  //   for (const [j, boxId] of row.entries()) {
-  //     const box = infoBoxes[boxId];
-
-  //     if (row.length % 2 === 0) {
-  //       const distanceFromCenter = j - row.length / 2;
-  //       if (distanceFromCenter < 0) {
-  //         box.x =
-  //           canvas.width / 2 -
-  //           boxWidth -
-  //           horizontalGap / 2 +
-  //           (distanceFromCenter + 1) * boxWidth +
-  //           (distanceFromCenter + 1) * horizontalGap;
-  //       } else {
-  //         box.x =
-  //           canvas.width / 2 +
-  //           horizontalGap / 2 +
-  //           distanceFromCenter * boxWidth +
-  //           distanceFromCenter * horizontalGap;
-  //       }
-  //     } else {
-  //       const distanceFromCenter = j - row.length / 2;
-  //       box.x =
-  //         canvas.width / 2 -
-  //         boxWidth / 2 +
-  //         distanceFromCenter * boxWidth +
-  //         distanceFromCenter * horizontalGap;
-  //     }
-  //     box.y = i * verticalGap + verticalGap + i * boxHeight;
-  //   }
-  // }
-
   drawAll(ctx, loadedObjects);
 
   // getVisible(loadedObjects, visibleObjects);

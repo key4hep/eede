@@ -1,4 +1,4 @@
-import { Link, colors } from "./links.js";
+import { linkTypes } from "./links.js";
 
 export function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {
@@ -21,10 +21,10 @@ export function loadOneToOneRelations(
     if (relationData === undefined) continue;
 
     const toObject = objects[relationData.index];
-    const link = new Link(object, toObject);
-    link.color = colors[name];
+    const linkType = linkTypes[name];
+    const link = new linkType(object, toObject);
 
-    oneToOne[name].push(link);
+    oneToOne[name] = link;
     object.oneToOneRelations[name] = link;
   }
 }
@@ -46,8 +46,8 @@ export function loadOneToManyRelations(
 
     for (const relationElement of relationData) {
       const toObject = objects[relationElement.index];
-      const link = new Link(object, toObject);
-      link.color = colors[name];
+      const linkType = linkTypes[name];
+      const link = new linkType(object, toObject);
       oneToMany[name].push(link);
       object.oneToManyRelations[name].push(link);
     }
