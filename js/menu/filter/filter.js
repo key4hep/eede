@@ -9,6 +9,8 @@ import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
 import { getVisible } from "../../events.js";
+import { units } from "../../types/units.js";
+import { copyObject } from "../../lib/copy.js";
 
 const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
@@ -72,31 +74,7 @@ export function renderGenSim(sim, gen, container) {
   container.appendChild(div);
 }
 
-// TODO: Check in the future for other types of particles
-let parametersRange = [
-  {
-    property: "momentum",
-    unit: "GeV",
-  },
-  {
-    property: "mass",
-    unit: "GeV",
-  },
-  {
-    property: "charge",
-    unit: "e",
-  },
-  {
-    property: "vertex",
-    unit: "mm",
-  },
-  {
-    property: "time",
-    unit: "ns",
-  },
-];
-
-parametersRange = parametersRange.sort((a, b) =>
+let parametersRange = units.sort((a, b) =>
   a.property.localeCompare(b.property)
 );
 
@@ -114,15 +92,15 @@ const SimStatusBitFieldDisplayValues = {
 };
 
 const bits = new BitFieldBuilder(
-  "simStatus",
+  "simulatorStatus",
   "Simulation status",
   SimStatusBitFieldDisplayValues
 );
 bits.setCheckBoxes();
 
-const genStatus = new CheckboxBuilder("genStatus", "Generator status");
+const genStatus = new CheckboxBuilder("generatorStatus", "Generator status");
 
-function applyFilter(particlesHandler, currentParticles, visibleParticles) {
+function applyFilter(loadedObjects, currentObjects, visibleObjects) {
   const rangeFunctions = Range.buildFilter(parametersRange);
   const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
   const genStatusFunctions = Checkbox.buildFilter(genStatus.checkBoxes);
@@ -133,28 +111,21 @@ function applyFilter(particlesHandler, currentParticles, visibleParticles) {
     genStatusFunctions
   );
 
-  const [newParentLinks, newChildrenLinks, filteredParticles] = reconnect(
-    criteriaFunction,
-    particlesHandler
-  );
+  const filteredObjects = reconnect(criteriaFunction, loadedObjects);
 
-  currentParticles.parentLinks = newParentLinks;
-  currentParticles.childrenLinks = newChildrenLinks;
-  currentParticles.infoBoxes = filteredParticles;
+  copyObject(filteredObjects, currentObjects);
 
-  drawAll(ctx, currentParticles);
+  drawAll(ctx, currentObjects);
 
-  getVisible(currentParticles, visibleParticles);
+  getVisible(currentObjects, visibleObjects);
 }
 
-function removeFilter(particlesHandler, currentParticles, visibleParticles) {
-  currentParticles.parentLinks = particlesHandler.parentLinks;
-  currentParticles.childrenLinks = particlesHandler.childrenLinks;
-  currentParticles.infoBoxes = particlesHandler.infoBoxes;
+function removeFilter(loadedObjects, currentObjects, visibleObjects) {
+  copyObject(loadedObjects, currentObjects);
 
-  drawAll(ctx, currentParticles);
+  drawAll(ctx, currentObjects);
 
-  getVisible(currentParticles, visibleParticles);
+  getVisible(currentObjects, visibleObjects);
 
   filters.innerHTML = "";
 
@@ -163,17 +134,17 @@ function removeFilter(particlesHandler, currentParticles, visibleParticles) {
 }
 
 apply.addEventListener("click", () =>
-  applyFilter(particlesHandler, currentParticles, visibleParticles)
+  applyFilter(loadedObjects, currentObjects, visibleObjects)
 );
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && active) {
-    applyFilter(particlesHandler, currentParticles, visibleParticles);
+    applyFilter(loadedObjects, currentObjects, visibleObjects);
   }
 });
 
 reset.addEventListener("click", () =>
-  removeFilter(particlesHandler, currentParticles, visibleParticles)
+  removeFilter(loadedObjects, currentObjects, visibleObjects)
 );
 
 export { bits, genStatus, parametersRange };

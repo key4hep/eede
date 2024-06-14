@@ -2,6 +2,7 @@ import { EDMObject } from "./edmobject.js";
 import { drawTex, drawRoundedRect } from "../graphic-primitives.js";
 import { getName } from "../tools.js";
 import { canvas } from "../main.js";
+import { linkTypes } from "./links.js";
 
 export class Cluster extends EDMObject {
   constructor(id) {
@@ -97,20 +98,10 @@ export class MCParticle extends EDMObject {
 
     const bottomY = this.y + this.height * 0.6;
     const bottomLines = [];
-    let moment = Math.sqrt(
-      this.momentum.x ** 2 + this.momentum.y ** 2 + this.momentum.z ** 2
-    );
-    moment = Math.round(moment * 100) / 100;
-    bottomLines.push("p = " + moment + " GeV");
-    let v = Math.sqrt(
-      this.vertex.x ** 2 + this.vertex.y ** 2 + this.vertex.z ** 2
-    );
-    v = Math.round(v * 100) / 100;
-    bottomLines.push("d = " + v + " mm");
-    const t = Math.round(this.time * 100) / 100;
-    bottomLines.push("t = " + t + " ns");
-    let m = Math.round(this.mass * 100) / 100;
-    bottomLines.push("m = " + m + " GeV");
+    bottomLines.push("p = " + this.momentum + " GeV");
+    bottomLines.push("d = " + this.vertex + " mm");
+    bottomLines.push("t = " + this.time + " ns");
+    bottomLines.push("m = " + this.mass + " GeV");
     if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
       if (Math.round(this.charge * 1000) === 667) {
         bottomLines.push("q = 2/3 e");
@@ -183,6 +174,21 @@ export class MCParticle extends EDMObject {
       const name = getName(mcParticle.PDG);
       mcParticle.name = name;
       mcParticle.updateTexImg(name);
+      mcParticle.momentum = Math.sqrt(
+        Math.pow(mcParticle.momentum.x, 2) +
+          Math.pow(mcParticle.momentum.y, 2) +
+          Math.pow(mcParticle.momentum.z, 2)
+      );
+      mcParticle.momentum = Math.round(mcParticle.momentum * 100) / 100;
+      mcParticle.vertex = Math.sqrt(
+        Math.pow(mcParticle.vertex.x, 2) +
+          Math.pow(mcParticle.vertex.y, 2) +
+          Math.pow(mcParticle.vertex.z, 2)
+      );
+      mcParticle.vertex = Math.round(mcParticle.vertex * 100) / 100;
+
+      mcParticle.time = Math.round(mcParticle.time * 100) / 100;
+      mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
     }
 
     const getMaxRow = (parentLinks) => {
@@ -271,6 +277,52 @@ export class MCParticle extends EDMObject {
             distanceFromCenter * horizontalGap;
         }
         box.y = i * verticalGap + verticalGap + i * boxHeight;
+      }
+    }
+  }
+
+  static filter({ collection }, filteredObjects, criteriaFunction) {
+    for (const mcParticle of collection) {
+      if (!criteriaFunction(mcParticle)) {
+        const parentParticles = mcParticle.oneToManyRelations["parents"]
+          .map((link) => link.from)
+          .filter((parent) => criteriaFunction(parent));
+        const childrenParticles = mcParticle.oneToManyRelations["daughters"]
+          .map((link) => link.to)
+          .filter((child) => criteriaFunction(child));
+
+        for (const parent of parentParticles) {
+          for (const child of childrenParticles) {
+            const linkToParent = new linkTypes["parents"](parent, mcParticle);
+
+            const linkToChild = new linkTypes["daughters"](mcParticle, child);
+
+            filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
+              linkToParent
+            );
+            filteredObjects["edm4hep::MCParticle"].oneToMany["daughters"].push(
+              linkToChild
+            );
+          }
+        }
+      } else {
+        filteredObjects["edm4hep::MCParticle"].collection.push(mcParticle);
+
+        for (const link of mcParticle.oneToManyRelations["parents"]) {
+          if (criteriaFunction(link.from)) {
+            filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
+              link
+            );
+          }
+        }
+
+        for (const link of mcParticle.oneToManyRelations["daughters"]) {
+          if (criteriaFunction(link.to)) {
+            filteredObjects["edm4hep::MCParticle"].oneToMany["daughters"].push(
+              link
+            );
+          }
+        }
       }
     }
   }

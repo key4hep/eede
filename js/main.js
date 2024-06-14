@@ -1,4 +1,4 @@
-import { errorMsg, loadMCParticles } from "./tools.js";
+import { errorMsg } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
 import {
@@ -19,6 +19,7 @@ import {
 } from "./events.js";
 import { loadObjects } from "./types/load.js";
 import { objectTypes } from "./types/objects.js";
+import { copyObject } from "./lib/copy.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -117,13 +118,11 @@ document
     event.preventDefault();
     const eventNum = document.getElementById("event-number").value;
 
-    const objects = loadObjects(jsonData, eventNum, ["edm4hep::MCParticle"]);
+    const selectedObjectTypes = ["edm4hep::MCParticle"];
+    const objects = loadObjects(jsonData, eventNum, selectedObjectTypes);
 
-    for (const [key, value] of Object.entries(objects))
-      loadedObjects[key] = value;
-
-    for (const [key, value] of Object.entries(loadedObjects))
-      currentObjects[key] = value;
+    copyObject(objects, loadedObjects);
+    copyObject(objects, currentObjects);
 
     const length = Object.values(loadedObjects)
       .map((obj) => obj.collection.length)
@@ -140,28 +139,27 @@ document
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
 
-    // for (const tool of manipulationTools) {
-    //   tool.style.display = "flex";
-    // }
+    for (const tool of manipulationTools) {
+      tool.style.display = "flex";
+    }
 
-    // const { infoBoxes } = currentParticles;
+    const mcObjects = loadedObjects["edm4hep::MCParticle"].collection;
+    mcObjects.forEach((mcObject) => {
+      genStatus.add(mcObject.generatorStatus);
+    });
+    genStatus.setCheckBoxes();
+    renderRangeParameters(filters, parametersRange);
+    const width = getWidthFilterContent();
+    filter.style.width = width;
 
-    // infoBoxes.forEach((infoBox) => {
-    //   genStatus.add(infoBox.genStatus);
-    // });
-    // genStatus.setCheckBoxes();
-    // renderRangeParameters(filters, parametersRange);
-    // const width = getWidthFilterContent();
-    // filter.style.width = width;
+    renderGenSim(bits, genStatus, filters);
 
-    // renderGenSim(bits, genStatus, filters);
-
-    // const pdgToggle = new PdgToggle("show-pdg");
-    // pdgToggle.init(() => {
-    //   pdgToggle.toggle(infoBoxes, () => {
-    //     drawAll(ctx, currentParticles);
-    //   });
-    // });
+    const pdgToggle = new PdgToggle("show-pdg");
+    pdgToggle.init(() => {
+      pdgToggle.toggle(currentObjects, () => {
+        drawAll(ctx, currentObjects);
+      });
+    });
   });
 
 export { canvas, ctx, loadedObjects, currentObjects, visibleObjects };
