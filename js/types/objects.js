@@ -1,7 +1,6 @@
 import { EDMObject } from "./edmobject.js";
 import { drawTex, drawRoundedRect } from "../graphic-primitives.js";
 import { getName } from "../lib/getName.js";
-import { canvas } from "../main.js";
 import { linkTypes } from "./links.js";
 
 export class Cluster extends EDMObject {
@@ -157,7 +156,7 @@ export class MCParticle extends EDMObject {
     );
   }
 
-  static setup(mcCollection) {
+  static setup(mcCollection, canvas) {
     for (const mcParticle of mcCollection) {
       const parentLength = mcParticle.oneToManyRelations["parents"].length;
       const daughterLength = mcParticle.oneToManyRelations["daughters"].length;

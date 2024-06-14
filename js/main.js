@@ -50,7 +50,7 @@ function start(currentObjects, visibleObjects) {
   for (const [key, value] of Object.entries(currentObjects)) {
     const classType = objectTypes[key];
     const collection = value.collection;
-    classType.setup(collection);
+    classType.setup(collection, canvas);
   }
 
   drawAll(ctx, currentObjects);

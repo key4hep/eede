@@ -8,7 +8,7 @@ export function generateRandomColor() {
   return "#" + ((0xffffff * Math.random()) << 0).toString(16).padStart(6, "0");
 }
 
-class Link {
+export class Link {
   // we may create a specific class for each type if needed
   constructor(from, to) {
     this.from = from;
@@ -108,7 +108,7 @@ class Link {
   }
 }
 
-class ParentLink extends Link {
+export class ParentLink extends Link {
   constructor(from, to) {
     super(to, from);
     this.color = colors["parents"];
@@ -118,7 +118,7 @@ class ParentLink extends Link {
   }
 }
 
-class DaughterLink extends Link {
+export class DaughterLink extends Link {
   constructor(from, to) {
     super(from, to);
     this.color = colors["daughters"];

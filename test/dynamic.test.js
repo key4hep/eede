@@ -15,7 +15,6 @@ beforeEach(() => {
 });
 
 test("load members given some defined members and data", () => {
-  object.members = {};
   const members = [
     {
       "name": "type",
@@ -91,14 +90,12 @@ test("load members given some defined members and data", () => {
   loadMembers(object, data, members);
   expect(object).toEqual({
     "id": 1,
-    "members": {
-      "type": 0,
-      "chi2": 0.0,
-      "ndf": 0,
-      "dEdx": 0.0,
-      "dEdxError": 0.0,
-      "radiusOfInnermostHit": 17.0,
-    },
+    "type": 0,
+    "chi2": 0.0,
+    "ndf": 0,
+    "dEdx": 0.0,
+    "dEdxError": 0.0,
+    "radiusOfInnermostHit": 17.0,
   });
 });
 
@@ -169,7 +166,8 @@ test("load one to one relations with some definition and data", () => {
       "name": "startVertex",
     },
   ];
-  loadOneToOneRelations(object, data, oneToOneRelations);
+  const oneToOne = {};
+  loadOneToOneRelations(object, data, oneToOneRelations, oneToOne, []);
   expect(object).toEqual({
     "id": 1,
     "oneToOneRelations": {
