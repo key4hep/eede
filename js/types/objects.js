@@ -1,6 +1,6 @@
 import { EDMObject } from "./edmobject.js";
 import { drawTex, drawRoundedRect } from "../graphic-primitives.js";
-import { getName } from "../tools.js";
+import { getName } from "../lib/getName.js";
 import { canvas } from "../main.js";
 import { linkTypes } from "./links.js";
 
@@ -293,9 +293,9 @@ export class MCParticle extends EDMObject {
 
         for (const parent of parentParticles) {
           for (const child of childrenParticles) {
-            const linkToParent = new linkTypes["parents"](parent, mcParticle);
+            const linkToParent = new linkTypes["parents"](child, parent);
 
-            const linkToChild = new linkTypes["daughters"](mcParticle, child);
+            const linkToChild = new linkTypes["daughters"](parent, child);
 
             filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
               linkToParent
