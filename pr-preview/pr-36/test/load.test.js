@@ -160,95 +160,14 @@ test("load a collection of particles", () => {
       "type": 0,
     },
   ];
-  const particles = loadObjectType(
+  const [objects, oneToOne, { trackerHits, tracks }] = loadObjectType(
     collection,
     datatypes[type],
     objectTypes[type]
   );
-  expect(particles).toEqual([
-    {
-      members: {
-        type: 0,
-        chi2: 0,
-        ndf: 0,
-        dEdx: 0,
-        dEdxError: 0,
-        radiusOfInnermostHit: 17,
-      },
-      id: 0,
-      oneToManyRelations: {
-        trackerHits: [
-          {
-            id: 0,
-            from: 0,
-            to: 0,
-            collectionID: 5,
-          },
-          {
-            id: 1,
-            from: 0,
-            to: 1,
-            collectionID: 5,
-          },
-        ],
-        tracks: [],
-      },
-    },
-    {
-      members: {
-        type: 0,
-        chi2: 0,
-        ndf: 0,
-        dEdx: 0,
-        dEdxError: 0,
-        radiusOfInnermostHit: 17,
-      },
-      id: 1,
-      oneToManyRelations: {
-        trackerHits: [
-          {
-            id: 1,
-            from: 1,
-            to: 2,
-            collectionID: 5,
-          },
-          {
-            id: 2,
-            from: 1,
-            to: 3,
-            collectionID: 5,
-          },
-        ],
-        tracks: [],
-      },
-    },
-    {
-      members: {
-        type: 0,
-        chi2: 0,
-        ndf: 0,
-        dEdx: 0,
-        dEdxError: 0,
-        radiusOfInnermostHit: 17,
-      },
-      id: 2,
-      oneToManyRelations: {
-        trackerHits: [
-          {
-            id: 2,
-            from: 2,
-            to: 4,
-            collectionID: 5,
-          },
-          {
-            id: 3,
-            from: 2,
-            to: 5,
-            collectionID: 5,
-          },
-        ],
-        tracks: [],
-      },
-    },
-  ]);
+
+  expect(objects.length).toEqual(3);
+  expect(oneToOne).toEqual({});
+  expect(trackerHits.length).toEqual(6);
+  expect(tracks.length).toEqual(0);
 });

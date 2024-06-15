@@ -1,6 +1,6 @@
 export class EDMObject {
-  constructor() {
-    this.members = {};
+  constructor(id) {
+    this.id = id;
   }
 
   draw() {}

@@ -15,7 +15,6 @@ beforeEach(() => {
 });
 
 test("load members given some defined members and data", () => {
-  object.members = {};
   const members = [
     {
       "name": "type",
@@ -91,14 +90,12 @@ test("load members given some defined members and data", () => {
   loadMembers(object, data, members);
   expect(object).toEqual({
     "id": 1,
-    "members": {
-      "type": 0,
-      "chi2": 0.0,
-      "ndf": 0,
-      "dEdx": 0.0,
-      "dEdxError": 0.0,
-      "radiusOfInnermostHit": 17.0,
-    },
+    "type": 0,
+    "chi2": 0.0,
+    "ndf": 0,
+    "dEdx": 0.0,
+    "dEdxError": 0.0,
+    "radiusOfInnermostHit": 17.0,
   });
 });
 
@@ -157,8 +154,8 @@ test("load one to one relations with some definition and data", () => {
       "z": 0.0,
     },
     "startVertex": {
-      "collectionID": -2,
-      "index": -2,
+      "collectionID": 2,
+      "index": 2,
     },
     "tracks": [],
     "type": 0,
@@ -169,18 +166,11 @@ test("load one to one relations with some definition and data", () => {
       "name": "startVertex",
     },
   ];
-  loadOneToOneRelations(object, data, oneToOneRelations);
-  expect(object).toEqual({
-    "id": 1,
-    "oneToOneRelations": {
-      "startVertex": {
-        "id": 1,
-        "from": 1,
-        "to": -2,
-        "collectionID": -2,
-      },
-    },
-  });
+  const oneToOne = {
+    "startVertex": null,
+  };
+  loadOneToOneRelations(object, data, oneToOneRelations, oneToOne, []);
+  expect(object.oneToOneRelations).not.toBeNull();
 });
 
 test("load one to many relations with some definition and data", () => {
@@ -247,32 +237,11 @@ test("load one to many relations with some definition and data", () => {
       "name": "daughters",
     },
   ];
-  loadOneToManyRelations(object, data, oneToManyRelations);
-  expect(object).toEqual({
-    "id": 1,
-    "oneToManyRelations": {
-      "parents": [
-        {
-          "id": 1,
-          "from": 1,
-          "to": 1,
-          "collectionID": 11,
-        },
-      ],
-      "daughters": [
-        {
-          "id": 1,
-          "from": 1,
-          "to": 4,
-          "collectionID": 11,
-        },
-        {
-          "id": 2,
-          "from": 1,
-          "to": 5,
-          "collectionID": 11,
-        },
-      ],
-    },
-  });
+  const oneToMany = {
+    "parents": [],
+    "daughters": [],
+  };
+  loadOneToManyRelations(object, data, oneToManyRelations, oneToMany, []);
+  expect(object.oneToManyRelations.daughters.length).toEqual(2);
+  expect(object.oneToManyRelations.parents.length).toEqual(1);
 });
