@@ -131,4 +131,6 @@ export class DaughterLink extends Link {
 export const linkTypes = {
   "parents": ParentLink,
   "daughters": DaughterLink,
+  "trackerHits": Link,
+  "startVertex": Link,
 };
