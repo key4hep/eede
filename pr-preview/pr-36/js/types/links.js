@@ -133,4 +133,5 @@ export const linkTypes = {
   "daughters": DaughterLink,
   "trackerHits": Link,
   "startVertex": Link,
+  "particles": Link,
 };

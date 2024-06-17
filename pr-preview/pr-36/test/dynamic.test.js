@@ -167,7 +167,7 @@ test("load one to one relations with some definition and data", () => {
     },
   ];
   const oneToOne = {
-    "startVertex": null,
+    "startVertex": [],
   };
   loadOneToOneRelations(object, data, oneToOneRelations, oneToOne, []);
   expect(object.oneToOneRelations).not.toBeNull();

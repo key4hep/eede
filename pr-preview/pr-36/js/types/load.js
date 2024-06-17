@@ -12,7 +12,7 @@ export function loadObjectType(collection, datatype, type) {
   let oneToOne = {};
   if (datatype.oneToOneRelations)
     datatype.oneToOneRelations.forEach((relation) => {
-      oneToOne[relation.name] = null;
+      oneToOne[relation.name] = [];
       if (colors[relation.name] === undefined) {
         colors[relation.name] = generateRandomColor();
       }
