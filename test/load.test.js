@@ -1,6 +1,7 @@
-import { loadObjectType } from "../js/types/load.js";
+import { loadObjectType, loadObjects } from "../js/types/load.js";
 import { datatypes } from "../output/datatypes.js";
 import { objectTypes } from "../js/types/objects.js";
+import json from "./load.json" assert { type: "json" };
 
 test("load a collection of particles", () => {
   const type = "edm4hep::Track";
@@ -170,4 +171,53 @@ test("load a collection of particles", () => {
   expect(oneToOne).toEqual({});
   expect(trackerHits.length).toEqual(6);
   expect(tracks.length).toEqual(0);
+});
+
+test("load a json file with a collection of objects", () => {
+  const objects = loadObjects(json, 1, [
+    "edm4hep::MCParticle",
+    "edm4hep::ReconstructedParticle",
+  ]);
+
+  expect(objects["edm4hep::MCParticle"]).toBeDefined();
+  expect(objects["edm4hep::ReconstructedParticle"]).toBeDefined();
+
+  expect(objects["edm4hep::MCParticle"].collection.length).toEqual(3);
+  expect(
+    objects["edm4hep::MCParticle"].collection.map((val) => val.id)
+  ).toEqual([0, 1, 2]);
+  expect(objects["edm4hep::MCParticle"].oneToMany["daughters"]).toBeDefined();
+  expect(objects["edm4hep::MCParticle"].oneToMany["parents"]).toBeDefined();
+  expect(
+    objects["edm4hep::MCParticle"].oneToMany["daughters"][0].from.id
+  ).toEqual(0);
+  expect(
+    objects["edm4hep::MCParticle"].oneToMany["daughters"][0].to.id
+  ).toEqual(2);
+
+  expect(objects["edm4hep::ReconstructedParticle"].collection.length).toEqual(
+    2
+  );
+  expect(
+    objects["edm4hep::ReconstructedParticle"].collection.map((val) => val.id)
+  ).toEqual([0, 1]);
+  expect(
+    objects["edm4hep::ReconstructedParticle"].oneToMany["particles"]
+  ).toBeDefined();
+  expect(
+    objects["edm4hep::ReconstructedParticle"].oneToOne["startVertex"]
+  ).toBeDefined();
+  expect(
+    objects["edm4hep::ReconstructedParticle"].oneToMany["particles"][0].from.id
+  ).toEqual(0);
+  expect(
+    objects["edm4hep::ReconstructedParticle"].oneToMany["particles"][0].to.id
+  ).toEqual(1);
+
+  expect(
+    objects["edm4hep::ReconstructedParticle"].oneToOne["startVertex"][0].to
+  ).toBeUndefined();
+  expect(
+    objects["edm4hep::ReconstructedParticle"].oneToOne["startVertex"][1].to
+  ).toBeUndefined();
 });

@@ -25,7 +25,7 @@ export function loadOneToOneRelations(
     const linkType = linkTypes[name];
     const link = new linkType(object, toObject);
 
-    oneToOne[name] = link;
+    oneToOne[name].push(link);
     object.oneToOneRelations[name] = link;
   }
 }
