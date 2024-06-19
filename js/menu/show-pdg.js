@@ -1,4 +1,5 @@
 import { Toggle } from "./toggle.js";
+import { selectedObjectTypes } from "../main.js";
 
 export class PdgToggle extends Toggle {
   constructor(id) {
@@ -6,18 +7,20 @@ export class PdgToggle extends Toggle {
   }
 
   toggle(currentObjects, redraw) {
-    const validParticles = ["edm4hep::MCParticle"];
+    const validObjects = selectedObjectTypes.types;
 
     if (this.isSliderActive) {
-      for (const objectType of validParticles) {
+      for (const objectType of validObjects) {
         const collection = currentObjects[objectType].collection;
+        if (object[0].PDG === undefined) return;
         for (const object of collection) {
           object.updateTexImg(`${object.PDG}`);
         }
       }
     } else {
-      for (const objectType of validParticles) {
+      for (const objectType of validObjects) {
         const collection = currentObjects[objectType].collection;
+        if (object[0].PDG === undefined) return;
         for (const object of collection) {
           object.updateTexImg(`${object.name}`);
         }
