@@ -1,4 +1,4 @@
-import { errorMsg, loadMCParticles } from "./tools.js";
+import { errorMsg } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
 import {
@@ -17,6 +17,9 @@ import {
   getVisible,
   onScroll,
 } from "./events.js";
+import { loadObjects } from "./types/load.js";
+import { objectTypes } from "./types/objects.js";
+import { copyObject } from "./lib/copy.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -31,116 +34,44 @@ canvas.height = window.innerHeight;
 let jsonData = {};
 
 const dragTools = {
-  draggedInfoBox: -1,
+  draggedObject: null,
   isDragging: false,
   prevMouseX: 0,
   prevMouseY: 0,
 };
 
-const particlesHandler = {
-  infoBoxes: [],
-  parentLinks: [],
-  childrenLinks: [],
-};
+const loadedObjects = {};
 
-const currentParticles = {
-  infoBoxes: [],
-  parentLinks: [],
-  childrenLinks: [],
-};
+const currentObjects = {};
 
-const visibleParticles = {
-  infoBoxes: [],
-  parentLinks: [],
-  childrenLinks: [],
-};
+const visibleObjects = {};
 
-function start(particlesHandler, visibleParticles) {
-  const { infoBoxes } = particlesHandler;
-
-  if (!infoBoxes) {
-    return;
+function start(currentObjects, visibleObjects) {
+  for (const [key, value] of Object.entries(currentObjects)) {
+    const classType = objectTypes[key];
+    const collection = value.collection;
+    classType.setup(collection, canvas);
   }
 
-  // Get How many rows
-  const rows = infoBoxes.map((obj) => {
-    return obj.row;
-  });
-  const maxRow = Math.max(...rows);
+  drawAll(ctx, currentObjects);
 
-  // Order infoBoxes into rows
-  const boxRows = [];
-  for (let i = 0; i <= maxRow; i++) {
-    boxRows.push([]);
-  }
-  for (const box of infoBoxes) {
-    boxRows[box.row].push(box.id);
-  }
-  const rowWidths = boxRows.map((obj) => {
-    return obj.length;
-  });
-  const maxRowWidth = Math.max(...rowWidths);
-
-  const boxWidth = infoBoxes[0].width;
-  const boxHeight = infoBoxes[0].height;
-  const horizontalGap = boxWidth * 0.4;
-  const verticalGap = boxHeight * 0.3;
-
-  canvas.width =
-    boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
-  canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
-
-  for (const [i, row] of boxRows.entries()) {
-    for (const [j, boxId] of row.entries()) {
-      const box = infoBoxes[boxId];
-
-      if (row.length % 2 === 0) {
-        const distanceFromCenter = j - row.length / 2;
-        if (distanceFromCenter < 0) {
-          box.x =
-            canvas.width / 2 -
-            boxWidth -
-            horizontalGap / 2 +
-            (distanceFromCenter + 1) * boxWidth +
-            (distanceFromCenter + 1) * horizontalGap;
-        } else {
-          box.x =
-            canvas.width / 2 +
-            horizontalGap / 2 +
-            distanceFromCenter * boxWidth +
-            distanceFromCenter * horizontalGap;
-        }
-      } else {
-        const distanceFromCenter = j - row.length / 2;
-        box.x =
-          canvas.width / 2 -
-          boxWidth / 2 +
-          distanceFromCenter * boxWidth +
-          distanceFromCenter * horizontalGap;
-      }
-      box.y = i * verticalGap + verticalGap + i * boxHeight;
-    }
-  }
-
-  drawAll(ctx, particlesHandler);
-
-  getVisible(particlesHandler, visibleParticles);
+  getVisible(currentObjects, visibleObjects);
 }
 
 canvas.onmousedown = (event) => {
-  mouseDown(event, currentParticles, visibleParticles, dragTools);
+  mouseDown(event, visibleObjects, dragTools);
 };
 canvas.onmouseup = (event) => {
-  mouseUp(event, currentParticles, dragTools);
+  mouseUp(event, currentObjects, dragTools);
 };
 canvas.onmouseout = (event) => {
   mouseOut(event, dragTools);
 };
 canvas.onmousemove = (event) => {
-  mouseMove(event, currentParticles, visibleParticles, dragTools);
+  mouseMove(event, visibleObjects, dragTools);
 };
 window.onscroll = () => {
-  onScroll(currentParticles, visibleParticles);
+  onScroll(currentObjects, visibleObjects);
 };
 
 /*
@@ -187,20 +118,24 @@ document
     event.preventDefault();
     const eventNum = document.getElementById("event-number").value;
 
-    loadMCParticles(jsonData, eventNum, particlesHandler);
+    const selectedObjectTypes = ["edm4hep::MCParticle"];
+    const objects = loadObjects(jsonData, eventNum, selectedObjectTypes);
 
-    currentParticles.infoBoxes = particlesHandler.infoBoxes;
-    currentParticles.parentLinks = particlesHandler.parentLinks;
-    currentParticles.childrenLinks = particlesHandler.childrenLinks;
+    copyObject(objects, loadedObjects);
+    copyObject(objects, currentObjects);
 
-    if (particlesHandler.infoBoxes.length === 0) {
+    const length = Object.values(loadedObjects)
+      .map((obj) => obj.collection.length)
+      .reduce((a, b) => a + b, 0);
+
+    if (length === 0) {
       errorMsg("Provided file does not contain any MC particle tree!");
       return;
     }
     for (const eventNum in jsonData) {
       delete jsonData[eventNum];
     }
-    start(currentParticles, visibleParticles);
+    start(currentObjects, visibleObjects);
     hideInputModal();
     window.scroll((canvas.width - window.innerWidth) / 2, 0);
 
@@ -208,10 +143,9 @@ document
       tool.style.display = "flex";
     }
 
-    const { infoBoxes } = currentParticles;
-
-    infoBoxes.forEach((infoBox) => {
-      genStatus.add(infoBox.genStatus);
+    const mcObjects = loadedObjects["edm4hep::MCParticle"].collection;
+    mcObjects.forEach((mcObject) => {
+      genStatus.add(mcObject.generatorStatus);
     });
     genStatus.setCheckBoxes();
     renderRangeParameters(filters, parametersRange);
@@ -222,10 +156,10 @@ document
 
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
-      pdgToggle.toggle(infoBoxes, () => {
-        drawAll(ctx, currentParticles);
+      pdgToggle.toggle(currentObjects, () => {
+        drawAll(ctx, currentObjects);
       });
     });
   });
 
-export { canvas, ctx, visibleParticles, particlesHandler, currentParticles };
+export { canvas, ctx, loadedObjects, currentObjects, visibleObjects };

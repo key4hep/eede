@@ -1,35 +1,22 @@
 import { canvas, ctx } from "./main.js";
 
-export function drawAll(ctx, currentParticles) {
-  const { parentLinks, childrenLinks, infoBoxes } = currentParticles;
-
+export function drawAll(ctx, loadedObjects) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // console.time("drawParentLinks");
-  for (const link of parentLinks) {
-    link.draw(ctx, infoBoxes);
+
+  for (const elements of Object.values(loadedObjects)) {
+    const { collection, oneToMany, oneToOne } = elements;
+
+    for (const links of Object.values(oneToMany)) {
+      for (const link of links) link.draw(ctx);
+    }
+
+    for (const link of Object.values(oneToOne)) link.draw(ctx);
+
+    for (const object of collection) object.draw(ctx);
   }
-  // console.timeEnd("drawParentLinks");
-  // console.time("drawChildrenLinks");
-  for (const link of childrenLinks) {
-    link.draw(ctx, infoBoxes);
-  }
-  // console.timeEnd("drawChildrenLinks");
-  // console.time("drawBoxes");
-  for (const infoBox of infoBoxes) {
-    if (infoBox !== null) infoBox.draw(ctx);
-  }
-  // console.timeEnd("drawBoxes");
 }
 
-export function drawVisible(currentParticles, visibleParticles) {
-  const {
-    infoBoxes: visibleBoxes,
-    parentLinks: visibleParentLinks,
-    childrenLinks: visibleChildrenLinks,
-  } = visibleParticles;
-
-  const { parentLinks, childrenLinks, infoBoxes } = currentParticles;
-
+export function drawVisible(visibleObjects) {
   const boundigClientRect = canvas.getBoundingClientRect();
   ctx.clearRect(
     0 - boundigClientRect.x,
@@ -37,15 +24,16 @@ export function drawVisible(currentParticles, visibleParticles) {
     window.innerWidth,
     window.innerHeight
   );
-  for (const linkId of visibleParentLinks) {
-    if (parentLinks[linkId] !== undefined)
-      parentLinks[linkId].draw(ctx, infoBoxes);
-  }
-  for (const linkId of visibleChildrenLinks) {
-    if (childrenLinks[linkId] !== undefined)
-      childrenLinks[linkId].draw(ctx, infoBoxes);
-  }
-  for (const boxId of visibleBoxes) {
-    infoBoxes[boxId].draw(ctx);
+
+  for (const elements of Object.values(visibleObjects)) {
+    const { collection, oneToMany, oneToOne } = elements;
+
+    for (const links of Object.values(oneToMany)) {
+      for (const link of links) link.draw(ctx);
+    }
+
+    for (const link of Object.values(oneToOne)) link.draw(ctx);
+
+    for (const object of collection) object.draw(ctx);
   }
 }
