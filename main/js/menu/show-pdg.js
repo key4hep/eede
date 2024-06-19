@@ -1,4 +1,3 @@
-// const slider = document.getElementById("show-pdg");
 import { Toggle } from "./toggle.js";
 
 export class PdgToggle extends Toggle {
@@ -6,14 +5,22 @@ export class PdgToggle extends Toggle {
     super(id);
   }
 
-  toggle(infoBoxes, redraw) {
+  toggle(currentObjects, redraw) {
+    const validParticles = ["edm4hep::MCParticle"];
+
     if (this.isSliderActive) {
-      for (const infoBox of infoBoxes) {
-        infoBox.updateTexImg(`${infoBox.pdg}`);
+      for (const objectType of validParticles) {
+        const collection = currentObjects[objectType].collection;
+        for (const object of collection) {
+          object.updateTexImg(`${object.PDG}`);
+        }
       }
     } else {
-      for (const infoBox of infoBoxes) {
-        infoBox.updateTexImg(infoBox.name);
+      for (const objectType of validParticles) {
+        const collection = currentObjects[objectType].collection;
+        for (const object of collection) {
+          object.updateTexImg(`${object.name}`);
+        }
       }
     }
 
