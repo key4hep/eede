@@ -4,6 +4,7 @@ import { drawAll } from "./draw.js";
 import { getWidthFilterContent } from "./menu/filter/filter.js";
 import { mouseDown, mouseUp, mouseOut, mouseMove, onScroll } from "./events.js";
 import { showEventSwitcher, loadSelectedEvent } from "./menu/event-number.js";
+import { renderEvent } from "./menu/event-number.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -79,11 +80,22 @@ document.getElementById("input-file").addEventListener("change", (event) => {
       eventNumberInput.value = options[0];
       document.getElementById("event-selector").style.display = "block";
       const eventOptions = document.getElementById("event-number");
+      const eventSelectorMenu = document.getElementById("event-selector-menu");
       eventOptions.replaceChildren();
+      eventSelectorMenu.replaceChildren();
       options.forEach((option) => {
         const optionElement = document.createElement("option");
         optionElement.appendChild(document.createTextNode(option));
         eventOptions.appendChild(optionElement);
+
+        const optionElementMenu = document.createElement("div");
+        optionElementMenu.className = "event-option";
+        optionElementMenu.appendChild(document.createTextNode(option));
+        eventSelectorMenu.appendChild(optionElementMenu);
+        optionElementMenu.addEventListener("click", () => {
+          eventSelectorMenu.style.display = "none";
+          renderEvent(option);
+        });
       });
     });
     reader.readAsText(file);

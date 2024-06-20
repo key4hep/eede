@@ -47,7 +47,7 @@ function start(currentObjects, visibleObjects) {
   getVisible(currentObjects, visibleObjects);
 }
 
-function renderEvent(eventNumber) {
+export function renderEvent(eventNumber) {
   const data = jsonData.data[`Event ${eventNumber}`];
 
   if (data === undefined) {
@@ -110,4 +110,12 @@ previousEvent.addEventListener("click", () => {
 nextEvent.addEventListener("click", () => {
   const newEventNum = `${parseInt(currentEvent) + 1}`;
   renderEvent(newEventNum);
+});
+eventNumber.addEventListener("click", () => {
+  const eventSelectorMenu = document.getElementById("event-selector-menu");
+  if (eventSelectorMenu.style.display === "flex") {
+    eventSelectorMenu.style.display = "none";
+  } else {
+    eventSelectorMenu.style.display = "flex";
+  }
 });

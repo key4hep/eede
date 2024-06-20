@@ -12,7 +12,7 @@ export class PdgToggle extends Toggle {
     if (this.isSliderActive) {
       for (const objectType of validObjects) {
         const collection = currentObjects[objectType].collection;
-        if (object[0].PDG === undefined) return;
+        if (collection[0].PDG === undefined) return;
         for (const object of collection) {
           object.updateTexImg(`${object.PDG}`);
         }
@@ -20,7 +20,7 @@ export class PdgToggle extends Toggle {
     } else {
       for (const objectType of validObjects) {
         const collection = currentObjects[objectType].collection;
-        if (object[0].PDG === undefined) return;
+        if (collection[0].PDG === undefined) return;
         for (const object of collection) {
           object.updateTexImg(`${object.name}`);
         }
