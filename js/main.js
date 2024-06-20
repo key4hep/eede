@@ -78,6 +78,13 @@ document.getElementById("input-file").addEventListener("change", (event) => {
       }
       eventNumberInput.value = options[0];
       document.getElementById("event-selector").style.display = "block";
+      const eventOptions = document.getElementById("event-number");
+      eventOptions.replaceChildren();
+      options.forEach((option) => {
+        const optionElement = document.createElement("option");
+        optionElement.appendChild(document.createTextNode(option));
+        eventOptions.appendChild(optionElement);
+      });
     });
     reader.readAsText(file);
     break;
