@@ -93,8 +93,8 @@ document.getElementById("input-file").addEventListener("change", (event) => {
         optionElementMenu.appendChild(document.createTextNode(option));
         eventSelectorMenu.appendChild(optionElementMenu);
         optionElementMenu.addEventListener("click", () => {
-          eventSelectorMenu.style.display = "none";
           renderEvent(option);
+          eventSelectorMenu.style.display = "none";
         });
       });
     });

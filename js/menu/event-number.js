@@ -28,6 +28,8 @@ const manipulationTools = document.getElementsByClassName("manipulation-tool");
 
 let currentEvent;
 
+const scrollLocation = {};
+
 function updateEventNumber(newEventNumber) {
   if (eventNumber.firstChild) {
     eventNumber.removeChild(eventNumber.firstChild);
@@ -50,12 +52,17 @@ function start(currentObjects, visibleObjects) {
 export function renderEvent(eventNumber) {
   const data = jsonData.data[`Event ${eventNumber}`];
 
+  scrollLocation[currentEvent] = {
+    x: window.scrollX,
+    y: window.scrollY,
+  };
+
   if (data === undefined) {
     return;
   } else {
     currentEvent = eventNumber;
-    updateEventNumber(eventNumber);
     loadSelectedEvent(jsonData, selectedObjectTypes.types, eventNumber);
+    updateEventNumber(eventNumber);
   }
 }
 
@@ -85,7 +92,14 @@ export function loadSelectedEvent() {
   }
 
   start(currentObjects, visibleObjects);
-  window.scroll((canvas.width - window.innerWidth) / 2, 0);
+  if (scrollLocation[currentEvent] === undefined) {
+    scrollLocation[currentEvent] = {
+      x: (canvas.width - window.innerWidth) / 2,
+      y: 0,
+    };
+  }
+
+  window.scroll(scrollLocation[currentEvent].x, scrollLocation[currentEvent].y);
 
   for (const tool of manipulationTools) {
     tool.style.display = "flex";
