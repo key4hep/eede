@@ -484,7 +484,7 @@ export const mappings = {
 
   // Bottom Baryons
   "5122": "\\Lambda^{0}_{b}",
-  "-5122": "\\bar\\Lambda_{b}^{0}$",
+  "-5122": "\\bar\\Lambda_{b}^{0}",
   "5112": "\\Sigma^{-}_{b}",
   "5212": "\\Sigma^{0}_{b}",
   "5222": "\\Sigma^{+}_{b}",
