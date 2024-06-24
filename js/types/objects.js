@@ -1,43 +1,9 @@
-import { EDMObject } from "./edmobject.js";
 import { drawTex, drawRoundedRect } from "../graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 
-export class Cluster extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class ParticleID extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class ReconstructedParticle extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class Vertex extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class Track extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class MCParticle extends EDMObject {
-  constructor(id) {
-    super(id);
-
-    // Appearance
+class EDMObject {
+  constructor() {
     this.x = 0;
     this.y = 0;
     this.width = 120;
@@ -45,6 +11,66 @@ export class MCParticle extends EDMObject {
     this.lineColor = "black";
     this.lineWidth = 2;
     this.color = "white";
+  }
+
+  draw(ctx) {}
+
+  isHere(mouseX, mouseY) {
+    return (
+      mouseX > this.x &&
+      mouseX < this.x + this.width &&
+      mouseY > this.y &&
+      mouseY < this.y + this.height
+    );
+  }
+
+  isVisible(x, y, width, height) {
+    return (
+      x + width > this.x &&
+      x < this.x + this.width &&
+      y + height > this.y &&
+      y < this.y + this.height
+    );
+  }
+  // more methods common to all particles
+}
+
+export class Cluster extends EDMObject {
+  constructor() {
+    super();
+  }
+}
+
+export class ParticleID extends EDMObject {
+  constructor() {
+    super();
+  }
+}
+
+export class ReconstructedParticle extends EDMObject {
+  constructor() {
+    super();
+  }
+
+  static setup() {}
+}
+
+export class Vertex extends EDMObject {
+  constructor() {
+    super();
+  }
+}
+
+export class Track extends EDMObject {
+  constructor() {
+    super();
+  }
+}
+
+export class MCParticle extends EDMObject {
+  constructor() {
+    super();
+
     this.row = -1;
 
     this.texImg = null;
@@ -63,8 +89,6 @@ export class MCParticle extends EDMObject {
   }
 
   draw(ctx) {
-    // drawCross(ctx, this.x, this.y);
-
     const boxCenterX = this.x + this.width / 2;
 
     drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
@@ -91,7 +115,7 @@ export class MCParticle extends EDMObject {
 
     const topY = this.y + 20;
     const topLines = [];
-    topLines.push("ID: " + this.id);
+    topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
     topLines.push("Sim. stat.: " + this.simulatorStatus);
 
@@ -136,24 +160,6 @@ export class MCParticle extends EDMObject {
       );
     }
     ctx.restore();
-  }
-
-  isHere(mouseX, mouseY) {
-    return (
-      mouseX > this.x &&
-      mouseX < this.x + this.width &&
-      mouseY > this.y &&
-      mouseY < this.y + this.height
-    );
-  }
-
-  isVisible(x, y, width, height) {
-    return (
-      x + width > this.x &&
-      x < this.x + this.width &&
-      y + height > this.y &&
-      y < this.y + this.height
-    );
   }
 
   static setup(mcCollection, canvas) {

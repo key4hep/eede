@@ -10,7 +10,7 @@ const mouseDown = function (event, visibleObjects, dragTools) {
   dragTools.prevMouseX = mouseX;
   dragTools.prevMouseY = mouseY;
 
-  for (const { collection } of Object.values(visibleObjects)) {
+  for (const { collection } of Object.values(visibleObjects.datatypes)) {
     for (const object of collection) {
       if (object.isHere(mouseX, mouseY)) {
         dragTools.draggedObject = object;
@@ -71,10 +71,13 @@ const mouseMove = function (event, visibleObjects, dragTools) {
 const getVisible = function (loadedObjects, visibleObjects) {
   const boundigClientRect = canvas.getBoundingClientRect();
 
-  for (const [objectType, elements] of Object.entries(loadedObjects)) {
+  visibleObjects.datatypes = {};
+  for (const [objectType, elements] of Object.entries(
+    loadedObjects.datatypes ?? {}
+  )) {
     const { collection, oneToMany, oneToOne } = elements;
 
-    visibleObjects[objectType] = {
+    visibleObjects.datatypes[objectType] = {
       collection: [],
       oneToMany: {},
       oneToOne: {},
@@ -89,12 +92,12 @@ const getVisible = function (loadedObjects, visibleObjects) {
           window.innerHeight
         )
       ) {
-        visibleObjects[objectType].collection.push(object);
+        visibleObjects.datatypes[objectType].collection.push(object);
       }
     }
 
     for (const [name, links] of Object.entries(oneToMany)) {
-      visibleObjects[objectType].oneToMany[name] = [];
+      visibleObjects.datatypes[objectType].oneToMany[name] = [];
 
       for (const link of links) {
         if (
@@ -105,13 +108,13 @@ const getVisible = function (loadedObjects, visibleObjects) {
             window.innerHeight
           )
         ) {
-          visibleObjects[objectType].oneToMany[name].push(link);
+          visibleObjects.datatypes[objectType].oneToMany[name].push(link);
         }
       }
     }
 
     for (const [name, links] of Object.entries(oneToOne)) {
-      visibleObjects[objectType].oneToOne[name] = null;
+      visibleObjects.datatypes[objectType].oneToOne[name] = null;
 
       for (const link of links) {
         if (
@@ -122,7 +125,7 @@ const getVisible = function (loadedObjects, visibleObjects) {
             window.innerHeight
           )
         ) {
-          visibleObjects[objectType].oneToOne[name] = link;
+          visibleObjects.datatypes[objectType].oneToOne[name] = link;
         }
       }
     }
