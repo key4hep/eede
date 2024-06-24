@@ -128,10 +128,19 @@ export class DaughterLink extends Link {
   }
 }
 
+export class MCRecoParticleAssociation extends Link {
+  constructor(from, to, weight) {
+    super(from, to);
+    this.weight = weight;
+  }
+}
+
 export const linkTypes = {
   "parents": ParentLink,
   "daughters": DaughterLink,
   "trackerHits": Link,
   "startVertex": Link,
   "particles": Link,
+  "clusters": Link,
+  "edm4hep::MCRecoParticleAssociation": MCRecoParticleAssociation,
 };
