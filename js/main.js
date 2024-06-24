@@ -3,7 +3,6 @@ import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
 import { getWidthFilterContent } from "./menu/filter/filter.js";
 import { mouseDown, mouseUp, mouseOut, mouseMove, onScroll } from "./events.js";
-import { showEventSwitcher, loadSelectedEvent } from "./menu/event-number.js";
 import { renderEvent } from "./menu/event-number.js";
 
 const canvas = document.getElementById("canvas");
@@ -28,7 +27,11 @@ const currentObjects = {};
 const visibleObjects = {};
 
 const selectedObjectTypes = {
-  types: ["edm4hep::MCParticle"],
+  types: [
+    "edm4hep::MCParticle",
+    "edm4hep::ReconstructedParticle",
+    "edm4hep::MCRecoParticleAssociation",
+  ],
 };
 
 canvas.onmousedown = (event) => {
@@ -51,6 +54,11 @@ function hideInputModal() {
   const modal = document.getElementById("input-modal");
 
   modal.style.display = "none";
+}
+
+function showEventSwitcher() {
+  const eventSwitcher = document.getElementById("event-switcher");
+  eventSwitcher.style.display = "flex";
 }
 
 document.getElementById("input-file").addEventListener("change", (event) => {
@@ -110,8 +118,8 @@ document
     const eventNum = document.getElementById("event-number").value;
 
     hideInputModal();
-    showEventSwitcher(eventNum);
-    loadSelectedEvent();
+    showEventSwitcher();
+    renderEvent(eventNum);
 
     const width = getWidthFilterContent();
     filter.style.width = width;
