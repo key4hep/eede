@@ -18,9 +18,9 @@ import {
 import { drawAll } from "../draw.js";
 import { objectTypes } from "../types/objects.js";
 import { jsonData, selectedObjectTypes } from "../main.js";
+import { placeObjects } from "../place-objects.js";
 
 const filters = document.getElementById("filters");
-const eventSwitcher = document.getElementById("event-switcher");
 const eventNumber = document.getElementById("selected-event");
 const previousEvent = document.getElementById("previous-event");
 const nextEvent = document.getElementById("next-event");
@@ -30,49 +30,24 @@ let currentEvent;
 
 const scrollLocation = {};
 
-function updateEventNumber(newEventNumber) {
+const layoutObjects = [];
+
+function updateEventNumber() {
   if (eventNumber.firstChild) {
     eventNumber.removeChild(eventNumber.firstChild);
   }
-  eventNumber.appendChild(document.createTextNode(`Event: ${newEventNumber}`));
+  eventNumber.appendChild(document.createTextNode(`Event: ${currentEvent}`));
 }
 
-function start(currentObjects, visibleObjects) {
-  for (const [key, value] of Object.entries(currentObjects)) {
-    const classType = objectTypes[key];
-    const collection = value.collection;
-    classType.setup(collection, canvas);
-  }
-
-  drawAll(ctx, currentObjects);
-
-  getVisible(currentObjects, visibleObjects);
-}
-
-export function renderEvent(eventNumber) {
-  const data = jsonData.data[`Event ${eventNumber}`];
-
+function saveScrollLocation() {
+  if (scrollLocation[currentEvent] === undefined) return;
   scrollLocation[currentEvent] = {
     x: window.scrollX,
     y: window.scrollY,
   };
-
-  if (data === undefined) {
-    return;
-  } else {
-    currentEvent = eventNumber;
-    loadSelectedEvent(jsonData, selectedObjectTypes.types, eventNumber);
-    updateEventNumber(eventNumber);
-  }
 }
 
-export function showEventSwitcher(initialValue) {
-  eventSwitcher.style.display = "flex";
-  updateEventNumber(initialValue);
-  currentEvent = initialValue;
-}
-
-export function loadSelectedEvent() {
+function loadSelectedEvent() {
   const objects = loadObjects(
     jsonData.data,
     currentEvent,
@@ -82,7 +57,7 @@ export function loadSelectedEvent() {
   copyObject(objects, loadedObjects);
   copyObject(objects, currentObjects);
 
-  const length = Object.values(loadedObjects)
+  const length = Object.values(loadedObjects.datatypes)
     .map((obj) => obj.collection.length)
     .reduce((a, b) => a + b, 0);
 
@@ -91,7 +66,21 @@ export function loadSelectedEvent() {
     return;
   }
 
-  start(currentObjects, visibleObjects);
+  for (const [key, value] of Object.entries(currentObjects.datatypes)) {
+    const classType = objectTypes[key];
+    const collection = value.collection;
+    classType.setup(collection, canvas);
+  }
+
+  // Prepare objects for drawing
+  // if (!layoutObjects[currentEvent]) {
+  placeObjects(currentObjects);
+  //   layoutObjects[currentEvent] = true;
+  // }
+
+  drawAll(ctx, currentObjects);
+  getVisible(currentObjects, visibleObjects);
+
   if (scrollLocation[currentEvent] === undefined) {
     scrollLocation[currentEvent] = {
       x: (canvas.width - window.innerWidth) / 2,
@@ -101,11 +90,11 @@ export function loadSelectedEvent() {
 
   window.scroll(scrollLocation[currentEvent].x, scrollLocation[currentEvent].y);
 
+  // menu/filtering stuff
   for (const tool of manipulationTools) {
     tool.style.display = "flex";
   }
-
-  const mcObjects = loadedObjects["edm4hep::MCParticle"].collection;
+  const mcObjects = loadedObjects.datatypes["edm4hep::MCParticle"].collection;
   genStatus.reset();
   mcObjects.forEach((mcObject) => {
     genStatus.add(mcObject.generatorStatus);
@@ -115,6 +104,13 @@ export function loadSelectedEvent() {
 
   renderRangeParameters(parametersRange);
   renderGenSim(bits, genStatus);
+}
+
+export function renderEvent(eventNumber) {
+  saveScrollLocation();
+  currentEvent = eventNumber;
+  loadSelectedEvent();
+  updateEventNumber();
 }
 
 previousEvent.addEventListener("click", () => {

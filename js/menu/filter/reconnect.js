@@ -6,7 +6,7 @@ export function reconnect(criteriaFunction, loadedObjects) {
 
   emptyCopyObject(loadedObjects, filteredObjects);
 
-  for (const [key, value] of Object.entries(loadedObjects)) {
+  for (const [key, value] of Object.entries(loadedObjects.datatypes)) {
     const filterFunction = objectTypes[key].filter;
 
     filterFunction(value, filteredObjects, criteriaFunction);
