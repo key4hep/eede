@@ -1,7 +1,16 @@
 import { canvas, ctx } from "./main.js";
 
 function draw(objects) {
-  for (const elements of Object.values(objects.datatypes ?? {})) {
+  const datatypes = objects.datatypes;
+  const associations = objects.associations;
+
+  for (const collection of Object.values(associations)) {
+    for (const association of collection) {
+      association.draw(ctx);
+    }
+  }
+
+  for (const elements of Object.values(datatypes ?? {})) {
     const { collection, oneToMany, oneToOne } = elements;
 
     for (const links of Object.values(oneToMany)) {

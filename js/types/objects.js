@@ -4,8 +4,8 @@ import { linkTypes } from "./links.js";
 
 class EDMObject {
   constructor() {
-    this.x = 0;
-    this.y = 0;
+    this.x = NaN;
+    this.y = NaN;
     this.width = 120;
     this.height = 240;
     this.lineColor = "black";
@@ -50,6 +50,10 @@ export class ParticleID extends EDMObject {
 export class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
+  }
+
+  draw(ctx) {
+    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
   }
 
   static setup() {}

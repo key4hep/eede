@@ -1,4 +1,5 @@
 import { fruchtermanReingold } from "./graph/fruchrein.js";
+import { generateRandomPositions } from "./graph/random-positions.js";
 
 function objectToNode(object) {
   const edges = [];
@@ -24,8 +25,6 @@ function objectToNode(object) {
   return {
     x: object.x,
     y: object.y,
-    width: object.width,
-    height: object.height,
     edges,
   };
 }
@@ -59,7 +58,20 @@ export function placeObjects(objects) {
     }
   }
 
+  generateRandomPositions(nodes);
+
   console.log(nodes, edges);
 
-  fruchtermanReingold(nodes, edges);
+  return nodes;
+}
+
+export function applyNewPositions(objects, nodes) {
+  let index = 0;
+  Object.values(objects.datatypes).forEach(({ collection }) => {
+    collection.forEach((obj) => {
+      obj.x = nodes[index].x;
+      obj.y = nodes[index].y;
+      index++;
+    });
+  });
 }

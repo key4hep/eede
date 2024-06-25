@@ -18,7 +18,7 @@ import {
 import { drawAll } from "../draw.js";
 import { objectTypes } from "../types/objects.js";
 import { jsonData, selectedObjectTypes } from "../main.js";
-import { placeObjects } from "../place-objects.js";
+import { placeObjects, applyNewPositions } from "../place-objects.js";
 
 const filters = document.getElementById("filters");
 const eventNumber = document.getElementById("selected-event");
@@ -74,7 +74,8 @@ function loadSelectedEvent() {
 
   // Prepare objects for drawing
   // if (!layoutObjects[currentEvent]) {
-  placeObjects(currentObjects);
+  const nodes = placeObjects(currentObjects);
+  applyNewPositions(currentObjects, nodes);
   //   layoutObjects[currentEvent] = true;
   // }
 
