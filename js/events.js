@@ -72,6 +72,7 @@ const getVisible = function (loadedObjects, visibleObjects) {
   const boundigClientRect = canvas.getBoundingClientRect();
 
   visibleObjects.datatypes = {};
+  visibleObjects.associations = {};
   for (const [objectType, elements] of Object.entries(
     loadedObjects.datatypes ?? {}
   )) {
@@ -114,7 +115,7 @@ const getVisible = function (loadedObjects, visibleObjects) {
     }
 
     for (const [name, links] of Object.entries(oneToOne)) {
-      visibleObjects.datatypes[objectType].oneToOne[name] = null;
+      visibleObjects.datatypes[objectType].oneToOne[name] = [];
 
       for (const link of links) {
         if (
@@ -125,8 +126,27 @@ const getVisible = function (loadedObjects, visibleObjects) {
             window.innerHeight
           )
         ) {
-          visibleObjects.datatypes[objectType].oneToOne[name] = link;
+          visibleObjects.datatypes[objectType].oneToOne[name].push(link);
         }
+      }
+    }
+  }
+
+  for (const [name, links] of Object.entries(
+    loadedObjects.associations ?? {}
+  )) {
+    visibleObjects.associations[name] = [];
+
+    for (const link of links) {
+      if (
+        link.isVisible(
+          0 - boundigClientRect.x,
+          0 - boundigClientRect.y,
+          window.innerWidth,
+          window.innerHeight
+        )
+      ) {
+        visibleObjects.associations[name].push(link);
       }
     }
   }

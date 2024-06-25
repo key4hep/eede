@@ -19,7 +19,7 @@ export function emptyCopyObject(objToCopy, updatedObject) {
     }
 
     for (const name in oneToOne) {
-      updatedObject[objectType].oneToOne[name] = null;
+      updatedObject[objectType].oneToOne[name] = [];
     }
   }
 }
