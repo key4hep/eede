@@ -43,3 +43,16 @@ const hideModal = () => {
 
 infoIcon.addEventListener("click", showModal);
 closeIcon.addEventListener("click", hideModal);
+
+window.addEventListener("click", (event) => {
+  const modal = document.getElementById("information-modal");
+
+  if (
+    event.target !== modal &&
+    !modal.contains(event.target) &&
+    event.target !== infoIcon &&
+    modal.style.display === "flex"
+  ) {
+    hideModal();
+  }
+});
