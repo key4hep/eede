@@ -15,9 +15,6 @@ function loadMembers(object, data, membersToLoad) {
 function loadEmptyRelations(object, relations) {
   const oneToOneRelations = relations.oneToOneRelations ?? [];
   if (oneToOneRelations) object.oneToOneRelations = {};
-  // for (const { name } of oneToOneRelations) {
-  //   object.oneToOneRelations[name] = null;
-  // }
 
   const oneToManyRelations = relations.oneToManyRelations ?? [];
   if (oneToManyRelations) object.oneToManyRelations = {};
