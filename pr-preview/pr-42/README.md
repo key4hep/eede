@@ -1,9 +1,9 @@
-# dmX
-*data model eXplorer*
+# eede
+*EDM4hep Event Data Explorer*
 
 Warning: **Experimental**
 
-Explore your events at [dmX](https://key4hep.github.io/dmx/).
+Explore your events at [eede](https://key4hep.github.io/eede/).
 
 To generate your `.json` file use `edm4hep2json` available in the Key4hep stack.
 Example usage for the events from FCC `winter2023` campaign:
