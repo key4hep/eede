@@ -1,4 +1,4 @@
-name: Deploy dmX to GitHub Pages
+name: Deploy eede to GitHub Pages
 on:
     push:
         branches: [main]
