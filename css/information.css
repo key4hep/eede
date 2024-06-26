@@ -28,7 +28,7 @@
   transform: translate(-50%, -50%);
   flex-direction: column;
   backdrop-filter: blur(10px);
-  background-color: rgba(200, 200, 200, 0.8);
+  background-color: rgba(225, 225, 225, 0.8);
   padding: 20px;
   border-radius: 10px;
   border: 2px solid black;
