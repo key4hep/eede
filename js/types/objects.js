@@ -57,6 +57,8 @@ export class ReconstructedParticle extends EDMObject {
   }
 
   static setup() {}
+
+  static filter() {}
 }
 
 export class Vertex extends EDMObject {

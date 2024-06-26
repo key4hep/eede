@@ -2,8 +2,6 @@ import { objectTypes } from "./objects.js";
 import { datatypes } from "../../output/datatypes.js";
 import { linkTypes } from "./links.js";
 
-// import json from "../../input/p8_ee_ZH_ecm240_edm4hep.edm4hep.json" assert { type: "json" };
-
 function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {
     const name = member.name;
@@ -214,12 +212,3 @@ export function loadObjects(jsonData, event, objectsToLoad) {
 
   return objects;
 }
-// console.time("load");
-// const data = loadObjects(json, 0, [
-//   "edm4hep::MCParticle",
-//   "edm4hep::ReconstructedParticle",
-//   "edm4hep::Cluster",
-//   "edm4hep::MCRecoParticleAssociation",
-// ]);
-// console.timeEnd("load");
-// console.log(data);

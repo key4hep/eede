@@ -9,7 +9,7 @@ export function reconnect(criteriaFunction, loadedObjects) {
   for (const [key, value] of Object.entries(loadedObjects.datatypes)) {
     const filterFunction = objectTypes[key].filter;
 
-    filterFunction(value, filteredObjects, criteriaFunction);
+    filterFunction(value, filteredObjects.datatypes, criteriaFunction);
   }
 
   return filteredObjects;

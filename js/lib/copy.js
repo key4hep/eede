@@ -5,21 +5,29 @@ export function copyObject(objToCopy, updatedObject) {
 }
 
 export function emptyCopyObject(objToCopy, updatedObject) {
-  for (const [objectType, elements] of Object.entries(objToCopy)) {
+  updatedObject.datatypes = {};
+
+  for (const [objectType, elements] of Object.entries(objToCopy.datatypes)) {
     const { _, oneToMany, oneToOne } = elements;
 
-    updatedObject[objectType] = {
+    updatedObject.datatypes[objectType] = {
       collection: [],
       oneToMany: {},
       oneToOne: {},
     };
 
     for (const name in oneToMany) {
-      updatedObject[objectType].oneToMany[name] = [];
+      updatedObject.datatypes[objectType].oneToMany[name] = [];
     }
 
     for (const name in oneToOne) {
-      updatedObject[objectType].oneToOne[name] = [];
+      updatedObject.datatypes[objectType].oneToOne[name] = [];
     }
+  }
+
+  updatedObject.associations = {};
+
+  for (const key in objToCopy.associations) {
+    updatedObject.associations[key] = [];
   }
 }
