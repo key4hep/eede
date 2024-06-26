@@ -212,3 +212,12 @@ export function loadObjects(jsonData, event, objectsToLoad) {
 
   return objects;
 }
+// console.time("load");
+// const data = loadObjects(json, 0, [
+//   "edm4hep::MCParticle",
+//   "edm4hep::ReconstructedParticle",
+//   "edm4hep::Cluster",
+//   "edm4hep::MCRecoParticleAssociation",
+// ]);
+// console.timeEnd("load");
+// console.log(data);
