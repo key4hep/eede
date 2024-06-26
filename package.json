@@ -1,5 +1,5 @@
 {
-	"name": "dmx",
+	"name": "eede",
 	"type": "module",
 	"version": "1.0.0",
 	"scripts": {
@@ -14,15 +14,16 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/key4hep/dmx.git"
+		"url": "https://github.com/key4hep/eede.git"
 	},
 	"keywords": [
-		"dmx",
+		"eede",
+		"EDM4hep",
 		"HEP",
-		"key4hep"
+		"Key4hep"
 	],
 	"license": "BSD-2-Clause",
-	"homepage": "https://key4hep.github.io/dmx/",
+	"homepage": "https://key4hep.github.io/eede/",
 	"dependencies": {
 		"js-yaml": "^4.1.0"
 	}

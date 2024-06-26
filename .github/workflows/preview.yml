@@ -10,7 +10,7 @@ on:
 
 jobs:
     test:
-        uses: key4hep/dmx/.github/workflows/test-previews.yml@main
+        uses: key4hep/eede/.github/workflows/test-previews.yml@main
         with:
             repository: ${{ github.event.pull_request.head.sha }}
 
@@ -34,7 +34,7 @@ jobs:
                   source-dir: .
                   preview-branch: gh-pages
                   umbrella-dir: pr-preview
-                  deploy-repository: "key4hep/dmx"
+                  deploy-repository: "key4hep/eede"
                   token: ${{ secrets.PR_TOKEN }}
                   action: auto
 
@@ -45,6 +45,6 @@ jobs:
                   source-dir: .
                   preview-branch: gh-pages
                   umbrella-dir: pr-preview
-                  deploy-repository: "key4hep/dmx"
+                  deploy-repository: "key4hep/eede"
                   token: ${{ secrets.PR_TOKEN }}
                   action: remove

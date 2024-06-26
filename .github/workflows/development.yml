@@ -1,4 +1,4 @@
-name: Release version of dmX in GitHub Pages
+name: Release version of eede in GitHub Pages
 on:
     push:
         branches: [release]
