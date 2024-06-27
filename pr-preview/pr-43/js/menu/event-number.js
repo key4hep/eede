@@ -72,13 +72,6 @@ function loadSelectedEvent() {
     classType.setup(collection, canvas);
   }
 
-  // Prepare objects for drawing
-  // if (!layoutObjects[currentEvent]) {
-  const nodes = placeObjects(currentObjects);
-  applyNewPositions(currentObjects, nodes);
-  //   layoutObjects[currentEvent] = true;
-  // }
-
   drawAll(ctx, currentObjects);
   getVisible(currentObjects, visibleObjects);
 
