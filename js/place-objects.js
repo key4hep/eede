@@ -60,8 +60,6 @@ export function placeObjects(objects) {
 
   generateRandomPositions(nodes);
 
-  console.log(nodes, edges);
-
   return nodes;
 }
 

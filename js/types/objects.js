@@ -56,7 +56,74 @@ export class ReconstructedParticle extends EDMObject {
     drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
   }
 
-  static setup() {}
+  static setup(recoCollection, canvas) {
+    const nodes = new Set();
+    const children = new Set();
+
+    for (const recoParticle of recoCollection) {
+      const particles = recoParticle.oneToManyRelations["particles"].map(
+        (link) => link.to
+      );
+      nodes.add(`${recoParticle.index}-${recoParticle.collectionId}`);
+      for (const recoParticleChild of particles) {
+        children.add(
+          `${recoParticleChild.index}-${recoParticleChild.collectionId}`
+        );
+      }
+    }
+
+    const rootNodesIds = nodes.difference(children);
+    const rootNodes = [];
+
+    recoCollection.forEach((recoParticle) => {
+      if (
+        rootNodesIds.has(`${recoParticle.index}-${recoParticle.collectionId}`)
+      ) {
+        rootNodes.push(recoParticle);
+      }
+    });
+
+    rootNodes.forEach((rootNode) => {
+      const stack = [[rootNode, 0]];
+
+      while (stack.length > 0) {
+        const [node, row] = stack.pop();
+        const id = `${node.index}-${node.collectionId}`;
+        if (nodes.has(id)) {
+          nodes.delete(id);
+          node.row = row;
+
+          const particles = node.oneToManyRelations["particles"];
+
+          particles.forEach((link) => {
+            stack.push([link.to, row + 1]);
+          });
+        }
+      }
+    });
+
+    const horizontalGap = recoCollection[0].width * 0.4;
+    const verticalGap = recoCollection[0].height * 0.3;
+    const boxWidth = recoCollection[0].width;
+    const boxHeight = recoCollection[0].height;
+
+    const matrix = [];
+
+    recoCollection.forEach((recoParticle) => {
+      const row = recoParticle.row;
+      if (matrix[row] === undefined) {
+        matrix[row] = [];
+      }
+      matrix[row].push(recoParticle);
+    });
+
+    matrix.forEach((row, i) => {
+      row.forEach((recoParticle, j) => {
+        recoParticle.x = j * horizontalGap + j * boxWidth;
+        recoParticle.y = i * verticalGap + i * boxHeight;
+      });
+    });
+  }
 
   static filter() {}
 }

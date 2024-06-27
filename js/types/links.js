@@ -2,7 +2,7 @@ export const colors = {
   "daughters": "#00AA00",
   "parents": "#AA0000",
   "mcreco": "#0000AA",
-  "clusters": "#AA00AA",
+  "particles": "#AA00AA",
 };
 
 export function generateRandomColor() {
@@ -140,7 +140,7 @@ export class MCRecoParticleAssociation extends Link {
 export class Particles extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["clusters"];
+    this.color = colors["particles"];
   }
 }
 
