@@ -107,6 +107,12 @@ document
   .getElementById("visualize-button")
   .addEventListener("click", (event) => {
     event.preventDefault();
+
+    if (jsonData.data === undefined) {
+      errorMsg("No data loaded!");
+      return;
+    }
+
     const eventNum = document.getElementById("event-number").value;
 
     hideInputModal();

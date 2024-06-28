@@ -35,3 +35,14 @@
   flex-direction: column;
   padding: 10px 0;
 }
+
+.filter-action {
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: 500;
+  border: 1px solid #000;
+}
+
+.filter-action:hover {
+  background-color: #c5c5c5;
+}
