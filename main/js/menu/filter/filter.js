@@ -36,7 +36,7 @@ filterButton.addEventListener("click", () => {
   }
 });
 
-export function renderRangeParameters(container, rangeParameters) {
+export function renderRangeParameters(rangeParameters) {
   const rangeFilters = document.createElement("div");
   rangeFilters.id = "range-filters";
   rangeFilters.style.display = "grid";
@@ -51,7 +51,7 @@ export function renderRangeParameters(container, rangeParameters) {
     parameter.max = undefined;
     parameter.render(rangeFilters);
   });
-  container.appendChild(rangeFilters);
+  filters.appendChild(rangeFilters);
 }
 
 export function getWidthFilterContent() {
@@ -63,7 +63,7 @@ export function getWidthFilterContent() {
   return `${width}px`;
 }
 
-export function renderGenSim(sim, gen, container) {
+export function renderGenSim(sim, gen) {
   const div = document.createElement("div");
   div.style.display = "flex";
   div.style.flexDirection = "column";
@@ -71,7 +71,7 @@ export function renderGenSim(sim, gen, container) {
   div.style.alignItems = "start";
   sim.render(div);
   gen.render(div);
-  container.appendChild(div);
+  filters.appendChild(div);
 }
 
 let parametersRange = units.sort((a, b) =>
@@ -129,8 +129,8 @@ function removeFilter(loadedObjects, currentObjects, visibleObjects) {
 
   filters.innerHTML = "";
 
-  renderRangeParameters(filters, parametersRange);
-  renderGenSim(bits, genStatus, filters);
+  renderRangeParameters(parametersRange);
+  renderGenSim(bits, genStatus);
 }
 
 apply.addEventListener("click", () =>

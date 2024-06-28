@@ -35,6 +35,10 @@ export class CheckboxBuilder {
     container.appendChild(section);
     this.checkBoxes.forEach((checkbox) => checkbox.render(options));
   }
+
+  reset() {
+    this.uniqueValues = new Set();
+  }
 }
 
 export class BitFieldBuilder extends CheckboxBuilder {
