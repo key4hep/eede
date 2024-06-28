@@ -1,37 +1,18 @@
 import { errorMsg } from "./tools.js";
 import { PdgToggle } from "./menu/show-pdg.js";
 import { drawAll } from "./draw.js";
-import {
-  bits,
-  genStatus,
-  renderRangeParameters,
-  parametersRange,
-  getWidthFilterContent,
-  renderGenSim,
-} from "./menu/filter/filter.js";
-import {
-  mouseDown,
-  mouseUp,
-  mouseOut,
-  mouseMove,
-  getVisible,
-  onScroll,
-} from "./events.js";
-import { loadObjects } from "./types/load.js";
-import { objectTypes } from "./types/objects.js";
-import { copyObject } from "./lib/copy.js";
+import { getWidthFilterContent } from "./menu/filter/filter.js";
+import { mouseDown, mouseUp, mouseOut, mouseMove, onScroll } from "./events.js";
+import { showEventSwitcher, loadSelectedEvent } from "./menu/event-number.js";
+import { renderEvent } from "./menu/event-number.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const manipulationTools = document.getElementsByClassName("manipulation-tool");
-const filter = document.getElementById("filter");
-const filters = document.getElementById("filters");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let jsonData = {};
+const jsonData = {};
 
 const dragTools = {
   draggedObject: null,
@@ -46,17 +27,9 @@ const currentObjects = {};
 
 const visibleObjects = {};
 
-function start(currentObjects, visibleObjects) {
-  for (const [key, value] of Object.entries(currentObjects)) {
-    const classType = objectTypes[key];
-    const collection = value.collection;
-    classType.setup(collection, canvas);
-  }
-
-  drawAll(ctx, currentObjects);
-
-  getVisible(currentObjects, visibleObjects);
-}
+const selectedObjectTypes = {
+  types: ["edm4hep::MCParticle"],
+};
 
 canvas.onmousedown = (event) => {
   mouseDown(event, visibleObjects, dragTools);
@@ -73,14 +46,6 @@ canvas.onmousemove = (event) => {
 window.onscroll = () => {
   onScroll(currentObjects, visibleObjects);
 };
-
-/*
-function showInputModal() {
-  const modal = document.getElementById("input-modal");
-
-  modal.style.display = "block";
-}
-*/
 
 function hideInputModal() {
   const modal = document.getElementById("input-modal");
@@ -101,11 +66,37 @@ document.getElementById("input-file").addEventListener("change", (event) => {
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
       const fileText = event.target.result;
-      jsonData = JSON.parse(fileText);
+      jsonData.data = JSON.parse(fileText);
 
       const eventNumberInput = document.getElementById("event-number");
-      eventNumberInput.max = Object.keys(jsonData).length - 1;
+      const options = Object.keys(jsonData.data).map((event) =>
+        parseInt(event.replace("Event ", ""))
+      );
+      eventNumberInput.max = Object.keys(options).length - 1;
+      if (options.length === 0) {
+        errorMsg("No events found in the file!");
+        return;
+      }
+      eventNumberInput.value = options[0];
       document.getElementById("event-selector").style.display = "block";
+      const eventOptions = document.getElementById("event-number");
+      const eventSelectorMenu = document.getElementById("event-selector-menu");
+      eventOptions.replaceChildren();
+      eventSelectorMenu.replaceChildren();
+      options.forEach((option) => {
+        const optionElement = document.createElement("option");
+        optionElement.appendChild(document.createTextNode(option));
+        eventOptions.appendChild(optionElement);
+
+        const optionElementMenu = document.createElement("div");
+        optionElementMenu.className = "event-option";
+        optionElementMenu.appendChild(document.createTextNode(option));
+        eventSelectorMenu.appendChild(optionElementMenu);
+        optionElementMenu.addEventListener("click", () => {
+          renderEvent(option);
+          eventSelectorMenu.style.display = "none";
+        });
+      });
     });
     reader.readAsText(file);
     break;
@@ -118,42 +109,12 @@ document
     event.preventDefault();
     const eventNum = document.getElementById("event-number").value;
 
-    const selectedObjectTypes = ["edm4hep::MCParticle"];
-    const objects = loadObjects(jsonData, eventNum, selectedObjectTypes);
-
-    copyObject(objects, loadedObjects);
-    copyObject(objects, currentObjects);
-
-    const length = Object.values(loadedObjects)
-      .map((obj) => obj.collection.length)
-      .reduce((a, b) => a + b, 0);
-
-    if (length === 0) {
-      errorMsg("Provided file does not contain any MC particle tree!");
-      return;
-    }
-    for (const eventNum in jsonData) {
-      delete jsonData[eventNum];
-    }
-    start(currentObjects, visibleObjects);
     hideInputModal();
-    window.scroll((canvas.width - window.innerWidth) / 2, 0);
+    showEventSwitcher(eventNum);
+    loadSelectedEvent();
 
-    for (const tool of manipulationTools) {
-      tool.style.display = "flex";
-    }
-
-    const mcObjects = loadedObjects["edm4hep::MCParticle"].collection;
-    mcObjects.forEach((mcObject) => {
-      genStatus.add(mcObject.generatorStatus);
-    });
-    genStatus.setCheckBoxes();
-    renderRangeParameters(filters, parametersRange);
     const width = getWidthFilterContent();
     filter.style.width = width;
-
-    renderGenSim(bits, genStatus, filters);
-
     const pdgToggle = new PdgToggle("show-pdg");
     pdgToggle.init(() => {
       pdgToggle.toggle(currentObjects, () => {
@@ -162,4 +123,12 @@ document
     });
   });
 
-export { canvas, ctx, loadedObjects, currentObjects, visibleObjects };
+export {
+  canvas,
+  ctx,
+  loadedObjects,
+  currentObjects,
+  visibleObjects,
+  jsonData,
+  selectedObjectTypes,
+};
