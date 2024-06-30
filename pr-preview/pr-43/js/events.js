@@ -1,4 +1,4 @@
-import { canvas, ctx } from "./main.js";
+import { canvas } from "./main.js";
 import { drawAll, drawVisible } from "./draw.js";
 
 const mouseDown = function (event, visibleObjects, dragTools) {
@@ -30,7 +30,7 @@ const mouseUp = function (event, currentObjects, dragTools) {
   dragTools.isDragging = false;
 
   // console.time("drawAll");
-  drawAll(ctx, currentObjects);
+  drawAll(currentObjects);
   // console.timeEnd("drawAll");
 };
 
@@ -47,7 +47,6 @@ const mouseMove = function (event, visibleObjects, dragTools) {
   if (!dragTools.isDragging) {
     return;
   }
-  event.preventDefault();
 
   const boundigClientRect = canvas.getBoundingClientRect();
   const mouseX = parseInt(event.clientX - boundigClientRect.x);
@@ -60,9 +59,7 @@ const mouseMove = function (event, visibleObjects, dragTools) {
   draggedObject.x += dx;
   draggedObject.y += dy;
 
-  // console.time("drawVisible");
   drawVisible(visibleObjects);
-  // console.timeEnd("drawVisible");
 
   dragTools.prevMouseX = mouseX;
   dragTools.prevMouseY = mouseY;

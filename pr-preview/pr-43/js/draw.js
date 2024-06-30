@@ -10,7 +10,7 @@ function draw(objects) {
     }
   }
 
-  for (const elements of Object.values(datatypes ?? {})) {
+  for (const elements of Object.values(datatypes)) {
     const { collection, oneToMany, oneToOne } = elements;
 
     for (const links of Object.values(oneToMany)) {
@@ -31,7 +31,7 @@ function draw(objects) {
   }
 }
 
-export function drawAll(ctx, loadedObjects) {
+export function drawAll(loadedObjects) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   draw(loadedObjects);
