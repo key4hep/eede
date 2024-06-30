@@ -4,10 +4,11 @@ import {
   recoParticleTree,
   recoParticleTreeScroll,
 } from "./recoparticletree.js";
+import { setupMCParticleFilter } from "../filter/mcparticle.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
-    filters: {},
+    filters: setupMCParticleFilter,
     viewFunction: mcParticleTree,
     scrollFunction: mcParticleTreeScroll,
     preFilterFunction: (currentObjects, viewObjects) => {
@@ -18,7 +19,7 @@ export const views = {
     },
   },
   "Reconstructed Particle Tree": {
-    filters: {},
+    filters: () => {},
     viewFunction: recoParticleTree,
     scrollFunction: recoParticleTreeScroll,
     preFilterFunction: (currentObjects, viewObjects) => {
@@ -29,7 +30,7 @@ export const views = {
     },
   },
   "Monte Carlo-Reconstructed Particle": {
-    filters: {},
+    filters: () => {},
     viewFunction: mcRecoAssociation,
     scrollFunction: () => {
       return { x: (canvas.width - window.innerWidth) / 2, y: 0 };

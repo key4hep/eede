@@ -2,8 +2,6 @@ import { errorMsg } from "./tools.js";
 import { renderEvent } from "./event-number.js";
 import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
-// import { PdgToggle } from "./menu/show-pdg.js";
-// import { getWidthFilterContent } from "./menu/filter/filter.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -131,15 +129,6 @@ document
     showEventSwitcher();
     showViewsMenu();
     renderEvent(eventNum);
-
-    // const width = getWidthFilterContent();
-    // filter.style.width = width;
-    // const pdgToggle = new PdgToggle("show-pdg");
-    // pdgToggle.init(() => {
-    //   pdgToggle.toggle(currentObjects, () => {
-    //     drawAll(currentObjects);
-    //   });
-    // });
   });
 
 export { canvas, ctx, jsonData, selectedObjectTypes };
