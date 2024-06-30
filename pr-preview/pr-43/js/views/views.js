@@ -68,6 +68,7 @@ const drawView = (view) => {
   scroll();
   drawAll(viewCurrentObjects);
   getVisible(viewCurrentObjects, viewVisibleObjects);
+  filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 
   canvas.onmousedown = (event) => {
     mouseDown(event, viewVisibleObjects, dragTools);
@@ -84,8 +85,6 @@ const drawView = (view) => {
   window.onscroll = () => {
     onScroll(viewCurrentObjects, viewVisibleObjects);
   };
-
-  // here would go distinct filters for each view
 };
 
 export function saveScrollLocation() {

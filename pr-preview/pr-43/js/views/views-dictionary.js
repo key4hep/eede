@@ -4,10 +4,11 @@ import {
   recoParticleTree,
   recoParticleTreeScroll,
 } from "./recoparticletree.js";
+import { setupMCParticleFilter } from "../filter/mcparticle.js";
 
 export const views = {
-  mcParticleTree: {
-    filters: {},
+  "Monte Carlo Particle Tree": {
+    filters: setupMCParticleFilter,
     viewFunction: mcParticleTree,
     scrollFunction: mcParticleTreeScroll,
     preFilterFunction: (currentObjects, viewObjects) => {
@@ -17,8 +18,8 @@ export const views = {
         currentObjects.datatypes["edm4hep::MCParticle"];
     },
   },
-  recoParticleTree: {
-    filters: {},
+  "Reconstructed Particle Tree": {
+    filters: () => {},
     viewFunction: recoParticleTree,
     scrollFunction: recoParticleTreeScroll,
     preFilterFunction: (currentObjects, viewObjects) => {
@@ -28,8 +29,8 @@ export const views = {
         currentObjects.datatypes["edm4hep::ReconstructedParticle"];
     },
   },
-  mcRecoAssociation: {
-    filters: {},
+  "Monte Carlo-Reconstructed Particle": {
+    filters: () => {},
     viewFunction: mcRecoAssociation,
     scrollFunction: () => {
       return { x: (canvas.width - window.innerWidth) / 2, y: 0 };

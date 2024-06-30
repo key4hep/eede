@@ -3,16 +3,7 @@ import { copyObject } from "./lib/copy.js";
 import { canvas, jsonData, selectedObjectTypes } from "./main.js";
 import { objectTypes } from "./types/objects.js";
 import { drawCurrentView, saveScrollLocation } from "./views/views.js";
-// import {
-//   bits,
-//   genStatus,
-//   renderRangeParameters,
-//   parametersRange,
-//   renderGenSim,
-// } from "./menu/filter/filter.js";
 
-// const filters = document.getElementById("filters");
-// const manipulationTools = document.getElementsByClassName("manipulation-tool");
 const eventNumber = document.getElementById("selected-event");
 const previousEvent = document.getElementById("previous-event");
 const nextEvent = document.getElementById("next-event");
@@ -52,21 +43,6 @@ function loadSelectedEvent() {
   } else {
     copyObject(eventCollection[currentEvent.event], currentObjects);
   }
-
-  // --> menu/filtering stuff
-  // for (const tool of manipulationTools) {
-  //   tool.style.display = "flex";
-  // }
-  // const mcObjects = loadedObjects.datatypes["edm4hep::MCParticle"].collection;
-  // genStatus.reset();
-  // mcObjects.forEach((mcObject) => {
-  //   genStatus.add(mcObject.generatorStatus);
-  // });
-  // genStatus.setCheckBoxes();
-  // filters.replaceChildren();
-
-  // renderRangeParameters(parametersRange);
-  // renderGenSim(bits, genStatus);
 }
 
 export function renderEvent(eventNumber) {

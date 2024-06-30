@@ -32,7 +32,6 @@ class EDMObject {
       y < this.y + this.height
     );
   }
-  // more methods common to all particles
 }
 
 export class Cluster extends EDMObject {
@@ -53,7 +52,43 @@ export class ReconstructedParticle extends EDMObject {
   }
 
   draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
     drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+
+    const topY = this.y + 20;
+    const topLines = [];
+    topLines.push("ID: " + this.index);
+    const energy = parseInt(this.energy * 100) / 100;
+    topLines.push("e = " + energy + " GeV");
+    topLines.push("c = " + this.charge + " e");
+    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
+      if (Math.round(this.charge * 1000) === 667) {
+        topLines.push("q = 2/3 e");
+      }
+      if (Math.round(this.charge * 1000) === -667) {
+        topLines.push("q = -2/3 e");
+      }
+      if (Math.round(this.charge * 1000) === 333) {
+        topLines.push("q = 1/3 e");
+      }
+      if (Math.round(this.charge * 1000) === -333) {
+        topLines.push("q = -1/3 e");
+      }
+    } else {
+      topLines.push("q = " + this.charge + " e");
+    }
+
+    ctx.save();
+    ctx.font = "16px sans-serif";
+    for (const [i, lineText] of topLines.entries()) {
+      ctx.fillText(
+        lineText,
+        boxCenterX - ctx.measureText(lineText).width / 2,
+        topY + i * 23
+      );
+    }
+    ctx.restore();
   }
 
   static setup(recoCollection) {}
