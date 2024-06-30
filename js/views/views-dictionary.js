@@ -6,7 +6,7 @@ import {
 } from "./recoparticletree.js";
 
 export const views = {
-  mcParticleTree: {
+  "Monte Carlo Particle Tree": {
     filters: {},
     viewFunction: mcParticleTree,
     scrollFunction: mcParticleTreeScroll,
@@ -17,7 +17,7 @@ export const views = {
         currentObjects.datatypes["edm4hep::MCParticle"];
     },
   },
-  recoParticleTree: {
+  "Reconstructed Particle Tree": {
     filters: {},
     viewFunction: recoParticleTree,
     scrollFunction: recoParticleTreeScroll,
@@ -28,7 +28,7 @@ export const views = {
         currentObjects.datatypes["edm4hep::ReconstructedParticle"];
     },
   },
-  mcRecoAssociation: {
+  "Monte Carlo-Reconstructed Particle": {
     filters: {},
     viewFunction: mcRecoAssociation,
     scrollFunction: () => {
