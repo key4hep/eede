@@ -56,74 +56,7 @@ export class ReconstructedParticle extends EDMObject {
     drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
   }
 
-  static setup(recoCollection, canvas) {
-    const nodes = new Set();
-    const children = new Set();
-
-    for (const recoParticle of recoCollection) {
-      const particles = recoParticle.oneToManyRelations["particles"].map(
-        (link) => link.to
-      );
-      nodes.add(`${recoParticle.index}-${recoParticle.collectionId}`);
-      for (const recoParticleChild of particles) {
-        children.add(
-          `${recoParticleChild.index}-${recoParticleChild.collectionId}`
-        );
-      }
-    }
-
-    const rootNodesIds = nodes.difference(children);
-    const rootNodes = [];
-
-    recoCollection.forEach((recoParticle) => {
-      if (
-        rootNodesIds.has(`${recoParticle.index}-${recoParticle.collectionId}`)
-      ) {
-        rootNodes.push(recoParticle);
-      }
-    });
-
-    rootNodes.forEach((rootNode) => {
-      const stack = [[rootNode, 0]];
-
-      while (stack.length > 0) {
-        const [node, row] = stack.pop();
-        const id = `${node.index}-${node.collectionId}`;
-        if (nodes.has(id)) {
-          nodes.delete(id);
-          node.row = row;
-
-          const particles = node.oneToManyRelations["particles"];
-
-          particles.forEach((link) => {
-            stack.push([link.to, row + 1]);
-          });
-        }
-      }
-    });
-
-    const horizontalGap = recoCollection[0].width * 0.4;
-    const verticalGap = recoCollection[0].height * 0.3;
-    const boxWidth = recoCollection[0].width;
-    const boxHeight = recoCollection[0].height;
-
-    const matrix = [];
-
-    recoCollection.forEach((recoParticle) => {
-      const row = recoParticle.row;
-      if (matrix[row] === undefined) {
-        matrix[row] = [];
-      }
-      matrix[row].push(recoParticle);
-    });
-
-    matrix.forEach((row, i) => {
-      row.forEach((recoParticle, j) => {
-        recoParticle.x = j * horizontalGap + j * boxWidth;
-        recoParticle.y = i * verticalGap + i * boxHeight;
-      });
-    });
-  }
+  static setup(recoCollection) {}
 
   static filter() {}
 }
@@ -235,7 +168,7 @@ export class MCParticle extends EDMObject {
     ctx.restore();
   }
 
-  static setup(mcCollection, canvas) {
+  static setup(mcCollection) {
     for (const mcParticle of mcCollection) {
       const parentLength = mcParticle.oneToManyRelations["parents"].length;
       const daughterLength = mcParticle.oneToManyRelations["daughters"].length;
@@ -267,95 +200,6 @@ export class MCParticle extends EDMObject {
 
       mcParticle.time = Math.round(mcParticle.time * 100) / 100;
       mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
-    }
-
-    const getMaxRow = (parentLinks) => {
-      let maxRow = -1;
-      for (const parentLink of parentLinks) {
-        const parent = parentLink.from;
-        if (parent.row === -1) {
-          return -1;
-        }
-
-        if (parent.row > maxRow) {
-          maxRow = parent.row;
-        }
-      }
-
-      return maxRow;
-    };
-
-    let repeat = true;
-    while (repeat) {
-      repeat = false;
-      for (const mcParticle of mcCollection) {
-        if (mcParticle.row >= 0) {
-          continue;
-        }
-        const parentRow = getMaxRow(mcParticle.oneToManyRelations["parents"]);
-        if (parentRow >= 0) {
-          mcParticle.row = parentRow + 1;
-        } else {
-          repeat = true;
-        }
-      }
-    }
-
-    const rows = mcCollection.map((obj) => {
-      return obj.row;
-    });
-    const maxRow = Math.max(...rows);
-
-    // Order infoBoxes into rows
-    const mcRows = [];
-    for (let i = 0; i <= maxRow; i++) {
-      mcRows.push([]);
-    }
-    for (const box of mcCollection) {
-      mcRows[box.row].push(box);
-    }
-    const rowWidths = mcRows.map((obj) => {
-      return obj.length;
-    });
-    const maxRowWidth = Math.max(...rowWidths);
-
-    const boxWidth = mcCollection[0].width;
-    const boxHeight = mcCollection[0].height;
-    const horizontalGap = boxWidth * 0.4;
-    const verticalGap = boxHeight * 0.3;
-
-    canvas.width =
-      boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
-    canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
-
-    for (const [i, row] of mcRows.entries()) {
-      for (const [j, box] of row.entries()) {
-        if (row.length % 2 === 0) {
-          const distanceFromCenter = j - row.length / 2;
-          if (distanceFromCenter < 0) {
-            box.x =
-              canvas.width / 2 -
-              boxWidth -
-              horizontalGap / 2 +
-              (distanceFromCenter + 1) * boxWidth +
-              (distanceFromCenter + 1) * horizontalGap;
-          } else {
-            box.x =
-              canvas.width / 2 +
-              horizontalGap / 2 +
-              distanceFromCenter * boxWidth +
-              distanceFromCenter * horizontalGap;
-          }
-        } else {
-          const distanceFromCenter = j - row.length / 2;
-          box.x =
-            canvas.width / 2 -
-            boxWidth / 2 +
-            distanceFromCenter * boxWidth +
-            distanceFromCenter * horizontalGap;
-        }
-        box.y = i * verticalGap + verticalGap + i * boxHeight;
-      }
     }
   }
 

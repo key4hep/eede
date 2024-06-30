@@ -1,33 +1,33 @@
-export function copyObject(objToCopy, updatedObject) {
-  for (const [key, value] of Object.entries(objToCopy)) {
-    updatedObject[key] = value;
+export function copyObject(source, destiny) {
+  for (const [key, value] of Object.entries(source)) {
+    destiny[key] = value;
   }
 }
 
-export function emptyCopyObject(objToCopy, updatedObject) {
-  updatedObject.datatypes = {};
+export function emptyCopyObject(source, destiny) {
+  destiny.datatypes = {};
 
-  for (const [objectType, elements] of Object.entries(objToCopy.datatypes)) {
+  for (const [objectType, elements] of Object.entries(source.datatypes)) {
     const { _, oneToMany, oneToOne } = elements;
 
-    updatedObject.datatypes[objectType] = {
+    destiny.datatypes[objectType] = {
       collection: [],
       oneToMany: {},
       oneToOne: {},
     };
 
     for (const name in oneToMany) {
-      updatedObject.datatypes[objectType].oneToMany[name] = [];
+      destiny.datatypes[objectType].oneToMany[name] = [];
     }
 
     for (const name in oneToOne) {
-      updatedObject.datatypes[objectType].oneToOne[name] = [];
+      destiny.datatypes[objectType].oneToOne[name] = [];
     }
   }
 
-  updatedObject.associations = {};
+  destiny.associations = {};
 
-  for (const key in objToCopy.associations) {
-    updatedObject.associations[key] = [];
+  for (const key in source.associations) {
+    destiny.associations[key] = [];
   }
 }

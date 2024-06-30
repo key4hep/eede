@@ -115,7 +115,7 @@ function applyFilter(loadedObjects, currentObjects, visibleObjects) {
 
   copyObject(filteredObjects, currentObjects);
 
-  drawAll(ctx, currentObjects);
+  drawAll(currentObjects);
 
   getVisible(currentObjects, visibleObjects);
 }
@@ -123,7 +123,7 @@ function applyFilter(loadedObjects, currentObjects, visibleObjects) {
 function removeFilter(loadedObjects, currentObjects, visibleObjects) {
   copyObject(loadedObjects, currentObjects);
 
-  drawAll(ctx, currentObjects);
+  drawAll(currentObjects);
 
   getVisible(currentObjects, visibleObjects);
 

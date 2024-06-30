@@ -135,6 +135,26 @@ export class MCRecoParticleAssociation extends Link {
     this.color = colors["mcreco"];
     this.weight = weight;
   }
+
+  draw(ctx) {
+    const boxFrom = this.from;
+    const boxTo = this.to;
+
+    const fromX = boxFrom.x + boxFrom.width / 2;
+    const fromY = boxFrom.y + boxFrom.height / 2;
+
+    const toX = boxTo.x + boxTo.width / 2;
+    const toY = boxTo.y + boxTo.height / 2;
+
+    ctx.save();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
+    ctx.restore();
+  }
 }
 
 export class Particles extends Link {
