@@ -13,7 +13,7 @@ function generateRandomColor() {
   return "#" + ((0xffffff * Math.random()) << 0).toString(16).padStart(6, "0");
 }
 
-class Link {
+export class Link {
   // we may create a specific class for each type if needed
   constructor(from, to) {
     this.from = from;

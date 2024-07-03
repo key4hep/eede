@@ -36,7 +36,7 @@ class EDMObject {
   }
 }
 
-class MCParticle extends EDMObject {
+export class MCParticle extends EDMObject {
   constructor() {
     super();
 
