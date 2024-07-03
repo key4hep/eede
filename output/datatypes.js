@@ -247,5 +247,39 @@ export const datatypes = {
         "name": "sim"
       }
     ]
+  },
+  "edm4hep::MCRecoClusterParticleAssociation": {
+    "members": [
+      {
+        "name": "weight"
+      }
+    ],
+    "oneToOneRelations": [
+      {
+        "type": "edm4hep::Cluster",
+        "name": "rec"
+      },
+      {
+        "type": "edm4hep::MCParticle",
+        "name": "sim"
+      }
+    ]
+  },
+  "edm4hep::MCRecoTrackParticleAssociation": {
+    "members": [
+      {
+        "name": "weight"
+      }
+    ],
+    "oneToOneRelations": [
+      {
+        "type": "edm4hep::Track",
+        "name": "rec"
+      },
+      {
+        "type": "edm4hep::MCParticle",
+        "name": "sim"
+      }
+    ]
   }
 }

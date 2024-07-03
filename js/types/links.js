@@ -1,15 +1,19 @@
-export const colors = {
-  "daughters": "#00AA00",
+const colors = {
   "parents": "#AA0000",
+  "daughters": "#00AA00",
   "mcreco": "#0000AA",
+  "tracks": "#AAAA00",
+  "clusters": "#00AAAA",
   "particles": "#AA00AA",
+  "mcclusters": "#AA00AA",
+  "mctracks": "#AA0000",
 };
 
-export function generateRandomColor() {
+function generateRandomColor() {
   return "#" + ((0xffffff * Math.random()) << 0).toString(16).padStart(6, "0");
 }
 
-export class Link {
+class Link {
   // we may create a specific class for each type if needed
   constructor(from, to) {
     this.from = from;
@@ -109,7 +113,7 @@ export class Link {
   }
 }
 
-export class ParentLink extends Link {
+class ParentLink extends Link {
   constructor(from, to) {
     super(to, from);
     this.color = colors["parents"];
@@ -119,7 +123,7 @@ export class ParentLink extends Link {
   }
 }
 
-export class DaughterLink extends Link {
+class DaughterLink extends Link {
   constructor(from, to) {
     super(from, to);
     this.color = colors["daughters"];
@@ -129,7 +133,7 @@ export class DaughterLink extends Link {
   }
 }
 
-export class MCRecoParticleAssociation extends Link {
+class MCRecoParticleAssociation extends Link {
   constructor(from, to, weight) {
     super(from, to);
     this.color = colors["mcreco"];
@@ -157,19 +161,51 @@ export class MCRecoParticleAssociation extends Link {
   }
 }
 
-export class Particles extends Link {
+class Particles extends Link {
   constructor(from, to) {
     super(from, to);
     this.color = colors["particles"];
   }
 }
 
+class Clusters extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["clusters"];
+  }
+}
+
+class Tracks extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["tracks"];
+  }
+}
+
+class MCRecoTrackParticleAssociation extends Link {
+  constructor(from, to, weight) {
+    super(from, to);
+    this.color = colors["mctracks"];
+    this.weight = weight;
+  }
+}
+
+class MCRecoClusterParticleAssociation extends Link {
+  constructor(from, to, weight) {
+    super(from, to);
+    this.color = colors["mcclusters"];
+    this.weight = weight;
+  }
+}
+
 export const linkTypes = {
   "parents": ParentLink,
   "daughters": DaughterLink,
-  "trackerHits": Link,
-  "startVertex": Link,
-  "particles": Particles,
-  "clusters": Link,
   "edm4hep::MCRecoParticleAssociation": MCRecoParticleAssociation,
+  "edm4hep::MCRecoClusterParticleAssociation": MCRecoClusterParticleAssociation,
+  "edm4hep::MCRecoTrackParticleAssociation": MCRecoTrackParticleAssociation,
+  "clusters": Clusters,
+  "tracks": Tracks,
+  "particles": Particles,
+  "startVertex": Link,
 };

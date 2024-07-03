@@ -5,6 +5,8 @@
   justify-content: flex-start;
   align-items: center;
   padding: 8px;
+  max-height: 90px;
+  overflow-y: auto;
 }
 
 .view-button {
@@ -38,4 +40,22 @@
   overflow-y: auto;
   overflow-x: hidden;
   width: fit-content;
+}
+
+.view-selector-menu::-webkit-scrollbar {
+  width: 7px;
+}
+
+.view-selector-menu::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 5px;
+}
+
+.view-selector-menu::-webkit-scrollbar-thumb {
+  background: #afafaf;
+  border-radius: 5px;
+}
+
+.view-selector-menu::-webkit-scrollbar-thumb:hover {
+  background: #858585;
 }

@@ -1,40 +1,69 @@
-import { mcParticleTree, mcParticleTreeScroll } from "./mcparticletree.js";
+import { mcParticleTree, preFilterMCTree } from "./mcparticletree.js";
 import { mcRecoAssociation, preFilterMCReco } from "./mcrecoassociation.js";
-import {
-  recoParticleTree,
-  recoParticleTreeScroll,
-} from "./recoparticletree.js";
+import { recoParticleTree, preFilterRecoTree } from "./recoparticletree.js";
 import { setupMCParticleFilter } from "../filter/mcparticle.js";
+import { trackTree, preFilterTrackTree } from "./tracktree.js";
+import { clusterTree, preFilterClusterTree } from "./clustertree.js";
+import { scrollTopCenter, scrollTopLeft } from "./scrolls.js";
+import { preFilterMCTrack, mcTrackAssociation } from "./mctrackassociation.js";
+import {
+  preFilterMCCluster,
+  mcClusterAssociation,
+} from "./mcclusterassociation.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
     filters: setupMCParticleFilter,
     viewFunction: mcParticleTree,
-    scrollFunction: mcParticleTreeScroll,
-    preFilterFunction: (currentObjects, viewObjects) => {
-      viewObjects.datatypes = {};
-      viewObjects.associations = {};
-      viewObjects.datatypes["edm4hep::MCParticle"] =
-        currentObjects.datatypes["edm4hep::MCParticle"];
-    },
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterMCTree,
   },
   "Reconstructed Particle Tree": {
     filters: () => {},
     viewFunction: recoParticleTree,
-    scrollFunction: recoParticleTreeScroll,
-    preFilterFunction: (currentObjects, viewObjects) => {
-      viewObjects.datatypes = {};
-      viewObjects.associations = {};
-      viewObjects.datatypes["edm4hep::ReconstructedParticle"] =
-        currentObjects.datatypes["edm4hep::ReconstructedParticle"];
-    },
+    scrollFunction: scrollTopLeft,
+    preFilterFunction: preFilterRecoTree,
+  },
+  "Track Tree": {
+    filters: () => {},
+    viewFunction: trackTree,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterTrackTree,
+  },
+  "Cluster Tree": {
+    filters: () => {},
+    viewFunction: clusterTree,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterClusterTree,
+  },
+  "Reconstructed Particle-Cluster": {
+    filters: () => {},
+    viewFunction: () => {},
+    scrollFunction: () => {},
+    preFilterFunction: () => {},
+  },
+  "Reconstructed Particle-Track": {
+    filters: () => {},
+    viewFunction: () => {},
+    scrollFunction: () => {},
+    preFilterFunction: () => {},
   },
   "Monte Carlo-Reconstructed Particle": {
     filters: () => {},
     viewFunction: mcRecoAssociation,
-    scrollFunction: () => {
-      return { x: (canvas.width - window.innerWidth) / 2, y: 0 };
-    },
+    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
+  },
+  "Monte Carlo Particle-Track": {
+    filters: () => {},
+    viewFunction: mcTrackAssociation,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterMCTrack,
+  },
+  "Monte Carlo Particle-Cluster": {
+    filters: () => {},
+    viewFunction: mcClusterAssociation,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterMCCluster,
   },
 };

@@ -6,6 +6,8 @@ class EDMObject {
   constructor() {
     this.x = NaN;
     this.y = NaN;
+    this.index = NaN;
+    this.collectionId = NaN;
     this.width = 120;
     this.height = 240;
     this.lineColor = "black";
@@ -34,81 +36,7 @@ class EDMObject {
   }
 }
 
-export class Cluster extends EDMObject {
-  constructor() {
-    super();
-  }
-}
-
-export class ParticleID extends EDMObject {
-  constructor() {
-    super();
-  }
-}
-
-export class ReconstructedParticle extends EDMObject {
-  constructor() {
-    super();
-  }
-
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
-
-    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
-
-    const topY = this.y + 20;
-    const topLines = [];
-    topLines.push("ID: " + this.index);
-    const energy = parseInt(this.energy * 100) / 100;
-    topLines.push("e = " + energy + " GeV");
-    topLines.push("c = " + this.charge + " e");
-    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
-      if (Math.round(this.charge * 1000) === 667) {
-        topLines.push("q = 2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -667) {
-        topLines.push("q = -2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === 333) {
-        topLines.push("q = 1/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -333) {
-        topLines.push("q = -1/3 e");
-      }
-    } else {
-      topLines.push("q = " + this.charge + " e");
-    }
-
-    ctx.save();
-    ctx.font = "16px sans-serif";
-    for (const [i, lineText] of topLines.entries()) {
-      ctx.fillText(
-        lineText,
-        boxCenterX - ctx.measureText(lineText).width / 2,
-        topY + i * 23
-      );
-    }
-    ctx.restore();
-  }
-
-  static setup(recoCollection) {}
-
-  static filter() {}
-}
-
-export class Vertex extends EDMObject {
-  constructor() {
-    super();
-  }
-}
-
-export class Track extends EDMObject {
-  constructor() {
-    super();
-  }
-}
-
-export class MCParticle extends EDMObject {
+class MCParticle extends EDMObject {
   constructor() {
     super();
 
@@ -285,11 +213,101 @@ export class MCParticle extends EDMObject {
   }
 }
 
+class ReconstructedParticle extends EDMObject {
+  constructor() {
+    super();
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+
+    const topY = this.y + 20;
+    const topLines = [];
+    topLines.push("ID: " + this.index);
+    const energy = parseInt(this.energy * 100) / 100;
+    topLines.push("e = " + energy + " GeV");
+    topLines.push("c = " + this.charge + " e");
+    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
+      if (Math.round(this.charge * 1000) === 667) {
+        topLines.push("q = 2/3 e");
+      }
+      if (Math.round(this.charge * 1000) === -667) {
+        topLines.push("q = -2/3 e");
+      }
+      if (Math.round(this.charge * 1000) === 333) {
+        topLines.push("q = 1/3 e");
+      }
+      if (Math.round(this.charge * 1000) === -333) {
+        topLines.push("q = -1/3 e");
+      }
+    } else {
+      topLines.push("q = " + this.charge + " e");
+    }
+
+    ctx.save();
+    ctx.font = "16px sans-serif";
+    for (const [i, lineText] of topLines.entries()) {
+      ctx.fillText(
+        lineText,
+        boxCenterX - ctx.measureText(lineText).width / 2,
+        topY + i * 23
+      );
+    }
+    ctx.restore();
+  }
+
+  static setup(recoCollection) {}
+
+  static filter() {}
+}
+
+class Cluster extends EDMObject {
+  constructor() {
+    super();
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+  }
+
+  static setup(clusterCollection) {}
+}
+
+class Track extends EDMObject {
+  constructor() {
+    super();
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+  }
+
+  static setup(trackCollection) {}
+}
+
+class ParticleID extends EDMObject {
+  constructor() {
+    super();
+  }
+}
+
+class Vertex extends EDMObject {
+  constructor() {
+    super();
+  }
+}
+
 export const objectTypes = {
-  "edm4hep::Cluster": Cluster,
-  "edm4hep::ParticleID": ParticleID,
-  "edm4hep::ReconstructedParticle": ReconstructedParticle,
-  "edm4hep::Vertex": Vertex,
-  "edm4hep::Track": Track,
   "edm4hep::MCParticle": MCParticle,
+  "edm4hep::ReconstructedParticle": ReconstructedParticle,
+  "edm4hep::Cluster": Cluster,
+  "edm4hep::Track": Track,
+  "edm4hep::ParticleID": ParticleID,
+  "edm4hep::Vertex": Vertex,
 };

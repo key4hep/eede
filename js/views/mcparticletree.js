@@ -1,4 +1,5 @@
 import { canvas } from "../main.js";
+import { preFilterTree } from "./pre-filter.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =
@@ -98,6 +99,9 @@ export function mcParticleTree(viewCurrentObjects) {
   }
 }
 
-export function mcParticleTreeScroll() {
-  return { x: (canvas.width - window.innerWidth) / 2, y: 0 };
+export function preFilterMCTree(currentObjects, viewObjects) {
+  preFilterTree(currentObjects, viewObjects, "edm4hep::MCParticle", [
+    "parents",
+    "daughters",
+  ]);
 }

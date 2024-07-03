@@ -1,6 +1,6 @@
 import { loadObjects } from "./types/load.js";
 import { copyObject } from "./lib/copy.js";
-import { canvas, jsonData, selectedObjectTypes } from "./main.js";
+import { jsonData, selectedObjectTypes } from "./main.js";
 import { objectTypes } from "./types/objects.js";
 import { drawCurrentView, saveScrollLocation } from "./views/views.js";
 
@@ -37,7 +37,7 @@ function loadSelectedEvent() {
     )) {
       const classType = objectTypes[key];
       const collection = value.collection;
-      classType.setup(collection, canvas);
+      classType.setup(collection);
     }
     copyObject(objects, currentObjects);
   } else {

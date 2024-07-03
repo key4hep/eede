@@ -18,6 +18,8 @@ const configTypes = new Set([
   "edm4hep::ReconstructedParticle",
   "edm4hep::Track",
   "edm4hep::MCRecoParticleAssociation",
+  "edm4hep::MCRecoTrackParticleAssociation",
+  "edm4hep::MCRecoClusterParticleAssociation",
 ]);
 
 const selectedTypes = Object.entries(datatypes).filter(([key, _]) =>
