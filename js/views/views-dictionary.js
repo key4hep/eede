@@ -10,6 +10,8 @@ import {
   preFilterMCCluster,
   mcClusterAssociation,
 } from "./mcclusterassociation.js";
+import { recoTrackView, preFilterRecoTrack } from "./recotrack.js";
+import { recoClusterView, preFilterRecoCluster } from "./recocluster.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -38,15 +40,15 @@ export const views = {
   },
   "Reconstructed Particle-Cluster": {
     filters: () => {},
-    viewFunction: () => {},
-    scrollFunction: () => {},
-    preFilterFunction: () => {},
+    viewFunction: recoClusterView,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterRecoCluster,
   },
   "Reconstructed Particle-Track": {
     filters: () => {},
-    viewFunction: () => {},
-    scrollFunction: () => {},
-    preFilterFunction: () => {},
+    viewFunction: recoTrackView,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterRecoTrack,
   },
   "Monte Carlo-Reconstructed Particle": {
     filters: () => {},

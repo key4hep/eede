@@ -1,6 +1,11 @@
-import { drawTex, drawRoundedRect } from "../graphic-primitives.js";
+import {
+  drawTex,
+  drawRoundedRect,
+  drawTextLines,
+} from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
+import { parseCharge } from "../lib/parseCharge.js";
 
 class EDMObject {
   constructor() {
@@ -60,7 +65,15 @@ export class MCParticle extends EDMObject {
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      "#dff6ff",
+      15
+    );
 
     if (this.texImg.complete) {
       drawTex(
@@ -94,41 +107,11 @@ export class MCParticle extends EDMObject {
     bottomLines.push("d = " + this.vertex + " mm");
     bottomLines.push("t = " + this.time + " ns");
     bottomLines.push("m = " + this.mass + " GeV");
-    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
-      if (Math.round(this.charge * 1000) === 667) {
-        bottomLines.push("q = 2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -667) {
-        bottomLines.push("q = -2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === 333) {
-        bottomLines.push("q = 1/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -333) {
-        bottomLines.push("q = -1/3 e");
-      }
-    } else {
-      bottomLines.push("q = " + this.charge + " e");
-    }
+    bottomLines.push(parseCharge(this.charge));
 
-    ctx.save();
-    ctx.font = "16px sans-serif";
-    for (const [i, lineText] of topLines.entries()) {
-      ctx.fillText(
-        lineText,
-        boxCenterX - ctx.measureText(lineText).width / 2,
-        topY + i * 23
-      );
-    }
+    drawTextLines(ctx, topLines, boxCenterX, topY, 23);
 
-    for (const [i, lineText] of bottomLines.entries()) {
-      ctx.fillText(
-        lineText,
-        boxCenterX - ctx.measureText(lineText).width / 2,
-        bottomY + i * 22
-      );
-    }
-    ctx.restore();
+    drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
   }
 
   static setup(mcCollection) {
@@ -216,46 +199,32 @@ export class MCParticle extends EDMObject {
 class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
+    this.width = 140;
+    this.height = 180;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      "#fbffdf",
+      30
+    );
 
     const topY = this.y + 20;
-    const topLines = [];
-    topLines.push("ID: " + this.index);
+    const lines = [];
+    lines.push("ID: " + this.index);
     const energy = parseInt(this.energy * 100) / 100;
-    topLines.push("e = " + energy + " GeV");
-    topLines.push("c = " + this.charge + " e");
-    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
-      if (Math.round(this.charge * 1000) === 667) {
-        topLines.push("q = 2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -667) {
-        topLines.push("q = -2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === 333) {
-        topLines.push("q = 1/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -333) {
-        topLines.push("q = -1/3 e");
-      }
-    } else {
-      topLines.push("q = " + this.charge + " e");
-    }
+    lines.push("e = " + energy + " GeV");
+    lines.push(parseCharge(this.charge));
+    lines.push("pdg = " + this.PDG);
 
-    ctx.save();
-    ctx.font = "16px sans-serif";
-    for (const [i, lineText] of topLines.entries()) {
-      ctx.fillText(
-        lineText,
-        boxCenterX - ctx.measureText(lineText).width / 2,
-        topY + i * 23
-      );
-    }
-    ctx.restore();
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
   }
 
   static setup(recoCollection) {}
@@ -266,12 +235,37 @@ class ReconstructedParticle extends EDMObject {
 class Cluster extends EDMObject {
   constructor() {
     super();
+    this.width = 140;
+    this.height = 180;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      "#ffe8df",
+      20
+    );
+
+    const topY = this.y + 20;
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    const energy = parseInt(this.energy * 100) / 100;
+    lines.push("e = " + energy + " GeV");
+    const x = parseInt(this.position.x * 100) / 100;
+    const y = parseInt(this.position.y * 100) / 100;
+    const z = parseInt(this.position.z * 100) / 100;
+    lines.push(`pos = (${x},`);
+    lines.push(`${y},`);
+    lines.push(`${z}) mm`);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
   }
 
   static setup(clusterCollection) {}
@@ -280,12 +274,38 @@ class Cluster extends EDMObject {
 class Track extends EDMObject {
   constructor() {
     super();
+    this.width = 140;
+    this.height = 180;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      "#fff6df",
+      25
+    );
+
+    const topY = this.y + 20;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    const chi2 = parseInt(this.chi2 * 100) / 100;
+    const ndf = parseInt(this.ndf * 100) / 100;
+    const chiNdf = `${chi2} / ${ndf}`;
+    lines.push("chi2/ndf = " + chiNdf);
+    lines.push("dEdx = " + this.dEdx);
+
+    const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
+    lines.push("tracker hits: " + trackerHitsCount);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
   }
 
   static setup(trackCollection) {}

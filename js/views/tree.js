@@ -65,8 +65,15 @@ export function buildTree(collection, relationOfReference) {
     });
   });
 
-  canvas.width =
+  const totalWidth =
     boxWidth * matrix[0].length + horizontalGap * (matrix[0].length + 1);
-  canvas.height =
+
+  canvas.width =
+    totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
+
+  const totalHeight =
     boxHeight * (matrix.length + 1) + verticalGap * (matrix.length + 2);
+
+  canvas.height =
+    totalHeight > window.innerHeight ? totalHeight : window.innerHeight;
 }

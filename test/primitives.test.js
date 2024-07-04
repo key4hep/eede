@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import { drawRoundedRect, drawTex } from "../js/graphic-primitives.js";
+import { drawRoundedRect, drawTex } from "../js/lib/graphic-primitives.js";
 
 let ctx;
 
@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe("drawRoundedRect", () => {
   it("should draw a rounded rectangle with the correct properties", () => {
-    drawRoundedRect(ctx, 10, 20, 100, 200, "red");
+    drawRoundedRect(ctx, 10, 20, 100, 200, "red", 15);
 
     expect(ctx.save).toHaveBeenCalled();
     expect(ctx.fillStyle).toBe("red");
