@@ -1,4 +1,4 @@
-import { infoMsg, errorMsg } from "../js/tools";
+import { infoMsg, errorMsg } from "../js/lib/messages.js";
 
 let msgDiv;
 

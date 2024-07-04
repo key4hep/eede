@@ -1,3 +1,5 @@
+import { drawBezierLink, drawStraightLink } from "../lib/graphic-primitives.js";
+
 const colors = {
   "parents": "#AA0000",
   "daughters": "#00AA00",
@@ -5,16 +7,11 @@ const colors = {
   "tracks": "#AAAA00",
   "clusters": "#00AAAA",
   "particles": "#AA00AA",
-  "mcclusters": "#AA00AA",
-  "mctracks": "#AA0000",
+  "mcclusters": "#D8F1A0",
+  "mctracks": "#fe5e41",
 };
 
-function generateRandomColor() {
-  return "#" + ((0xffffff * Math.random()) << 0).toString(16).padStart(6, "0");
-}
-
 export class Link {
-  // we may create a specific class for each type if needed
   constructor(from, to) {
     this.from = from;
     this.to = to;
@@ -23,64 +20,7 @@ export class Link {
   }
 
   draw(ctx) {
-    const boxFrom = this.from;
-    const boxTo = this.to;
-
-    const fromX = boxFrom.x + boxFrom.width / 2;
-    const fromY = boxFrom.y + boxFrom.height;
-    const toX = boxTo.x + boxTo.width / 2;
-    const toY = boxTo.y;
-
-    if (toY > fromY) {
-      var cpFromY = (toY - fromY) / 2 + fromY;
-      var cpToY = cpFromY;
-    } else {
-      cpFromY = (fromY - toY) / 2 + fromY;
-      cpToY = toY - (fromY - toY) / 2;
-    }
-
-    if (toX > fromX) {
-      var cpFromX = (toX - fromX) / 4 + fromX;
-      var cpToX = (3 * (toX - fromX)) / 4 + fromX;
-    } else {
-      cpFromX = (3 * (fromX - toX)) / 4 + toX;
-      cpToX = (fromX - toX) / 4 + toX;
-    }
-
-    /*
-    drawCross(ctx, fromX, fromY, "blue");
-    drawCross(ctx, toX, toY, "green");
-    drawCross(ctx, cpFromX, cpFromY, "yellow");
-    drawLine(ctx, fromX, fromY, cpFromX, cpFromY, "yellow")
-    drawCross(ctx, cpToX, cpToY, "orange");
-    drawLine(ctx, toX, toY, cpToX, cpToY, "orange")
-    */
-
-    ctx.save();
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(fromX + this.xShift, fromY);
-    ctx.bezierCurveTo(
-      cpFromX + this.xShift,
-      cpFromY,
-      cpToX + this.xShift,
-      cpToY,
-      toX + this.xShift,
-      toY
-    );
-    ctx.stroke();
-    ctx.restore();
-
-    /*
-    ctx.save();
-    ctx.font = "14px sans-serif";
-    ctx.fillStyle = this.color;
-    const idText = "ID: " + this.id;
-    ctx.fillText(idText,
-                 cpToX, cpToY);
-    ctx.restore();
-    */
+    drawBezierLink(ctx, this);
   }
 
   isVisible(x, y, width, height) {
@@ -141,23 +81,7 @@ class MCRecoParticleAssociation extends Link {
   }
 
   draw(ctx) {
-    const boxFrom = this.from;
-    const boxTo = this.to;
-
-    const fromX = boxFrom.x + boxFrom.width / 2;
-    const fromY = boxFrom.y + boxFrom.height / 2;
-
-    const toX = boxTo.x + boxTo.width / 2;
-    const toY = boxTo.y + boxTo.height / 2;
-
-    ctx.save();
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(fromX, fromY);
-    ctx.lineTo(toX, toY);
-    ctx.stroke();
-    ctx.restore();
+    drawStraightLink(ctx, this);
   }
 }
 
@@ -188,6 +112,10 @@ class MCRecoTrackParticleAssociation extends Link {
     this.color = colors["mctracks"];
     this.weight = weight;
   }
+
+  draw(ctx) {
+    drawStraightLink(ctx, this);
+  }
 }
 
 class MCRecoClusterParticleAssociation extends Link {
@@ -195,6 +123,10 @@ class MCRecoClusterParticleAssociation extends Link {
     super(from, to);
     this.color = colors["mcclusters"];
     this.weight = weight;
+  }
+
+  draw(ctx) {
+    drawStraightLink(ctx, this);
   }
 }
 

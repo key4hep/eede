@@ -1,4 +1,4 @@
-import { errorMsg } from "./tools.js";
+import { errorMsg } from "./lib/messages.js";
 import { renderEvent } from "./event-number.js";
 import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";

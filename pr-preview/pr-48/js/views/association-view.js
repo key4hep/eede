@@ -37,13 +37,15 @@ export function buildAssociationView(viewObjects, associationName) {
   canvas.height =
     fromTotalHeight > toTotalHeight ? fromTotalHeight : toTotalHeight;
 
+  const fromX = width / 2 - fromWidth - fromHorizontalGap;
   for (const [index, from] of fromCollection.entries()) {
     from.y = fromVerticalGap + index * (fromHeight + fromVerticalGap);
-    from.x = width / 2 + fromHorizontalGap;
+    from.x = fromX;
   }
 
+  const toX = width / 2 + toHorizontalGap;
   for (const [index, to] of toCollection.entries()) {
     to.y = toVerticalGap + index * (toHeight + toVerticalGap);
-    to.x = width / 2 - toWidth - toHorizontalGap;
+    to.x = toX;
   }
 }
