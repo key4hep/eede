@@ -218,11 +218,20 @@ class ReconstructedParticle extends EDMObject {
 
     const topY = this.y + 20;
     const lines = [];
+
     lines.push("ID: " + this.index);
+
+    const x = parseInt(this.momentum.x * 100) / 100;
+    const y = parseInt(this.momentum.y * 100) / 100;
+    const z = parseInt(this.momentum.z * 100) / 100;
+    lines.push(`p = (x=${x},`);
+    lines.push(`y=${y},`);
+    lines.push(`z=${z}) GeV`);
+
     const energy = parseInt(this.energy * 100) / 100;
     lines.push("e = " + energy + " GeV");
+
     lines.push(parseCharge(this.charge));
-    lines.push("pdg = " + this.PDG);
 
     drawTextLines(ctx, lines, boxCenterX, topY, 23);
   }
@@ -261,9 +270,9 @@ class Cluster extends EDMObject {
     const x = parseInt(this.position.x * 100) / 100;
     const y = parseInt(this.position.y * 100) / 100;
     const z = parseInt(this.position.z * 100) / 100;
-    lines.push(`pos = (${x},`);
-    lines.push(`${y},`);
-    lines.push(`${z}) mm`);
+    lines.push(`pos = (x=${x},`);
+    lines.push(`y=${y},`);
+    lines.push(`z=${z}) mm`);
 
     drawTextLines(ctx, lines, boxCenterX, topY, 23);
   }
