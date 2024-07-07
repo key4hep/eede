@@ -1,0 +1,39 @@
+#information-icon {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+}
+
+#information-icon:hover {
+  cursor: pointer;
+}
+
+#close-information:hover {
+  cursor: pointer;
+}
+
+#close-information {
+  margin-left: auto;
+}
+
+#information-modal {
+  position: fixed;
+  z-index: 2;
+  display: none;
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+  background-color: rgba(225, 225, 225, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+.info-modal-content {
+  width: 100%;
+}
