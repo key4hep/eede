@@ -19,33 +19,33 @@ export function buildAssociationView(viewObjects, associationName) {
   const gap = 2 * (fromWidth + toWidth);
   const totalWidth = gap + fromWidth + toWidth;
 
-  canvas.width =
-    totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
-
-  const width = canvas.width;
+  const width = totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
+  canvas.width = width;
 
   const fromHeight = fromCollection[0].height;
   const toHeight = toCollection[0].height;
-  const fromVerticalGap = 0.3 * fromHeight;
-  const toVerticalGap = 0.3 * toHeight;
 
-  const fromTotalHeight =
-    fromCollection.length * (fromHeight + fromVerticalGap) + fromVerticalGap;
-  const toTotalHeight =
-    toCollection.length * (toHeight + toVerticalGap) + toVerticalGap;
+  const height = Math.max(fromHeight, toHeight);
+  const verticalGap = 0.3 * height;
 
-  canvas.height =
-    fromTotalHeight > toTotalHeight ? fromTotalHeight : toTotalHeight;
+  const totalHeight =
+    fromCollection.length * (height + verticalGap) + verticalGap;
+
+  canvas.height = totalHeight;
+
+  let accHeight = 0;
 
   const fromX = width / 2 - fromWidth - fromHorizontalGap;
-  for (const [index, from] of fromCollection.entries()) {
-    from.y = fromVerticalGap + index * (fromHeight + fromVerticalGap);
-    from.x = fromX;
-  }
 
   const toX = width / 2 + toHorizontalGap;
-  for (const [index, to] of toCollection.entries()) {
-    to.y = toVerticalGap + index * (toHeight + toVerticalGap);
-    to.x = toX;
+
+  for (let i = 0; i < fromCollection.length; i++) {
+    fromCollection[i].x = fromX;
+    toCollection[i].x = toX;
+
+    const space = height + verticalGap;
+    fromCollection[i].y = accHeight + space / 2 - fromHeight / 2;
+    toCollection[i].y = accHeight + space / 2 - toHeight / 2;
+    accHeight += height + verticalGap;
   }
 }
