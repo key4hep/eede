@@ -17,16 +17,16 @@ const configTypes = new Set([
   "edm4hep::Vertex",
   "edm4hep::ReconstructedParticle",
   "edm4hep::Track",
+  "edm4hep::MCRecoParticleAssociation",
+  "edm4hep::MCRecoTrackParticleAssociation",
+  "edm4hep::MCRecoClusterParticleAssociation",
 ]);
 
 const selectedTypes = Object.entries(datatypes).filter(([key, _]) =>
   configTypes.has(key)
 );
 
-const componentsDefinition = {};
 const datatypesDefinition = {};
-
-class Component {}
 
 class DataTypeMember {
   constructor(name, unit = null) {
@@ -36,7 +36,8 @@ class DataTypeMember {
 }
 
 class Relation {
-  constructor(name) {
+  constructor(type, name) {
+    this.type = type;
     this.name = name;
   }
 }
@@ -63,9 +64,9 @@ const parseDatatypesMembers = (members) => {
 
 const parseRelation = (relations) => {
   return relations.map((relation) => {
-    const [_, name] = parseString(relation);
+    const [type, name] = parseString(relation);
 
-    return new Relation(name);
+    return new Relation(type, name);
   });
 };
 
