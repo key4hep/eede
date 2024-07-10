@@ -135,9 +135,6 @@ export const datatypes = {
       },
       {
         "name": "dEdxError"
-      },
-      {
-        "name": "radiusOfInnermostHit"
       }
     ],
     "oneToManyRelations": [
@@ -154,13 +151,13 @@ export const datatypes = {
   "edm4hep::Vertex": {
     "members": [
       {
-        "name": "primary"
+        "name": "type"
       },
       {
         "name": "chi2"
       },
       {
-        "name": "probability"
+        "name": "ndf"
       },
       {
         "name": "position"

@@ -15,6 +15,9 @@ import {
   preFilterRecoClusterTrack,
 } from "./recoclustertrack.js";
 import { setupNoFilter } from "../filter/nofilter.js";
+import { vertexList, preFilterVertexList } from "./vertexlist.js";
+import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
+import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -32,13 +35,13 @@ export const views = {
   "Track Tree": {
     filters: setupNoFilter,
     viewFunction: trackTree,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterTrackTree,
   },
   "Cluster Tree": {
     filters: setupNoFilter,
     viewFunction: clusterTree,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
   },
   "Reco Particle-Cluster-Track": {
@@ -64,5 +67,23 @@ export const views = {
     viewFunction: mcClusterAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCCluster,
+  },
+  "ParticleID List": {
+    filters: setupNoFilter,
+    viewFunction: particleIDList,
+    scrollFunction: scrollTopLeft,
+    preFilterFunction: preFilterParticleIDList,
+  },
+  "Vertex List": {
+    filters: setupNoFilter,
+    viewFunction: vertexList,
+    scrollFunction: scrollTopLeft,
+    preFilterFunction: preFilterVertexList,
+  },
+  "ParticleID-Reconstructed Particle": {
+    filters: setupNoFilter,
+    viewFunction: recoParticleID,
+    scrollFunction: scrollTopCenter,
+    preFilterFunction: preFilterRecoParticleID,
   },
 };

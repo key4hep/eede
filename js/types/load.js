@@ -102,9 +102,12 @@ export function loadObjects(jsonData, event, objectsToLoad) {
         // load One To One Relations
         for (const { type, name } of oneToOneRelations) {
           if (objects.datatypes?.[type] === undefined) continue;
-          const oneToOneRelationData = element.collection.map(
-            (object) => object[name]
-          );
+          const oneToOneRelationData = element.collection
+            .map((object) => object[name])
+            .filter((object) => object !== undefined);
+
+          if (oneToOneRelationData.length === 0) continue;
+
           const toCollectionID =
             oneToOneRelationData.find(
               (relation) => relation.collectionID !== undefined
@@ -131,9 +134,11 @@ export function loadObjects(jsonData, event, objectsToLoad) {
         // load One To Many Relations
         for (const { type, name } of oneToManyRelations) {
           if (objects.datatypes?.[type] === undefined) continue;
-          const oneToManyRelationData = element.collection.map(
-            (object) => object[name]
-          );
+          const oneToManyRelationData = element.collection
+            .map((object) => object[name])
+            .filter((object) => object !== undefined);
+
+          if (oneToManyRelationData.length === 0) continue;
 
           const toCollectionID =
             oneToManyRelationData.find(
