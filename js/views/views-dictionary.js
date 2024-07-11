@@ -11,8 +11,8 @@ import {
   mcClusterAssociation,
 } from "./mcclusterassociation.js";
 import {
-  recoClusterTrack,
-  preFilterRecoClusterTrack,
+  recoClusterTrackVertex,
+  preFilterRecoClusterTrackVertex,
 } from "./recoclustertrack.js";
 import { setupNoFilter } from "../filter/nofilter.js";
 import { vertexList, preFilterVertexList } from "./vertexlist.js";
@@ -44,11 +44,11 @@ export const views = {
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
   },
-  "Reco Particle-Cluster-Track": {
+  "RecoParticle-Cluster-Track-Vertex": {
     filters: setupNoFilter,
-    viewFunction: recoClusterTrack,
+    viewFunction: recoClusterTrackVertex,
     scrollFunction: scrollTopCenter,
-    preFilterFunction: preFilterRecoClusterTrack,
+    preFilterFunction: preFilterRecoClusterTrackVertex,
   },
   "Monte Carlo-Reconstructed Particle": {
     filters: setupNoFilter,
