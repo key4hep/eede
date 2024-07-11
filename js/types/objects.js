@@ -339,6 +339,17 @@ class ParticleID extends EDMObject {
       "#c9edf7",
       25
     );
+
+    const topY = this.y + 20;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    lines.push("PDG: " + this.PDG);
+    lines.push("algorithm: " + this.algorithmType);
+    lines.push("likelihood: " + this.likelihood);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
   }
 
   static setup(particleIDCollection) {}
