@@ -1,7 +1,7 @@
 import { canvas } from "../main.js";
 import { emptyCopyObject } from "../lib/copy.js";
 
-export function recoClusterTrack(viewObjects) {
+export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
     viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection;
 
@@ -37,7 +37,23 @@ export function recoClusterTrack(viewObjects) {
   const trackVerticalGap = trackHeight * 0.3;
   const trackWidth = firstTrack.width;
 
-  const widestObject = Math.max(clusterWidth, trackWidth);
+  const firstVertex = recoParticles.find((particle) => {
+    const vertexRelation = particle.oneToOneRelations["startVertex"];
+    if (vertexRelation !== undefined) {
+      return vertexRelation.to;
+    }
+  });
+
+  let vertexHeight = 0;
+  let vertexVerticalGap = 0;
+  let vertexWidth = 0;
+  if (firstVertex !== undefined) {
+    vertexHeight = firstVertex.height;
+    vertexVerticalGap = vertexHeight * 0.3;
+    vertexWidth = firstVertex.width;
+  }
+
+  const widestObject = Math.max(clusterWidth, trackWidth, vertexWidth);
   const widestGap = widestObject * 0.3;
 
   const totalHorizontalGap =
@@ -59,10 +75,12 @@ export function recoClusterTrack(viewObjects) {
   recoParticles.forEach((particle) => {
     const clusterRelations = particle.oneToManyRelations["clusters"];
     const trackRelations = particle.oneToManyRelations["tracks"];
+    const vertexRelation = particle.oneToOneRelations["startVertex"];
 
     const relationsHeight = parseInt(
       clusterRelations.length * (clusterHeight + clusterVerticalGap) +
-        trackRelations.length * (trackHeight + trackVerticalGap)
+        trackRelations.length * (trackHeight + trackVerticalGap) +
+        (vertexRelation !== undefined ? vertexHeight + vertexVerticalGap : 0)
     );
 
     const height =
@@ -94,13 +112,22 @@ export function recoClusterTrack(viewObjects) {
       accumulatedRelationsHeight += trackHeight + trackVerticalGap / 2;
     });
 
+    if (vertexRelation !== undefined) {
+      const vertex = vertexRelation.to;
+      vertex.x = otherX;
+
+      const y = vertexVerticalGap / 2 + accumulatedRelationsHeight;
+      vertex.y = y;
+      accumulatedRelationsHeight += vertexHeight + vertexVerticalGap / 2;
+    }
+
     totalHeight += height;
   });
 
   canvas.height = totalHeight;
 }
 
-export function preFilterRecoClusterTrack(currentObjects, viewObjects) {
+export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
   emptyCopyObject(currentObjects, viewObjects);
 
   const fromDatatype =
@@ -111,10 +138,12 @@ export function preFilterRecoClusterTrack(currentObjects, viewObjects) {
   const recoParticles = [];
   const clusters = [];
   const tracks = [];
+  const vertexCollection = [];
 
   fromCollection.forEach((particle) => {
     const clusterRelations = particle.oneToManyRelations["clusters"];
     const trackRelations = particle.oneToManyRelations["tracks"];
+    const vertexRelation = particle.oneToOneRelations["startVertex"];
 
     const total = clusterRelations.length + trackRelations.length;
 
@@ -132,6 +161,11 @@ export function preFilterRecoClusterTrack(currentObjects, viewObjects) {
       tracks.push(track);
     });
 
+    if (vertexRelation !== undefined) {
+      const vertex = vertexRelation.to;
+      vertexCollection.push(vertex);
+    }
+
     recoParticles.push(particle);
   });
 
@@ -147,8 +181,14 @@ export function preFilterRecoClusterTrack(currentObjects, viewObjects) {
     currentObjects.datatypes["edm4hep::ReconstructedParticle"].oneToMany[
       "tracks"
     ];
+  viewObjects.datatypes["edm4hep::ReconstructedParticle"].oneToOne[
+    "startVertex"
+  ] =
+    currentObjects.datatypes["edm4hep::ReconstructedParticle"].oneToOne[
+      "startVertex"
+    ];
 
   viewObjects.datatypes["edm4hep::Cluster"].collection = clusters;
-
   viewObjects.datatypes["edm4hep::Track"].collection = tracks;
+  viewObjects.datatypes["edm4hep::Vertex"].collection = vertexCollection;
 }

@@ -2,18 +2,16 @@ import { canvas } from "../main.js";
 
 // List 1:1 association in a vertical list
 export function buildAssociationView(viewObjects, associationName) {
-  const association = viewObjects.associations[associationName];
+  const associations = viewObjects.associations[associationName];
+  const length = associations.length;
 
-  const fromCollection = association.map((association) => association.from);
-  const toCollection = association.map((association) => association.to);
-
-  if (fromCollection.length === 0 || toCollection.length === 0) {
+  if (length === 0) {
     alert("No association found!");
     return;
   }
 
-  const fromWidth = fromCollection[0].width;
-  const toWidth = toCollection[0].width;
+  const fromWidth = associations[0].from.width;
+  const toWidth = associations[0].to.width;
   const fromHorizontalGap = 0.3 * fromWidth;
   const toHorizontalGap = 0.3 * toWidth;
   const gap = 2 * (fromWidth + toWidth);
@@ -22,14 +20,13 @@ export function buildAssociationView(viewObjects, associationName) {
   const width = totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
   canvas.width = width;
 
-  const fromHeight = fromCollection[0].height;
-  const toHeight = toCollection[0].height;
+  const fromHeight = associations[0].from.height;
+  const toHeight = associations[0].to.height;
 
   const height = Math.max(fromHeight, toHeight);
   const verticalGap = 0.3 * height;
 
-  const totalHeight =
-    fromCollection.length * (height + verticalGap) + verticalGap;
+  const totalHeight = length * (height + verticalGap) + verticalGap;
 
   canvas.height = totalHeight;
 
@@ -39,13 +36,15 @@ export function buildAssociationView(viewObjects, associationName) {
 
   const toX = width / 2 + toHorizontalGap;
 
-  for (let i = 0; i < fromCollection.length; i++) {
-    fromCollection[i].x = fromX;
-    toCollection[i].x = toX;
+  associations.forEach((association) => {
+    association.from.x = fromX;
+    association.to.x = toX;
 
     const space = height + verticalGap;
-    fromCollection[i].y = accHeight + space / 2 - fromHeight / 2;
-    toCollection[i].y = accHeight + space / 2 - toHeight / 2;
+    const fromY = accHeight + space / 2 - fromHeight / 2;
+    const toY = accHeight + space / 2 - toHeight / 2;
+    association.from.y = fromY;
+    association.to.y = toY;
     accHeight += height + verticalGap;
-  }
+  });
 }
