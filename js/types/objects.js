@@ -3,6 +3,7 @@ import {
   drawRoundedRect,
   drawTextLines,
   drawObjectHeader,
+  drawObjectInfoTip,
 } from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
@@ -52,6 +53,10 @@ class EDMObject {
       y + height > this.y &&
       y < this.y + this.height
     );
+  }
+
+  showObjectTip(ctx) {
+    drawObjectInfoTip(ctx, this);
   }
 }
 

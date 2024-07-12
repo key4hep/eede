@@ -131,3 +131,13 @@ export function drawObjectHeader(ctx, object) {
   }
   ctx.restore();
 }
+
+export function drawObjectInfoTip(ctx, object) {
+  ctx.save();
+  const collectionName = "Collection: " + object.collectionName;
+  const x = object.x + object.width / 2;
+  const y = object.y - 10;
+  ctx.font = "bold 12px sans-serif";
+  ctx.fillText(collectionName, x, y);
+  ctx.restore();
+}
