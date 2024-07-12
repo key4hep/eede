@@ -11,3 +11,11 @@ export function errorMsg(msg) {
   msgDiv.style.color = "red";
   msgDiv.innerHTML = "<p>ERROR: " + msg + "</p>";
 }
+
+export function emptyViewMessage() {
+  const msgDiv = document.getElementById("empty-view");
+  msgDiv.style.display = "flex";
+  setTimeout(() => {
+    msgDiv.style.display = "none";
+  }, 3000);
+}
