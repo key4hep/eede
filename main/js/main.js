@@ -20,6 +20,8 @@ const selectedObjectTypes = {
     "edm4hep::MCRecoClusterParticleAssociation",
     "edm4hep::Cluster",
     "edm4hep::Track",
+    "edm4hep::Vertex",
+    "edm4hep::ParticleID",
   ],
 };
 

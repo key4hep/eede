@@ -307,7 +307,7 @@ class Track extends EDMObject {
     lines.push("type: " + this.type);
     const chi2 = parseInt(this.chi2 * 100) / 100;
     const ndf = parseInt(this.ndf * 100) / 100;
-    const chiNdf = `${chi2} / ${ndf}`;
+    const chiNdf = `${chi2}/${ndf}`;
     lines.push("chi2/ndf = " + chiNdf);
     lines.push("dEdx = " + this.dEdx);
 
@@ -323,13 +323,77 @@ class Track extends EDMObject {
 class ParticleID extends EDMObject {
   constructor() {
     super();
+    this.width = 140;
+    this.height = 120;
   }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      "#c9edf7",
+      25
+    );
+
+    const topY = this.y + 20;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    lines.push("PDG: " + this.PDG);
+    lines.push("algorithm: " + this.algorithmType);
+    lines.push("likelihood: " + this.likelihood);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(particleIDCollection) {}
 }
 
 class Vertex extends EDMObject {
   constructor() {
     super();
+    this.width = 140;
+    this.height = 140;
   }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      "#f5d3ef",
+      25
+    );
+
+    const topY = this.y + 20;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    const x = parseInt(this.position.x * 100) / 100;
+    const y = parseInt(this.position.y * 100) / 100;
+    const z = parseInt(this.position.z * 100) / 100;
+    lines.push(`pos = (x=${x},`);
+    lines.push(`y=${y},`);
+    lines.push(`z=${z}) mm`);
+    const chi2 = parseInt(this.chi2 * 100) / 100;
+    const ndf = parseInt(this.ndf * 100) / 100;
+    const chiNdf = `${chi2}/${ndf}`;
+    lines.push("chi2/ndf = " + chiNdf);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(vertexCollection) {}
 }
 
 export const objectTypes = {
