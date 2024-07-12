@@ -1,9 +1,15 @@
 import { canvas } from "../main.js";
+import { emptyViewMessage } from "../lib/messages.js";
 
 // All particles that are related to itself have an one to many relation
 export function buildTree(collection, relationOfReference) {
   const nodes = new Set();
   const children = new Set();
+
+  if (collection.length === 0) {
+    emptyViewMessage();
+    return;
+  }
 
   for (const object of collection) {
     const objects = object.oneToManyRelations[relationOfReference].map(

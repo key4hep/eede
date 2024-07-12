@@ -1,4 +1,5 @@
 import { canvas } from "../main.js";
+import { emptyViewMessage } from "../lib/messages.js";
 
 export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const relations =
@@ -8,7 +9,7 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const toCollection = relations.map((relation) => relation.to);
 
   if (fromCollection.length === 0 || toCollection.length === 0) {
-    alert("No association found!");
+    emptyViewMessage();
     return;
   }
 

@@ -6,10 +6,6 @@ export function recoParticleTree(viewCurrentObjects) {
     viewCurrentObjects.datatypes["edm4hep::ReconstructedParticle"].collection ??
     [];
 
-  if (recoCollection.length === 0) {
-    alert("No ReconstructedParticles found in this event.");
-  }
-
   buildTree(recoCollection, "particles");
 }
 
