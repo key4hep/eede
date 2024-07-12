@@ -41,6 +41,12 @@ function showViewsMenu() {
   viewsMenu.style.display = "flex";
 }
 
+function hideDeploySwitch() {
+  const deploySwitch = document.getElementById("switch-deploy");
+
+  deploySwitch.style.display = "none";
+}
+
 document.getElementById("input-file").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
@@ -133,6 +139,7 @@ document
     showEventSwitcher();
     showViewsMenu();
     renderEvent(eventNum);
+    hideDeploySwitch();
   });
 
 export { canvas, ctx, jsonData, selectedObjectTypes };
