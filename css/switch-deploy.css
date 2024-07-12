@@ -1,0 +1,23 @@
+#switch-deploy {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#switch-deploy-button {
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #000;
+  padding: 5px;
+  border-radius: 5px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+#switch-deploy-button:hover {
+  background-color: #c5c5c5;
+}
+
+#switch-deploy-text {
+  margin: 0 10px 0 0;
+}
