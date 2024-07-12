@@ -43,6 +43,7 @@ function loadSelectedEvent() {
   } else {
     copyObject(eventCollection[currentEvent.event], currentObjects);
   }
+  console.log(currentObjects);
 }
 
 export function renderEvent(eventNumber) {

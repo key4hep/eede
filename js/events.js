@@ -44,13 +44,21 @@ const mouseOut = function (event, dragTools) {
 };
 
 const mouseMove = function (event, visibleObjects, dragTools) {
-  if (!dragTools.isDragging) {
-    return;
-  }
-
   const boundigClientRect = canvas.getBoundingClientRect();
   const mouseX = parseInt(event.clientX - boundigClientRect.x);
   const mouseY = parseInt(event.clientY - boundigClientRect.y);
+
+  for (const { collection } of Object.values(visibleObjects.datatypes)) {
+    for (const object of collection) {
+      if (object.isHere(mouseX, mouseY)) {
+        object.showObjectTip();
+      }
+    }
+  }
+
+  if (!dragTools.isDragging) {
+    return;
+  }
 
   const dx = mouseX - dragTools.prevMouseX;
   const dy = mouseY - dragTools.prevMouseY;
