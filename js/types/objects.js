@@ -44,9 +44,7 @@ class EDMObject {
 export class MCParticle extends EDMObject {
   constructor() {
     super();
-
     this.row = -1;
-
     this.texImg = null;
   }
 

@@ -107,3 +107,14 @@ export function drawStraightLink(ctx, link) {
   ctx.stroke();
   ctx.restore();
 }
+
+export function drawObjectHeader(ctx, object, y) {
+  ctx.save();
+  ctx.font = "16px sans-serif";
+  ctx.fontWeight = "bold";
+  const text = object.constructor.name;
+  const boxCenterX = object.x + object.width / 2;
+  const x = boxCenterX - ctx.measureText(text).width / 2;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
