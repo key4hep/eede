@@ -52,20 +52,22 @@ const mouseMove = function (event, visibleObjects, dragTools) {
     .map((datatype) => datatype.collection)
     .flat();
 
+  let someHovered = false;
   for (const object of allObjects) {
     if (object.isHere(mouseX, mouseY)) {
       if (dragTools.hoveredObject !== object) {
         dragTools.hoveredObject = object;
         drawVisible(visibleObjects);
-        setTimeout(() => {
-          object.showObjectTip(ctx);
-        }, 200);
-        setTimeout(() => {
-          drawVisible(visibleObjects);
-        }, 2000);
+        object.showObjectTip(ctx);
       }
+      someHovered = true;
       break;
     }
+  }
+
+  if (!someHovered) {
+    dragTools.hoveredObject = null;
+    drawVisible(visibleObjects);
   }
 
   if (!dragTools.isDragging) {
