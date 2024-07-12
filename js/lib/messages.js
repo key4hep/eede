@@ -17,5 +17,5 @@ export function emptyViewMessage() {
   msgDiv.style.display = "flex";
   setTimeout(() => {
     msgDiv.style.display = "none";
-  }, 3000);
+  }, 1500);
 }

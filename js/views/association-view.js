@@ -1,4 +1,5 @@
 import { canvas } from "../main.js";
+import { emptyViewMessage } from "../lib/messages.js";
 
 // List 1:1 association in a vertical list
 export function buildAssociationView(viewObjects, associationName) {
@@ -6,7 +7,7 @@ export function buildAssociationView(viewObjects, associationName) {
   const length = associations.length;
 
   if (length === 0) {
-    alert("No association found!");
+    emptyViewMessage();
     return;
   }
 
