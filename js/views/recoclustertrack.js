@@ -1,15 +1,9 @@
 import { canvas } from "../main.js";
 import { emptyCopyObject } from "../lib/copy.js";
-import { emptyViewMessage } from "../lib/messages.js";
 
 export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
     viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection;
-
-  if (recoParticles.length === 0) {
-    emptyViewMessage();
-    return;
-  }
 
   const findFirstObject = (relationName) => {
     const object = recoParticles.find((particle) => {

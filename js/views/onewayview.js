@@ -1,5 +1,4 @@
 import { canvas } from "../main.js";
-import { emptyViewMessage } from "../lib/messages.js";
 
 export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const relations =
@@ -7,11 +6,6 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
 
   const fromCollection = relations.map((relation) => relation.from);
   const toCollection = relations.map((relation) => relation.to);
-
-  if (fromCollection.length === 0 || toCollection.length === 0) {
-    emptyViewMessage();
-    return;
-  }
 
   const fromWidth = fromCollection[0].width;
   const toWidth = toCollection[0].width;

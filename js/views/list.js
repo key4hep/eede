@@ -1,11 +1,6 @@
 import { canvas } from "../main.js";
-import { emptyViewMessage } from "../lib/messages.js";
 
 export function listView(collection) {
-  if (collection.length === 0) {
-    emptyViewMessage();
-    return;
-  }
   const width = window.innerWidth;
   canvas.width = width;
 

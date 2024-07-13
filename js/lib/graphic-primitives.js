@@ -107,3 +107,7 @@ export function drawStraightLink(ctx, link) {
   ctx.stroke();
   ctx.restore();
 }
+
+export function updateCanvas(ctx, x, y, width, height) {
+  ctx.clearRect(x, y, width, height);
+}

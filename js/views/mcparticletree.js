@@ -1,15 +1,9 @@
 import { canvas } from "../main.js";
 import { preFilterTree } from "./pre-filter.js";
-import { emptyViewMessage } from "../lib/messages.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =
     viewCurrentObjects.datatypes["edm4hep::MCParticle"].collection ?? [];
-
-  if (mcCollection.length === 0) {
-    emptyViewMessage();
-    return;
-  }
 
   const getMaxRow = (parentLinks) => {
     let maxRow = -1;
