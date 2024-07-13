@@ -61,11 +61,13 @@ const mouseMove = function (event, visibleObjects, dragTools) {
         object.showObjectTip(ctx);
       }
       someHovered = true;
+      document.body.style.cursor = "pointer";
       break;
     }
   }
 
   if (!someHovered) {
+    document.body.style.cursor = "default";
     dragTools.hoveredObject = null;
     drawVisible(visibleObjects);
   }
