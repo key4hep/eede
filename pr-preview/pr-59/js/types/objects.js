@@ -8,6 +8,7 @@ import {
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
+import { SimStatusBitFieldDisplayValues } from "../../mappings/sim-status.js";
 
 const TOP_MARGIN = 40;
 
@@ -56,7 +57,10 @@ class EDMObject {
   }
 
   showObjectTip(ctx) {
-    drawObjectInfoTip(ctx, this);
+    const x = this.x;
+    const y = this.y - 10;
+    const collectionName = "Collection: " + this.collectionName;
+    drawObjectInfoTip(ctx, x, y, collectionName);
   }
 }
 
@@ -123,6 +127,23 @@ export class MCParticle extends EDMObject {
     drawTextLines(ctx, topLines, boxCenterX, topY, 23);
 
     drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
+  }
+
+  showObjectTip(ctx) {
+    const x = this.x;
+    const y = this.y - 10;
+    const collectionName = "Collection: " + this.collectionName;
+    const displaySimulatorStatus =
+      SimStatusBitFieldDisplayValues[this.simulatorStatus];
+    let simulatorStatus = "";
+
+    if (displaySimulatorStatus) {
+      simulatorStatus = "Simulator status: " + displaySimulatorStatus;
+    } else {
+      simulatorStatus = "Simulator status: " + this.simulatorStatus;
+    }
+
+    drawObjectInfoTip(ctx, x, y, collectionName, simulatorStatus);
   }
 
   static setup(mcCollection) {
