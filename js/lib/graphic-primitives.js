@@ -132,12 +132,17 @@ export function drawObjectHeader(ctx, object) {
   ctx.restore();
 }
 
-export function drawObjectInfoTip(ctx, object) {
+export function drawObjectInfoTip(ctx, x, y, ...args) {
   ctx.save();
-  const collectionName = "Collection: " + object.collectionName;
-  const x = object.x;
-  const y = object.y - 10;
   ctx.font = "bold 12px sans-serif";
-  ctx.fillText(collectionName, x, y);
+  const lines = args.length;
+  const height = 20 * lines;
+  const maxWidth = Math.max(...args.map((arg) => ctx.measureText(arg).width));
+  ctx.fillStyle = "rgba(225, 225, 225, 1)";
+  ctx.fillRect(x, y, maxWidth + 10, height + 10);
+  ctx.fillStyle = "black";
+  for (const [i, arg] of args.entries()) {
+    ctx.fillText(arg, x + 5, y + 20 + i * 20);
+  }
   ctx.restore();
 }

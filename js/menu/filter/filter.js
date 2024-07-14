@@ -60,7 +60,7 @@ let parametersRange = units.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-const SimStatusBitFieldDisplayValues = {
+export const SimStatusBitFieldDisplayValues = {
   23: "Overlay",
   24: "Stopped",
   25: "LeftDetector",
