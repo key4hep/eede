@@ -8,7 +8,7 @@ import {
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
-import { SimStatusBitFieldDisplayValues } from "../menu/filter/filter.js";
+import { SimStatusBitFieldDisplayValues } from "../../mappings/sim-status.js";
 
 const TOP_MARGIN = 40;
 
