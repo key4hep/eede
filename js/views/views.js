@@ -64,9 +64,8 @@ const drawView = (view) => {
     emptyCanvas();
     emptyViewMessage();
     return;
-  } else {
-    hideEmptyViewMessage();
   }
+  hideEmptyViewMessage();
 
   viewFunction(viewObjects);
   copyObject(viewObjects, viewCurrentObjects);
