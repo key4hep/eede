@@ -99,55 +99,67 @@
     <div class="info-modal-content">
       <span class="logo-letter e1">e</span><span class="logo-letter e2">e</span><span
         class="logo-letter d">d</span><span class="logo-letter e3">E</span>
-      <p>Welcome to eede, an EDM4hep Event Data Explorer. Learn more about eede on the <a
-          href="https://github.com/key4hep/eede/wiki" target="_blank" rel="noopener noreferrer">wiki</a>.
-        Want to learn more about EDM4hep? Check out the <a href="https://edm4hep.web.cern.ch" target="_blank"
-          rel="noopener noreferrer">EDM4hep</a> website.
-      </p>
-      <p>
-        Found a bug or have a feature request? Open a new <a href="https://github.com/key4hep/eede/issues"
-          target="_blank" rel="noopener noreferrer">issue</a>.
-      </p>
-      <p>Contact:</p>
-      <ul>
-        <li class="contact-element">Juraj Smiesko:
-          <address class="email">
-            <a href="mailto:juraj.smiesko@cern.ch">
-              <img src="img/juraj-email.webp" alt="juraj-email" height="21px" />
-            </a>
-          </address>
-          <button class="copy-email-button" data-email="juraj.smiesko@cern.ch">
-            <abbr title="Copy to Clipboard">
-              <img src="img/copy.svg" alt="Copy" width="16" height="16" />
-            </abbr>
-          </button>
+      <div id="information-buttons">
+        <button id="information-button" class="information-button">About eede</button>
+        <button id="view-information-button" class="information-button">This view</button>
+      </div>
+      <div id="information-options">
+        <div id="information-content">
+          <p>Welcome to eede, an EDM4hep Event Data Explorer. Learn more about eede on the <a
+              href="https://github.com/key4hep/eede/wiki" target="_blank" rel="noopener noreferrer">wiki</a>.
+            Want to learn more about EDM4hep? Check out the <a href="https://edm4hep.web.cern.ch" target="_blank"
+              rel="noopener noreferrer">EDM4hep</a> website.
+          </p>
+          <p>
+            Found a bug or have a feature request? Open a new <a href="https://github.com/key4hep/eede/issues"
+              target="_blank" rel="noopener noreferrer">issue</a>.
+          </p>
+          <p>Contact:</p>
+          <ul>
+            <li class="contact-element">Juraj Smiesko:
+              <address class="email">
+                <a href="mailto:juraj.smiesko@cern.ch">
+                  <img src="img/juraj-email.webp" alt="juraj-email" height="21px" />
+                </a>
+              </address>
+              <button class="copy-email-button" data-email="juraj.smiesko@cern.ch">
+                <abbr title="Copy to Clipboard">
+                  <img src="img/copy.svg" alt="Copy" width="16" height="16" />
+                </abbr>
+              </button>
 
-        </li>
-        <li class="contact-element">Thomas Madlener:
-          <address class="email">
-            <a href="mailto:thomas.madlener@desy.de">
-              <img src="img/thomas-email.webp" alt="thomas-email" height="21px" />
-            </a>
-          </address>
-          <button class="copy-email-button" data-email="thomas.madlener@desy.de">
-            <abbr title="Copy to Clipboard">
-              <img src="img/copy.svg" alt="Copy" width="16" height="16" />
-            </abbr>
-          </button>
-        </li>
-        <li class="contact-element">Braulio Rivas:
-          <address class="email">
-            <a href="mailto:brauliorivas@pm.me">
-              <img src="img/braulio-email.webp" alt="braulio-email" height="21px" />
-            </a>
-          </address>
-          <button class="copy-email-button" data-email="brauliorivas@pm.me">
-            <abbr title="Copy to Clipboard">
-              <img src="img/copy.svg" alt="Copy" width="16" height="16" />
-            </abbr>
-          </button>
-        </li>
-      </ul>
+            </li>
+            <li class="contact-element">Thomas Madlener:
+              <address class="email">
+                <a href="mailto:thomas.madlener@desy.de">
+                  <img src="img/thomas-email.webp" alt="thomas-email" height="21px" />
+                </a>
+              </address>
+              <button class="copy-email-button" data-email="thomas.madlener@desy.de">
+                <abbr title="Copy to Clipboard">
+                  <img src="img/copy.svg" alt="Copy" width="16" height="16" />
+                </abbr>
+              </button>
+            </li>
+            <li class="contact-element">Braulio Rivas:
+              <address class="email">
+                <a href="mailto:brauliorivas@pm.me">
+                  <img src="img/braulio-email.webp" alt="braulio-email" height="21px" />
+                </a>
+              </address>
+              <button class="copy-email-button" data-email="brauliorivas@pm.me">
+                <abbr title="Copy to Clipboard">
+                  <img src="img/copy.svg" alt="Copy" width="16" height="16" />
+                </abbr>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div id="view-information-content">
+          <h2 id="view-title-info"></h2>
+          <p id="view-description-info"></p>
+        </div>
+      </div>
     </div>
   </div>
 

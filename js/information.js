@@ -2,6 +2,8 @@ const infoIcon = document.getElementById("information-icon");
 const closeIcon = document.getElementById("close-information");
 const copyToClipboardButtons =
   document.getElementsByClassName("copy-email-button");
+const informationButton = document.getElementById("information-button");
+const viewButton = document.getElementById("view-information-button");
 
 Array.from(copyToClipboardButtons).forEach((button) => {
   button.addEventListener("click", () => {
@@ -56,3 +58,52 @@ window.addEventListener("click", (event) => {
     hideModal();
   }
 });
+
+function chooseButton(id) {
+  const buttons = document.getElementsByClassName("information-button");
+  Array.from(buttons).forEach((button) => {
+    if (button.id === id) {
+      button.style.backgroundColor = "#c5c5c5";
+    } else {
+      button.style.backgroundColor = "#ffffff";
+    }
+  });
+}
+
+function showOption(id) {
+  const informationOptions = document.getElementById("information-options");
+  const children = informationOptions.children;
+  Array.from(children).forEach((child) => {
+    if (child.id === id) {
+      child.style.display = "block";
+    } else {
+      child.style.display = "none";
+    }
+  });
+}
+
+informationButton.addEventListener("click", () => {
+  chooseButton("information-button");
+  showOption("information-content");
+});
+
+viewButton.addEventListener("click", () => {
+  chooseButton("view-information-button");
+  showOption("view-information-content");
+});
+
+export function showViewInformation(title, description) {
+  if (viewButton.style.display !== "block") {
+    viewButton.style.display = "block";
+  }
+
+  const viewTitle = document.getElementById("view-title-info");
+  viewTitle.innerText = `Learn more about ${title} view`;
+
+  const viewDescription = document.getElementById("view-description-info");
+  viewDescription.innerText = description;
+}
+
+export function hideViewInformation() {
+  viewButton.style.display = "none";
+}
