@@ -8,7 +8,7 @@ import {
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
-import { SimStatusBitFieldDisplayValues } from "../../mappings/sim-status.js";
+import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
 
 const TOP_MARGIN = 40;
 
@@ -114,7 +114,17 @@ export class MCParticle extends EDMObject {
     const topLines = [];
     topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
-    topLines.push("Sim. stat.: " + this.simulatorStatus);
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
+    const simulatorStatusFirstLetter = simulatorStatus
+      .map((s) => s[0])
+      .join(", ");
+    const simulatorStatusString =
+      simulatorStatusFirstLetter !== ""
+        ? simulatorStatusFirstLetter
+        : this.simulatorStatus;
+    topLines.push("Sim. stat.: " + simulatorStatusString);
 
     const bottomY = this.y + this.height * 0.6;
     const bottomLines = [];
@@ -133,17 +143,11 @@ export class MCParticle extends EDMObject {
     const x = this.x;
     const y = this.y - 10;
     const collectionName = "Collection: " + this.collectionName;
-    const displaySimulatorStatus =
-      SimStatusBitFieldDisplayValues[this.simulatorStatus];
-    let simulatorStatus = "";
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
 
-    if (displaySimulatorStatus) {
-      simulatorStatus = "Simulator status: " + displaySimulatorStatus;
-    } else {
-      simulatorStatus = "Simulator status: " + this.simulatorStatus;
-    }
-
-    drawObjectInfoTip(ctx, x, y, collectionName, simulatorStatus);
+    drawObjectInfoTip(ctx, x, y, collectionName, ...simulatorStatus);
   }
 
   static setup(mcCollection) {
