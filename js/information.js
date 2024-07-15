@@ -82,14 +82,22 @@ function showOption(id) {
   });
 }
 
-informationButton.addEventListener("click", () => {
+export function selectInformationSection() {
   chooseButton("information-button");
   showOption("information-content");
+}
+
+export function selectViewInformation() {
+  chooseButton("view-information-button");
+  showOption("view-information-content");
+}
+
+informationButton.addEventListener("click", () => {
+  selectInformationSection();
 });
 
 viewButton.addEventListener("click", () => {
-  chooseButton("view-information-button");
-  showOption("view-information-content");
+  selectViewInformation();
 });
 
 export function showViewInformation(title, description) {
