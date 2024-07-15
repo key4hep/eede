@@ -12,7 +12,7 @@ button.addEventListener("click", () => {
 
 const url = window.location.href;
 if (url.includes("/release")) {
-  button.innerText = "Main";
+  button.innerText = "Develop";
 } else {
   button.innerText = "Release";
 }
