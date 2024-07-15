@@ -37,3 +37,30 @@ export function preFilterTree(
       currentObjects.datatypes[collectionName].oneToMany[relationName];
   });
 }
+
+export function preFilterList(currentObjects, viewObjects, collectionName) {
+  emptyCopyObject(currentObjects, viewObjects);
+
+  viewObjects.datatypes[collectionName].collection =
+    currentObjects.datatypes[collectionName].collection;
+}
+
+export function preFilterOneWay(
+  currentObjects,
+  viewObjects,
+  relationName,
+  fromCollectionName,
+  toCollectionName
+) {
+  emptyCopyObject(currentObjects, viewObjects);
+
+  const relations =
+    currentObjects.datatypes[fromCollectionName].oneToOne[relationName];
+
+  const fromCollection = relations.map((relation) => relation.from);
+  const toCollection = relations.map((relation) => relation.to);
+
+  viewObjects.datatypes[fromCollectionName].oneToOne[relationName] = relations;
+  viewObjects.datatypes[fromCollectionName].collection = fromCollection;
+  viewObjects.datatypes[toCollectionName].collection = toCollection;
+}
