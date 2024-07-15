@@ -82,14 +82,22 @@ function showOption(id) {
   });
 }
 
-informationButton.addEventListener("click", () => {
+export function selectInformationSection() {
   chooseButton("information-button");
   showOption("information-content");
+}
+
+export function selectViewInformation() {
+  chooseButton("view-information-button");
+  showOption("view-information-content");
+}
+
+informationButton.addEventListener("click", () => {
+  selectInformationSection();
 });
 
 viewButton.addEventListener("click", () => {
-  chooseButton("view-information-button");
-  showOption("view-information-content");
+  selectViewInformation();
 });
 
 export function showViewInformation(title, description) {
@@ -101,7 +109,10 @@ export function showViewInformation(title, description) {
   viewTitle.innerText = `Learn more about ${title} view`;
 
   const viewDescription = document.getElementById("view-description-info");
-  viewDescription.innerText = description;
+  viewDescription.replaceChildren();
+  const newElement = document.createElement("div");
+  newElement.innerHTML = description;
+  viewDescription.appendChild(newElement.firstChild);
 }
 
 export function hideViewInformation() {
