@@ -109,7 +109,10 @@ export function showViewInformation(title, description) {
   viewTitle.innerText = `Learn more about ${title} view`;
 
   const viewDescription = document.getElementById("view-description-info");
-  viewDescription.innerText = description;
+  viewDescription.replaceChildren();
+  const newElement = document.createElement("div");
+  newElement.innerHTML = description;
+  viewDescription.appendChild(newElement.firstChild);
 }
 
 export function hideViewInformation() {

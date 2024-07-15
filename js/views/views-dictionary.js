@@ -26,7 +26,7 @@ export const views = {
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTree,
     description:
-      "Red relations mean parent relation (from bottom to top), green relations mean daughter relation (from top to bottom).",
+      "<p>Red relations mean parent relation (from bottom to top), green relations mean daughter relation (from top to bottom).</p>",
   },
   "Reconstructed Particle Tree": {
     filters: setupNoFilter,
@@ -34,21 +34,21 @@ export const views = {
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterRecoTree,
     description:
-      "A tree of the Reconstructed Particles. Purple relations mean relation between particles.",
+      "<p>A tree of the Reconstructed Particles. Purple relations mean relation between particles.</p>",
   },
   "Track Tree": {
     filters: setupNoFilter,
     viewFunction: trackTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterTrackTree,
-    description: "A tree of the Tracks.",
+    description: "<p>A tree of the Tracks.</p>",
   },
   "Cluster Tree": {
     filters: setupNoFilter,
     viewFunction: clusterTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
-    description: "A tree of the Clusters.",
+    description: "<p>A tree of the Clusters.</p>",
   },
   "RecoParticle-Cluster-Track-Vertex": {
     filters: setupNoFilter,
@@ -56,7 +56,7 @@ export const views = {
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoClusterTrackVertex,
     description:
-      "Relations that a Reconstruced Particle has with other objects. Green connections are towards Tracks, and sky blue connections are towards Clusters.",
+      "<p>Relations that a Reconstruced Particle has with other objects. Green connections are towards Tracks, and sky blue connections are towards Clusters.</p>",
   },
   "Monte Carlo-Reconstructed Particle": {
     filters: setupNoFilter,
@@ -64,7 +64,7 @@ export const views = {
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
     description:
-      "Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.",
+      "<p>Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.</p>",
   },
   "Monte Carlo Particle-Track": {
     filters: setupNoFilter,
@@ -72,7 +72,7 @@ export const views = {
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTrack,
     description:
-      "Association between Monte Carlo Particles and Tracks. 1:1 relation.",
+      "<p>Association between Monte Carlo Particles and Tracks. 1:1 relation.</p>",
   },
   "Monte Carlo Particle-Cluster": {
     filters: setupNoFilter,
@@ -80,27 +80,28 @@ export const views = {
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCCluster,
     description:
-      "Association between Monte Carlo Particles and Clusters. 1:1 relation.",
+      "<p>Association between Monte Carlo Particles and Clusters. 1:1 relation.</p>",
   },
   "ParticleID List": {
     filters: setupNoFilter,
     viewFunction: particleIDList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterParticleIDList,
-    description: "A list of ParticleIDs found in the event.",
+    description: "<p>A list of ParticleIDs found in the event.</p>",
   },
   "Vertex List": {
     filters: setupNoFilter,
     viewFunction: vertexList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterVertexList,
-    description: "A list of Vertices found in the event.",
+    description: "<p>A list of Vertices found in the event.</p>",
   },
   "ParticleID-Reconstructed Particle": {
     filters: setupNoFilter,
     viewFunction: recoParticleID,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoParticleID,
-    description: "1:1 relation from ParticleID to Reconstructed Particle.",
+    description:
+      "<p>1:1 relation from ParticleID to Reconstructed Particle.</p>",
   },
 };
