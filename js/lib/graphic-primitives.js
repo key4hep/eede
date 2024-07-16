@@ -14,22 +14,25 @@ export function drawRoundedRect(ctx, x, y, width, height, fillColor, radius) {
   ctx.restore();
 }
 
-export function drawTex(ctx, x, y, texImg, maxWidth) {
-  let scale = (maxWidth * 0.9) / texImg.naturalWidth;
-  if (scale > 2) {
-    scale = 2;
-  }
-  const tempHeight = texImg.naturalHeight * scale;
-  const tempWidth = texImg.naturalWidth * scale;
+export function drawTex(ctx, x, y, path, maxWidth) {
+  // let scale = (maxWidth * 0.9) / texImg.naturalWidth;
+  // if (scale > 2) {
+  //   scale = 2;
+  // }
+  // const tempHeight = texImg.naturalHeight * scale;
+  // const tempWidth = texImg.naturalWidth * scale;
 
   ctx.save();
-  ctx.drawImage(
-    texImg,
-    x - tempWidth / 2,
-    y - tempHeight / 2,
-    tempWidth,
-    tempHeight
-  );
+  const pathImage = new Path2D(path);
+  // ctx.drawImage(
+  //   texImg,
+  //   x - tempWidth / 2,
+  //   y - tempHeight / 2,
+  //   tempWidth,
+  //   tempHeight
+  // );
+  ctx.translate(x, y);
+  ctx.stroke(pathImage);
   ctx.restore();
 }
 

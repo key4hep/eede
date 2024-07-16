@@ -50,8 +50,14 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
   }
 
-  updateTexImg(text) {
+  getPath(text) {
+    if (this.path) return this.path;
     let svg = MathJax.tex2svg(text).firstElementChild;
+    const pathElement = svg.querySelector("path");
+    const path = pathElement.getAttribute("d");
+
+    this.path = path;
+    return;
 
     this.texImg = document.createElement("img");
     this.texImg.src =
@@ -75,25 +81,8 @@ export class MCParticle extends EDMObject {
       15
     );
 
-    if (this.texImg.complete) {
-      drawTex(
-        ctx,
-        boxCenterX,
-        this.y + this.height * 0.4,
-        this.texImg,
-        this.width
-      );
-    } else {
-      this.texImg.onload = () => {
-        drawTex(
-          ctx,
-          boxCenterX,
-          this.y + this.height * 0.4,
-          this.texImg,
-          this.width
-        );
-      };
-    }
+    const path = this.getPath(this.name);
+    drawTex(ctx, boxCenterX, this.y + this.height * 0.4, path, this.width);
 
     const topY = this.y + 20;
     const topLines = [];
@@ -130,7 +119,7 @@ export class MCParticle extends EDMObject {
 
       const name = getName(mcParticle.PDG);
       mcParticle.name = name;
-      mcParticle.updateTexImg(name);
+      // mcParticle.updateTexImg(name);
       mcParticle.momentum = Math.sqrt(
         Math.pow(mcParticle.momentum.x, 2) +
           Math.pow(mcParticle.momentum.y, 2) +
