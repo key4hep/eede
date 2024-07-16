@@ -119,7 +119,7 @@ export class MCParticle extends EDMObject {
     );
     const simulatorStatusFirstLetter = simulatorStatus
       .map((s) => s[0])
-      .join(", ");
+      .join("");
     const simulatorStatusString =
       simulatorStatusFirstLetter !== ""
         ? simulatorStatusFirstLetter
