@@ -107,3 +107,27 @@ export function drawStraightLink(ctx, link) {
   ctx.stroke();
   ctx.restore();
 }
+
+export function drawObjectHeader(ctx, object) {
+  ctx.save();
+  ctx.font = "bold 16px sans-serif";
+  const text = object.constructor.name;
+  const boxCenterX = object.x + object.width / 2;
+  const textWidth = ctx.measureText(text).width;
+  const x = boxCenterX - ctx.measureText(text).width / 2;
+  const topY = object.y + 20;
+
+  if (textWidth > object.width) {
+    const lines = text.split(/(?=[A-Z])/);
+    for (const [i, lineText] of lines.entries()) {
+      ctx.fillText(
+        lineText,
+        boxCenterX - ctx.measureText(lineText).width / 2,
+        topY + i * 20
+      );
+    }
+  } else {
+    ctx.fillText(text, x, topY);
+  }
+  ctx.restore();
+}
