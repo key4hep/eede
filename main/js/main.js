@@ -2,6 +2,7 @@ import { errorMsg } from "./lib/messages.js";
 import { renderEvent } from "./event-number.js";
 import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
+import { selectViewInformation } from "./information.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -39,8 +40,10 @@ function showEventSwitcher() {
 
 function showViewsMenu() {
   const viewsMenu = document.getElementById("views");
+  const aboutButton = document.getElementById("information-button");
 
   viewsMenu.style.display = "flex";
+  aboutButton.style.display = "block";
 }
 
 function hideDeploySwitch() {
@@ -141,6 +144,7 @@ document
     showEventSwitcher();
     showViewsMenu();
     renderEvent(eventNum);
+    selectViewInformation();
     hideDeploySwitch();
   });
 
