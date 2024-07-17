@@ -1,4 +1,4 @@
-import { canvas } from "./main.js";
+import { canvas, ctx } from "./main.js";
 import { drawAll, drawVisible } from "./draw.js";
 
 const mouseDown = function (event, visibleObjects, dragTools) {
@@ -44,13 +44,37 @@ const mouseOut = function (event, dragTools) {
 };
 
 const mouseMove = function (event, visibleObjects, dragTools) {
-  if (!dragTools.isDragging) {
-    return;
-  }
-
   const boundigClientRect = canvas.getBoundingClientRect();
   const mouseX = parseInt(event.clientX - boundigClientRect.x);
   const mouseY = parseInt(event.clientY - boundigClientRect.y);
+
+  const allObjects = Object.values(visibleObjects.datatypes)
+    .map((datatype) => datatype.collection)
+    .flat();
+
+  let someHovered = false;
+  for (const object of allObjects) {
+    if (object.isHere(mouseX, mouseY)) {
+      if (dragTools.hoveredObject !== object) {
+        dragTools.hoveredObject = object;
+        drawVisible(visibleObjects);
+        object.showObjectTip(ctx);
+      }
+      someHovered = true;
+      document.body.style.cursor = "pointer";
+      break;
+    }
+  }
+
+  if (!someHovered) {
+    document.body.style.cursor = "default";
+    dragTools.hoveredObject = null;
+    drawVisible(visibleObjects);
+  }
+
+  if (!dragTools.isDragging) {
+    return;
+  }
 
   const dx = mouseX - dragTools.prevMouseX;
   const dy = mouseY - dragTools.prevMouseY;
