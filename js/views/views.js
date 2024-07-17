@@ -41,6 +41,11 @@ function scroll() {
   window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
 }
 
+function setInfoButtonName(view) {
+  const button = document.getElementById("view-information-button");
+  button.innerText = view;
+}
+
 const drawView = (view) => {
   paintButton(view);
 
@@ -88,6 +93,7 @@ const drawView = (view) => {
   drawAll(viewCurrentObjects);
   getVisible(viewCurrentObjects, viewVisibleObjects);
   filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
+  setInfoButtonName(getView());
 
   canvas.onmousedown = (event) => {
     mouseDown(event, viewVisibleObjects, dragTools);
