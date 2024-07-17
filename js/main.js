@@ -46,6 +46,12 @@ function showViewsMenu() {
   aboutButton.style.display = "block";
 }
 
+function hideDeploySwitch() {
+  const deploySwitch = document.getElementById("switch-deploy");
+
+  deploySwitch.style.display = "none";
+}
+
 document.getElementById("input-file").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
@@ -139,6 +145,7 @@ document
     showViewsMenu();
     renderEvent(eventNum);
     selectViewInformation();
+    hideDeploySwitch();
   });
 
 export { canvas, ctx, jsonData, selectedObjectTypes };
