@@ -2,10 +2,13 @@ import {
   drawTex,
   drawRoundedRect,
   drawTextLines,
+  drawObjectHeader,
 } from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
+
+const TOP_MARGIN = 45;
 
 class EDMObject {
   constructor() {
@@ -14,13 +17,24 @@ class EDMObject {
     this.index = NaN;
     this.collectionId = NaN;
     this.width = 120;
-    this.height = 240;
+    this.height = 260;
     this.lineColor = "black";
     this.lineWidth = 2;
     this.color = "white";
   }
 
-  draw(ctx) {}
+  draw(ctx) {
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      this.color,
+      this.radius
+    );
+    drawObjectHeader(ctx, this);
+  }
 
   isHere(mouseX, mouseY) {
     return (
@@ -44,10 +58,11 @@ class EDMObject {
 export class MCParticle extends EDMObject {
   constructor() {
     super();
-
     this.row = -1;
-
     this.texImg = null;
+    this.color = "#dff6ff";
+    this.radius = 15;
+    this.height = 270;
   }
 
   updateTexImg(text) {
@@ -65,21 +80,13 @@ export class MCParticle extends EDMObject {
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#dff6ff",
-      15
-    );
+    super.draw(ctx);
 
     if (this.texImg.complete) {
       drawTex(
         ctx,
         boxCenterX,
-        this.y + this.height * 0.4,
+        this.y + TOP_MARGIN + 80,
         this.texImg,
         this.width
       );
@@ -88,20 +95,20 @@ export class MCParticle extends EDMObject {
         drawTex(
           ctx,
           boxCenterX,
-          this.y + this.height * 0.4,
+          this.y + TOP_MARGIN + 80,
           this.texImg,
           this.width
         );
       };
     }
 
-    const topY = this.y + 20;
+    const topY = this.y + TOP_MARGIN;
     const topLines = [];
     topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
     topLines.push("Sim. stat.: " + this.simulatorStatus);
 
-    const bottomY = this.y + this.height * 0.6;
+    const bottomY = this.y + this.height * 0.65;
     const bottomLines = [];
     bottomLines.push("p = " + this.momentum + " GeV");
     bottomLines.push("d = " + this.vertex + " mm");
@@ -200,23 +207,17 @@ class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 180;
+    this.height = 190;
+    this.color = "#fbffdf";
+    this.radius = 30;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#fbffdf",
-      30
-    );
+    super.draw(ctx);
 
-    const topY = this.y + 20;
+    const topY = this.y + 1.5 * TOP_MARGIN;
     const lines = [];
 
     lines.push("ID: " + this.index);
@@ -245,23 +246,17 @@ class Cluster extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 180;
+    this.height = 170;
+    this.color = "#ffe8df";
+    this.radius = 20;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#ffe8df",
-      20
-    );
+    super.draw(ctx);
 
-    const topY = this.y + 20;
+    const topY = this.y + TOP_MARGIN;
     const lines = [];
     lines.push("ID: " + this.index);
     lines.push("type: " + this.type);
@@ -284,23 +279,17 @@ class Track extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 180;
+    this.height = 150;
+    this.color = "#fff6df";
+    this.radius = 25;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#fff6df",
-      25
-    );
+    super.draw(ctx);
 
-    const topY = this.y + 20;
+    const topY = this.y + TOP_MARGIN;
 
     const lines = [];
     lines.push("ID: " + this.index);
@@ -324,23 +313,17 @@ class ParticleID extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 120;
+    this.height = 140;
+    this.color = "#c9edf7";
+    this.radius = 25;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#c9edf7",
-      25
-    );
+    super.draw(ctx);
 
-    const topY = this.y + 20;
+    const topY = this.y + TOP_MARGIN;
 
     const lines = [];
     lines.push("ID: " + this.index);
@@ -359,23 +342,17 @@ class Vertex extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 140;
+    this.height = 150;
+    this.color = "#f5d3ef";
+    this.radius = 25;
   }
 
   draw(ctx) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#f5d3ef",
-      25
-    );
+    super.draw(ctx);
 
-    const topY = this.y + 20;
+    const topY = this.y + TOP_MARGIN;
 
     const lines = [];
     lines.push("ID: " + this.index);
