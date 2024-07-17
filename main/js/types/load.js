@@ -21,13 +21,19 @@ function loadEmptyRelations(object, relations) {
   }
 }
 
-export function loadPlainObject(collection, datatype, collectionId) {
+export function loadPlainObject(
+  collection,
+  datatype,
+  collectionId,
+  collectionName
+) {
   const objects = [];
 
   for (const [index, particle] of collection.entries()) {
     const newObject = new objectTypes[datatype]();
     newObject.index = index;
     newObject.collectionId = collectionId;
+    newObject.collectionName = collectionName;
 
     loadMembers(newObject, particle, datatypes[datatype].members);
     loadEmptyRelations(newObject, datatypes[datatype]);
@@ -66,7 +72,7 @@ export function loadObjects(jsonData, event, objectsToLoad) {
   });
 
   for (const datatype of datatypesToLoad) {
-    Object.values(eventData).forEach((element) => {
+    Object.entries(eventData).forEach(([key, element]) => {
       const collectionName = `${datatype}Collection`;
       if (element.collType === collectionName) {
         const collection = element.collection;
@@ -74,7 +80,8 @@ export function loadObjects(jsonData, event, objectsToLoad) {
         const objectCollection = loadPlainObject(
           collection,
           datatype,
-          collectionId
+          collectionId,
+          key
         );
         objects.datatypes[datatype].collection.push(...objectCollection);
       }

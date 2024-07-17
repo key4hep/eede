@@ -3,10 +3,12 @@ import {
   drawRoundedRect,
   drawTextLines,
   drawObjectHeader,
+  drawObjectInfoTip,
 } from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
+import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
 
 const TOP_MARGIN = 45;
 
@@ -52,6 +54,13 @@ class EDMObject {
       y + height > this.y &&
       y < this.y + this.height
     );
+  }
+
+  showObjectTip(ctx) {
+    const x = this.x;
+    const y = this.y - 10;
+    const collectionName = "Collection: " + this.collectionName;
+    drawObjectInfoTip(ctx, x, y, collectionName);
   }
 }
 
@@ -106,7 +115,17 @@ export class MCParticle extends EDMObject {
     const topLines = [];
     topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
-    topLines.push("Sim. stat.: " + this.simulatorStatus);
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
+    const simulatorStatusFirstLetter = simulatorStatus
+      .map((s) => s[0])
+      .join("");
+    const simulatorStatusString =
+      simulatorStatusFirstLetter !== ""
+        ? simulatorStatusFirstLetter
+        : this.simulatorStatus;
+    topLines.push("Sim. stat.: " + simulatorStatusString);
 
     const bottomY = this.y + this.height * 0.65;
     const bottomLines = [];
@@ -119,6 +138,17 @@ export class MCParticle extends EDMObject {
     drawTextLines(ctx, topLines, boxCenterX, topY, 23);
 
     drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
+  }
+
+  showObjectTip(ctx) {
+    const x = this.x;
+    const y = this.y - 10;
+    const collectionName = "Collection: " + this.collectionName;
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
+
+    drawObjectInfoTip(ctx, x, y, collectionName, ...simulatorStatus);
   }
 
   static setup(mcCollection) {
