@@ -5,11 +5,6 @@ export function trackTree(viewCurrentObjects) {
   const trackCollection =
     viewCurrentObjects.datatypes["edm4hep::Track"].collection ?? [];
 
-  if (trackCollection.length === 0) {
-    alert("No Tracks found in this event.");
-    return;
-  }
-
   buildTree(trackCollection, "tracks");
 }
 

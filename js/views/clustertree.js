@@ -5,11 +5,6 @@ export function clusterTree(viewCurrentObjects) {
   const clusterCollection =
     viewCurrentObjects.datatypes["edm4hep::Cluster"].collection ?? [];
 
-  if (clusterCollection.length === 0) {
-    alert("No Clusters found in this event.");
-    return;
-  }
-
   buildTree(clusterCollection, "clusters");
 }
 

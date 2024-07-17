@@ -1,4 +1,5 @@
 import { canvas, ctx } from "./main.js";
+import { updateCanvas } from "./lib/graphic-primitives.js";
 
 function draw(objects) {
   const datatypes = objects.datatypes;
@@ -32,19 +33,26 @@ function draw(objects) {
 }
 
 export function drawAll(loadedObjects) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  emptyCanvas();
   draw(loadedObjects);
 }
 
 export function drawVisible(visibleObjects) {
+  emptyVisibleCanvas();
+  draw(visibleObjects);
+}
+
+export function emptyCanvas() {
+  updateCanvas(ctx, 0, 0, canvas.width, canvas.height);
+}
+
+function emptyVisibleCanvas() {
   const boundigClientRect = canvas.getBoundingClientRect();
-  ctx.clearRect(
+  updateCanvas(
+    ctx,
     0 - boundigClientRect.x,
     0 - boundigClientRect.y,
     window.innerWidth,
     window.innerHeight
   );
-
-  draw(visibleObjects);
 }

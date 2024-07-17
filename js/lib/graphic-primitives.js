@@ -108,6 +108,10 @@ export function drawStraightLink(ctx, link) {
   ctx.restore();
 }
 
+export function updateCanvas(ctx, x, y, width, height) {
+  ctx.clearRect(x, y, width, height);
+}
+
 export function drawObjectHeader(ctx, object) {
   ctx.save();
   ctx.font = "bold 16px sans-serif";

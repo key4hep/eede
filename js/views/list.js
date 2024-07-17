@@ -1,10 +1,6 @@
 import { canvas } from "../main.js";
 
 export function listView(collection) {
-  if (collection.length === 0) {
-    alert("No objects found!");
-    return;
-  }
   const width = window.innerWidth;
   canvas.width = width;
 
