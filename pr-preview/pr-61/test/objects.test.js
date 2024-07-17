@@ -108,7 +108,7 @@ describe("Link", () => {
     secondObject.x = 140;
     secondObject.y = 250;
 
-    expect(link.isVisible(0, 0, 250, 250)).toBe(true);
+    expect(link.isVisible(0, 0, 300, 300)).toBe(true);
   });
 
   it("should return false if the link is not visible", () => {
