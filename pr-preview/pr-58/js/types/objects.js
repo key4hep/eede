@@ -8,7 +8,7 @@ import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
 
-const TOP_MARGIN = 40;
+const TOP_MARGIN = 45;
 
 class EDMObject {
   constructor() {
@@ -62,6 +62,7 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 15;
+    this.height = 270;
   }
 
   updateTexImg(text) {
@@ -85,7 +86,7 @@ export class MCParticle extends EDMObject {
       drawTex(
         ctx,
         boxCenterX,
-        this.y + this.height * 0.4,
+        this.y + TOP_MARGIN + 80,
         this.texImg,
         this.width
       );
@@ -94,7 +95,7 @@ export class MCParticle extends EDMObject {
         drawTex(
           ctx,
           boxCenterX,
-          this.y + this.height * 0.4,
+          this.y + TOP_MARGIN + 80,
           this.texImg,
           this.width
         );
@@ -107,7 +108,7 @@ export class MCParticle extends EDMObject {
     topLines.push("Gen. stat.: " + this.generatorStatus);
     topLines.push("Sim. stat.: " + this.simulatorStatus);
 
-    const bottomY = this.y + this.height * 0.6;
+    const bottomY = this.y + this.height * 0.65;
     const bottomLines = [];
     bottomLines.push("p = " + this.momentum + " GeV");
     bottomLines.push("d = " + this.vertex + " mm");
