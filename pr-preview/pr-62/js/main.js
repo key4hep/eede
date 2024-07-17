@@ -40,8 +40,10 @@ function showEventSwitcher() {
 
 function showViewsMenu() {
   const viewsMenu = document.getElementById("views");
+  const aboutButton = document.getElementById("information-button");
 
   viewsMenu.style.display = "flex";
+  aboutButton.style.display = "block";
 }
 
 document.getElementById("input-file").addEventListener("change", (event) => {

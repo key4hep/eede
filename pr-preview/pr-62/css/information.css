@@ -67,6 +67,10 @@
   display: none;
 }
 
+#information-button {
+  display: none;
+}
+
 #view-information-content {
   display: none;
 }
