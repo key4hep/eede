@@ -13,6 +13,7 @@ import {
   onScroll,
 } from "../events.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
+import { showViewInformation, hideViewInformation } from "../information.js";
 import { emptyCanvas } from "../draw.js";
 
 const currentView = {};
@@ -40,6 +41,11 @@ function scroll() {
   window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
 }
 
+function setInfoButtonName(view) {
+  const button = document.getElementById("view-information-button");
+  button.innerText = view;
+}
+
 const drawView = (view) => {
   paintButton(view);
 
@@ -50,8 +56,13 @@ const drawView = (view) => {
     prevMouseY: 0,
   };
 
-  const { preFilterFunction, viewFunction, scrollFunction, filters } =
-    views[view];
+  const {
+    preFilterFunction,
+    viewFunction,
+    scrollFunction,
+    filters,
+    description,
+  } = views[view];
 
   const viewObjects = {};
   const viewCurrentObjects = {};
@@ -63,10 +74,11 @@ const drawView = (view) => {
   if (isEmpty) {
     emptyCanvas();
     emptyViewMessage();
+    hideViewInformation();
     return;
   }
+  showViewInformation(view, description);
   hideEmptyViewMessage();
-
   viewFunction(viewObjects);
   copyObject(viewObjects, viewCurrentObjects);
 
@@ -81,6 +93,7 @@ const drawView = (view) => {
   drawAll(viewCurrentObjects);
   getVisible(viewCurrentObjects, viewVisibleObjects);
   filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
+  setInfoButtonName(getView());
 
   canvas.onmousedown = (event) => {
     mouseDown(event, viewVisibleObjects, dragTools);
