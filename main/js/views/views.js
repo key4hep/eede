@@ -1,5 +1,6 @@
 import { currentObjects, currentEvent } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
+import { checkEmptyObject } from "../lib/empty-object.js";
 import { getVisible } from "../events.js";
 import { drawAll } from "../draw.js";
 import { canvas } from "../main.js";
@@ -11,6 +12,8 @@ import {
   mouseMove,
   onScroll,
 } from "../events.js";
+import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
+import { emptyCanvas } from "../draw.js";
 
 const currentView = {};
 
@@ -55,6 +58,15 @@ const drawView = (view) => {
   const viewVisibleObjects = {};
 
   preFilterFunction(currentObjects, viewObjects);
+  const isEmpty = checkEmptyObject(viewObjects);
+
+  if (isEmpty) {
+    emptyCanvas();
+    emptyViewMessage();
+    return;
+  }
+  hideEmptyViewMessage();
+
   viewFunction(viewObjects);
   copyObject(viewObjects, viewCurrentObjects);
 

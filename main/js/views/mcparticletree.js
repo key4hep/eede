@@ -5,10 +5,6 @@ export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =
     viewCurrentObjects.datatypes["edm4hep::MCParticle"].collection ?? [];
 
-  if (mcCollection.length === 0) {
-    alert("No MCParticles found in this event.");
-  }
-
   const getMaxRow = (parentLinks) => {
     let maxRow = -1;
     for (const parentLink of parentLinks) {

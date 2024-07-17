@@ -5,11 +5,6 @@ export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
     viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection;
 
-  if (recoParticles.length === 0) {
-    alert("No reconstructed particles found!");
-    return;
-  }
-
   const findFirstObject = (relationName) => {
     const object = recoParticles.find((particle) => {
       const relation = particle.oneToManyRelations[relationName];
