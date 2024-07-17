@@ -1,11 +1,8 @@
-import {
-  drawTex,
-  drawRoundedRect,
-  drawTextLines,
-} from "../lib/graphic-primitives.js";
+import { drawObjectBox } from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
+import { generateMathJaxSvg } from "../lib/generate-svg.js";
 
 class EDMObject {
   constructor() {
@@ -50,39 +47,13 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
   }
 
-  getPath(text) {
-    if (this.path) return this.path;
-    let svg = MathJax.tex2svg(text).firstElementChild;
-    const pathElement = svg.querySelector("path");
-    const path = pathElement.getAttribute("d");
-
-    this.path = path;
-    return;
-
-    this.texImg = document.createElement("img");
-    this.texImg.src =
-      "data:image/svg+xml;base64," +
-      btoa(
-        '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n' +
-          svg.outerHTML
-      );
-  }
-
-  draw(ctx) {
+  draw(app) {
     const boxCenterX = this.x + this.width / 2;
 
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      "#dff6ff",
-      15
-    );
+    // drawRoundedRect(this.x, this.y, this.width, this.height, "#dff6ff", 15);
 
-    const path = this.getPath(this.name);
-    drawTex(ctx, boxCenterX, this.y + this.height * 0.4, path, this.width);
+    // const path = this.getPath(this.name);
+    // drawTex(ctx, boxCenterX, this.y + this.height * 0.4, path, this.width);
 
     const topY = this.y + 20;
     const topLines = [];
@@ -98,9 +69,23 @@ export class MCParticle extends EDMObject {
     bottomLines.push("m = " + this.mass + " GeV");
     bottomLines.push(parseCharge(this.charge));
 
-    drawTextLines(ctx, topLines, boxCenterX, topY, 23);
+    // drawTextLines(topLines, boxCenterX, topY, 23);
 
-    drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
+    // drawTextLines(bottomLines, boxCenterX, bottomY, 22);
+
+    const boxConfiguration = {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      color: "#dff6ff",
+      radius: 15,
+    };
+    const lines = topLines.concat(bottomLines);
+
+    const image = generateMathJaxSvg(this.name);
+
+    drawObjectBox(app, boxConfiguration, lines, image);
   }
 
   static setup(mcCollection) {
@@ -222,7 +207,7 @@ class ReconstructedParticle extends EDMObject {
 
     lines.push(parseCharge(this.charge));
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    drawTextLines(lines, boxCenterX, topY, 23);
   }
 
   static setup(recoCollection) {}
@@ -263,7 +248,7 @@ class Cluster extends EDMObject {
     lines.push(`y=${y},`);
     lines.push(`z=${z}) mm`);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    drawTextLines(lines, boxCenterX, topY, 23);
   }
 
   static setup(clusterCollection) {}
@@ -303,7 +288,7 @@ class Track extends EDMObject {
     const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
     lines.push("tracker hits: " + trackerHitsCount);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    drawTextLines(lines, boxCenterX, topY, 23);
   }
 
   static setup(trackCollection) {}
@@ -338,7 +323,7 @@ class ParticleID extends EDMObject {
     lines.push("algorithm: " + this.algorithmType);
     lines.push("likelihood: " + this.likelihood);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    drawTextLines(lines, boxCenterX, topY, 23);
   }
 
   static setup(particleIDCollection) {}
@@ -379,7 +364,7 @@ class Vertex extends EDMObject {
     const chiNdf = `${chi2}/${ndf}`;
     lines.push("chi2/ndf = " + chiNdf);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    drawTextLines(lines, boxCenterX, topY, 23);
   }
 
   static setup(vertexCollection) {}

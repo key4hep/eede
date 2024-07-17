@@ -1,9 +1,9 @@
 import { currentObjects, currentEvent } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { getVisible } from "../events.js";
-import { drawAll } from "../draw.js";
-import { canvas } from "../main.js";
+import { draw } from "../draw.js";
 import { views } from "./views-dictionary.js";
+import { createPixi } from "../pixi/start.js";
 import {
   mouseDown,
   mouseUp,
@@ -37,15 +37,8 @@ function scroll() {
   window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
 }
 
-const drawView = (view) => {
+const drawView = async (view) => {
   paintButton(view);
-
-  const dragTools = {
-    draggedObject: null,
-    isDragging: false,
-    prevMouseX: 0,
-    prevMouseY: 0,
-  };
 
   const { preFilterFunction, viewFunction, scrollFunction, filters } =
     views[view];
@@ -55,7 +48,9 @@ const drawView = (view) => {
   const viewVisibleObjects = {};
 
   preFilterFunction(currentObjects, viewObjects);
-  viewFunction(viewObjects);
+  const { width, height } = viewFunction(viewObjects);
+  const app = await createPixi(width, height);
+
   copyObject(viewObjects, viewCurrentObjects);
 
   const scrollIndex = getViewScrollIndex();
@@ -66,25 +61,24 @@ const drawView = (view) => {
   }
 
   scroll();
-  drawAll(viewCurrentObjects);
-  getVisible(viewCurrentObjects, viewVisibleObjects);
+  draw(app, viewCurrentObjects);
   filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 
-  canvas.onmousedown = (event) => {
-    mouseDown(event, viewVisibleObjects, dragTools);
-  };
-  canvas.onmouseup = (event) => {
-    mouseUp(event, viewCurrentObjects, dragTools);
-  };
-  canvas.onmouseout = (event) => {
-    mouseOut(event, dragTools);
-  };
-  canvas.onmousemove = (event) => {
-    mouseMove(event, viewVisibleObjects, dragTools);
-  };
-  window.onscroll = () => {
-    onScroll(viewCurrentObjects, viewVisibleObjects);
-  };
+  // canvas.onmousedown = (event) => {
+  //   mouseDown(event, viewVisibleObjects, dragTools);
+  // };
+  // canvas.onmouseup = (event) => {
+  //   mouseUp(event, viewCurrentObjects, dragTools);
+  // };
+  // canvas.onmouseout = (event) => {
+  //   mouseOut(event, dragTools);
+  // };
+  // canvas.onmousemove = (event) => {
+  //   mouseMove(event, viewVisibleObjects, dragTools);
+  // };
+  // window.onscroll = () => {
+  //   onScroll(viewCurrentObjects, viewVisibleObjects);
+  // };
 };
 
 export function saveScrollLocation() {

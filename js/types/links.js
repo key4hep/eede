@@ -20,8 +20,8 @@ export class Link {
     this.xShift = 0;
   }
 
-  draw(ctx) {
-    drawBezierLink(ctx, this);
+  draw(app) {
+    drawBezierLink(app, this);
   }
 
   isVisible(x, y, width, height) {
@@ -81,8 +81,8 @@ class MCRecoParticleAssociation extends Link {
     this.weight = weight;
   }
 
-  draw(ctx) {
-    drawStraightLink(ctx, this);
+  draw() {
+    drawStraightLink(this);
   }
 }
 
@@ -121,8 +121,8 @@ class MCRecoTrackParticleAssociation extends Link {
     this.weight = weight;
   }
 
-  draw(ctx) {
-    drawStraightLink(ctx, this);
+  draw() {
+    drawStraightLink(this);
   }
 }
 
@@ -133,8 +133,8 @@ class MCRecoClusterParticleAssociation extends Link {
     this.weight = weight;
   }
 
-  draw(ctx) {
-    drawStraightLink(ctx, this);
+  draw() {
+    drawStraightLink(this);
   }
 }
 

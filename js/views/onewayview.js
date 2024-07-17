@@ -1,5 +1,3 @@
-import { canvas } from "../main.js";
-
 export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const relations =
     viewObjects.datatypes[fromCollectionName].oneToOne[relationName];

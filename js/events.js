@@ -1,4 +1,3 @@
-import { canvas } from "./main.js";
 import { drawAll, drawVisible } from "./draw.js";
 
 const mouseDown = function (event, visibleObjects, dragTools) {

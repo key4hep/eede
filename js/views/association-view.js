@@ -1,5 +1,3 @@
-import { canvas } from "../main.js";
-
 // List 1:1 association in a vertical list
 export function buildAssociationView(viewObjects, associationName) {
   const associations = viewObjects.associations[associationName];

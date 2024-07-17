@@ -1,4 +1,7 @@
-export function drawRoundedRect(ctx, x, y, width, height, fillColor, radius) {
+import { onDragStart } from "../pixi/events.js";
+import { Graphics, BitmapText } from "../pixi/pixi.min.mjs";
+
+export function drawRoundedRect(x, y, width, height, fillColor, radius) {
   ctx.save();
 
   ctx.fillStyle = fillColor;
@@ -14,7 +17,39 @@ export function drawRoundedRect(ctx, x, y, width, height, fillColor, radius) {
   ctx.restore();
 }
 
-export function drawTex(ctx, x, y, path, maxWidth) {
+export function drawObjectBox(
+  app,
+  { x, y, width, height, color, radius },
+  lines,
+  image
+) {
+  const box = new Graphics();
+  box.lineStyle(2, 0x000000, 1);
+  box.beginFill(color, 1);
+  box.drawRect(x, y, width, height);
+  box.endFill();
+  app.stage.addChild(box);
+
+  for (const [i, lineText] of lines.entries()) {
+    const text = new BitmapText({
+      text: lineText,
+      style: {
+        fontFamily: "sans-serif",
+        fontSize: 16,
+        fill: 0x000000,
+        align: "center",
+      },
+    });
+
+    box.addChild(text);
+    text.x = x + width / 2 - text.width / 2;
+    text.y = y + 20 + i * 20;
+  }
+
+  box.on("pointerdown", onDragStart, box);
+}
+
+export function drawTex(x, y, path, maxWidth) {
   // let scale = (maxWidth * 0.9) / texImg.naturalWidth;
   // if (scale > 2) {
   //   scale = 2;
@@ -36,7 +71,7 @@ export function drawTex(ctx, x, y, path, maxWidth) {
   ctx.restore();
 }
 
-export function drawTextLines(ctx, lines, boxCenterX, y, n) {
+export function drawTextLines(lines, boxCenterX, y, n) {
   ctx.save();
   ctx.font = "16px sans-serif";
   for (const [i, lineText] of lines.entries()) {
@@ -49,7 +84,7 @@ export function drawTextLines(ctx, lines, boxCenterX, y, n) {
   ctx.restore();
 }
 
-export function drawBezierLink(ctx, link) {
+export function drawBezierLink(app, link) {
   const boxFrom = link.from;
   const boxTo = link.to;
 
@@ -58,28 +93,27 @@ export function drawBezierLink(ctx, link) {
   const toX = boxTo.x + boxTo.width / 2;
   const toY = boxTo.y;
 
+  let cpFromY, cpToY, cpFromX, cpToX;
+
   if (toY > fromY) {
-    var cpFromY = (toY - fromY) / 2 + fromY;
-    var cpToY = cpFromY;
+    cpFromY = (toY - fromY) / 2 + fromY;
+    cpToY = cpFromY;
   } else {
     cpFromY = (fromY - toY) / 2 + fromY;
     cpToY = toY - (fromY - toY) / 2;
   }
 
   if (toX > fromX) {
-    var cpFromX = (toX - fromX) / 4 + fromX;
-    var cpToX = (3 * (toX - fromX)) / 4 + fromX;
+    cpFromX = (toX - fromX) / 4 + fromX;
+    cpToX = (3 * (toX - fromX)) / 4 + fromX;
   } else {
     cpFromX = (3 * (fromX - toX)) / 4 + toX;
     cpToX = (fromX - toX) / 4 + toX;
   }
 
-  ctx.save();
-  ctx.strokeStyle = link.color;
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(fromX + link.xShift, fromY);
-  ctx.bezierCurveTo(
+  const line = new Graphics();
+
+  line.bezierCurveTo(
     cpFromX + link.xShift,
     cpFromY,
     cpToX + link.xShift,
@@ -87,11 +121,30 @@ export function drawBezierLink(ctx, link) {
     toX + link.xShift,
     toY
   );
-  ctx.stroke();
-  ctx.restore();
+  line.stroke({ with: 2, color: 0x000000 });
+  line.position.x = fromX + link.xShift;
+  line.position.y = fromY;
+
+  app.stage.addChild(line);
+
+  // ctx.save();
+  // ctx.strokeStyle = link.color;
+  // ctx.lineWidth = 2;
+  // ctx.beginPath();
+  // ctx.moveTo(fromX + link.xShift, fromY);
+  // ctx.bezierCurveTo(
+  //   cpFromX + link.xShift,
+  //   cpFromY,
+  //   cpToX + link.xShift,
+  //   cpToY,
+  //   toX + link.xShift,
+  //   toY
+  // );
+  // ctx.stroke();
+  // ctx.restore();
 }
 
-export function drawStraightLink(ctx, link) {
+export function drawStraightLink(link) {
   const boxFrom = link.from;
   const boxTo = link.to;
 

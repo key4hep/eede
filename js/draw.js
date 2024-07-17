@@ -1,12 +1,10 @@
-import { canvas, ctx } from "./main.js";
-
-function draw(objects) {
+export function draw(app, objects) {
   const datatypes = objects.datatypes;
   const associations = objects.associations;
 
   for (const collection of Object.values(associations)) {
     for (const association of collection) {
-      association.draw(ctx);
+      association.draw(app);
     }
   }
 
@@ -15,18 +13,18 @@ function draw(objects) {
 
     for (const links of Object.values(oneToMany)) {
       for (const link of links) {
-        link.draw(ctx);
+        link.draw(app);
       }
     }
 
     for (const links of Object.values(oneToOne)) {
       for (const link of links) {
-        link.draw(ctx);
+        link.draw(app);
       }
     }
 
     for (const object of collection) {
-      object.draw(ctx);
+      object.draw(app);
     }
   }
 }

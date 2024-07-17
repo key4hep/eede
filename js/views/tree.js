@@ -1,5 +1,3 @@
-import { canvas } from "../main.js";
-
 // All particles that are related to itself have an one to many relation
 export function buildTree(collection, relationOfReference) {
   const nodes = new Set();
