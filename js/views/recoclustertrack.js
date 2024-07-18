@@ -1,4 +1,3 @@
-import { canvas } from "../main.js";
 import { emptyCopyObject } from "../lib/copy.js";
 
 export function recoClusterTrackVertex(viewObjects) {

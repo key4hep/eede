@@ -1,5 +1,3 @@
-import { canvas } from "../main.js";
-
 export function listView(collection) {
   const width = window.innerWidth;
   canvas.width = width;

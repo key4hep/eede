@@ -1,4 +1,3 @@
-import { canvas } from "../main.js";
 import { preFilterTree } from "./pre-filter.js";
 
 export function mcParticleTree(viewCurrentObjects) {
@@ -60,9 +59,9 @@ export function mcParticleTree(viewCurrentObjects) {
   const horizontalGap = boxWidth * 0.4;
   const verticalGap = boxHeight * 0.3;
 
-  canvas.width =
+  const width =
     boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
-  canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
+  const height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
 
   for (const [i, row] of mcRows.entries()) {
     for (const [j, box] of row.entries()) {
@@ -70,14 +69,14 @@ export function mcParticleTree(viewCurrentObjects) {
         const distanceFromCenter = j - row.length / 2;
         if (distanceFromCenter < 0) {
           box.x =
-            canvas.width / 2 -
+            width / 2 -
             boxWidth -
             horizontalGap / 2 +
             (distanceFromCenter + 1) * boxWidth +
             (distanceFromCenter + 1) * horizontalGap;
         } else {
           box.x =
-            canvas.width / 2 +
+            width / 2 +
             horizontalGap / 2 +
             distanceFromCenter * boxWidth +
             distanceFromCenter * horizontalGap;
@@ -85,7 +84,7 @@ export function mcParticleTree(viewCurrentObjects) {
       } else {
         const distanceFromCenter = j - row.length / 2;
         box.x =
-          canvas.width / 2 -
+          width / 2 -
           boxWidth / 2 +
           distanceFromCenter * boxWidth +
           distanceFromCenter * horizontalGap;
@@ -93,6 +92,8 @@ export function mcParticleTree(viewCurrentObjects) {
       box.y = i * verticalGap + verticalGap + i * boxHeight;
     }
   }
+
+  return [width, height];
 }
 
 export function preFilterMCTree(currentObjects, viewObjects) {

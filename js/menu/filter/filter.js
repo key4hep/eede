@@ -2,7 +2,6 @@ import { drawAll } from "../../draw.js";
 import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
-import { getVisible } from "../../events.js";
 import { units } from "../../types/units.js";
 import { copyObject } from "../../lib/copy.js";
 import { SimStatusBitFieldDisplayValues } from "../../../mappings/sim-status.js";

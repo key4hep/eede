@@ -9,6 +9,7 @@ import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
+import { addBox } from "../draw/add-box.js";
 
 const TOP_MARGIN = 45;
 
@@ -86,58 +87,60 @@ export class MCParticle extends EDMObject {
       );
   }
 
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
+  draw(app) {
+    // const boxCenterX = this.x + this.width / 2;
 
-    super.draw(ctx);
+    // super.draw(ctx);
 
-    if (this.texImg.complete) {
-      drawTex(
-        ctx,
-        boxCenterX,
-        this.y + TOP_MARGIN + 80,
-        this.texImg,
-        this.width
-      );
-    } else {
-      this.texImg.onload = () => {
-        drawTex(
-          ctx,
-          boxCenterX,
-          this.y + TOP_MARGIN + 80,
-          this.texImg,
-          this.width
-        );
-      };
-    }
+    // if (this.texImg.complete) {
+    //   drawTex(
+    //     ctx,
+    //     boxCenterX,
+    //     this.y + TOP_MARGIN + 80,
+    //     this.texImg,
+    //     this.width
+    //   );
+    // } else {
+    //   this.texImg.onload = () => {
+    //     drawTex(
+    //       ctx,
+    //       boxCenterX,
+    //       this.y + TOP_MARGIN + 80,
+    //       this.texImg,
+    //       this.width
+    //     );
+    //   };
+    // }
 
-    const topY = this.y + TOP_MARGIN;
-    const topLines = [];
-    topLines.push("ID: " + this.index);
-    topLines.push("Gen. stat.: " + this.generatorStatus);
-    const simulatorStatus = getSimStatusDisplayValuesFromBit(
-      this.simulatorStatus
-    );
-    const simulatorStatusFirstLetter = simulatorStatus
-      .map((s) => s[0])
-      .join("");
-    const simulatorStatusString =
-      simulatorStatusFirstLetter !== ""
-        ? simulatorStatusFirstLetter
-        : this.simulatorStatus;
-    topLines.push("Sim. stat.: " + simulatorStatusString);
+    // const topY = this.y + TOP_MARGIN;
+    // const topLines = [];
+    // topLines.push("ID: " + this.index);
+    // topLines.push("Gen. stat.: " + this.generatorStatus);
+    // const simulatorStatus = getSimStatusDisplayValuesFromBit(
+    //   this.simulatorStatus
+    // );
+    // const simulatorStatusFirstLetter = simulatorStatus
+    //   .map((s) => s[0])
+    //   .join("");
+    // const simulatorStatusString =
+    //   simulatorStatusFirstLetter !== ""
+    //     ? simulatorStatusFirstLetter
+    //     : this.simulatorStatus;
+    // topLines.push("Sim. stat.: " + simulatorStatusString);
 
-    const bottomY = this.y + this.height * 0.65;
-    const bottomLines = [];
-    bottomLines.push("p = " + this.momentum + " GeV");
-    bottomLines.push("d = " + this.vertex + " mm");
-    bottomLines.push("t = " + this.time + " ns");
-    bottomLines.push("m = " + this.mass + " GeV");
-    bottomLines.push(parseCharge(this.charge));
+    // const bottomY = this.y + this.height * 0.65;
+    // const bottomLines = [];
+    // bottomLines.push("p = " + this.momentum + " GeV");
+    // bottomLines.push("d = " + this.vertex + " mm");
+    // bottomLines.push("t = " + this.time + " ns");
+    // bottomLines.push("m = " + this.mass + " GeV");
+    // bottomLines.push(parseCharge(this.charge));
 
-    drawTextLines(ctx, topLines, boxCenterX, topY, 23);
+    // drawTextLines(ctx, topLines, boxCenterX, topY, 23);
 
-    drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
+    // drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
+
+    addBox(app, this);
   }
 
   showObjectTip(ctx) {

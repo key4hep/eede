@@ -1,7 +1,7 @@
-import { canvas } from "../main.js";
-
 export function scrollTopCenter() {
-  return { x: (canvas.width - window.innerWidth) / 2, y: 0 };
+  const canvas = document.querySelector("canvas");
+  const x = canvas.width / 2;
+  return { x, y: 0 };
 }
 
 export function scrollTopLeft() {

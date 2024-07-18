@@ -3,26 +3,20 @@ import { renderEvent } from "./event-number.js";
 import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+import { startPixi } from "./draw/app.js";
 
 const jsonData = {};
-
 const selectedObjectTypes = {
   types: [
     "edm4hep::MCParticle",
-    "edm4hep::ReconstructedParticle",
-    "edm4hep::MCRecoParticleAssociation",
-    "edm4hep::MCRecoTrackParticleAssociation",
-    "edm4hep::MCRecoClusterParticleAssociation",
-    "edm4hep::Cluster",
-    "edm4hep::Track",
-    "edm4hep::Vertex",
-    "edm4hep::ParticleID",
+    // "edm4hep::ReconstructedParticle",
+    // "edm4hep::MCRecoParticleAssociation",
+    // "edm4hep::MCRecoTrackParticleAssociation",
+    // "edm4hep::MCRecoClusterParticleAssociation",
+    // "edm4hep::Cluster",
+    // "edm4hep::Track",
+    // "edm4hep::Vertex",
+    // "edm4hep::ParticleID",
   ],
 };
 
@@ -125,7 +119,7 @@ document.getElementById("input-file").addEventListener("change", (event) => {
 
 document
   .getElementById("visualize-button")
-  .addEventListener("click", (event) => {
+  .addEventListener("click", async (event) => {
     event.preventDefault();
 
     if (jsonData.data === undefined) {
@@ -140,6 +134,7 @@ document
 
     const eventNum = document.getElementById("event-number").value;
 
+    await startPixi();
     hideInputModal();
     showEventSwitcher();
     showViewsMenu();
@@ -148,4 +143,4 @@ document
     hideDeploySwitch();
   });
 
-export { canvas, ctx, jsonData, selectedObjectTypes };
+export { jsonData, selectedObjectTypes };
