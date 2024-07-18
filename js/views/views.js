@@ -5,7 +5,6 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
-import { resizeWindow } from "../draw/resize.js";
 
 const currentView = {};
 
@@ -50,7 +49,6 @@ const drawView = async (view) => {
 
   const viewObjects = {};
   const viewCurrentObjects = {};
-  const viewVisibleObjects = {};
 
   preFilterFunction(currentObjects, viewObjects);
   const isEmpty = checkEmptyObject(viewObjects);
@@ -62,8 +60,7 @@ const drawView = async (view) => {
   }
   showViewInformation(view, description);
   hideEmptyViewMessage();
-  const [width, height] = viewFunction(viewObjects);
-  resizeWindow(width, height);
+  viewFunction(viewObjects);
   copyObject(viewObjects, viewCurrentObjects);
 
   const scrollIndex = getViewScrollIndex();

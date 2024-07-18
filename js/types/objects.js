@@ -1,15 +1,9 @@
-import {
-  drawTex,
-  drawRoundedRect,
-  drawTextLines,
-  drawObjectHeader,
-  drawObjectInfoTip,
-} from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
 import { addBox } from "../draw/add-box.js";
+import { textToSVGElement } from "../lib/generate-svg.js";
 
 const TOP_MARGIN = 45;
 
@@ -26,18 +20,7 @@ class EDMObject {
     this.color = "white";
   }
 
-  draw(ctx) {
-    drawRoundedRect(
-      ctx,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      this.color,
-      this.radius
-    );
-    drawObjectHeader(ctx, this);
-  }
+  draw(app) {}
 
   isHere(mouseX, mouseY) {
     return (
@@ -75,72 +58,35 @@ export class MCParticle extends EDMObject {
     this.height = 270;
   }
 
-  updateTexImg(text) {
-    let svg = MathJax.tex2svg(text).firstElementChild;
+  async draw() {
+    const boxCenterX = this.x + this.width / 2;
 
-    this.texImg = document.createElement("img");
-    this.texImg.src =
-      "data:image/svg+xml;base64," +
-      btoa(
-        '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n' +
-          svg.outerHTML
-      );
-  }
+    const topY = this.y + TOP_MARGIN;
+    const topLines = [];
+    topLines.push("ID: " + this.index);
+    topLines.push("Gen. stat.: " + this.generatorStatus);
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
+    const simulatorStatusFirstLetter = simulatorStatus
+      .map((s) => s[0])
+      .join("");
+    const simulatorStatusString =
+      simulatorStatusFirstLetter !== ""
+        ? simulatorStatusFirstLetter
+        : this.simulatorStatus;
+    topLines.push("Sim. stat.: " + simulatorStatusString);
 
-  draw(app) {
-    // const boxCenterX = this.x + this.width / 2;
+    const bottomY = this.y + this.height * 0.65;
+    const bottomLines = [];
+    bottomLines.push("p = " + this.momentum + " GeV");
+    bottomLines.push("d = " + this.vertex + " mm");
+    bottomLines.push("t = " + this.time + " ns");
+    bottomLines.push("m = " + this.mass + " GeV");
+    bottomLines.push(parseCharge(this.charge));
 
-    // super.draw(ctx);
-
-    // if (this.texImg.complete) {
-    //   drawTex(
-    //     ctx,
-    //     boxCenterX,
-    //     this.y + TOP_MARGIN + 80,
-    //     this.texImg,
-    //     this.width
-    //   );
-    // } else {
-    //   this.texImg.onload = () => {
-    //     drawTex(
-    //       ctx,
-    //       boxCenterX,
-    //       this.y + TOP_MARGIN + 80,
-    //       this.texImg,
-    //       this.width
-    //     );
-    //   };
-    // }
-
-    // const topY = this.y + TOP_MARGIN;
-    // const topLines = [];
-    // topLines.push("ID: " + this.index);
-    // topLines.push("Gen. stat.: " + this.generatorStatus);
-    // const simulatorStatus = getSimStatusDisplayValuesFromBit(
-    //   this.simulatorStatus
-    // );
-    // const simulatorStatusFirstLetter = simulatorStatus
-    //   .map((s) => s[0])
-    //   .join("");
-    // const simulatorStatusString =
-    //   simulatorStatusFirstLetter !== ""
-    //     ? simulatorStatusFirstLetter
-    //     : this.simulatorStatus;
-    // topLines.push("Sim. stat.: " + simulatorStatusString);
-
-    // const bottomY = this.y + this.height * 0.65;
-    // const bottomLines = [];
-    // bottomLines.push("p = " + this.momentum + " GeV");
-    // bottomLines.push("d = " + this.vertex + " mm");
-    // bottomLines.push("t = " + this.time + " ns");
-    // bottomLines.push("m = " + this.mass + " GeV");
-    // bottomLines.push(parseCharge(this.charge));
-
-    // drawTextLines(ctx, topLines, boxCenterX, topY, 23);
-
-    // drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
-
-    addBox(app, this);
+    const svgElement = textToSVGElement(this.name);
+    addBox(this);
   }
 
   showObjectTip(ctx) {
@@ -170,7 +116,6 @@ export class MCParticle extends EDMObject {
 
       const name = getName(mcParticle.PDG);
       mcParticle.name = name;
-      mcParticle.updateTexImg(name);
       mcParticle.momentum = Math.sqrt(
         Math.pow(mcParticle.momentum.x, 2) +
           Math.pow(mcParticle.momentum.y, 2) +
