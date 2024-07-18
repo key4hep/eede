@@ -1,0 +1,32 @@
+address {
+  display: inline-block;
+}
+
+.contact-element {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.contact-element::before {
+  content: "•";
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: black;
+}
+
+.copy-email-button img {
+  display: block;
+}
+
+.email {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.copy-infobox {
+  position: absolute;
+  background-color: #f1f1f1;
+  padding: 5px;
+  border-radius: 5px;
+}
