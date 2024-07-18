@@ -5,6 +5,7 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
+import { setContainerSize } from "../draw/app.js";
 
 const currentView = {};
 
@@ -60,7 +61,8 @@ const drawView = async (view) => {
   }
   showViewInformation(view, description);
   hideEmptyViewMessage();
-  viewFunction(viewObjects);
+  const [width, height] = viewFunction(viewObjects);
+  setContainerSize(width, height);
   copyObject(viewObjects, viewCurrentObjects);
 
   const scrollIndex = getViewScrollIndex();

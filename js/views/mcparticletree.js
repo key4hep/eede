@@ -92,6 +92,8 @@ export function mcParticleTree(viewCurrentObjects) {
       box.y = i * verticalGap + verticalGap + i * boxHeight;
     }
   }
+
+  return [width, height];
 }
 
 export function preFilterMCTree(currentObjects, viewObjects) {
