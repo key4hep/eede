@@ -1,6 +1,6 @@
 import { Application, Container } from "../pixi.min.mjs";
 
-const SPEED = 0.3;
+const SPEED = 0.5;
 const MARGIN = 100;
 
 const pixi = {

@@ -4,7 +4,7 @@ export async function renderObjects(objects) {
 
   for (const collection of Object.values(associations)) {
     for (const association of collection) {
-      await association.draw();
+      association.draw();
     }
   }
 
@@ -13,13 +13,13 @@ export async function renderObjects(objects) {
 
     for (const links of Object.values(oneToMany)) {
       for (const link of links) {
-        await link.draw();
+        link.draw();
       }
     }
 
     for (const links of Object.values(oneToOne)) {
       for (const link of links) {
-        await link.draw();
+        link.draw();
       }
     }
 

@@ -1,5 +1,9 @@
 export async function textToSVG(text) {
-  const svg = await MathJax.tex2svg(text).firstElementChild;
+  const mathjaxContainer = await MathJax.tex2svgPromise(text);
+  const svg = mathjaxContainer.firstElementChild;
+
+  svg.setAttribute("width", "50px");
+  svg.setAttribute("height", "50px");
 
   const src =
     "data:image/svg+xml;base64," +
