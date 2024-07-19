@@ -5,6 +5,7 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
+import { setContainerSize } from "../draw/app.js";
 
 const currentView = {};
 
@@ -60,19 +61,20 @@ const drawView = async (view) => {
   }
   showViewInformation(view, description);
   hideEmptyViewMessage();
-  viewFunction(viewObjects);
+  const [width, height] = viewFunction(viewObjects);
+  setContainerSize(width, height);
   copyObject(viewObjects, viewCurrentObjects);
 
-  const scrollIndex = getViewScrollIndex();
+  // const scrollIndex = getViewScrollIndex();
 
-  if (scrollLocations[scrollIndex] === undefined) {
-    const viewScrollLocation = scrollFunction();
-    scrollLocations[scrollIndex] = viewScrollLocation;
-  }
+  // if (scrollLocations[scrollIndex] === undefined) {
+  //   const viewScrollLocation = scrollFunction();
+  //   scrollLocations[scrollIndex] = viewScrollLocation;
+  // }
 
-  scroll();
   await renderObjects(viewObjects);
   setInfoButtonName(getView());
+  scrollFunction();
   // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 };
 

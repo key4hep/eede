@@ -2,8 +2,15 @@ import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
-import { addBox } from "../draw/add-box.js";
-import { textToSVGElement } from "../lib/generate-svg.js";
+import {
+  buildBox,
+  addBox,
+  addTitleToBox,
+  addLinesToBox,
+  svgElementToPixiSprite,
+  addImageToBox,
+} from "../draw/box.js";
+import { textToSVG } from "../lib/generate-svg.js";
 
 const TOP_MARGIN = 45;
 
@@ -20,7 +27,12 @@ class EDMObject {
     this.color = "white";
   }
 
-  draw(app) {}
+  async draw() {
+    const box = buildBox(this);
+    const nextY = addTitleToBox(this.collectionName, box);
+    addBox(box);
+    return [box, nextY];
+  }
 
   isHere(mouseX, mouseY) {
     return (
@@ -59,9 +71,21 @@ export class MCParticle extends EDMObject {
   }
 
   async draw() {
-    const boxCenterX = this.x + this.width / 2;
+    // const boxCenterX = this.x + this.width / 2;
+    // const topY = this.y + TOP_MARGIN;
 
-    const topY = this.y + TOP_MARGIN;
+    // const bottomY = this.y + this.height * 0.65;
+    // const bottomLines = [];
+    // bottomLines.push("p = " + this.momentum + " GeV");
+    // bottomLines.push("d = " + this.vertex + " mm");
+    // bottomLines.push("t = " + this.time + " ns");
+    // bottomLines.push("m = " + this.mass + " GeV");
+    // bottomLines.push(parseCharge(this.charge));
+    // const svgElement = textToSVGElement(this.name);
+    // addBox(this);
+
+    let [box, nextY] = await super.draw();
+
     const topLines = [];
     topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
@@ -77,16 +101,10 @@ export class MCParticle extends EDMObject {
         : this.simulatorStatus;
     topLines.push("Sim. stat.: " + simulatorStatusString);
 
-    const bottomY = this.y + this.height * 0.65;
-    const bottomLines = [];
-    bottomLines.push("p = " + this.momentum + " GeV");
-    bottomLines.push("d = " + this.vertex + " mm");
-    bottomLines.push("t = " + this.time + " ns");
-    bottomLines.push("m = " + this.mass + " GeV");
-    bottomLines.push(parseCharge(this.charge));
-
-    const svgElement = textToSVGElement(this.name);
-    addBox(this);
+    nextY = addLinesToBox(topLines, box, nextY);
+    const svg = await textToSVG(this.name);
+    const sprite = await svgElementToPixiSprite(svg);
+    nextY = addImageToBox(sprite, box, nextY);
   }
 
   showObjectTip(ctx) {

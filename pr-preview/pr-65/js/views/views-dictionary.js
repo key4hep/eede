@@ -4,7 +4,6 @@ import { recoParticleTree, preFilterRecoTree } from "./recoparticletree.js";
 import { setupMCParticleFilter } from "../filter/mcparticle.js";
 import { trackTree, preFilterTrackTree } from "./tracktree.js";
 import { clusterTree, preFilterClusterTree } from "./clustertree.js";
-import { scrollTopCenter, scrollTopLeft } from "./scrolls.js";
 import { preFilterMCTrack, mcTrackAssociation } from "./mctrackassociation.js";
 import {
   preFilterMCCluster,
@@ -19,6 +18,7 @@ import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 import { spanWithColor } from "../lib/html-string.js";
+import { scrollTopCenter } from "../draw/scroll.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -37,7 +37,7 @@ export const views = {
   "Reconstructed Particle Tree": {
     filters: setupNoFilter,
     viewFunction: recoParticleTree,
-    scrollFunction: scrollTopLeft,
+    scrollFunction: null,
     preFilterFunction: preFilterRecoTree,
     description: `<p>A tree of the Reconstructed Particles. ${spanWithColor(
       "Purple",
@@ -47,21 +47,21 @@ export const views = {
   "Track Tree": {
     filters: setupNoFilter,
     viewFunction: trackTree,
-    scrollFunction: scrollTopLeft,
+    scrollFunction: null,
     preFilterFunction: preFilterTrackTree,
     description: `<p>A tree of the Tracks.</p>`,
   },
   "Cluster Tree": {
     filters: setupNoFilter,
     viewFunction: clusterTree,
-    scrollFunction: scrollTopLeft,
+    scrollFunction: null,
     preFilterFunction: preFilterClusterTree,
     description: `<p>A tree of the Clusters.</p>`,
   },
   "RecoParticle-Cluster-Track-Vertex": {
     filters: setupNoFilter,
     viewFunction: recoClusterTrackVertex,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: null,
     preFilterFunction: preFilterRecoClusterTrackVertex,
     description: `<p>Relations that a Reconstruced Particle has with other objects. ${spanWithColor(
       "Green",
@@ -74,42 +74,42 @@ export const views = {
   "Monte Carlo-Reconstructed Particle": {
     filters: setupNoFilter,
     viewFunction: mcRecoAssociation,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: null,
     preFilterFunction: preFilterMCReco,
     description: `<p>Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.</p>`,
   },
   "Monte Carlo Particle-Track": {
     filters: setupNoFilter,
     viewFunction: mcTrackAssociation,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: null,
     preFilterFunction: preFilterMCTrack,
     description: `<p>Association between Monte Carlo Particles and Tracks. 1:1 relation.</p>`,
   },
   "Monte Carlo Particle-Cluster": {
     filters: setupNoFilter,
     viewFunction: mcClusterAssociation,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: null,
     preFilterFunction: preFilterMCCluster,
     description: `<p>Association between Monte Carlo Particles and Clusters. 1:1 relation.</p>`,
   },
   "ParticleID List": {
     filters: setupNoFilter,
     viewFunction: particleIDList,
-    scrollFunction: scrollTopLeft,
+    scrollFunction: null,
     preFilterFunction: preFilterParticleIDList,
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
   "Vertex List": {
     filters: setupNoFilter,
     viewFunction: vertexList,
-    scrollFunction: scrollTopLeft,
+    scrollFunction: null,
     preFilterFunction: preFilterVertexList,
     description: `<p>A list of Vertices found in the event.</p>`,
   },
   "ParticleID-Reconstructed Particle": {
     filters: setupNoFilter,
     viewFunction: recoParticleID,
-    scrollFunction: scrollTopCenter,
+    scrollFunction: null,
     preFilterFunction: preFilterRecoParticleID,
     description: `<p>1:1 relation from ParticleID to Reconstructed Particle.</p>`,
   },
