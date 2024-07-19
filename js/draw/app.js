@@ -3,7 +3,7 @@ import { Application, Container } from "../pixi.min.mjs";
 const SPEED = 0.3;
 const MARGIN = 100;
 
-export const pixi = {
+const pixi = {
   app: null,
   container: null,
   elements: [],
@@ -66,9 +66,21 @@ const createContainer = (app) => {
 };
 
 export const setContainerSize = (width, height) => {
-  const container = pixi.container;
+  const container = getContainer();
   container.width = width;
   container.height = height;
+};
+
+export const getApp = () => {
+  return pixi.app;
+};
+
+export const getContainer = () => {
+  return pixi.container;
+};
+
+export const getElements = () => {
+  return pixi.elements;
 };
 
 export const startPixi = async () => {

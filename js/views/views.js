@@ -65,16 +65,16 @@ const drawView = async (view) => {
   setContainerSize(width, height);
   copyObject(viewObjects, viewCurrentObjects);
 
-  const scrollIndex = getViewScrollIndex();
+  // const scrollIndex = getViewScrollIndex();
 
-  if (scrollLocations[scrollIndex] === undefined) {
-    const viewScrollLocation = scrollFunction();
-    scrollLocations[scrollIndex] = viewScrollLocation;
-  }
+  // if (scrollLocations[scrollIndex] === undefined) {
+  //   const viewScrollLocation = scrollFunction();
+  //   scrollLocations[scrollIndex] = viewScrollLocation;
+  // }
 
-  scroll();
   await renderObjects(viewObjects);
   setInfoButtonName(getView());
+  scrollFunction();
   // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 };
 
