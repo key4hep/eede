@@ -33,6 +33,8 @@ class EDMObject {
   async draw() {
     const box = buildBox(this);
     this.renderedBox = box;
+    box.zIndex = 1;
+    box.interactiveChildren = false;
     addBox(box);
     box.position.set(this.x, this.y);
     const nextY = addTitleToBox(this.constructor.name, box);

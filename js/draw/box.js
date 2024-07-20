@@ -1,5 +1,5 @@
 import { Graphics, Assets, Sprite, Text, TextStyle } from "../pixi.min.mjs";
-import { getContainer, getElements } from "./app.js";
+import { getApp, getContainer, getElements } from "./app.js";
 
 const MARGIN = 20;
 const PADDING = 5;
@@ -35,6 +35,7 @@ function createObjectModal(lines) {
   box.fill("#f1f1f1");
   box.stroke({ width: 1, color: "#000000" });
   box.addChild(text);
+  box.zIndex = 2;
   text.position.set((box.width - text.width) / 2, MARGIN);
 
   return box;
@@ -60,11 +61,22 @@ export function addBox(box) {
   elements.push(box);
 }
 
+const boxes = {};
+
 export function buildBox(object) {
-  const box = new Graphics();
-  box.roundRect(0, 0, object.width, object.height, object.radius);
-  box.fill(object.color);
-  box.stroke({ width: 2, color: "#000000" });
+  const key = `${object.width}-${object.height}-${object.color}-${object.radius}`;
+
+  if (boxes[key] === undefined) {
+    const box = new Graphics();
+    box.roundRect(0, 0, object.width, object.height, object.radius);
+    box.fill(object.color);
+    box.stroke({ width: 2, color: "#000000" });
+    const app = getApp();
+    const texture = app.renderer.generateTexture(box);
+    boxes[key] = texture;
+  }
+
+  const box = new Sprite(boxes[key]);
   return box;
 }
 

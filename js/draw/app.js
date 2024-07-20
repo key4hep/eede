@@ -1,4 +1,4 @@
-import { Application, Container } from "../pixi.min.mjs";
+import { Application, Container, Culler } from "../pixi.min.mjs";
 
 const SPEED = 0.5;
 const MARGIN = 100;
@@ -16,6 +16,10 @@ const createApp = async () => {
     antialias: false,
     useContextAlpha: false,
     resizeTo: window,
+    preference: "webgpu",
+    webgpu: {
+      powerPreference: "high-performance",
+    },
   });
 
   document.body.appendChild(app.canvas);
@@ -62,6 +66,15 @@ const createContainer = (app) => {
     isRenderGroup: true,
   });
   pixi.container = container;
+
+  const culler = new Culler();
+  culler.cull(container, {
+    x: 0,
+    y: 0,
+    width: app.renderer.width,
+    height: app.renderer.height,
+  });
+
   app.stage.addChild(container);
 };
 
