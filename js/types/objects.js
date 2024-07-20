@@ -9,6 +9,7 @@ import {
   addLinesToBox,
   svgElementToPixiSprite,
   addImageToBox,
+  addHoverModal,
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
 
@@ -34,6 +35,47 @@ class EDMObject {
     addBox(box);
     box.position.set(this.x, this.y);
     const nextY = addTitleToBox(this.constructor.name, box);
+
+    box.cursor = "pointer";
+    box.eventMode = "static";
+
+    let prevX = box.x + box.width / 2;
+    let prevY = box.y + box.height / 2;
+
+    box
+      .on(
+        "pointerdown",
+        function () {
+          this.on(
+            "pointermove",
+            function (event) {
+              const container = box.parent;
+
+              const eventX = container.toLocal(event.data.global).x;
+              const eventY = container.toLocal(event.data.global).y;
+
+              const deltaX = eventX - prevX;
+              const deltaY = eventY - prevY;
+
+              this.position.x += deltaX;
+              this.position.y += deltaY;
+              prevX = eventX;
+              prevY = eventY;
+            },
+            box
+          );
+        },
+        box
+      )
+      .on(
+        "pointerup",
+        function () {
+          this.off("pointermove");
+        },
+        box
+      );
+
+    addHoverModal(box, this.objectModalLines());
     return [box, nextY];
   }
 
@@ -55,11 +97,9 @@ class EDMObject {
     );
   }
 
-  showObjectTip(ctx) {
-    const x = this.x;
-    const y = this.y - 10;
+  objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
-    drawObjectInfoTip(ctx, x, y, collectionName);
+    return [collectionName];
   }
 }
 
@@ -115,15 +155,12 @@ export class MCParticle extends EDMObject {
     addLinesToBox(bottomLines, box, nextY);
   }
 
-  showObjectTip(ctx) {
-    const x = this.x;
-    const y = this.y - 10;
+  objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus
     );
-
-    drawObjectInfoTip(ctx, x, y, collectionName, ...simulatorStatus);
+    return [collectionName, ...simulatorStatus];
   }
 
   static setup(mcCollection) {
