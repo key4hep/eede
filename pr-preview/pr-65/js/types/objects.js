@@ -9,10 +9,13 @@ import {
   addLinesToBox,
   svgElementToPixiSprite,
   addImageToBox,
+  addHoverModal,
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
 
 const TOP_MARGIN = 45;
+const IMAGE_MARGIN = 10;
+const IMAGE_HEIGHT = 30;
 
 class EDMObject {
   constructor() {
@@ -29,8 +32,51 @@ class EDMObject {
 
   async draw() {
     const box = buildBox(this);
-    const nextY = addTitleToBox(this.collectionName, box);
+    this.renderedBox = box;
     addBox(box);
+    box.position.set(this.x, this.y);
+    const nextY = addTitleToBox(this.constructor.name, box);
+
+    box.cursor = "pointer";
+    box.eventMode = "static";
+
+    let prevX = box.x + box.width / 2;
+    let prevY = box.y + box.height / 2;
+
+    box
+      .on(
+        "pointerdown",
+        function () {
+          this.on(
+            "pointermove",
+            function (event) {
+              const container = box.parent;
+
+              const eventX = container.toLocal(event.data.global).x;
+              const eventY = container.toLocal(event.data.global).y;
+
+              const deltaX = eventX - prevX;
+              const deltaY = eventY - prevY;
+
+              this.position.x += deltaX;
+              this.position.y += deltaY;
+              prevX = eventX;
+              prevY = eventY;
+            },
+            box
+          );
+        },
+        box
+      )
+      .on(
+        "pointerup",
+        function () {
+          this.off("pointermove");
+        },
+        box
+      );
+
+    addHoverModal(box, this.objectModalLines());
     return [box, nextY];
   }
 
@@ -52,11 +98,9 @@ class EDMObject {
     );
   }
 
-  showObjectTip(ctx) {
-    const x = this.x;
-    const y = this.y - 10;
+  objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
-    drawObjectInfoTip(ctx, x, y, collectionName);
+    return [collectionName];
   }
 }
 
@@ -71,19 +115,6 @@ export class MCParticle extends EDMObject {
   }
 
   async draw() {
-    // const boxCenterX = this.x + this.width / 2;
-    // const topY = this.y + TOP_MARGIN;
-
-    // const bottomY = this.y + this.height * 0.65;
-    // const bottomLines = [];
-    // bottomLines.push("p = " + this.momentum + " GeV");
-    // bottomLines.push("d = " + this.vertex + " mm");
-    // bottomLines.push("t = " + this.time + " ns");
-    // bottomLines.push("m = " + this.mass + " GeV");
-    // bottomLines.push(parseCharge(this.charge));
-    // const svgElement = textToSVGElement(this.name);
-    // addBox(this);
-
     let [box, nextY] = await super.draw();
 
     const topLines = [];
@@ -102,20 +133,35 @@ export class MCParticle extends EDMObject {
     topLines.push("Sim. stat.: " + simulatorStatusString);
 
     nextY = addLinesToBox(topLines, box, nextY);
-    const svg = await textToSVG(this.name);
-    const sprite = await svgElementToPixiSprite(svg);
-    nextY = addImageToBox(sprite, box, nextY);
+
+    const imageY = nextY + IMAGE_MARGIN;
+
+    textToSVG(this.name)
+      .then((src) => {
+        const sprite = svgElementToPixiSprite(src);
+        return sprite;
+      })
+      .then((sprite) => addImageToBox(sprite, box, imageY))
+      .catch((e) => console.error("Error loading SVG: ", e));
+
+    nextY += IMAGE_HEIGHT + 2 * IMAGE_MARGIN;
+
+    const bottomLines = [];
+    bottomLines.push("p = " + this.momentum + " GeV");
+    bottomLines.push("d = " + this.vertex + " mm");
+    bottomLines.push("t = " + this.time + " ns");
+    bottomLines.push("m = " + this.mass + " GeV");
+    bottomLines.push(parseCharge(this.charge));
+
+    addLinesToBox(bottomLines, box, nextY);
   }
 
-  showObjectTip(ctx) {
-    const x = this.x;
-    const y = this.y - 10;
+  objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus
     );
-
-    drawObjectInfoTip(ctx, x, y, collectionName, ...simulatorStatus);
+    return [collectionName, ...simulatorStatus];
   }
 
   static setup(mcCollection) {

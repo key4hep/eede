@@ -44,39 +44,10 @@ export function drawTextLines(ctx, lines, boxCenterX, y, n) {
 }
 
 export function drawBezierLink(ctx, link) {
-  // const boxFrom = link.from;
-  // const boxTo = link.to;
-  // const fromX = boxFrom.x + boxFrom.width / 2;
-  // const fromY = boxFrom.y + boxFrom.height;
-  // const toX = boxTo.x + boxTo.width / 2;
-  // const toY = boxTo.y;
-  // if (toY > fromY) {
-  //   var cpFromY = (toY - fromY) / 2 + fromY;
-  //   var cpToY = cpFromY;
-  // } else {
-  //   cpFromY = (fromY - toY) / 2 + fromY;
-  //   cpToY = toY - (fromY - toY) / 2;
-  // }
-  // if (toX > fromX) {
-  //   var cpFromX = (toX - fromX) / 4 + fromX;
-  //   var cpToX = (3 * (toX - fromX)) / 4 + fromX;
-  // } else {
-  //   cpFromX = (3 * (fromX - toX)) / 4 + toX;
-  //   cpToX = (fromX - toX) / 4 + toX;
-  // }
   // ctx.save();
   // ctx.strokeStyle = link.color;
   // ctx.lineWidth = 2;
   // ctx.beginPath();
-  // ctx.moveTo(fromX + link.xShift, fromY);
-  // ctx.bezierCurveTo(
-  //   cpFromX + link.xShift,
-  //   cpFromY,
-  //   cpToX + link.xShift,
-  //   cpToY,
-  //   toX + link.xShift,
-  //   toY
-  // );
   // ctx.stroke();
   // ctx.restore();
 }

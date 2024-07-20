@@ -73,8 +73,8 @@ const drawView = async (view) => {
   // }
 
   await renderObjects(viewObjects);
-  setInfoButtonName(getView());
   scrollFunction();
+  setInfoButtonName(getView());
   // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 };
 

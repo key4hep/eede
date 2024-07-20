@@ -1,4 +1,5 @@
-import { drawBezierLink, drawStraightLink } from "../lib/graphic-primitives.js";
+import { drawStraightLink } from "../lib/graphic-primitives.js";
+import { drawBezierLink } from "../draw/link.js";
 
 const colors = {
   "parents": "#AA0000",
@@ -20,8 +21,8 @@ export class Link {
     this.xShift = 0;
   }
 
-  draw(ctx) {
-    drawBezierLink(ctx, this);
+  draw() {
+    drawBezierLink(this);
   }
 
   isVisible(x, y, width, height) {
