@@ -1,11 +1,11 @@
 import { Graphics } from "../pixi.min.mjs";
 import { getContainer } from "./app.js";
 
-export function drawBezierLink(link) {
-  const curve = new Graphics();
+function fromPoints(boxFrom) {
+  return [boxFrom.x + boxFrom.width / 2, boxFrom.y + boxFrom.height];
+}
 
-  const boxFrom = link.from;
-  const boxTo = link.to;
+function toPoints(boxFrom, boxTo) {
   const fromX = boxFrom.x + boxFrom.width / 2;
   const fromY = boxFrom.y + boxFrom.height;
   const toX = boxTo.x + boxTo.width / 2;
@@ -27,18 +27,95 @@ export function drawBezierLink(link) {
     cpFromX = (3 * (fromX - toX)) / 4 + toX;
     cpToX = (fromX - toX) / 4 + toX;
   }
+  return [cpFromX, cpFromY, cpToX, cpToY, toX, toY];
+}
 
-  curve.moveTo(fromX + link.xShift, fromY);
-  curve.bezierCurveTo(
-    cpFromX + link.xShift,
-    cpFromY,
-    cpToX + link.xShift,
-    cpToY,
-    toX + link.xShift,
-    toY
+function bezierCurve({
+  fromX,
+  fromY,
+  cpFromX,
+  cpFromY,
+  cpToX,
+  cpToY,
+  toX,
+  toY,
+  color,
+}) {
+  const curve = new Graphics();
+  curve.moveTo(fromX, fromY);
+  curve.bezierCurveTo(cpFromX, cpFromY, cpToX, cpToY, toX, toY);
+  curve.stroke({ width: 2, color });
+  return curve;
+}
+
+export function drawBezierLink(link) {
+  const [fromX, fromY] = fromPoints(link.from);
+  const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
+    link.from,
+    link.to
   );
-  curve.stroke({ width: 2, color: link.color });
+
+  let curve = bezierCurve({
+    fromX: fromX + link.xShift,
+    fromY: fromY,
+    cpFromX: cpFromX + link.xShift,
+    cpFromY: cpFromY,
+    cpToX: cpToX + link.xShift,
+    cpToY: cpToY,
+    toX: toX + link.xShift,
+    toY: toY,
+    color: link.color,
+  });
+
+  const boxFrom = link.from.renderedBox;
+  const boxTo = link.to.renderedBox;
 
   const container = getContainer();
+  boxFrom.on("pointerdown", () => {
+    boxFrom.on("pointermove", () => {
+      container.removeChild(curve);
+      const [fromX, fromY] = fromPoints(boxFrom);
+      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
+        boxFrom,
+        boxTo
+      );
+      curve = bezierCurve({
+        fromX: fromX + link.xShift,
+        fromY: fromY,
+        cpFromX: cpFromX + link.xShift,
+        cpFromY: cpFromY,
+        cpToX: cpToX + link.xShift,
+        cpToY: cpToY,
+        toX: toX + link.xShift,
+        toY: toY,
+        color: link.color,
+      });
+      container.addChild(curve);
+    });
+  });
+
+  boxTo.on("pointerdown", () => {
+    boxTo.on("pointermove", () => {
+      container.removeChild(curve);
+      const [fromX, fromY] = fromPoints(boxFrom);
+      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
+        boxFrom,
+        boxTo
+      );
+      curve = bezierCurve({
+        fromX: fromX + link.xShift,
+        fromY: fromY,
+        cpFromX: cpFromX + link.xShift,
+        cpFromY: cpFromY,
+        cpToX: cpToX + link.xShift,
+        cpToY: cpToY,
+        toX: toX + link.xShift,
+        toY: toY,
+        color: link.color,
+      });
+      container.addChild(curve);
+    });
+  });
+
   container.addChild(curve);
 }
