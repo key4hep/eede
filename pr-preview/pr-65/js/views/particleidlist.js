@@ -5,7 +5,7 @@ export function particleIDList(viewCurrentObjects) {
   const vertexCollection =
     viewCurrentObjects.datatypes["edm4hep::ParticleID"].collection ?? [];
 
-  listView(vertexCollection);
+  return listView(vertexCollection);
 }
 
 export function preFilterParticleIDList(currentObjects, viewObjects) {

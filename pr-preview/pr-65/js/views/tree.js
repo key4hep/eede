@@ -66,12 +66,13 @@ export function buildTree(collection, relationOfReference) {
   const totalWidth =
     boxWidth * matrix[0].length + horizontalGap * (matrix[0].length + 1);
 
-  canvas.width =
-    totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
+  const width = totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
 
   const totalHeight =
     boxHeight * (matrix.length + 1) + verticalGap * (matrix.length + 2);
 
-  canvas.height =
+  const height =
     totalHeight > window.innerHeight ? totalHeight : window.innerHeight;
+
+  return [width, height];
 }

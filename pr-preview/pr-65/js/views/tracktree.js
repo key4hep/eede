@@ -5,7 +5,7 @@ export function trackTree(viewCurrentObjects) {
   const trackCollection =
     viewCurrentObjects.datatypes["edm4hep::Track"].collection ?? [];
 
-  buildTree(trackCollection, "tracks");
+  return buildTree(trackCollection, "tracks");
 }
 
 export function preFilterTrackTree(currentObjects, viewObjects) {

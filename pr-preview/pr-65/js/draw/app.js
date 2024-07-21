@@ -1,4 +1,4 @@
-import { Application, Container } from "../pixi.min.mjs";
+import { Application, Container, Culler } from "../pixi.min.mjs";
 
 const SPEED = 0.5;
 const MARGIN = 100;
@@ -6,7 +6,6 @@ const MARGIN = 100;
 const pixi = {
   app: null,
   container: null,
-  elements: [],
 };
 
 const createApp = async () => {
@@ -16,6 +15,10 @@ const createApp = async () => {
     antialias: false,
     useContextAlpha: false,
     resizeTo: window,
+    preference: "webgpu",
+    webgpu: {
+      powerPreference: "high-performance",
+    },
   });
 
   document.body.appendChild(app.canvas);
@@ -23,7 +26,7 @@ const createApp = async () => {
 };
 
 const addScroll = (app) => {
-  const container = pixi.container;
+  const container = getContainer();
   const renderer = app.renderer;
 
   container.x = 0;
@@ -57,12 +60,22 @@ const addScroll = (app) => {
   });
 };
 
-const createContainer = (app) => {
+export const createContainer = (app) => {
   const container = new Container({
     isRenderGroup: true,
   });
   pixi.container = container;
+
+  const culler = new Culler();
+  culler.cull(container, {
+    x: 0,
+    y: 0,
+    width: app.renderer.width,
+    height: app.renderer.height,
+  });
+
   app.stage.addChild(container);
+  addScroll(app);
 };
 
 export const setContainerSize = (width, height) => {
@@ -79,13 +92,8 @@ export const getContainer = () => {
   return pixi.container;
 };
 
-export const getElements = () => {
-  return pixi.elements;
-};
-
 export const startPixi = async () => {
   const app = await createApp();
   createContainer(app);
-  addScroll(app);
   pixi.app = app;
 };

@@ -13,9 +13,8 @@ import {
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
 
-const TOP_MARGIN = 45;
 const IMAGE_MARGIN = 10;
-const IMAGE_HEIGHT = 30;
+const IMAGE_SIZE = 40;
 
 class EDMObject {
   constructor() {
@@ -33,6 +32,8 @@ class EDMObject {
   async draw() {
     const box = buildBox(this);
     this.renderedBox = box;
+    box.zIndex = 1;
+    box.interactiveChildren = false;
     addBox(box);
     box.position.set(this.x, this.y);
     const nextY = addTitleToBox(this.constructor.name, box);
@@ -65,6 +66,7 @@ class EDMObject {
             },
             box
           );
+          this.zIndex = 2;
         },
         box
       )
@@ -72,30 +74,13 @@ class EDMObject {
         "pointerup",
         function () {
           this.off("pointermove");
+          this.zIndex = 1;
         },
         box
       );
 
     addHoverModal(box, this.objectModalLines());
     return [box, nextY];
-  }
-
-  isHere(mouseX, mouseY) {
-    return (
-      mouseX > this.x &&
-      mouseX < this.x + this.width &&
-      mouseY > this.y &&
-      mouseY < this.y + this.height
-    );
-  }
-
-  isVisible(x, y, width, height) {
-    return (
-      x + width > this.x &&
-      x < this.x + this.width &&
-      y + height > this.y &&
-      y < this.y + this.height
-    );
   }
 
   objectModalLines() {
@@ -136,15 +121,15 @@ export class MCParticle extends EDMObject {
 
     const imageY = nextY + IMAGE_MARGIN;
 
-    textToSVG(this.name)
+    textToSVG(this.name, IMAGE_SIZE)
       .then((src) => {
-        const sprite = svgElementToPixiSprite(src);
+        const sprite = svgElementToPixiSprite(src, IMAGE_SIZE);
         return sprite;
       })
       .then((sprite) => addImageToBox(sprite, box, imageY))
       .catch((e) => console.error("Error loading SVG: ", e));
 
-    nextY += IMAGE_HEIGHT + 2 * IMAGE_MARGIN;
+    nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
 
     const bottomLines = [];
     bottomLines.push("p = " + this.momentum + " GeV");
@@ -254,29 +239,23 @@ class ReconstructedParticle extends EDMObject {
     this.radius = 30;
   }
 
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
+  async draw() {
+    let [box, nextY] = await super.draw();
 
-    super.draw(ctx);
-
-    const topY = this.y + 1.5 * TOP_MARGIN;
     const lines = [];
 
     lines.push("ID: " + this.index);
-
     const x = parseInt(this.momentum.x * 100) / 100;
     const y = parseInt(this.momentum.y * 100) / 100;
     const z = parseInt(this.momentum.z * 100) / 100;
     lines.push(`p = (x=${x},`);
     lines.push(`y=${y},`);
     lines.push(`z=${z}) GeV`);
-
     const energy = parseInt(this.energy * 100) / 100;
     lines.push("e = " + energy + " GeV");
-
     lines.push(parseCharge(this.charge));
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    addLinesToBox(lines, box, nextY);
   }
 
   static setup(recoCollection) {}
@@ -293,12 +272,9 @@ class Cluster extends EDMObject {
     this.radius = 20;
   }
 
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
+  async draw() {
+    const [box, nextY] = await super.draw();
 
-    super.draw(ctx);
-
-    const topY = this.y + TOP_MARGIN;
     const lines = [];
     lines.push("ID: " + this.index);
     lines.push("type: " + this.type);
@@ -311,7 +287,7 @@ class Cluster extends EDMObject {
     lines.push(`y=${y},`);
     lines.push(`z=${z}) mm`);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    addLinesToBox(lines, box, nextY);
   }
 
   static setup(clusterCollection) {}
@@ -326,12 +302,8 @@ class Track extends EDMObject {
     this.radius = 25;
   }
 
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
-
-    super.draw(ctx);
-
-    const topY = this.y + TOP_MARGIN;
+  async draw() {
+    const [box, nextY] = await super.draw();
 
     const lines = [];
     lines.push("ID: " + this.index);
@@ -341,11 +313,10 @@ class Track extends EDMObject {
     const chiNdf = `${chi2}/${ndf}`;
     lines.push("chi2/ndf = " + chiNdf);
     lines.push("dEdx = " + this.dEdx);
-
     const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
     lines.push("tracker hits: " + trackerHitsCount);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    addLinesToBox(lines, box, nextY);
   }
 
   static setup(trackCollection) {}
@@ -360,12 +331,8 @@ class ParticleID extends EDMObject {
     this.radius = 25;
   }
 
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
-
-    super.draw(ctx);
-
-    const topY = this.y + TOP_MARGIN;
+  async draw() {
+    const [box, nextY] = await super.draw();
 
     const lines = [];
     lines.push("ID: " + this.index);
@@ -374,7 +341,7 @@ class ParticleID extends EDMObject {
     lines.push("algorithm: " + this.algorithmType);
     lines.push("likelihood: " + this.likelihood);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    addLinesToBox(lines, box, nextY);
   }
 
   static setup(particleIDCollection) {}
@@ -389,12 +356,8 @@ class Vertex extends EDMObject {
     this.radius = 25;
   }
 
-  draw(ctx) {
-    const boxCenterX = this.x + this.width / 2;
-
-    super.draw(ctx);
-
-    const topY = this.y + TOP_MARGIN;
+  async draw() {
+    const [box, nextY] = await super.draw();
 
     const lines = [];
     lines.push("ID: " + this.index);
@@ -409,7 +372,7 @@ class Vertex extends EDMObject {
     const chiNdf = `${chi2}/${ndf}`;
     lines.push("chi2/ndf = " + chiNdf);
 
-    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+    addLinesToBox(lines, box, nextY);
   }
 
   static setup(vertexCollection) {}

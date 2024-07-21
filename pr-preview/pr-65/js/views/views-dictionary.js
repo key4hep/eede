@@ -18,7 +18,7 @@ import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 import { spanWithColor } from "../lib/html-string.js";
-import { scrollTopCenter } from "../draw/scroll.js";
+import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -37,7 +37,7 @@ export const views = {
   "Reconstructed Particle Tree": {
     filters: setupNoFilter,
     viewFunction: recoParticleTree,
-    scrollFunction: null,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterRecoTree,
     description: `<p>A tree of the Reconstructed Particles. ${spanWithColor(
       "Purple",
@@ -47,21 +47,21 @@ export const views = {
   "Track Tree": {
     filters: setupNoFilter,
     viewFunction: trackTree,
-    scrollFunction: null,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterTrackTree,
     description: `<p>A tree of the Tracks.</p>`,
   },
   "Cluster Tree": {
     filters: setupNoFilter,
     viewFunction: clusterTree,
-    scrollFunction: null,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
     description: `<p>A tree of the Clusters.</p>`,
   },
   "RecoParticle-Cluster-Track-Vertex": {
     filters: setupNoFilter,
     viewFunction: recoClusterTrackVertex,
-    scrollFunction: null,
+    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoClusterTrackVertex,
     description: `<p>Relations that a Reconstruced Particle has with other objects. ${spanWithColor(
       "Green",
@@ -74,42 +74,42 @@ export const views = {
   "Monte Carlo-Reconstructed Particle": {
     filters: setupNoFilter,
     viewFunction: mcRecoAssociation,
-    scrollFunction: null,
+    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
     description: `<p>Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.</p>`,
   },
   "Monte Carlo Particle-Track": {
     filters: setupNoFilter,
     viewFunction: mcTrackAssociation,
-    scrollFunction: null,
+    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTrack,
     description: `<p>Association between Monte Carlo Particles and Tracks. 1:1 relation.</p>`,
   },
   "Monte Carlo Particle-Cluster": {
     filters: setupNoFilter,
     viewFunction: mcClusterAssociation,
-    scrollFunction: null,
+    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCCluster,
     description: `<p>Association between Monte Carlo Particles and Clusters. 1:1 relation.</p>`,
   },
   "ParticleID List": {
     filters: setupNoFilter,
     viewFunction: particleIDList,
-    scrollFunction: null,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterParticleIDList,
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
   "Vertex List": {
     filters: setupNoFilter,
     viewFunction: vertexList,
-    scrollFunction: null,
+    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterVertexList,
     description: `<p>A list of Vertices found in the event.</p>`,
   },
   "ParticleID-Reconstructed Particle": {
     filters: setupNoFilter,
     viewFunction: recoParticleID,
-    scrollFunction: null,
+    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoParticleID,
     description: `<p>1:1 relation from ParticleID to Reconstructed Particle.</p>`,
   },

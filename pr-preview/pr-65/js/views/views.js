@@ -5,7 +5,12 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
-import { setContainerSize } from "../draw/app.js";
+import {
+  createContainer,
+  getApp,
+  getContainer,
+  setContainerSize,
+} from "../draw/app.js";
 
 const currentView = {};
 
@@ -37,9 +42,21 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-const drawView = async (view) => {
-  paintButton(view);
+const addTask = (() => {
+  let pending = Promise.resolve();
 
+  const run = async (view) => {
+    try {
+      await pending;
+    } finally {
+      return drawView(view);
+    }
+  };
+
+  return (view) => (pending = run(view));
+})();
+
+const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
@@ -49,9 +66,8 @@ const drawView = async (view) => {
   } = views[view];
 
   const viewObjects = {};
-  const viewCurrentObjects = {};
-
   preFilterFunction(currentObjects, viewObjects);
+  paintButton(view);
   const isEmpty = checkEmptyObject(viewObjects);
 
   if (isEmpty) {
@@ -59,12 +75,27 @@ const drawView = async (view) => {
     hideViewInformation();
     return;
   }
+
   showViewInformation(view, description);
+  setInfoButtonName(getView());
   hideEmptyViewMessage();
-  const [width, height] = viewFunction(viewObjects);
-  setContainerSize(width, height);
+
+  const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
+  // const container = getContainer();
+  // container.destroy({
+  //   children: true,
+  // });
+  const app = getApp();
+  app.stage.removeChildren();
+  createContainer(app);
+
+  const [width, height] = viewFunction(viewObjects);
+  setContainerSize(width, height);
+
+  await renderObjects(viewObjects);
+  scrollFunction();
   // const scrollIndex = getViewScrollIndex();
 
   // if (scrollLocations[scrollIndex] === undefined) {
@@ -72,9 +103,6 @@ const drawView = async (view) => {
   //   scrollLocations[scrollIndex] = viewScrollLocation;
   // }
 
-  await renderObjects(viewObjects);
-  scrollFunction();
-  setInfoButtonName(getView());
   // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 };
 
@@ -96,7 +124,7 @@ export const getView = () => {
 };
 
 export const drawCurrentView = () => {
-  drawView(currentView.view);
+  addTask(currentView.view);
 };
 
 const buttons = [];
@@ -105,9 +133,7 @@ for (const key in views) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
   button.onclick = () => {
-    saveScrollLocation();
-    setView(key);
-    drawView(key);
+    addTask(key);
   };
   button.className = "view-button";
   buttons.push(button);

@@ -6,6 +6,7 @@ export async function renderObjects(objects) {
     const { collection, oneToMany, oneToOne } = elements;
 
     for (const object of collection) {
+      object.renderedBox = null;
       await object.draw();
     }
 
