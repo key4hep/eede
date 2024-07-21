@@ -5,7 +5,12 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
-import { getContainer, setContainerSize } from "../draw/app.js";
+import {
+  createContainer,
+  getApp,
+  getContainer,
+  setContainerSize,
+} from "../draw/app.js";
 
 const currentView = {};
 
@@ -37,10 +42,21 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-const drawView = async (view) => {
-  const container = getContainer();
-  container.removeChildren();
+const addTask = (() => {
+  let pending = Promise.resolve();
 
+  const run = async (view) => {
+    try {
+      await pending;
+    } finally {
+      return drawView(view);
+    }
+  };
+
+  return (view) => (pending = run(view));
+})();
+
+const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
@@ -66,6 +82,14 @@ const drawView = async (view) => {
 
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
+
+  // const container = getContainer();
+  // container.destroy({
+  //   children: true,
+  // });
+  const app = getApp();
+  app.stage.removeChildren();
+  createContainer(app);
 
   const [width, height] = viewFunction(viewObjects);
   setContainerSize(width, height);
@@ -99,8 +123,8 @@ export const getView = () => {
   return currentView.view;
 };
 
-export const drawCurrentView = async () => {
-  await drawView(currentView.view);
+export const drawCurrentView = () => {
+  addTask(currentView.view);
 };
 
 const buttons = [];
@@ -108,8 +132,8 @@ const buttons = [];
 for (const key in views) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
-  button.onclick = async () => {
-    await drawView(key);
+  button.onclick = () => {
+    addTask(key);
   };
   button.className = "view-button";
   buttons.push(button);

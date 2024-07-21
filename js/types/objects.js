@@ -14,7 +14,7 @@ import {
 import { textToSVG } from "../lib/generate-svg.js";
 
 const IMAGE_MARGIN = 10;
-const IMAGE_HEIGHT = 30;
+const IMAGE_SIZE = 40;
 
 class EDMObject {
   constructor() {
@@ -83,24 +83,6 @@ class EDMObject {
     return [box, nextY];
   }
 
-  isHere(mouseX, mouseY) {
-    return (
-      mouseX > this.x &&
-      mouseX < this.x + this.width &&
-      mouseY > this.y &&
-      mouseY < this.y + this.height
-    );
-  }
-
-  isVisible(x, y, width, height) {
-    return (
-      x + width > this.x &&
-      x < this.x + this.width &&
-      y + height > this.y &&
-      y < this.y + this.height
-    );
-  }
-
   objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
     return [collectionName];
@@ -139,15 +121,15 @@ export class MCParticle extends EDMObject {
 
     const imageY = nextY + IMAGE_MARGIN;
 
-    textToSVG(this.name)
+    textToSVG(this.name, IMAGE_SIZE)
       .then((src) => {
-        const sprite = svgElementToPixiSprite(src);
+        const sprite = svgElementToPixiSprite(src, IMAGE_SIZE);
         return sprite;
       })
       .then((sprite) => addImageToBox(sprite, box, imageY))
       .catch((e) => console.error("Error loading SVG: ", e));
 
-    nextY += IMAGE_HEIGHT + 2 * IMAGE_MARGIN;
+    nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
 
     const bottomLines = [];
     bottomLines.push("p = " + this.momentum + " GeV");

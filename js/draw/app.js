@@ -6,7 +6,6 @@ const MARGIN = 100;
 const pixi = {
   app: null,
   container: null,
-  elements: [],
 };
 
 const createApp = async () => {
@@ -27,7 +26,7 @@ const createApp = async () => {
 };
 
 const addScroll = (app) => {
-  const container = pixi.container;
+  const container = getContainer();
   const renderer = app.renderer;
 
   container.x = 0;
@@ -61,7 +60,7 @@ const addScroll = (app) => {
   });
 };
 
-const createContainer = (app) => {
+export const createContainer = (app) => {
   const container = new Container({
     isRenderGroup: true,
   });
@@ -76,6 +75,7 @@ const createContainer = (app) => {
   });
 
   app.stage.addChild(container);
+  addScroll(app);
 };
 
 export const setContainerSize = (width, height) => {
@@ -92,13 +92,8 @@ export const getContainer = () => {
   return pixi.container;
 };
 
-export const getElements = () => {
-  return pixi.elements;
-};
-
 export const startPixi = async () => {
   const app = await createApp();
   createContainer(app);
-  addScroll(app);
   pixi.app = app;
 };

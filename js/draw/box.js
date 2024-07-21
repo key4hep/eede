@@ -1,5 +1,5 @@
 import { Graphics, Assets, Sprite, Text, TextStyle } from "../pixi.min.mjs";
-import { getApp, getContainer, getElements } from "./app.js";
+import { getApp, getContainer } from "./app.js";
 
 const MARGIN = 20;
 const PADDING = 5;
@@ -55,10 +55,8 @@ function removeObjectModal(objectModal) {
 }
 
 export function addBox(box) {
-  const elements = getElements();
   const container = getContainer();
   container.addChild(box);
-  elements.push(box);
 }
 
 const boxes = {};
@@ -130,11 +128,11 @@ export function addLinesToBox(lines, box, y) {
   return text.position.y + text.height;
 }
 
-export async function svgElementToPixiSprite(src) {
+export async function svgElementToPixiSprite(src, size) {
   const asset = await Assets.load(src);
   const sprite = Sprite.from(asset);
-  sprite.width = 50;
-  sprite.height = 50;
+  sprite.width = size;
+  sprite.height = size;
   return sprite;
 }
 

@@ -71,6 +71,7 @@ export function drawBezierLink(link) {
   const boxTo = link.to.renderedBox;
 
   const container = getContainer();
+
   boxFrom.on("pointerdown", () => {
     boxFrom.on("pointermove", () => {
       container.removeChild(curve);

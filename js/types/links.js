@@ -1,4 +1,3 @@
-import { drawStraightLink } from "../lib/graphic-primitives.js";
 import { drawBezierLink } from "../draw/link.js";
 
 const colors = {
@@ -23,35 +22,6 @@ export class Link {
 
   draw() {
     drawBezierLink(this);
-  }
-
-  isVisible(x, y, width, height) {
-    const boxFrom = this.from;
-    const boxTo = this.to;
-
-    const fromX = boxFrom.x + boxFrom.width / 2;
-    const fromY = boxFrom.y + boxFrom.height;
-    const toX = boxTo.x + boxTo.width / 2;
-    const toY = boxTo.y;
-
-    const boxX = Math.min(fromX, toX);
-    const boxWidth = Math.abs(fromX - toX);
-    const boxY = Math.min(fromY, toY);
-    const boxHeight = Math.abs(fromY - toY);
-
-    /*
-    console.log("boxX: ", this.boxX);
-    console.log("boxY: ", this.boxY);
-    console.log("boxWidth: ", this.boxWidth);
-    console.log("boxHeight: ", this.boxHeight);
-    */
-
-    return (
-      x + width > boxX &&
-      x < boxX + boxWidth &&
-      y + height > boxY &&
-      y < boxY + boxHeight
-    );
   }
 }
 

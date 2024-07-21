@@ -140,7 +140,7 @@ document
     showEventSwitcher();
     showViewsMenu();
     selectViewInformation();
-    await renderEvent(eventNum);
+    renderEvent(eventNum);
   });
 
 export { jsonData, selectedObjectTypes };

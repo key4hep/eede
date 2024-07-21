@@ -8,7 +8,6 @@ import {
   start,
   getWidthFilterContent,
 } from "../menu/filter/filter.js";
-import { drawAll } from "../draw.js";
 
 const filter = document.getElementById("filter");
 const filters = document.getElementById("filters");
