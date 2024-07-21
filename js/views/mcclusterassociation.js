@@ -2,7 +2,7 @@ import { preFilterAssociation } from "./pre-filter.js";
 import { buildAssociationView } from "./association-view.js";
 
 export function mcClusterAssociation(viewObjects) {
-  buildAssociationView(
+  return buildAssociationView(
     viewObjects,
     "edm4hep::MCRecoClusterParticleAssociation"
   );

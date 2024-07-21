@@ -82,9 +82,9 @@ class MCRecoParticleAssociation extends Link {
     this.weight = weight;
   }
 
-  draw(ctx) {
-    drawStraightLink(ctx, this);
-  }
+  // draw(ctx) {
+  //   drawStraightLink(ctx, this);
+  // }
 }
 
 class Particles extends Link {
@@ -122,9 +122,9 @@ class MCRecoTrackParticleAssociation extends Link {
     this.weight = weight;
   }
 
-  draw(ctx) {
-    drawStraightLink(ctx, this);
-  }
+  // draw(ctx) {
+  //   drawStraightLink(ctx, this);
+  // }
 }
 
 class MCRecoClusterParticleAssociation extends Link {
@@ -134,9 +134,9 @@ class MCRecoClusterParticleAssociation extends Link {
     this.weight = weight;
   }
 
-  draw(ctx) {
-    drawStraightLink(ctx, this);
-  }
+  // draw(ctx) {
+  //   drawStraightLink(ctx, this);
+  // }
 }
 
 export const linkTypes = {

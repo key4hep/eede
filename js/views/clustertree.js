@@ -5,7 +5,7 @@ export function clusterTree(viewCurrentObjects) {
   const clusterCollection =
     viewCurrentObjects.datatypes["edm4hep::Cluster"].collection ?? [];
 
-  buildTree(clusterCollection, "clusters");
+  return buildTree(clusterCollection, "clusters");
 }
 
 export function preFilterClusterTree(currentObjects, viewObjects) {

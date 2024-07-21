@@ -6,7 +6,7 @@ export function recoParticleTree(viewCurrentObjects) {
     viewCurrentObjects.datatypes["edm4hep::ReconstructedParticle"].collection ??
     [];
 
-  buildTree(recoCollection, "particles");
+  return buildTree(recoCollection, "particles");
 }
 
 export function preFilterRecoTree(currentObjects, viewObjects) {

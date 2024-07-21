@@ -45,12 +45,12 @@ function loadSelectedEvent() {
   }
 }
 
-export function renderEvent(eventNumber) {
+export async function renderEvent(eventNumber) {
   saveScrollLocation();
   currentEvent.event = eventNumber;
   loadSelectedEvent();
   updateEventNumber();
-  drawCurrentView();
+  await drawCurrentView();
 }
 
 previousEvent.addEventListener("click", () => {

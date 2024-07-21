@@ -5,7 +5,7 @@ export function vertexList(viewCurrentObjects) {
   const vertexCollection =
     viewCurrentObjects.datatypes["edm4hep::Vertex"].collection ?? [];
 
-  listView(vertexCollection);
+  return listView(vertexCollection);
 }
 
 export function preFilterVertexList(currentObjects, viewObjects) {

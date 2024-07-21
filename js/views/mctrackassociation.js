@@ -2,7 +2,10 @@ import { preFilterAssociation } from "./pre-filter.js";
 import { buildAssociationView } from "./association-view.js";
 
 export function mcTrackAssociation(viewObjects) {
-  buildAssociationView(viewObjects, "edm4hep::MCRecoTrackParticleAssociation");
+  return buildAssociationView(
+    viewObjects,
+    "edm4hep::MCRecoTrackParticleAssociation"
+  );
 }
 
 export function preFilterMCTrack(currentObjects, viewObjects) {

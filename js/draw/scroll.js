@@ -2,8 +2,13 @@ import { getContainer, getApp } from "./app.js";
 
 export const scrollTopLeft = () => {
   const container = getContainer();
-  container.x = 0;
-  container.y = 0;
+  const x = 0;
+  const y = 0;
+
+  container.x = x;
+  container.y = y;
+
+  return { x, y };
 };
 
 export const scrollTopCenter = () => {
