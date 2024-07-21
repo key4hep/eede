@@ -1,15 +1,18 @@
-export const colors = {
-  "daughters": "#00AA00",
+import { drawBezierLink, drawStraightLink } from "../lib/graphic-primitives.js";
+
+const colors = {
   "parents": "#AA0000",
-  // more if needed
+  "daughters": "#00AA00",
+  "mcreco": "#0000AA",
+  "tracks": "#AAAA00",
+  "clusters": "#00AAAA",
+  "particles": "#AA00AA",
+  "mcclusters": "#D8F1A0",
+  "mctracks": "#fe5e41",
+  "vertex": "#593746",
 };
 
-export function generateRandomColor() {
-  return "#" + ((0xffffff * Math.random()) << 0).toString(16).padStart(6, "0");
-}
-
 export class Link {
-  // we may create a specific class for each type if needed
   constructor(from, to) {
     this.from = from;
     this.to = to;
@@ -18,64 +21,7 @@ export class Link {
   }
 
   draw(ctx) {
-    const boxFrom = this.from;
-    const boxTo = this.to;
-
-    const fromX = boxFrom.x + boxFrom.width / 2;
-    const fromY = boxFrom.y + boxFrom.height;
-    const toX = boxTo.x + boxTo.width / 2;
-    const toY = boxTo.y;
-
-    if (toY > fromY) {
-      var cpFromY = (toY - fromY) / 2 + fromY;
-      var cpToY = cpFromY;
-    } else {
-      cpFromY = (fromY - toY) / 2 + fromY;
-      cpToY = toY - (fromY - toY) / 2;
-    }
-
-    if (toX > fromX) {
-      var cpFromX = (toX - fromX) / 4 + fromX;
-      var cpToX = (3 * (toX - fromX)) / 4 + fromX;
-    } else {
-      cpFromX = (3 * (fromX - toX)) / 4 + toX;
-      cpToX = (fromX - toX) / 4 + toX;
-    }
-
-    /*
-    drawCross(ctx, fromX, fromY, "blue");
-    drawCross(ctx, toX, toY, "green");
-    drawCross(ctx, cpFromX, cpFromY, "yellow");
-    drawLine(ctx, fromX, fromY, cpFromX, cpFromY, "yellow")
-    drawCross(ctx, cpToX, cpToY, "orange");
-    drawLine(ctx, toX, toY, cpToX, cpToY, "orange")
-    */
-
-    ctx.save();
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(fromX + this.xShift, fromY);
-    ctx.bezierCurveTo(
-      cpFromX + this.xShift,
-      cpFromY,
-      cpToX + this.xShift,
-      cpToY,
-      toX + this.xShift,
-      toY
-    );
-    ctx.stroke();
-    ctx.restore();
-
-    /*
-    ctx.save();
-    ctx.font = "14px sans-serif";
-    ctx.fillStyle = this.color;
-    const idText = "ID: " + this.id;
-    ctx.fillText(idText,
-                 cpToX, cpToY);
-    ctx.restore();
-    */
+    drawBezierLink(ctx, this);
   }
 
   isVisible(x, y, width, height) {
@@ -108,7 +54,7 @@ export class Link {
   }
 }
 
-export class ParentLink extends Link {
+class ParentLink extends Link {
   constructor(from, to) {
     super(to, from);
     this.color = colors["parents"];
@@ -118,7 +64,7 @@ export class ParentLink extends Link {
   }
 }
 
-export class DaughterLink extends Link {
+class DaughterLink extends Link {
   constructor(from, to) {
     super(from, to);
     this.color = colors["daughters"];
@@ -128,10 +74,80 @@ export class DaughterLink extends Link {
   }
 }
 
+class MCRecoParticleAssociation extends Link {
+  constructor(from, to, weight) {
+    super(from, to);
+    this.color = colors["mcreco"];
+    this.weight = weight;
+  }
+
+  draw(ctx) {
+    drawStraightLink(ctx, this);
+  }
+}
+
+class Particles extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["particles"];
+  }
+}
+
+class Clusters extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["clusters"];
+  }
+}
+
+class Tracks extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["tracks"];
+  }
+}
+
+class Vertex extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["vertex"];
+  }
+}
+
+class MCRecoTrackParticleAssociation extends Link {
+  constructor(from, to, weight) {
+    super(from, to);
+    this.color = colors["mctracks"];
+    this.weight = weight;
+  }
+
+  draw(ctx) {
+    drawStraightLink(ctx, this);
+  }
+}
+
+class MCRecoClusterParticleAssociation extends Link {
+  constructor(from, to, weight) {
+    super(from, to);
+    this.color = colors["mcclusters"];
+    this.weight = weight;
+  }
+
+  draw(ctx) {
+    drawStraightLink(ctx, this);
+  }
+}
+
 export const linkTypes = {
   "parents": ParentLink,
   "daughters": DaughterLink,
-  "trackerHits": Link,
-  "startVertex": Link,
-  "particles": Link,
+  "edm4hep::MCRecoParticleAssociation": MCRecoParticleAssociation,
+  "edm4hep::MCRecoClusterParticleAssociation": MCRecoClusterParticleAssociation,
+  "edm4hep::MCRecoTrackParticleAssociation": MCRecoTrackParticleAssociation,
+  "clusters": Clusters,
+  "tracks": Tracks,
+  "particles": Particles,
+  "particle": Particles,
+  "startVertex": Vertex,
+  "associatedParticle": Vertex,
 };
