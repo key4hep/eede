@@ -37,3 +37,40 @@
 .info-modal-content {
   width: 100%;
 }
+
+#information-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.information-button {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin: 0 5px;
+}
+
+.information-button:hover {
+  cursor: pointer;
+  background-color: #c5c5c5;
+}
+
+#information-button {
+  background-color: #c5c5c5;
+}
+
+#view-information-button {
+  display: none;
+}
+
+#information-button {
+  display: none;
+}
+
+#view-information-content {
+  display: none;
+}

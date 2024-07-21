@@ -6,11 +6,11 @@ export function reconnect(criteriaFunction, loadedObjects) {
 
   emptyCopyObject(loadedObjects, filteredObjects);
 
-  for (const [key, value] of Object.entries(loadedObjects)) {
-    const filterFunction = objectTypes[key].filter;
+  const filterFunction = objectTypes["edm4hep::MCParticle"].filter;
 
-    filterFunction(value, filteredObjects, criteriaFunction);
-  }
+  const mcParticles = loadedObjects.datatypes["edm4hep::MCParticle"];
+
+  filterFunction(mcParticles, filteredObjects.datatypes, criteriaFunction);
 
   return filteredObjects;
 }

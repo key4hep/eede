@@ -1,141 +1,41 @@
-import { EDMObject } from "./edmobject.js";
-import { drawTex, drawRoundedRect } from "../graphic-primitives.js";
+import {
+  drawTex,
+  drawRoundedRect,
+  drawTextLines,
+  drawObjectHeader,
+  drawObjectInfoTip,
+} from "../lib/graphic-primitives.js";
 import { getName } from "../lib/getName.js";
 import { linkTypes } from "./links.js";
+import { parseCharge } from "../lib/parseCharge.js";
+import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
 
-export class Cluster extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
+const TOP_MARGIN = 45;
 
-export class ParticleID extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class ReconstructedParticle extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class Vertex extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class Track extends EDMObject {
-  constructor(id) {
-    super(id);
-  }
-}
-
-export class MCParticle extends EDMObject {
-  constructor(id) {
-    super(id);
-
-    // Appearance
-    this.x = 0;
-    this.y = 0;
+class EDMObject {
+  constructor() {
+    this.x = NaN;
+    this.y = NaN;
+    this.index = NaN;
+    this.collectionId = NaN;
     this.width = 120;
-    this.height = 240;
+    this.height = 260;
     this.lineColor = "black";
     this.lineWidth = 2;
     this.color = "white";
-    this.row = -1;
-
-    this.texImg = null;
-  }
-
-  updateTexImg(text) {
-    let svg = MathJax.tex2svg(text).firstElementChild;
-
-    this.texImg = document.createElement("img");
-    this.texImg.src =
-      "data:image/svg+xml;base64," +
-      btoa(
-        '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n' +
-          svg.outerHTML
-      );
   }
 
   draw(ctx) {
-    // drawCross(ctx, this.x, this.y);
-
-    const boxCenterX = this.x + this.width / 2;
-
-    drawRoundedRect(ctx, this.x, this.y, this.width, this.height, "#f5f5f5");
-
-    if (this.texImg.complete) {
-      drawTex(
-        ctx,
-        boxCenterX,
-        this.y + this.height * 0.4,
-        this.texImg,
-        this.width
-      );
-    } else {
-      this.texImg.onload = () => {
-        drawTex(
-          ctx,
-          boxCenterX,
-          this.y + this.height * 0.4,
-          this.texImg,
-          this.width
-        );
-      };
-    }
-
-    const topY = this.y + 20;
-    const topLines = [];
-    topLines.push("ID: " + this.id);
-    topLines.push("Gen. stat.: " + this.generatorStatus);
-    topLines.push("Sim. stat.: " + this.simulatorStatus);
-
-    const bottomY = this.y + this.height * 0.6;
-    const bottomLines = [];
-    bottomLines.push("p = " + this.momentum + " GeV");
-    bottomLines.push("d = " + this.vertex + " mm");
-    bottomLines.push("t = " + this.time + " ns");
-    bottomLines.push("m = " + this.mass + " GeV");
-    if (Math.abs(this.charge) < 1.0 && this.charge != 0) {
-      if (Math.round(this.charge * 1000) === 667) {
-        bottomLines.push("q = 2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -667) {
-        bottomLines.push("q = -2/3 e");
-      }
-      if (Math.round(this.charge * 1000) === 333) {
-        bottomLines.push("q = 1/3 e");
-      }
-      if (Math.round(this.charge * 1000) === -333) {
-        bottomLines.push("q = -1/3 e");
-      }
-    } else {
-      bottomLines.push("q = " + this.charge + " e");
-    }
-
-    ctx.save();
-    ctx.font = "16px sans-serif";
-    for (const [i, lineText] of topLines.entries()) {
-      ctx.fillText(
-        lineText,
-        boxCenterX - ctx.measureText(lineText).width / 2,
-        topY + i * 23
-      );
-    }
-
-    for (const [i, lineText] of bottomLines.entries()) {
-      ctx.fillText(
-        lineText,
-        boxCenterX - ctx.measureText(lineText).width / 2,
-        bottomY + i * 22
-      );
-    }
-    ctx.restore();
+    drawRoundedRect(
+      ctx,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      this.color,
+      this.radius
+    );
+    drawObjectHeader(ctx, this);
   }
 
   isHere(mouseX, mouseY) {
@@ -156,7 +56,102 @@ export class MCParticle extends EDMObject {
     );
   }
 
-  static setup(mcCollection, canvas) {
+  showObjectTip(ctx) {
+    const x = this.x;
+    const y = this.y - 10;
+    const collectionName = "Collection: " + this.collectionName;
+    drawObjectInfoTip(ctx, x, y, collectionName);
+  }
+}
+
+export class MCParticle extends EDMObject {
+  constructor() {
+    super();
+    this.row = -1;
+    this.texImg = null;
+    this.color = "#dff6ff";
+    this.radius = 15;
+    this.height = 270;
+  }
+
+  updateTexImg(text) {
+    let svg = MathJax.tex2svg(text).firstElementChild;
+
+    this.texImg = document.createElement("img");
+    this.texImg.src =
+      "data:image/svg+xml;base64," +
+      btoa(
+        '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n' +
+          svg.outerHTML
+      );
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    super.draw(ctx);
+
+    if (this.texImg.complete) {
+      drawTex(
+        ctx,
+        boxCenterX,
+        this.y + TOP_MARGIN + 80,
+        this.texImg,
+        this.width
+      );
+    } else {
+      this.texImg.onload = () => {
+        drawTex(
+          ctx,
+          boxCenterX,
+          this.y + TOP_MARGIN + 80,
+          this.texImg,
+          this.width
+        );
+      };
+    }
+
+    const topY = this.y + TOP_MARGIN;
+    const topLines = [];
+    topLines.push("ID: " + this.index);
+    topLines.push("Gen. stat.: " + this.generatorStatus);
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
+    const simulatorStatusFirstLetter = simulatorStatus
+      .map((s) => s[0])
+      .join("");
+    const simulatorStatusString =
+      simulatorStatusFirstLetter !== ""
+        ? simulatorStatusFirstLetter
+        : this.simulatorStatus;
+    topLines.push("Sim. stat.: " + simulatorStatusString);
+
+    const bottomY = this.y + this.height * 0.65;
+    const bottomLines = [];
+    bottomLines.push("p = " + this.momentum + " GeV");
+    bottomLines.push("d = " + this.vertex + " mm");
+    bottomLines.push("t = " + this.time + " ns");
+    bottomLines.push("m = " + this.mass + " GeV");
+    bottomLines.push(parseCharge(this.charge));
+
+    drawTextLines(ctx, topLines, boxCenterX, topY, 23);
+
+    drawTextLines(ctx, bottomLines, boxCenterX, bottomY, 22);
+  }
+
+  showObjectTip(ctx) {
+    const x = this.x;
+    const y = this.y - 10;
+    const collectionName = "Collection: " + this.collectionName;
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus
+    );
+
+    drawObjectInfoTip(ctx, x, y, collectionName, ...simulatorStatus);
+  }
+
+  static setup(mcCollection) {
     for (const mcParticle of mcCollection) {
       const parentLength = mcParticle.oneToManyRelations["parents"].length;
       const daughterLength = mcParticle.oneToManyRelations["daughters"].length;
@@ -188,95 +183,6 @@ export class MCParticle extends EDMObject {
 
       mcParticle.time = Math.round(mcParticle.time * 100) / 100;
       mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
-    }
-
-    const getMaxRow = (parentLinks) => {
-      let maxRow = -1;
-      for (const parentLink of parentLinks) {
-        const parent = parentLink.from;
-        if (parent.row === -1) {
-          return -1;
-        }
-
-        if (parent.row > maxRow) {
-          maxRow = parent.row;
-        }
-      }
-
-      return maxRow;
-    };
-
-    let repeat = true;
-    while (repeat) {
-      repeat = false;
-      for (const mcParticle of mcCollection) {
-        if (mcParticle.row >= 0) {
-          continue;
-        }
-        const parentRow = getMaxRow(mcParticle.oneToManyRelations["parents"]);
-        if (parentRow >= 0) {
-          mcParticle.row = parentRow + 1;
-        } else {
-          repeat = true;
-        }
-      }
-    }
-
-    const rows = mcCollection.map((obj) => {
-      return obj.row;
-    });
-    const maxRow = Math.max(...rows);
-
-    // Order infoBoxes into rows
-    const mcRows = [];
-    for (let i = 0; i <= maxRow; i++) {
-      mcRows.push([]);
-    }
-    for (const box of mcCollection) {
-      mcRows[box.row].push(box);
-    }
-    const rowWidths = mcRows.map((obj) => {
-      return obj.length;
-    });
-    const maxRowWidth = Math.max(...rowWidths);
-
-    const boxWidth = mcCollection[0].width;
-    const boxHeight = mcCollection[0].height;
-    const horizontalGap = boxWidth * 0.4;
-    const verticalGap = boxHeight * 0.3;
-
-    canvas.width =
-      boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
-    canvas.height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
-
-    for (const [i, row] of mcRows.entries()) {
-      for (const [j, box] of row.entries()) {
-        if (row.length % 2 === 0) {
-          const distanceFromCenter = j - row.length / 2;
-          if (distanceFromCenter < 0) {
-            box.x =
-              canvas.width / 2 -
-              boxWidth -
-              horizontalGap / 2 +
-              (distanceFromCenter + 1) * boxWidth +
-              (distanceFromCenter + 1) * horizontalGap;
-          } else {
-            box.x =
-              canvas.width / 2 +
-              horizontalGap / 2 +
-              distanceFromCenter * boxWidth +
-              distanceFromCenter * horizontalGap;
-          }
-        } else {
-          const distanceFromCenter = j - row.length / 2;
-          box.x =
-            canvas.width / 2 -
-            boxWidth / 2 +
-            distanceFromCenter * boxWidth +
-            distanceFromCenter * horizontalGap;
-        }
-        box.y = i * verticalGap + verticalGap + i * boxHeight;
-      }
     }
   }
 
@@ -327,11 +233,181 @@ export class MCParticle extends EDMObject {
   }
 }
 
+class ReconstructedParticle extends EDMObject {
+  constructor() {
+    super();
+    this.width = 140;
+    this.height = 190;
+    this.color = "#fbffdf";
+    this.radius = 30;
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    super.draw(ctx);
+
+    const topY = this.y + 1.5 * TOP_MARGIN;
+    const lines = [];
+
+    lines.push("ID: " + this.index);
+
+    const x = parseInt(this.momentum.x * 100) / 100;
+    const y = parseInt(this.momentum.y * 100) / 100;
+    const z = parseInt(this.momentum.z * 100) / 100;
+    lines.push(`p = (x=${x},`);
+    lines.push(`y=${y},`);
+    lines.push(`z=${z}) GeV`);
+
+    const energy = parseInt(this.energy * 100) / 100;
+    lines.push("e = " + energy + " GeV");
+
+    lines.push(parseCharge(this.charge));
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(recoCollection) {}
+
+  static filter() {}
+}
+
+class Cluster extends EDMObject {
+  constructor() {
+    super();
+    this.width = 140;
+    this.height = 170;
+    this.color = "#ffe8df";
+    this.radius = 20;
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    super.draw(ctx);
+
+    const topY = this.y + TOP_MARGIN;
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    const energy = parseInt(this.energy * 100) / 100;
+    lines.push("e = " + energy + " GeV");
+    const x = parseInt(this.position.x * 100) / 100;
+    const y = parseInt(this.position.y * 100) / 100;
+    const z = parseInt(this.position.z * 100) / 100;
+    lines.push(`pos = (x=${x},`);
+    lines.push(`y=${y},`);
+    lines.push(`z=${z}) mm`);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(clusterCollection) {}
+}
+
+class Track extends EDMObject {
+  constructor() {
+    super();
+    this.width = 140;
+    this.height = 150;
+    this.color = "#fff6df";
+    this.radius = 25;
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    super.draw(ctx);
+
+    const topY = this.y + TOP_MARGIN;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    const chi2 = parseInt(this.chi2 * 100) / 100;
+    const ndf = parseInt(this.ndf * 100) / 100;
+    const chiNdf = `${chi2}/${ndf}`;
+    lines.push("chi2/ndf = " + chiNdf);
+    lines.push("dEdx = " + this.dEdx);
+
+    const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
+    lines.push("tracker hits: " + trackerHitsCount);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(trackCollection) {}
+}
+
+class ParticleID extends EDMObject {
+  constructor() {
+    super();
+    this.width = 140;
+    this.height = 140;
+    this.color = "#c9edf7";
+    this.radius = 25;
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    super.draw(ctx);
+
+    const topY = this.y + TOP_MARGIN;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    lines.push("type: " + this.type);
+    lines.push("PDG: " + this.PDG);
+    lines.push("algorithm: " + this.algorithmType);
+    lines.push("likelihood: " + this.likelihood);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(particleIDCollection) {}
+}
+
+class Vertex extends EDMObject {
+  constructor() {
+    super();
+    this.width = 140;
+    this.height = 150;
+    this.color = "#f5d3ef";
+    this.radius = 25;
+  }
+
+  draw(ctx) {
+    const boxCenterX = this.x + this.width / 2;
+
+    super.draw(ctx);
+
+    const topY = this.y + TOP_MARGIN;
+
+    const lines = [];
+    lines.push("ID: " + this.index);
+    const x = parseInt(this.position.x * 100) / 100;
+    const y = parseInt(this.position.y * 100) / 100;
+    const z = parseInt(this.position.z * 100) / 100;
+    lines.push(`pos = (x=${x},`);
+    lines.push(`y=${y},`);
+    lines.push(`z=${z}) mm`);
+    const chi2 = parseInt(this.chi2 * 100) / 100;
+    const ndf = parseInt(this.ndf * 100) / 100;
+    const chiNdf = `${chi2}/${ndf}`;
+    lines.push("chi2/ndf = " + chiNdf);
+
+    drawTextLines(ctx, lines, boxCenterX, topY, 23);
+  }
+
+  static setup(vertexCollection) {}
+}
+
 export const objectTypes = {
-  "edm4hep::Cluster": Cluster,
-  "edm4hep::ParticleID": ParticleID,
-  "edm4hep::ReconstructedParticle": ReconstructedParticle,
-  "edm4hep::Vertex": Vertex,
-  "edm4hep::Track": Track,
   "edm4hep::MCParticle": MCParticle,
+  "edm4hep::ReconstructedParticle": ReconstructedParticle,
+  "edm4hep::Cluster": Cluster,
+  "edm4hep::Track": Track,
+  "edm4hep::ParticleID": ParticleID,
+  "edm4hep::Vertex": Vertex,
 };

@@ -1,16 +1,11 @@
 import { drawAll } from "../../draw.js";
-import {
-  ctx,
-  loadedObjects,
-  currentObjects,
-  visibleObjects,
-} from "../../main.js";
 import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
 import { getVisible } from "../../events.js";
 import { units } from "../../types/units.js";
 import { copyObject } from "../../lib/copy.js";
+import { SimStatusBitFieldDisplayValues } from "../../../mappings/sim-status.js";
 
 const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
@@ -21,20 +16,6 @@ const apply = document.getElementById("filter-apply");
 const reset = document.getElementById("filter-reset");
 
 let active = false;
-
-filterButton.addEventListener("click", () => {
-  active = !active;
-
-  if (active) {
-    openFilter.style.display = "none";
-    closeFilter.style.display = "block";
-    filterContent.style.display = "flex";
-  } else {
-    openFilter.style.display = "block";
-    closeFilter.style.display = "none";
-    filterContent.style.display = "none";
-  }
-});
 
 export function renderRangeParameters(rangeParameters) {
   const rangeFilters = document.createElement("div");
@@ -80,17 +61,6 @@ let parametersRange = units.sort((a, b) =>
 
 parametersRange = parametersRange.map((parameter) => new Range(parameter));
 
-const SimStatusBitFieldDisplayValues = {
-  23: "Overlay",
-  24: "Stopped",
-  25: "LeftDetector",
-  26: "DecayedInCalorimeter",
-  27: "DecayedInTracker",
-  28: "VertexIsNotEndpointOfParent",
-  29: "Backscatter",
-  30: "CreatedInSimulation",
-};
-
 const bits = new BitFieldBuilder(
   "simulatorStatus",
   "Simulation status",
@@ -115,7 +85,7 @@ function applyFilter(loadedObjects, currentObjects, visibleObjects) {
 
   copyObject(filteredObjects, currentObjects);
 
-  drawAll(ctx, currentObjects);
+  drawAll(currentObjects);
 
   getVisible(currentObjects, visibleObjects);
 }
@@ -123,7 +93,7 @@ function applyFilter(loadedObjects, currentObjects, visibleObjects) {
 function removeFilter(loadedObjects, currentObjects, visibleObjects) {
   copyObject(loadedObjects, currentObjects);
 
-  drawAll(ctx, currentObjects);
+  drawAll(currentObjects);
 
   getVisible(currentObjects, visibleObjects);
 
@@ -133,18 +103,34 @@ function removeFilter(loadedObjects, currentObjects, visibleObjects) {
   renderGenSim(bits, genStatus);
 }
 
-apply.addEventListener("click", () =>
-  applyFilter(loadedObjects, currentObjects, visibleObjects)
-);
+export function start(loadedObjects, currentObjects, visibleObjects) {
+  filterButton.addEventListener("click", () => {
+    active = !active;
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" && active) {
-    applyFilter(loadedObjects, currentObjects, visibleObjects);
-  }
-});
+    if (active) {
+      openFilter.style.display = "none";
+      closeFilter.style.display = "block";
+      filterContent.style.display = "flex";
+    } else {
+      openFilter.style.display = "block";
+      closeFilter.style.display = "none";
+      filterContent.style.display = "none";
+    }
+  });
 
-reset.addEventListener("click", () =>
-  removeFilter(loadedObjects, currentObjects, visibleObjects)
-);
+  apply.addEventListener("click", () =>
+    applyFilter(loadedObjects, currentObjects, visibleObjects)
+  );
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && active) {
+      applyFilter(loadedObjects, currentObjects, visibleObjects);
+    }
+  });
+
+  reset.addEventListener("click", () =>
+    removeFilter(loadedObjects, currentObjects, visibleObjects)
+  );
+}
 
 export { bits, genStatus, parametersRange };
