@@ -1,7 +1,5 @@
 import { Application, Container, Culler } from "../pixi.min.mjs";
-
-const SPEED = 0.5;
-const MARGIN = 0;
+import { addScroll } from "./scroll.js";
 
 const pixi = {
   app: null,
@@ -25,38 +23,6 @@ const createApp = async () => {
 
   document.body.appendChild(app.canvas);
   return app;
-};
-
-const addScroll = (app) => {
-  const container = getContainer();
-  const renderer = app.renderer;
-
-  container.x = 0;
-  container.y = 0;
-
-  const screenWidth = renderer.width;
-  const screenHeight = renderer.height;
-
-  app.canvas.addEventListener("wheel", (e) => {
-    const deltaX = parseInt(e.deltaX * SPEED);
-    const deltaY = parseInt(e.deltaY * SPEED);
-
-    const newXPosition = container.x - deltaX;
-    const newYPosition = container.y - deltaY;
-
-    const isXInBounds =
-      newXPosition < 0 && newXPosition > screenWidth - pixi.width;
-
-    const isYInBounds =
-      newYPosition < 0 && newYPosition > screenHeight - pixi.height;
-
-    if (isXInBounds) {
-      container.x = newXPosition;
-    }
-    if (isYInBounds) {
-      container.y = newYPosition;
-    }
-  });
 };
 
 export const createContainer = (app) => {
@@ -96,6 +62,5 @@ export const getContainerSize = () => {
 
 export const startPixi = async () => {
   const app = await createApp();
-  createContainer(app);
   pixi.app = app;
 };
