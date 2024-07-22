@@ -9,6 +9,7 @@ import {
   createContainer,
   getApp,
   getContainer,
+  saveSize,
   setContainerSize,
 } from "../draw/app.js";
 
@@ -33,8 +34,11 @@ function getViewScrollIndex() {
 }
 
 function scroll() {
+  const container = getContainer();
   const index = getViewScrollIndex();
-  window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
+  const { x, y } = scrollLocations[index];
+
+  container.position.set(x, y);
 }
 
 function setInfoButtonName(view) {
@@ -83,35 +87,33 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  // const container = getContainer();
-  // container.destroy({
-  //   children: true,
-  // });
   const app = getApp();
   app.stage.removeChildren();
   createContainer(app);
 
   const [width, height] = viewFunction(viewObjects);
   setContainerSize(width, height);
+  saveSize(width, height);
 
   await renderObjects(viewObjects);
-  scrollFunction();
-  // const scrollIndex = getViewScrollIndex();
 
-  // if (scrollLocations[scrollIndex] === undefined) {
-  //   const viewScrollLocation = scrollFunction();
-  //   scrollLocations[scrollIndex] = viewScrollLocation;
-  // }
+  const scrollIndex = getViewScrollIndex();
+  if (scrollLocations[scrollIndex] === undefined) {
+    const viewScrollLocation = scrollFunction();
+    scrollLocations[scrollIndex] = viewScrollLocation;
+  }
 
+  scroll();
   // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
 };
 
 export function saveScrollLocation() {
   const index = getViewScrollIndex();
   if (scrollLocations[index] === undefined) return;
+  const container = getContainer();
   scrollLocations[index] = {
-    x: window.scrollX,
-    y: window.scrollY,
+    x: container.x,
+    y: container.y,
   };
 }
 
@@ -133,6 +135,8 @@ for (const key in views) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
   button.onclick = () => {
+    saveScrollLocation();
+    setView(key);
     addTask(key);
   };
   button.className = "view-button";

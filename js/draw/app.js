@@ -1,11 +1,13 @@
 import { Application, Container, Culler } from "../pixi.min.mjs";
 
 const SPEED = 0.5;
-const MARGIN = 100;
+const MARGIN = 0;
 
 const pixi = {
   app: null,
   container: null,
+  width: NaN,
+  height: NaN,
 };
 
 const createApp = async () => {
@@ -36,20 +38,17 @@ const addScroll = (app) => {
   const screenHeight = renderer.height;
 
   app.canvas.addEventListener("wheel", (e) => {
-    const deltaX = parseInt(e.deltaX) * SPEED;
-    const deltaY = parseInt(e.deltaY) * SPEED;
+    const deltaX = parseInt(e.deltaX * SPEED);
+    const deltaY = parseInt(e.deltaY * SPEED);
 
     const newXPosition = container.x - deltaX;
     const newYPosition = container.y - deltaY;
 
-    const absXPosition = Math.abs(newXPosition);
-    const absYPosition = Math.abs(newYPosition);
-
     const isXInBounds =
-      newXPosition < 0 && absXPosition + screenWidth < container.width + MARGIN;
+      newXPosition < 0 && newXPosition > screenWidth - pixi.width;
+
     const isYInBounds =
-      newYPosition < 0 &&
-      absYPosition + screenHeight < container.height + MARGIN;
+      newYPosition < 0 && newYPosition > screenHeight - pixi.height;
 
     if (isXInBounds) {
       container.x = newXPosition;
@@ -82,6 +81,11 @@ export const setContainerSize = (width, height) => {
   const container = getContainer();
   container.width = width;
   container.height = height;
+};
+
+export const saveSize = (width, height) => {
+  pixi.width = width;
+  pixi.height = height;
 };
 
 export const getApp = () => {
