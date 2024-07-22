@@ -1,11 +1,11 @@
 import { Application, Container, Culler } from "../pixi.min.mjs";
-
-const SPEED = 0.5;
-const MARGIN = 100;
+import { addScroll } from "./scroll.js";
 
 const pixi = {
   app: null,
   container: null,
+  width: NaN,
+  height: NaN,
 };
 
 const createApp = async () => {
@@ -23,41 +23,6 @@ const createApp = async () => {
 
   document.body.appendChild(app.canvas);
   return app;
-};
-
-const addScroll = (app) => {
-  const container = getContainer();
-  const renderer = app.renderer;
-
-  container.x = 0;
-  container.y = 0;
-
-  const screenWidth = renderer.width;
-  const screenHeight = renderer.height;
-
-  app.canvas.addEventListener("wheel", (e) => {
-    const deltaX = parseInt(e.deltaX) * SPEED;
-    const deltaY = parseInt(e.deltaY) * SPEED;
-
-    const newXPosition = container.x - deltaX;
-    const newYPosition = container.y - deltaY;
-
-    const absXPosition = Math.abs(newXPosition);
-    const absYPosition = Math.abs(newYPosition);
-
-    const isXInBounds =
-      newXPosition < 0 && absXPosition + screenWidth < container.width + MARGIN;
-    const isYInBounds =
-      newYPosition < 0 &&
-      absYPosition + screenHeight < container.height + MARGIN;
-
-    if (isXInBounds) {
-      container.x = newXPosition;
-    }
-    if (isYInBounds) {
-      container.y = newYPosition;
-    }
-  });
 };
 
 export const createContainer = (app) => {
@@ -78,10 +43,9 @@ export const createContainer = (app) => {
   addScroll(app);
 };
 
-export const setContainerSize = (width, height) => {
-  const container = getContainer();
-  container.width = width;
-  container.height = height;
+export const saveSize = (width, height) => {
+  pixi.width = width;
+  pixi.height = height;
 };
 
 export const getApp = () => {
@@ -92,8 +56,11 @@ export const getContainer = () => {
   return pixi.container;
 };
 
+export const getContainerSize = () => {
+  return { width: pixi.width, height: pixi.height };
+};
+
 export const startPixi = async () => {
   const app = await createApp();
-  createContainer(app);
   pixi.app = app;
 };

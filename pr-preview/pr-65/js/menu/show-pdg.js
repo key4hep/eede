@@ -1,25 +1,19 @@
-import { Toggle } from "./toggle.js";
+export const togglePDG = async (objects) => {
+  const collection = objects.datatypes["edm4hep::MCParticle"].collection;
 
-export class PdgToggle extends Toggle {
-  constructor(id) {
-    super(id);
-  }
+  const updatePDG = collection.map((object) =>
+    object.drawImage(`${object.name}`)
+  );
 
-  toggle(currentObjects, redraw) {
-    const collection =
-      currentObjects.datatypes["edm4hep::MCParticle"].collection;
-    if (this.isSliderActive) {
-      if (collection[0].PDG === undefined) return;
-      for (const object of collection) {
-        object.updateTexImg(`${object.PDG}`);
-      }
-    } else {
-      if (collection[0].PDG === undefined) return;
-      for (const object of collection) {
-        object.updateTexImg(`${object.name}`);
-      }
-    }
+  await Promise.all(updatePDG);
+};
 
-    redraw();
-  }
-}
+export const toggleId = async (objects) => {
+  const collection = objects.datatypes["edm4hep::MCParticle"].collection;
+
+  const updateId = collection.map((object) =>
+    object.drawImage(`${object.PDG}`)
+  );
+
+  await Promise.all(updateId);
+};

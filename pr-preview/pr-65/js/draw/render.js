@@ -1,12 +1,17 @@
+import { getApp, createContainer } from "./app.js";
+import { scroll } from "../views/views.js";
+
 export async function renderObjects(objects) {
+  const app = getApp();
+  app.stage.removeChildren();
+  createContainer(app);
+
   const datatypes = objects.datatypes;
   const associations = objects.associations;
 
   for (const { collection } of Object.values(datatypes)) {
-    for (const object of collection) {
-      object.renderedBox = null;
-      await object.draw();
-    }
+    const renderPromises = collection.map((object) => object.draw());
+    await Promise.all(renderPromises);
   }
 
   for (const { oneToMany, oneToOne } of Object.values(datatypes)) {
@@ -28,4 +33,6 @@ export async function renderObjects(objects) {
       association.draw();
     }
   }
+
+  scroll();
 }

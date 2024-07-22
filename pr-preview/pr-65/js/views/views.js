@@ -5,12 +5,7 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
-import {
-  createContainer,
-  getApp,
-  getContainer,
-  setContainerSize,
-} from "../draw/app.js";
+import { getContainer, saveSize } from "../draw/app.js";
 
 const currentView = {};
 
@@ -32,9 +27,12 @@ function getViewScrollIndex() {
   return `${currentEvent.event}-${getView()}`;
 }
 
-function scroll() {
+export function scroll() {
+  const container = getContainer();
   const index = getViewScrollIndex();
-  window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
+  const { x, y } = scrollLocations[index];
+
+  container.position.set(x, y);
 }
 
 function setInfoButtonName(view) {
@@ -83,35 +81,27 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  // const container = getContainer();
-  // container.destroy({
-  //   children: true,
-  // });
-  const app = getApp();
-  app.stage.removeChildren();
-  createContainer(app);
-
   const [width, height] = viewFunction(viewObjects);
-  setContainerSize(width, height);
+  saveSize(width, height);
+
+  const scrollIndex = getViewScrollIndex();
+  if (scrollLocations[scrollIndex] === undefined) {
+    const viewScrollLocation = scrollFunction();
+    scrollLocations[scrollIndex] = viewScrollLocation;
+  }
 
   await renderObjects(viewObjects);
-  scrollFunction();
-  // const scrollIndex = getViewScrollIndex();
 
-  // if (scrollLocations[scrollIndex] === undefined) {
-  //   const viewScrollLocation = scrollFunction();
-  //   scrollLocations[scrollIndex] = viewScrollLocation;
-  // }
-
-  // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
+  filters(viewObjects, viewCurrentObjects);
 };
 
 export function saveScrollLocation() {
   const index = getViewScrollIndex();
   if (scrollLocations[index] === undefined) return;
+  const container = getContainer();
   scrollLocations[index] = {
-    x: window.scrollX,
-    y: window.scrollY,
+    x: container.x,
+    y: container.y,
   };
 }
 
@@ -133,6 +123,8 @@ for (const key in views) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
   button.onclick = () => {
+    saveScrollLocation();
+    setView(key);
     addTask(key);
   };
   button.className = "view-button";
