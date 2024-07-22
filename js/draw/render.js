@@ -2,14 +2,14 @@ export async function renderObjects(objects) {
   const datatypes = objects.datatypes;
   const associations = objects.associations;
 
-  for (const elements of Object.values(datatypes)) {
-    const { collection, oneToMany, oneToOne } = elements;
-
+  for (const { collection } of Object.values(datatypes)) {
     for (const object of collection) {
       object.renderedBox = null;
       await object.draw();
     }
+  }
 
+  for (const { oneToMany, oneToOne } of Object.values(datatypes)) {
     for (const links of Object.values(oneToMany)) {
       for (const link of links) {
         link.draw();
