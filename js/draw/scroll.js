@@ -1,4 +1,4 @@
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainerSize } from "./app.js";
 
 export const scrollTopLeft = () => {
   const x = 0;
@@ -9,10 +9,10 @@ export const scrollTopLeft = () => {
 
 export const scrollTopCenter = () => {
   const app = getApp();
-  const container = getContainer();
+  const { width } = getContainerSize();
 
   const screenWidth = app.renderer.width;
-  const containerWidth = container.width;
+  const containerWidth = width;
 
   const x = (screenWidth - containerWidth) / 2;
   const y = 0;

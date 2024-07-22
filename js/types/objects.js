@@ -121,13 +121,7 @@ export class MCParticle extends EDMObject {
 
     const imageY = nextY + IMAGE_MARGIN;
 
-    textToSVG(this.name, IMAGE_SIZE)
-      .then((src) => {
-        const sprite = svgElementToPixiSprite(src, IMAGE_SIZE);
-        return sprite;
-      })
-      .then((sprite) => addImageToBox(sprite, box, imageY))
-      .catch((e) => console.error("Error loading SVG: ", e));
+    this.drawImage(this.name, imageY);
 
     nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
 
@@ -147,6 +141,18 @@ export class MCParticle extends EDMObject {
       this.simulatorStatus
     );
     return [collectionName, ...simulatorStatus];
+  }
+
+  async drawImage(text, imageY) {
+    if (this.pdgImage) {
+      imageY = this.pdgImage.position.y;
+      this.renderedBox.removeChild(this.pdgImage);
+    }
+
+    const src = await textToSVG(text, IMAGE_SIZE);
+    const sprite = await svgElementToPixiSprite(src, IMAGE_SIZE);
+    this.pdgImage = sprite;
+    addImageToBox(sprite, this.renderedBox, imageY);
   }
 
   static setup(mcCollection) {

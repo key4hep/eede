@@ -77,12 +77,6 @@ export const createContainer = (app) => {
   addScroll(app);
 };
 
-export const setContainerSize = (width, height) => {
-  const container = getContainer();
-  container.width = width;
-  container.height = height;
-};
-
 export const saveSize = (width, height) => {
   pixi.width = width;
   pixi.height = height;
@@ -94,6 +88,10 @@ export const getApp = () => {
 
 export const getContainer = () => {
   return pixi.container;
+};
+
+export const getContainerSize = () => {
+  return { width: pixi.width, height: pixi.height };
 };
 
 export const startPixi = async () => {

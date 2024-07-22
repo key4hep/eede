@@ -5,13 +5,7 @@ import { views } from "./views-dictionary.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
-import {
-  createContainer,
-  getApp,
-  getContainer,
-  saveSize,
-  setContainerSize,
-} from "../draw/app.js";
+import { getContainer, saveSize } from "../draw/app.js";
 
 const currentView = {};
 
@@ -33,7 +27,7 @@ function getViewScrollIndex() {
   return `${currentEvent.event}-${getView()}`;
 }
 
-function scroll() {
+export function scroll() {
   const container = getContainer();
   const index = getViewScrollIndex();
   const { x, y } = scrollLocations[index];
@@ -87,15 +81,8 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  const app = getApp();
-  app.stage.removeChildren();
-  createContainer(app);
-
   const [width, height] = viewFunction(viewObjects);
-  setContainerSize(width, height);
   saveSize(width, height);
-
-  await renderObjects(viewObjects);
 
   const scrollIndex = getViewScrollIndex();
   if (scrollLocations[scrollIndex] === undefined) {
@@ -103,8 +90,9 @@ const drawView = async (view) => {
     scrollLocations[scrollIndex] = viewScrollLocation;
   }
 
-  scroll();
-  // filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
+  await renderObjects(viewObjects);
+
+  filters(viewObjects, viewCurrentObjects);
 };
 
 export function saveScrollLocation() {
