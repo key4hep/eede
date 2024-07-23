@@ -1,4 +1,4 @@
-import { preFilterTree } from "./pre-filter.js";
+import { preFilterTree } from "../filters/pre-filter.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =
