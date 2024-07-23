@@ -12,7 +12,7 @@ const createApp = async () => {
   const app = new Application();
   await app.init({
     background: "#ffffff",
-    antialias: false,
+    antialias: true,
     useContextAlpha: false,
     resizeTo: window,
     preference: "webgpu",
