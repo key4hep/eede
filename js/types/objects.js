@@ -37,11 +37,11 @@ class EDMObject {
     box.interactiveChildren = false;
     addBox(box);
     box.position.set(this.x, this.y);
+    box.cullable = true;
     const nextY = addTitleToBox(this.constructor.name, box);
 
     box.cursor = "pointer";
     box.eventMode = "static";
-
     box.on("pointerdown", dragStart, box);
 
     addHoverModal(box, this.objectModalLines());

@@ -27,9 +27,7 @@ const createApp = async () => {
 };
 
 export const createContainer = (app) => {
-  const container = new Container({
-    isRenderGroup: true,
-  });
+  const container = new Container();
   pixi.container = container;
 
   const culler = new Culler();
