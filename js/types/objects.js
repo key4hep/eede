@@ -41,18 +41,18 @@ class EDMObject {
     box.cursor = "pointer";
     box.eventMode = "static";
 
-    let prevX = box.x + box.width / 2;
-    let prevY = box.y + box.height / 2;
+    const container = box.parent;
 
     box
       .on(
         "pointerdown",
-        function () {
+        function (downEvent) {
+          let prevX = container.toLocal(downEvent.data.global).x;
+          let prevY = container.toLocal(downEvent.data.global).y;
+
           this.on(
             "pointermove",
             function (event) {
-              const container = box.parent;
-
               const eventX = container.toLocal(event.data.global).x;
               const eventY = container.toLocal(event.data.global).y;
 
