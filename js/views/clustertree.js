@@ -1,5 +1,5 @@
-import { buildTree } from "./tree.js";
-import { preFilterTree } from "./pre-filter.js";
+import { buildTree } from "./templates/tree.js";
+import { preFilterTree } from "../filters/pre-filter.js";
 
 export function clusterTree(viewCurrentObjects) {
   const clusterCollection =
