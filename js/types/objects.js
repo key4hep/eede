@@ -12,6 +12,7 @@ import {
   addHoverModal,
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
+import { dragStart } from "../draw/drag.js";
 
 const IMAGE_MARGIN = 10;
 const IMAGE_SIZE = 40;
@@ -41,43 +42,7 @@ class EDMObject {
     box.cursor = "pointer";
     box.eventMode = "static";
 
-    const container = box.parent;
-
-    box
-      .on(
-        "pointerdown",
-        function (downEvent) {
-          let prevX = container.toLocal(downEvent.data.global).x;
-          let prevY = container.toLocal(downEvent.data.global).y;
-
-          this.on(
-            "pointermove",
-            function (event) {
-              const eventX = container.toLocal(event.data.global).x;
-              const eventY = container.toLocal(event.data.global).y;
-
-              const deltaX = eventX - prevX;
-              const deltaY = eventY - prevY;
-
-              this.position.x += deltaX;
-              this.position.y += deltaY;
-              prevX = eventX;
-              prevY = eventY;
-            },
-            box
-          );
-          this.zIndex = 2;
-        },
-        box
-      )
-      .on(
-        "pointerup",
-        function () {
-          this.off("pointermove");
-          this.zIndex = 1;
-        },
-        box
-      );
+    box.on("pointerdown", dragStart, box);
 
     addHoverModal(box, this.objectModalLines());
     return [box, nextY];

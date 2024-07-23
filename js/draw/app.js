@@ -1,4 +1,5 @@
 import { Application, Container, Culler } from "../pixi.min.mjs";
+import { dragEnd } from "./drag.js";
 import { addScroll } from "./scroll.js";
 
 const pixi = {
@@ -40,6 +41,10 @@ export const createContainer = (app) => {
   });
 
   app.stage.addChild(container);
+  app.stage.eventMode = "static";
+  app.stage.hitArea = app.screen;
+  app.stage.on("pointerup", dragEnd);
+  app.stage.on("pointerupoutside", dragEnd);
   addScroll(app);
 };
 
