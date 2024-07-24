@@ -44,19 +44,26 @@ export const addScroll = (app, objects) => {
         container.x = newXPosition;
       }
     } else {
+      const deltaX = parseInt(e.deltaX * SPEED);
       const deltaY = parseInt(e.deltaY * SPEED);
-
+      const newXPosition = container.x - deltaX;
       const newYPosition = container.y - deltaY;
 
+      const isXInBounds =
+        newXPosition < 0 &&
+        newXPosition > screenWidth - getContainerSize().width;
       const isYInBounds =
         newYPosition < 0 &&
         newYPosition > screenHeight - getContainerSize().height;
+
+      if (isXInBounds) {
+        container.x = newXPosition;
+      }
 
       if (isYInBounds) {
         container.y = newYPosition;
       }
     }
-
     setRenderable(objects);
   });
 };
