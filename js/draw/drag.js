@@ -1,3 +1,4 @@
+import { Rectangle } from "../pixi.min.mjs";
 import { getApp, getContainer } from "./app.js";
 
 let currentObject;
@@ -27,6 +28,13 @@ export function dragMove(event) {
 
   this.position.x += deltaX;
   this.position.y += deltaY;
+
+  this.cullArea = new Rectangle(
+    this.position.x,
+    this.position.y,
+    this.width,
+    this.height
+  );
 
   prevX = eventX;
   prevY = eventY;

@@ -6,6 +6,7 @@ import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
 import { getContainer, saveSize } from "../draw/app.js";
+import { setRenderable } from "../draw/renderable.js";
 
 const currentView = {};
 
@@ -91,6 +92,7 @@ const drawView = async (view) => {
   }
 
   await renderObjects(viewObjects);
+  setRenderable(viewCurrentObjects);
 
   filters(viewObjects, viewCurrentObjects);
 };

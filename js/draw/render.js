@@ -4,7 +4,7 @@ import { scroll } from "../views/views.js";
 export async function renderObjects(objects) {
   const app = getApp();
   app.stage.removeChildren();
-  createContainer(app);
+  createContainer(app, objects);
 
   const datatypes = objects.datatypes;
   const associations = objects.associations;

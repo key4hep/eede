@@ -1,4 +1,5 @@
 import { getApp, getContainerSize, getContainer } from "./app.js";
+import { setRenderable } from "./renderable.js";
 
 const SPEED = 0.5;
 
@@ -22,7 +23,7 @@ export const scrollTopCenter = () => {
   return { x, y };
 };
 
-export const addScroll = (app) => {
+export const addScroll = (app, objects) => {
   const container = getContainer();
   const renderer = app.renderer;
 
@@ -55,5 +56,7 @@ export const addScroll = (app) => {
         container.y = newYPosition;
       }
     }
+
+    setRenderable(objects);
   });
 };
