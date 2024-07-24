@@ -12,6 +12,9 @@ import {
   addHoverModal,
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
+import { dragStart } from "../draw/drag.js";
+import { getApp, getContainer } from "../draw/app.js";
+import { Culler, Rectangle } from "../pixi.min.mjs";
 
 const IMAGE_MARGIN = 10;
 const IMAGE_SIZE = 40;
@@ -40,44 +43,9 @@ class EDMObject {
 
     box.cursor = "pointer";
     box.eventMode = "static";
-
-    let prevX = box.x + box.width / 2;
-    let prevY = box.y + box.height / 2;
-
-    box
-      .on(
-        "pointerdown",
-        function () {
-          this.on(
-            "pointermove",
-            function (event) {
-              const container = box.parent;
-
-              const eventX = container.toLocal(event.data.global).x;
-              const eventY = container.toLocal(event.data.global).y;
-
-              const deltaX = eventX - prevX;
-              const deltaY = eventY - prevY;
-
-              this.position.x += deltaX;
-              this.position.y += deltaY;
-              prevX = eventX;
-              prevY = eventY;
-            },
-            box
-          );
-          this.zIndex = 2;
-        },
-        box
-      )
-      .on(
-        "pointerup",
-        function () {
-          this.off("pointermove");
-          this.zIndex = 1;
-        },
-        box
-      );
+    box.on("pointerdown", dragStart, box);
+    box.cullable = true;
+    box.cullArea = new Rectangle(box.x, box.y, box.width, box.height);
 
     addHoverModal(box, this.objectModalLines());
     return [box, nextY];
@@ -86,6 +54,23 @@ class EDMObject {
   objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
     return [collectionName];
+  }
+
+  isVisible() {
+    const app = getApp();
+    const container = getContainer();
+
+    const x = Math.abs(container.x);
+    const y = Math.abs(container.y);
+    const width = app.renderer.width;
+    const height = app.renderer.height;
+
+    return (
+      x + width > this.x &&
+      x < this.x + this.width &&
+      y + height > this.y &&
+      y < this.y + this.height
+    );
   }
 }
 

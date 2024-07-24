@@ -45,6 +45,7 @@ function bezierCurve({
   curve.moveTo(fromX, fromY);
   curve.bezierCurveTo(cpFromX, cpFromY, cpToX, cpToY, toX, toY);
   curve.stroke({ width: 2, color });
+  curve.cullable = true;
   return curve;
 }
 

@@ -81,24 +81,27 @@ export function buildBox(object) {
 export function addHoverModal(box, lines) {
   let objectModal = null;
 
-  box
-    .on("pointerover", () => {
-      objectModal = createObjectModal(lines, box.width);
-      const objectModalWidth = parseInt(objectModal.width);
-      const boxWidth = parseInt(box.width);
-      const x = parseInt(box.position.x);
-      const xPosition = (boxWidth - objectModalWidth) / 2 + x;
-      const y = box.position.y;
+  box.on("pointerover", () => {
+    objectModal = createObjectModal(lines, box.width);
+    const objectModalWidth = parseInt(objectModal.width);
+    const boxWidth = parseInt(box.width);
+    const x = parseInt(box.position.x);
+    const xPosition = (boxWidth - objectModalWidth) / 2 + x;
+    const y = box.position.y;
 
+    const timeout = setTimeout(() => {
       renderObjectModal(objectModal, xPosition, y);
+    }, 500);
 
-      box.on("pointerdown", () => {
-        removeObjectModal(objectModal);
-      });
-    })
-    .on("pointerout", () => {
+    const clean = () => {
+      clearTimeout(timeout);
       removeObjectModal(objectModal);
-    });
+      objectModal = null;
+    };
+
+    box.on("pointerdown", clean);
+    box.on("pointerout", clean);
+  });
 }
 
 export function addTitleToBox(title, box) {

@@ -1,4 +1,11 @@
-import { Application, Container, Culler } from "../pixi.min.mjs";
+import {
+  Application,
+  Container,
+  Culler,
+  CullerPlugin,
+  extensions,
+} from "../pixi.min.mjs";
+import { dragEnd } from "./drag.js";
 import { addScroll } from "./scroll.js";
 
 const pixi = {
@@ -12,7 +19,7 @@ const createApp = async () => {
   const app = new Application();
   await app.init({
     background: "#ffffff",
-    antialias: false,
+    antialias: true,
     useContextAlpha: false,
     resizeTo: window,
     preference: "webgpu",
@@ -25,10 +32,8 @@ const createApp = async () => {
   return app;
 };
 
-export const createContainer = (app) => {
-  const container = new Container({
-    isRenderGroup: true,
-  });
+export const createContainer = (app, objects) => {
+  const container = new Container();
   pixi.container = container;
 
   const culler = new Culler();
@@ -40,7 +45,11 @@ export const createContainer = (app) => {
   });
 
   app.stage.addChild(container);
-  addScroll(app);
+  app.stage.eventMode = "static";
+  app.stage.hitArea = app.screen;
+  app.stage.on("pointerup", dragEnd);
+  app.stage.on("pointerupoutside", dragEnd);
+  addScroll(app, objects);
 };
 
 export const saveSize = (width, height) => {
