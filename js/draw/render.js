@@ -1,5 +1,4 @@
 import { getApp, createContainer } from "./app.js";
-import { scroll } from "../views/views.js";
 
 export async function renderObjects(objects) {
   const app = getApp();
@@ -33,6 +32,4 @@ export async function renderObjects(objects) {
       association.draw();
     }
   }
-
-  scroll();
 }

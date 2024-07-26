@@ -10,6 +10,7 @@ import {
   svgElementToPixiSprite,
   addImageToBox,
   addHoverModal,
+  removeImageFromBox,
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
 import { dragStart } from "../draw/drag.js";
@@ -105,8 +106,8 @@ export class MCParticle extends EDMObject {
     nextY = addLinesToBox(topLines, box, nextY);
 
     const imageY = nextY + IMAGE_MARGIN;
-
-    this.drawImage(this.name, imageY);
+    this.imageY = imageY;
+    this.hasImage = false;
 
     nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
 
@@ -129,15 +130,31 @@ export class MCParticle extends EDMObject {
   }
 
   async drawImage(text, imageY) {
-    if (this.pdgImage) {
-      imageY = this.pdgImage.position.y;
-      this.renderedBox.removeChild(this.pdgImage);
-    }
-
-    const src = await textToSVG(text, IMAGE_SIZE);
-    const sprite = await svgElementToPixiSprite(src, IMAGE_SIZE);
+    const id = `${text}-${IMAGE_SIZE}`;
+    const src = await textToSVG(id, text, IMAGE_SIZE);
+    const sprite = await svgElementToPixiSprite(id, src, IMAGE_SIZE);
     this.pdgImage = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
+  }
+
+  isVisible() {
+    const isVisible = super.isVisible();
+
+    if (isVisible) {
+      if (!this.hasImage) {
+        this.hasImage = true;
+        this.drawImage(this.name, this.imageY);
+      }
+    } else {
+      if (this.pdgImage) {
+        removeImageFromBox(this.pdgImage, this.renderedBox);
+        this.pdgImage.destroy();
+        this.pdgImage = null;
+        this.hasImage = false;
+      }
+    }
+
+    return isVisible;
   }
 
   static setup(mcCollection) {

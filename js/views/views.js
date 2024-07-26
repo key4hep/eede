@@ -92,6 +92,7 @@ const drawView = async (view) => {
   }
 
   await renderObjects(viewObjects);
+  scroll();
   setRenderable(viewCurrentObjects);
 
   filters(viewObjects, viewCurrentObjects);
