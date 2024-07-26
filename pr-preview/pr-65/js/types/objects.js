@@ -40,7 +40,7 @@ class EDMObject {
     box.interactiveChildren = false;
     addBox(box);
     box.position.set(this.x, this.y);
-    const nextY = addTitleToBox(this.constructor.name, box);
+    const nextY = addTitleToBox(this.titleName, box);
 
     box.cursor = "pointer";
     box.eventMode = "static";
@@ -83,6 +83,7 @@ export class MCParticle extends EDMObject {
     this.color = "#dff6ff";
     this.radius = 15;
     this.height = 270;
+    this.titleName = "MCParticle";
   }
 
   async draw() {
@@ -242,10 +243,11 @@ export class MCParticle extends EDMObject {
 class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
-    this.width = 140;
+    this.width = 145;
     this.height = 190;
     this.color = "#fbffdf";
     this.radius = 30;
+    this.titleName = "Reconstructed\nParticle";
   }
 
   async draw() {
@@ -279,6 +281,7 @@ class Cluster extends EDMObject {
     this.height = 170;
     this.color = "#ffe8df";
     this.radius = 20;
+    this.titleName = "Cluster";
   }
 
   async draw() {
@@ -309,6 +312,7 @@ class Track extends EDMObject {
     this.height = 150;
     this.color = "#fff6df";
     this.radius = 25;
+    this.titleName = "Track";
   }
 
   async draw() {
@@ -338,6 +342,7 @@ class ParticleID extends EDMObject {
     this.height = 140;
     this.color = "#c9edf7";
     this.radius = 25;
+    this.titleName = "Particle ID";
   }
 
   async draw() {
@@ -363,6 +368,7 @@ class Vertex extends EDMObject {
     this.height = 150;
     this.color = "#f5d3ef";
     this.radius = 25;
+    this.titleName = "Vertex";
   }
 
   async draw() {
