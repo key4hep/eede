@@ -1,19 +1,26 @@
-export const togglePDG = async (objects) => {
-  const collection = objects.datatypes["edm4hep::MCParticle"].collection;
+import { removeImageFromBox } from "../draw/box.js";
 
-  const updatePDG = collection.map((object) =>
-    object.drawImage(`${object.name}`)
-  );
-
-  await Promise.all(updatePDG);
+const toggleImage = (object, newText) => {
+  object.textToRender = newText;
+  const renderedBox = object.renderedBox;
+  removeImageFromBox(object.image, renderedBox);
+  if (renderedBox.renderable) {
+    object.drawImage(object.textToRender, object.imageY);
+  }
 };
 
-export const toggleId = async (objects) => {
+export const togglePDG = (objects) => {
   const collection = objects.datatypes["edm4hep::MCParticle"].collection;
 
-  const updateId = collection.map((object) =>
-    object.drawImage(`${object.PDG}`)
-  );
+  collection.map((object) => {
+    toggleImage(object, object.name);
+  });
+};
 
-  await Promise.all(updateId);
+export const toggleId = (objects) => {
+  const collection = objects.datatypes["edm4hep::MCParticle"].collection;
+
+  collection.map((object) => {
+    toggleImage(object, object.PDG);
+  });
 };

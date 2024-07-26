@@ -7,7 +7,7 @@ export async function textToSVG(id, text, size) {
     return store[id];
   }
 
-  const mathjaxContainer = await MathJax.tex2svgPromise(text);
+  const mathjaxContainer = await MathJax.tex2svgPromise(`${text}`);
   const svg = mathjaxContainer.firstElementChild;
 
   svg.setAttribute("width", `${parseInt(size * SCALE)}px`);

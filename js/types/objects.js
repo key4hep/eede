@@ -133,7 +133,7 @@ export class MCParticle extends EDMObject {
     const id = `${text}-${IMAGE_SIZE}`;
     const src = await textToSVG(id, text, IMAGE_SIZE);
     const sprite = await svgElementToPixiSprite(id, src, IMAGE_SIZE);
-    this.pdgImage = sprite;
+    this.image = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
   }
 
@@ -143,13 +143,13 @@ export class MCParticle extends EDMObject {
     if (isVisible) {
       if (!this.hasImage) {
         this.hasImage = true;
-        this.drawImage(this.name, this.imageY);
+        this.drawImage(this.textToRender, this.imageY);
       }
     } else {
-      if (this.pdgImage) {
-        removeImageFromBox(this.pdgImage, this.renderedBox);
-        this.pdgImage.destroy();
-        this.pdgImage = null;
+      if (this.image) {
+        removeImageFromBox(this.image, this.renderedBox);
+        this.image.destroy();
+        this.image = null;
         this.hasImage = false;
       }
     }
@@ -173,6 +173,7 @@ export class MCParticle extends EDMObject {
 
       const name = getName(mcParticle.PDG);
       mcParticle.name = name;
+      mcParticle.textToRender = name;
       mcParticle.momentum = Math.sqrt(
         Math.pow(mcParticle.momentum.x, 2) +
           Math.pow(mcParticle.momentum.y, 2) +
