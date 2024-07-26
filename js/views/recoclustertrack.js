@@ -1,4 +1,3 @@
-import { canvas } from "../main.js";
 import { emptyCopyObject } from "../lib/copy.js";
 
 export function recoClusterTrackVertex(viewObjects) {
@@ -59,8 +58,6 @@ export function recoClusterTrackVertex(viewObjects) {
       ? totalHorizontalGap
       : window.innerWidth;
 
-  canvas.width = width;
-
   const recoX = width / 2 - recoWidth;
 
   const otherX = width / 2 + widestGap;
@@ -119,7 +116,7 @@ export function recoClusterTrackVertex(viewObjects) {
     totalHeight += height;
   });
 
-  canvas.height = totalHeight;
+  return [width, totalHeight];
 }
 
 export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {

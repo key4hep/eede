@@ -1,5 +1,3 @@
-import { canvas } from "../main.js";
-
 // List 1:1 association in a vertical list
 export function buildAssociationView(viewObjects, associationName) {
   const associations = viewObjects.associations[associationName];
@@ -13,7 +11,6 @@ export function buildAssociationView(viewObjects, associationName) {
   const totalWidth = gap + fromWidth + toWidth;
 
   const width = totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
-  canvas.width = width;
 
   const fromHeight = associations[0].from.height;
   const toHeight = associations[0].to.height;
@@ -22,8 +19,6 @@ export function buildAssociationView(viewObjects, associationName) {
   const verticalGap = 0.3 * height;
 
   const totalHeight = length * (height + verticalGap) + verticalGap;
-
-  canvas.height = totalHeight;
 
   let accHeight = 0;
 
@@ -42,4 +37,6 @@ export function buildAssociationView(viewObjects, associationName) {
     association.to.y = toY;
     accHeight += height + verticalGap;
   });
+
+  return [width, totalHeight];
 }

@@ -1,5 +1,3 @@
-import { canvas } from "../main.js";
-
 export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const relations =
     viewObjects.datatypes[fromCollectionName].oneToOne[relationName];
@@ -15,7 +13,6 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const totalWidth = gap + fromWidth + toWidth;
 
   const width = totalWidth > window.innerWidth ? totalWidth : window.innerWidth;
-  canvas.width = width;
 
   const fromHeight = fromCollection[0].height;
   const toHeight = toCollection[0].height;
@@ -25,8 +22,6 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
 
   const totalHeight =
     fromCollection.length * (height + verticalGap) + verticalGap;
-
-  canvas.height = totalHeight;
 
   let accHeight = 0;
 
@@ -43,4 +38,6 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
     toCollection[i].y = accHeight + space / 2 - toHeight / 2;
     accHeight += height + verticalGap;
   }
+
+  return [width, totalHeight];
 }

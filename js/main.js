@@ -3,15 +3,9 @@ import { renderEvent } from "./event-number.js";
 import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+import { startPixi } from "./draw/app.js";
 
 const jsonData = {};
-
 const selectedObjectTypes = {
   types: [
     "edm4hep::MCParticle",
@@ -125,7 +119,7 @@ document.getElementById("input-file").addEventListener("change", (event) => {
 
 document
   .getElementById("visualize-button")
-  .addEventListener("click", (event) => {
+  .addEventListener("click", async (event) => {
     event.preventDefault();
 
     if (jsonData.data === undefined) {
@@ -140,12 +134,13 @@ document
 
     const eventNum = document.getElementById("event-number").value;
 
+    await startPixi();
     hideInputModal();
+    hideDeploySwitch();
     showEventSwitcher();
     showViewsMenu();
-    renderEvent(eventNum);
     selectViewInformation();
-    hideDeploySwitch();
+    renderEvent(eventNum);
   });
 
-export { canvas, ctx, jsonData, selectedObjectTypes };
+export { jsonData, selectedObjectTypes };

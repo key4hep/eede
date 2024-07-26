@@ -1,10 +1,9 @@
 import { mcParticleTree, preFilterMCTree } from "./mcparticletree.js";
 import { mcRecoAssociation, preFilterMCReco } from "./mcrecoassociation.js";
 import { recoParticleTree, preFilterRecoTree } from "./recoparticletree.js";
-import { setupMCParticleFilter } from "../filter/mcparticle.js";
+import { setupMCParticleFilter } from "../filters/mcparticle.js";
 import { trackTree, preFilterTrackTree } from "./tracktree.js";
 import { clusterTree, preFilterClusterTree } from "./clustertree.js";
-import { scrollTopCenter, scrollTopLeft } from "./scrolls.js";
 import { preFilterMCTrack, mcTrackAssociation } from "./mctrackassociation.js";
 import {
   preFilterMCCluster,
@@ -14,11 +13,12 @@ import {
   recoClusterTrackVertex,
   preFilterRecoClusterTrackVertex,
 } from "./recoclustertrack.js";
-import { setupNoFilter } from "../filter/nofilter.js";
+import { setupNoFilter } from "../filters/nofilter.js";
 import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 import { spanWithColor } from "../lib/html-string.js";
+import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {

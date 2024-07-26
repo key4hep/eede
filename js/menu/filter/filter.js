@@ -1,11 +1,10 @@
-import { drawAll } from "../../draw.js";
 import { CheckboxBuilder, BitFieldBuilder } from "./builders.js";
 import { Range, Checkbox, buildCriteriaFunction } from "./parameters.js";
 import { reconnect } from "./reconnect.js";
-import { getVisible } from "../../events.js";
 import { units } from "../../types/units.js";
 import { copyObject } from "../../lib/copy.js";
 import { SimStatusBitFieldDisplayValues } from "../../../mappings/sim-status.js";
+import { renderObjects } from "../../draw/render.js";
 
 const filterButton = document.getElementById("filter-button");
 const openFilter = document.getElementById("open-filter");
@@ -70,7 +69,7 @@ bits.setCheckBoxes();
 
 const genStatus = new CheckboxBuilder("generatorStatus", "Generator status");
 
-function applyFilter(loadedObjects, currentObjects, visibleObjects) {
+function applyFilter(loadedObjects, currentObjects) {
   const rangeFunctions = Range.buildFilter(parametersRange);
   const checkboxFunctions = Checkbox.buildFilter(bits.checkBoxes);
   const genStatusFunctions = Checkbox.buildFilter(genStatus.checkBoxes);
@@ -84,18 +83,12 @@ function applyFilter(loadedObjects, currentObjects, visibleObjects) {
   const filteredObjects = reconnect(criteriaFunction, loadedObjects);
 
   copyObject(filteredObjects, currentObjects);
-
-  drawAll(currentObjects);
-
-  getVisible(currentObjects, visibleObjects);
+  renderObjects(currentObjects);
 }
 
-function removeFilter(loadedObjects, currentObjects, visibleObjects) {
+function removeFilter(loadedObjects, currentObjects) {
   copyObject(loadedObjects, currentObjects);
-
-  drawAll(currentObjects);
-
-  getVisible(currentObjects, visibleObjects);
+  renderObjects(currentObjects);
 
   filters.innerHTML = "";
 
@@ -103,7 +96,7 @@ function removeFilter(loadedObjects, currentObjects, visibleObjects) {
   renderGenSim(bits, genStatus);
 }
 
-export function start(loadedObjects, currentObjects, visibleObjects) {
+export function start(loadedObjects, currentObjects) {
   filterButton.addEventListener("click", () => {
     active = !active;
 
@@ -119,17 +112,17 @@ export function start(loadedObjects, currentObjects, visibleObjects) {
   });
 
   apply.addEventListener("click", () =>
-    applyFilter(loadedObjects, currentObjects, visibleObjects)
+    applyFilter(loadedObjects, currentObjects)
   );
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && active) {
-      applyFilter(loadedObjects, currentObjects, visibleObjects);
+      applyFilter(loadedObjects, currentObjects);
     }
   });
 
   reset.addEventListener("click", () =>
-    removeFilter(loadedObjects, currentObjects, visibleObjects)
+    removeFilter(loadedObjects, currentObjects)
   );
 }
 
