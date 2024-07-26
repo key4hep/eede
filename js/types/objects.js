@@ -14,7 +14,7 @@ import {
 import { textToSVG } from "../lib/generate-svg.js";
 import { dragStart } from "../draw/drag.js";
 import { getApp, getContainer } from "../draw/app.js";
-import { Culler, Rectangle } from "../pixi.min.mjs";
+import { Rectangle } from "../pixi.min.mjs";
 
 const IMAGE_MARGIN = 10;
 const IMAGE_SIZE = 40;
@@ -43,7 +43,7 @@ class EDMObject {
 
     box.cursor = "pointer";
     box.eventMode = "static";
-    box.on("pointerdown", dragStart, box);
+    box.on("pointerdown", dragStart, this);
     box.cullable = true;
     box.cullArea = new Rectangle(box.x, box.y, box.width, box.height);
 
