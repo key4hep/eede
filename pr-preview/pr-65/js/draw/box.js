@@ -1,4 +1,11 @@
-import { Graphics, Assets, Sprite, Text, TextStyle } from "../pixi.min.mjs";
+import {
+  Graphics,
+  Assets,
+  Sprite,
+  Text,
+  TextStyle,
+  Cache,
+} from "../pixi.min.mjs";
 import { getApp, getContainer } from "./app.js";
 
 const MARGIN = 20;
@@ -131,8 +138,14 @@ export function addLinesToBox(lines, box, y) {
   return text.position.y + text.height;
 }
 
-export async function svgElementToPixiSprite(src, size) {
-  const asset = await Assets.load(src);
+export async function svgElementToPixiSprite(id, src, size) {
+  let asset;
+
+  if (!Cache.has(id)) {
+    Cache.set(id, await Assets.load(src));
+  }
+
+  asset = Cache.get(id);
   const sprite = Sprite.from(asset);
   sprite.width = size;
   sprite.height = size;
@@ -143,4 +156,8 @@ export function addImageToBox(sprite, box, y) {
   box.addChild(sprite);
   sprite.position.set((box.width - sprite.width) / 2, y);
   return sprite.position.y + sprite.height;
+}
+
+export function removeImageFromBox(sprite, box) {
+  box.removeChild(sprite);
 }

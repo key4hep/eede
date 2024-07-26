@@ -1,7 +1,13 @@
 const SCALE = 1.25;
 
-export async function textToSVG(text, size) {
-  const mathjaxContainer = await MathJax.tex2svgPromise(text);
+const store = {};
+
+export async function textToSVG(id, text, size) {
+  if (store[id]) {
+    return store[id];
+  }
+
+  const mathjaxContainer = await MathJax.tex2svgPromise(`${text}`);
   const svg = mathjaxContainer.firstElementChild;
 
   svg.setAttribute("width", `${parseInt(size * SCALE)}px`);
@@ -14,5 +20,6 @@ export async function textToSVG(text, size) {
         svg.outerHTML
     );
 
+  store[id] = src;
   return src;
 }
