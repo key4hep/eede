@@ -37,14 +37,18 @@
           <label class="mr-10" for="input-file">Select EDM4hep JSON:</label>
           <input id="input-file" name="input-file" type="file" accept=".json">
           <p class="small-text ml-20">Example input files (right click to save):
-            <ul class="small-text">
-              <li>
-                Delphes: <a href="https://fccsw.web.cern.ch/fccsw/eede/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a> [5.6 MB]
-              </li>
-              <li>
-                Full Sim: <a href="https://fccsw.web.cern.ch/fccsw/eede/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json">wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json</a> [28 MB]
-              </li>
-            </ul>
+          <ul class="small-text">
+            <li>
+              Delphes: <a
+                href="https://fccsw.web.cern.ch/fccsw/eede/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a>
+              [5.6 MB]
+            </li>
+            <li>
+              Full Sim: <a
+                href="https://fccsw.web.cern.ch/fccsw/eede/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json">wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json</a>
+              [28 MB]
+            </li>
+          </ul>
           </p>
         </div>
         <div id="event-selector">
@@ -186,14 +190,13 @@
     <button id="switch-deploy-button">release</button>
   </div>
 
-  <canvas id="canvas" width="100vw" height="100vh"></canvas>
-
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" type="text/javascript"></script>
+  <script type="module" src="js/pixi.min.mjs"> </script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/information.js"></script>
   <script type="module" src="js/views/views.js"></script>
-  <script type="module" src="js/menu/filter/filter.js"></script>
   <script type="module" src="js/switch-deploy.js"></script>
+  <script type="module" src="js/menu/filter/filter.js"></script>
 </body>
 
 </html>

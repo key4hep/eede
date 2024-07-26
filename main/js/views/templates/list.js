@@ -1,8 +1,5 @@
-import { canvas } from "../main.js";
-
 export function listView(collection) {
   const width = window.innerWidth;
-  canvas.width = width;
 
   const gap = 1;
   const objWidth = collection[0].width;
@@ -14,7 +11,7 @@ export function listView(collection) {
   const rows = Math.ceil(collection.length / cols);
 
   const height = rows * (objHeight + objVerticalGap / 2) + objVerticalGap / 2;
-  canvas.height = height > window.innerHeight ? height : window.innerHeight;
+  const finalHeight = height > window.innerHeight ? height : window.innerHeight;
 
   for (let i = 0; i < collection.length; i++) {
     const x = (i % cols) * objWidth + (((i % cols) + 1) * objHorizontalGap) / 2;
@@ -25,4 +22,6 @@ export function listView(collection) {
     collection[i].x = x;
     collection[i].y = y;
   }
+
+  return [width, finalHeight];
 }

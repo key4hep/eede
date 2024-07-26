@@ -1,4 +1,5 @@
-import { PdgToggle } from "../menu/show-pdg.js";
+import { Toggle } from "../menu/toggle.js";
+import { togglePDG, toggleId } from "../menu/show-pdg.js";
 import {
   bits,
   genStatus,
@@ -8,17 +9,12 @@ import {
   start,
   getWidthFilterContent,
 } from "../menu/filter/filter.js";
-import { drawAll } from "../draw.js";
 
 const filter = document.getElementById("filter");
 const filters = document.getElementById("filters");
 const manipulationTools = document.getElementsByClassName("manipulation-tool");
 
-export function setupMCParticleFilter(
-  viewObjects,
-  viewCurrentObjects,
-  viewVisibleObjects
-) {
+export function setupMCParticleFilter(viewObjects, viewCurrentObjects) {
   for (const tool of manipulationTools) {
     tool.style.display = "flex";
   }
@@ -36,12 +32,16 @@ export function setupMCParticleFilter(
 
   const width = getWidthFilterContent();
   filter.style.width = width;
-  const pdgToggle = new PdgToggle("show-pdg");
-  pdgToggle.init(() => {
-    pdgToggle.toggle(viewCurrentObjects, () => {
-      drawAll(viewCurrentObjects);
-    });
-  });
 
-  start(viewObjects, viewCurrentObjects, viewVisibleObjects);
+  const pdgToggle = new Toggle("show-pdg");
+  pdgToggle.init(
+    () => {
+      toggleId(viewCurrentObjects);
+    },
+    () => {
+      togglePDG(viewCurrentObjects);
+    }
+  );
+
+  start(viewObjects, viewCurrentObjects);
 }

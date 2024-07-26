@@ -1,25 +1,26 @@
-import { Toggle } from "./toggle.js";
+import { removeImageFromBox } from "../draw/box.js";
 
-export class PdgToggle extends Toggle {
-  constructor(id) {
-    super(id);
+const toggleImage = (object, newText) => {
+  object.textToRender = newText;
+  const renderedBox = object.renderedBox;
+  removeImageFromBox(object.image, renderedBox);
+  if (renderedBox.renderable) {
+    object.drawImage(object.textToRender, object.imageY);
   }
+};
 
-  toggle(currentObjects, redraw) {
-    const collection =
-      currentObjects.datatypes["edm4hep::MCParticle"].collection;
-    if (this.isSliderActive) {
-      if (collection[0].PDG === undefined) return;
-      for (const object of collection) {
-        object.updateTexImg(`${object.PDG}`);
-      }
-    } else {
-      if (collection[0].PDG === undefined) return;
-      for (const object of collection) {
-        object.updateTexImg(`${object.name}`);
-      }
-    }
+export const togglePDG = (objects) => {
+  const collection = objects.datatypes["edm4hep::MCParticle"].collection;
 
-    redraw();
-  }
-}
+  collection.map((object) => {
+    toggleImage(object, object.name);
+  });
+};
+
+export const toggleId = (objects) => {
+  const collection = objects.datatypes["edm4hep::MCParticle"].collection;
+
+  collection.map((object) => {
+    toggleImage(object, object.PDG);
+  });
+};

@@ -1,8 +1,11 @@
-import { preFilterAssociation } from "./pre-filter.js";
-import { buildAssociationView } from "./association-view.js";
+import { preFilterAssociation } from "../filters/pre-filter.js";
+import { buildAssociationView } from "./templates/association-view.js";
 
 export function mcRecoAssociation(viewObjects) {
-  buildAssociationView(viewObjects, "edm4hep::MCRecoParticleAssociation");
+  return buildAssociationView(
+    viewObjects,
+    "edm4hep::MCRecoParticleAssociation"
+  );
 }
 
 export function preFilterMCReco(currentObjects, viewObjects) {

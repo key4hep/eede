@@ -1,20 +1,12 @@
 import { currentObjects, currentEvent } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
-import { getVisible } from "../events.js";
-import { drawAll } from "../draw.js";
-import { canvas } from "../main.js";
 import { views } from "./views-dictionary.js";
-import {
-  mouseDown,
-  mouseUp,
-  mouseOut,
-  mouseMove,
-  onScroll,
-} from "../events.js";
 import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
-import { emptyCanvas } from "../draw.js";
+import { renderObjects } from "../draw/render.js";
+import { getContainer, saveSize } from "../draw/app.js";
+import { setRenderable } from "../draw/renderable.js";
 
 const currentView = {};
 
@@ -36,9 +28,12 @@ function getViewScrollIndex() {
   return `${currentEvent.event}-${getView()}`;
 }
 
-function scroll() {
+export function scroll() {
+  const container = getContainer();
   const index = getViewScrollIndex();
-  window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
+  const { x, y } = scrollLocations[index];
+
+  container.position.set(x, y);
 }
 
 function setInfoButtonName(view) {
@@ -46,16 +41,21 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-const drawView = (view) => {
-  paintButton(view);
+const addTask = (() => {
+  let pending = Promise.resolve();
 
-  const dragTools = {
-    draggedObject: null,
-    isDragging: false,
-    prevMouseX: 0,
-    prevMouseY: 0,
+  const run = async (view) => {
+    try {
+      await pending;
+    } finally {
+      return drawView(view);
+    }
   };
 
+  return (view) => (pending = run(view));
+})();
+
+const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
@@ -65,59 +65,52 @@ const drawView = (view) => {
   } = views[view];
 
   const viewObjects = {};
-  const viewCurrentObjects = {};
-  const viewVisibleObjects = {};
-
   preFilterFunction(currentObjects, viewObjects);
+  paintButton(view);
   const isEmpty = checkEmptyObject(viewObjects);
 
   if (isEmpty) {
-    emptyCanvas();
     emptyViewMessage();
     hideViewInformation();
     return;
   }
+
   showViewInformation(view, description);
+  setInfoButtonName(getView());
   hideEmptyViewMessage();
-  viewFunction(viewObjects);
+
+  const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  const scrollIndex = getViewScrollIndex();
+  let [width, height] = viewFunction(viewObjects);
+  if (width < window.innerWidth) {
+    width = window.innerWidth;
+  }
+  if (height < window.innerHeight) {
+    height = window.innerHeight;
+  }
+  saveSize(width, height);
 
+  const scrollIndex = getViewScrollIndex();
   if (scrollLocations[scrollIndex] === undefined) {
     const viewScrollLocation = scrollFunction();
     scrollLocations[scrollIndex] = viewScrollLocation;
   }
 
+  await renderObjects(viewObjects);
   scroll();
-  drawAll(viewCurrentObjects);
-  getVisible(viewCurrentObjects, viewVisibleObjects);
-  filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
-  setInfoButtonName(getView());
+  setRenderable(viewCurrentObjects);
 
-  canvas.onmousedown = (event) => {
-    mouseDown(event, viewVisibleObjects, dragTools);
-  };
-  canvas.onmouseup = (event) => {
-    mouseUp(event, viewCurrentObjects, dragTools);
-  };
-  canvas.onmouseout = (event) => {
-    mouseOut(event, dragTools);
-  };
-  canvas.onmousemove = (event) => {
-    mouseMove(event, viewVisibleObjects, dragTools);
-  };
-  window.onscroll = () => {
-    onScroll(viewCurrentObjects, viewVisibleObjects);
-  };
+  filters(viewObjects, viewCurrentObjects);
 };
 
 export function saveScrollLocation() {
   const index = getViewScrollIndex();
   if (scrollLocations[index] === undefined) return;
+  const container = getContainer();
   scrollLocations[index] = {
-    x: window.scrollX,
-    y: window.scrollY,
+    x: container.x,
+    y: container.y,
   };
 }
 
@@ -130,7 +123,7 @@ export const getView = () => {
 };
 
 export const drawCurrentView = () => {
-  drawView(currentView.view);
+  addTask(currentView.view);
 };
 
 const buttons = [];
@@ -141,7 +134,7 @@ for (const key in views) {
   button.onclick = () => {
     saveScrollLocation();
     setView(key);
-    drawView(key);
+    addTask(key);
   };
   button.className = "view-button";
   buttons.push(button);

@@ -1,11 +1,11 @@
-import { buildTree } from "./tree.js";
-import { preFilterTree } from "./pre-filter.js";
+import { buildTree } from "./templates/tree.js";
+import { preFilterTree } from "../filters/pre-filter.js";
 
 export function trackTree(viewCurrentObjects) {
   const trackCollection =
     viewCurrentObjects.datatypes["edm4hep::Track"].collection ?? [];
 
-  buildTree(trackCollection, "tracks");
+  return buildTree(trackCollection, "tracks");
 }
 
 export function preFilterTrackTree(currentObjects, viewObjects) {

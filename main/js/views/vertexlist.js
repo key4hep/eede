@@ -1,11 +1,11 @@
-import { listView } from "./list.js";
-import { preFilterList } from "./pre-filter.js";
+import { listView } from "./templates/list.js";
+import { preFilterList } from "../filters/pre-filter.js";
 
 export function vertexList(viewCurrentObjects) {
   const vertexCollection =
     viewCurrentObjects.datatypes["edm4hep::Vertex"].collection ?? [];
 
-  listView(vertexCollection);
+  return listView(vertexCollection);
 }
 
 export function preFilterVertexList(currentObjects, viewObjects) {
