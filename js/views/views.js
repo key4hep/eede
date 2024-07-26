@@ -82,7 +82,13 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  const [width, height] = viewFunction(viewObjects);
+  let [width, height] = viewFunction(viewObjects);
+  if (width < window.innerWidth) {
+    width = window.innerWidth;
+  }
+  if (height < window.innerHeight) {
+    height = window.innerHeight;
+  }
   saveSize(width, height);
 
   const scrollIndex = getViewScrollIndex();
