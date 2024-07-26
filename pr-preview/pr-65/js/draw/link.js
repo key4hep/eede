@@ -68,6 +68,8 @@ export function drawBezierLink(link) {
     color: link.color,
   });
 
+  link.renderedLink = curve;
+
   const boxFrom = link.from.renderedBox;
   const boxTo = link.to.renderedBox;
 
@@ -92,7 +94,12 @@ export function drawBezierLink(link) {
         toY: toY,
         color: link.color,
       });
+      link.renderedLink = curve;
+      link.renderedLink.renderable = link.isVisible();
       container.addChild(curve);
+    });
+    boxFrom.on("pointerup", () => {
+      boxFrom.off("pointermove");
     });
   });
 
@@ -115,7 +122,12 @@ export function drawBezierLink(link) {
         toY: toY,
         color: link.color,
       });
+      link.renderedLink = curve;
+      link.renderedLink.renderable = link.isVisible();
       container.addChild(curve);
+    });
+    boxTo.on("pointerup", () => {
+      boxTo.off("pointermove");
     });
   });
 
