@@ -1,5 +1,5 @@
 import { Graphics } from "../pixi.min.mjs";
-import { getContainer } from "./app.js";
+import { getApp, getContainer } from "./app.js";
 
 function fromPoints(boxFrom) {
   return [boxFrom.x + boxFrom.width / 2, boxFrom.y + boxFrom.height];
@@ -50,6 +50,9 @@ function bezierCurve({
 }
 
 export function drawBezierLink(link) {
+  const app = getApp();
+  const container = getContainer();
+
   const [fromX, fromY] = fromPoints(link.from);
   const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
     link.from,
@@ -73,62 +76,70 @@ export function drawBezierLink(link) {
   const boxFrom = link.from.renderedBox;
   const boxTo = link.to.renderedBox;
 
-  const container = getContainer();
+  const boxFromOnMove = () => {
+    container.removeChild(curve);
+    const [fromX, fromY] = fromPoints(link.from);
+    const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
+      link.from,
+      link.to
+    );
+    curve = bezierCurve({
+      fromX: fromX + link.xShift,
+      fromY: fromY,
+      cpFromX: cpFromX + link.xShift,
+      cpFromY: cpFromY,
+      cpToX: cpToX + link.xShift,
+      cpToY: cpToY,
+      toX: toX + link.xShift,
+      toY: toY,
+      color: link.color,
+    });
+    link.renderedLink = curve;
+    link.renderedLink.renderable = link.isVisible();
+    container.addChild(curve);
+  };
 
   boxFrom.on("pointerdown", () => {
-    boxFrom.on("pointermove", () => {
-      container.removeChild(curve);
-      const [fromX, fromY] = fromPoints(boxFrom);
-      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-        boxFrom,
-        boxTo
-      );
-      curve = bezierCurve({
-        fromX: fromX + link.xShift,
-        fromY: fromY,
-        cpFromX: cpFromX + link.xShift,
-        cpFromY: cpFromY,
-        cpToX: cpToX + link.xShift,
-        cpToY: cpToY,
-        toX: toX + link.xShift,
-        toY: toY,
-        color: link.color,
-      });
-      link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
-      container.addChild(curve);
-    });
-    boxFrom.on("pointerup", () => {
-      boxFrom.off("pointermove");
-    });
+    app.stage.on("pointermove", boxFromOnMove);
+  });
+  app.stage.on("pointerup", () => {
+    app.stage.off("pointermove", boxFromOnMove);
+  });
+  app.stage.on("pointerupoutside", () => {
+    app.stage.off("pointermove", boxFromOnMove);
   });
 
+  const boxToOnMove = () => {
+    container.removeChild(curve);
+    const [fromX, fromY] = fromPoints(link.from);
+    const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
+      link.from,
+      link.to
+    );
+    curve = bezierCurve({
+      fromX: fromX + link.xShift,
+      fromY: fromY,
+      cpFromX: cpFromX + link.xShift,
+      cpFromY: cpFromY,
+      cpToX: cpToX + link.xShift,
+      cpToY: cpToY,
+      toX: toX + link.xShift,
+      toY: toY,
+      color: link.color,
+    });
+    link.renderedLink = curve;
+    link.renderedLink.renderable = link.isVisible();
+    container.addChild(curve);
+  };
+
   boxTo.on("pointerdown", () => {
-    boxTo.on("pointermove", () => {
-      container.removeChild(curve);
-      const [fromX, fromY] = fromPoints(boxFrom);
-      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-        boxFrom,
-        boxTo
-      );
-      curve = bezierCurve({
-        fromX: fromX + link.xShift,
-        fromY: fromY,
-        cpFromX: cpFromX + link.xShift,
-        cpFromY: cpFromY,
-        cpToX: cpToX + link.xShift,
-        cpToY: cpToY,
-        toX: toX + link.xShift,
-        toY: toY,
-        color: link.color,
-      });
-      link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
-      container.addChild(curve);
-    });
-    boxTo.on("pointerup", () => {
-      boxTo.off("pointermove");
-    });
+    app.stage.on("pointermove", boxToOnMove);
+  });
+  app.stage.on("pointerup", () => {
+    app.stage.off("pointermove", boxToOnMove);
+  });
+  app.stage.on("pointerupoutside", () => {
+    app.stage.off("pointermove", boxToOnMove);
   });
 
   container.addChild(curve);
