@@ -10,8 +10,12 @@ import { getApp, getContainer } from "./app.js";
 
 const MARGIN = 20;
 const PADDING = 5;
+const TITLE_MARGIN = 12;
 
-function createText(text, { fontFamily, fontSize, fontWeight, align, fill }) {
+function createText(
+  text,
+  { fontFamily, fontSize, fontWeight, align, fill, wrap = false, maxWidth }
+) {
   return new Text({
     text,
     style: new TextStyle({
@@ -20,6 +24,8 @@ function createText(text, { fontFamily, fontSize, fontWeight, align, fill }) {
       fontWeight,
       align,
       fill,
+      wordWrap: wrap,
+      wordWrapWidth: maxWidth,
     }),
     resolution: 2,
   });
@@ -118,10 +124,12 @@ export function addTitleToBox(title, box) {
     align: "center",
     fill: "black",
     fontWeight: "bold",
+    wrap: true,
+    maxWidth: box.width,
   });
   box.addChild(boxTitle);
   boxTitle.position.set((box.width - boxTitle.width) / 2, MARGIN);
-  return boxTitle.position.y + boxTitle.height + 12;
+  return boxTitle.position.y + boxTitle.height + TITLE_MARGIN;
 }
 
 export function addLinesToBox(lines, box, y) {
@@ -131,7 +139,8 @@ export function addLinesToBox(lines, box, y) {
     fontWeight: "normal",
     align: "center",
     fill: "black",
-    width: box.width,
+    wrap: true,
+    maxWidth: box.width,
   });
   box.addChild(text);
   text.position.set((box.width - text.width) / 2, y);
