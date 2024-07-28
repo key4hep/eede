@@ -1,0 +1,30 @@
+{
+	"name": "eede",
+	"type": "module",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "node ./model/index.js",
+		"download": "node ./model/download.js",
+		"update": "npm run download && npm run build",
+		"test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
+	},
+	"devDependencies": {
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/key4hep/eede.git"
+	},
+	"keywords": [
+		"eede",
+		"EDM4hep",
+		"HEP",
+		"Key4hep"
+	],
+	"license": "BSD-2-Clause",
+	"homepage": "https://key4hep.github.io/eede/",
+	"dependencies": {
+		"js-yaml": "^4.1.0"
+	}
+}
