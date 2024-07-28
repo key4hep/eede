@@ -92,13 +92,9 @@ export function selectViewInformation() {
   showOption("view-information-content");
 }
 
-informationButton.addEventListener("click", () => {
-  selectInformationSection();
-});
+informationButton.addEventListener("click", selectInformationSection);
 
-viewButton.addEventListener("click", () => {
-  selectViewInformation();
-});
+viewButton.addEventListener("click", selectViewInformation);
 
 export function showViewInformation(title, description) {
   if (viewButton.style.display !== "block") {

@@ -8,10 +8,9 @@ const eventNumber = document.getElementById("selected-event");
 const previousEvent = document.getElementById("previous-event");
 const nextEvent = document.getElementById("next-event");
 
-const currentEvent = {};
-
-const eventCollection = {};
-const currentObjects = {};
+const currentEvent = {}; // only store event number
+const eventCollection = {}; // store all events info (gradually store data for each event)
+const currentObjects = {}; // store data (objects) for current event number
 
 function updateEventNumber() {
   if (eventNumber.firstChild) {
@@ -70,4 +69,4 @@ eventNumber.addEventListener("click", () => {
   }
 });
 
-export { currentObjects, currentEvent };
+export { eventCollection, currentObjects, currentEvent };
