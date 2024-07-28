@@ -1,5 +1,6 @@
 import { eventCollection, renderEvent } from "./event-number.js";
 import { selectViewInformation } from "./information.js";
+import { showMessage } from "./lib/messages.js";
 import { jsonData } from "./main.js";
 import { scrollLocations } from "./views/views.js";
 
@@ -8,11 +9,13 @@ const fileInput = document.getElementById("change-file-input");
 fileInput.addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
-      errorMsg("Provided file is not EDM4hep JSON!");
+      showMessage("ERROR: Provided file is not EDM4hep JSON!");
+      return;
     }
 
     if (!file.type.endsWith("/json")) {
-      errorMsg("ERROR: Provided file is not EDM4hep JSON!");
+      showMessage("ERROR: Provided file is not JSON!");
+      return;
     }
 
     setFileName(file.name);
