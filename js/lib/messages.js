@@ -13,11 +13,26 @@ export function errorMsg(msg) {
 }
 
 export function emptyViewMessage() {
-  const msgDiv = document.getElementById("empty-view");
+  const msgDiv = document.getElementById("information-message-modal");
   msgDiv.style.display = "flex";
+
+  const msgText = document.getElementById("information-text");
+  msgText.innerText = "This view has no elements";
 }
 
 export function hideEmptyViewMessage() {
-  const msgDiv = document.getElementById("empty-view");
+  const msgDiv = document.getElementById("information-message-modal");
   msgDiv.style.display = "none";
+}
+
+export function showMessage(message) {
+  const msgDiv = document.getElementById("information-message-modal");
+  msgDiv.style.display = "flex";
+
+  const msgText = document.getElementById("information-text");
+  msgText.innerText = message;
+
+  setTimeout(() => {
+    msgDiv.style.display = "none";
+  }, 2000);
 }

@@ -4,6 +4,7 @@ import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
 import { startPixi } from "./draw/app.js";
+import { setFileName, showFileNameMenu } from "./current-file.js";
 
 const jsonData = {};
 const selectedObjectTypes = {
@@ -55,6 +56,8 @@ document.getElementById("input-file").addEventListener("change", (event) => {
     if (!file.type.endsWith("/json")) {
       errorMsg("ERROR: Provided file is not EDM4hep JSON!");
     }
+
+    setFileName(file.name);
 
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
@@ -139,6 +142,7 @@ document
     hideDeploySwitch();
     showEventSwitcher();
     showViewsMenu();
+    showFileNameMenu();
     selectViewInformation();
     renderEvent(eventNum);
   });

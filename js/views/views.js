@@ -12,7 +12,7 @@ const currentView = {};
 
 const viewOptions = document.getElementById("view-selector");
 
-const scrollLocations = {};
+export const scrollLocations = {};
 
 function paintButton(view) {
   for (const button of buttons) {
