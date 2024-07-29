@@ -26,14 +26,32 @@
   top: 25%;
   left: 10px;
   width: fit-content;
-  height: 50%;
+  height: fit-content;
+  max-height: 50%;
   background-color: #e1e1e1;
   padding: 15px;
   border: 1px solid #000;
   border-radius: 5px;
 }
 
+#views-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#open-views {
+  display: none;
+}
+
+#views-menu-handler {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
 #view-selector {
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

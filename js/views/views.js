@@ -11,6 +11,20 @@ import { setRenderable } from "../draw/renderable.js";
 const currentView = {};
 
 const viewOptions = document.getElementById("view-selector");
+const openViewsButton = document.getElementById("open-views");
+const closeViewsButton = document.getElementById("close-views");
+
+openViewsButton.addEventListener("click", () => {
+  viewOptions.style.display = "flex";
+  openViewsButton.style.display = "none";
+  closeViewsButton.style.display = "block";
+});
+
+closeViewsButton.addEventListener("click", () => {
+  viewOptions.style.display = "none";
+  openViewsButton.style.display = "block";
+  closeViewsButton.style.display = "none";
+});
 
 export const scrollLocations = {};
 
