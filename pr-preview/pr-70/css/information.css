@@ -1,0 +1,76 @@
+#information-icon {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+}
+
+#information-icon:hover {
+  cursor: pointer;
+}
+
+#close-information:hover {
+  cursor: pointer;
+}
+
+#close-information {
+  margin-left: auto;
+}
+
+#information-modal {
+  position: fixed;
+  z-index: 2;
+  display: none;
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+  background-color: rgba(225, 225, 225, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+.info-modal-content {
+  width: 100%;
+}
+
+#information-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.information-button {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin: 0 5px;
+}
+
+.information-button:hover {
+  cursor: pointer;
+  background-color: #c5c5c5;
+}
+
+#information-button {
+  background-color: #c5c5c5;
+}
+
+#view-information-button {
+  display: none;
+}
+
+#information-button {
+  display: none;
+}
+
+#view-information-content {
+  display: none;
+}
