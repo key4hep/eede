@@ -26,6 +26,7 @@ export const views = {
     viewFunction: mcParticleTree,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTree,
+    collections: ["edm4hep::MCParticle"],
     description: `<p>${spanWithColor(
       "Red",
       "#AA0000"
@@ -39,6 +40,7 @@ export const views = {
     viewFunction: recoParticleTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterRecoTree,
+    collections: ["edm4hep::ReconstructedParticle"],
     description: `<p>A tree of the Reconstructed Particles. ${spanWithColor(
       "Purple",
       "#AA00AA"
@@ -49,6 +51,7 @@ export const views = {
     viewFunction: trackTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterTrackTree,
+    collections: ["edm4hep::Track"],
     description: `<p>A tree of the Tracks.</p>`,
   },
   "Cluster Tree": {
@@ -56,6 +59,7 @@ export const views = {
     viewFunction: clusterTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
+    collections: ["edm4hep::Cluster"],
     description: `<p>A tree of the Clusters.</p>`,
   },
   "RecoParticle-Cluster-Track-Vertex": {
@@ -76,6 +80,7 @@ export const views = {
     viewFunction: mcRecoAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
+    collections: ["edm4hep::MCParticle", "edm4hep::ReconstructedParticle"],
     description: `<p>Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.</p>`,
   },
   "Monte Carlo Particle-Track": {

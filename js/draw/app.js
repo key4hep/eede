@@ -1,10 +1,4 @@
-import {
-  Application,
-  Container,
-  Culler,
-  CullerPlugin,
-  extensions,
-} from "../pixi.min.mjs";
+import { Application, Container, Culler } from "../pixi.min.mjs";
 import { dragEnd } from "./drag.js";
 import { addScroll } from "./scroll.js";
 

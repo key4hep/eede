@@ -7,6 +7,7 @@ import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
 import { getContainer, saveSize } from "../draw/app.js";
 import { setRenderable } from "../draw/renderable.js";
+import { initFilters } from "../filters/filter.js";
 
 const currentView = {};
 
@@ -74,7 +75,7 @@ const drawView = async (view) => {
     preFilterFunction,
     viewFunction,
     scrollFunction,
-    filters,
+    collections,
     description,
   } = views[view];
 
@@ -96,26 +97,32 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  let [width, height] = viewFunction(viewObjects);
-  if (width < window.innerWidth) {
-    width = window.innerWidth;
-  }
-  if (height < window.innerHeight) {
-    height = window.innerHeight;
-  }
-  saveSize(width, height);
+  const render = async (objects) => {
+    const [width, height] = viewFunction(objects);
+    if (width < window.innerWidth) {
+      width = window.innerWidth;
+    }
+    if (height < window.innerHeight) {
+      height = window.innerHeight;
+    }
+    saveSize(width, height);
+    await renderObjects(objects);
+  };
+  await render(viewCurrentObjects);
 
   const scrollIndex = getViewScrollIndex();
   if (scrollLocations[scrollIndex] === undefined) {
     const viewScrollLocation = scrollFunction();
     scrollLocations[scrollIndex] = viewScrollLocation;
   }
-
-  await renderObjects(viewObjects);
   scroll();
   setRenderable(viewCurrentObjects);
 
-  filters(viewObjects, viewCurrentObjects);
+  initFilters({ viewObjects, viewCurrentObjects }, collections, {
+    render,
+    scroll,
+    setRenderable,
+  });
 };
 
 export function saveScrollLocation() {
@@ -137,7 +144,8 @@ export const getView = () => {
 };
 
 export const drawCurrentView = () => {
-  addTask(currentView.view);
+  // addTask(currentView.view);
+  drawView(currentView.view);
 };
 
 const buttons = [];
