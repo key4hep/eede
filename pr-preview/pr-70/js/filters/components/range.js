@@ -56,3 +56,21 @@ export function rangeLogic(min, max, object, property) {
   }
   return true;
 }
+
+export function magnitudeRangeLogic(min, max, object, property) {
+  const minVal = parseFloat(min);
+  const maxVal = parseFloat(max);
+
+  const objectMagnitude = Math.sqrt(
+    Object.values(object[property]).reduce((acc, val) => acc + val ** 2, 0)
+  );
+
+  if (minVal && maxVal) {
+    return objectMagnitude >= minVal && objectMagnitude <= maxVal;
+  } else if (minVal) {
+    return objectMagnitude >= minVal;
+  } else if (maxVal) {
+    return objectMagnitude <= maxVal;
+  }
+  return true;
+}

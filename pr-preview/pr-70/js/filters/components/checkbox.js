@@ -25,7 +25,10 @@ export class CheckboxComponent {
 }
 
 export function checkboxLogic(checked, object, property) {
-  return object[property] === checked;
+  if (checked) {
+    return object[property] === checked;
+  }
+  return true;
 }
 
 export function bitfieldCheckboxLogic(checked, value, object, property) {

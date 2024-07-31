@@ -1,15 +1,15 @@
 import { copyObject } from "../lib/copy.js";
-import {
-  filterMCParticleCollection,
-  initMCParticleFilters,
-} from "./collections/mcparticle.js";
+import { initClusterFilters } from "./collections/cluster.js";
+import { initMCParticleFilters } from "./collections/mcparticle.js";
+import { initRecoParticleFilters } from "./collections/recoparticle.js";
+import { initTrackFilters } from "./collections/track.js";
 import { reconnect } from "./reconnect.js";
 
 const map = {
-  "edm4hep::MCParticle": {
-    init: initMCParticleFilters,
-    filter: filterMCParticleCollection,
-  },
+  "edm4hep::MCParticle": initMCParticleFilters,
+  "edm4hep::ReconstructedParticle": initRecoParticleFilters,
+  "edm4hep::Cluster": initClusterFilters,
+  "edm4hep::Track": initTrackFilters,
 };
 
 const openFiltersButton = document.getElementById("open-filter");
@@ -28,10 +28,15 @@ closeFiltersButton.addEventListener("click", () => {
   closeFiltersButton.style.display = "none";
 });
 
+const filters = {
+  apply: null,
+  reset: null,
+};
+
 export function initFilters(
   { viewObjects, viewCurrentObjects },
   collections,
-  { render, scroll, setRenderable }
+  { render, filterScroll, originalScroll, setRenderable }
 ) {
   const criteriaFunctions = {};
 
@@ -41,7 +46,7 @@ export function initFilters(
 
     for (const collection of collections) {
       delete criteriaFunctions[collection];
-      const { init } = map[collection];
+      const init = map[collection];
       if (init) {
         const criteriaFunction = init(content);
         criteriaFunctions[collection] = criteriaFunction;
@@ -51,20 +56,27 @@ export function initFilters(
 
   setupContent();
 
-  const applyButton = document.getElementById("filter-apply");
-  applyButton.addEventListener("click", async () => {
+  filters.apply = async () => {
     reconnect({ viewObjects, viewCurrentObjects }, criteriaFunctions);
     await render(viewCurrentObjects);
-    scroll();
+    filterScroll();
     setRenderable(viewCurrentObjects);
-  });
-
-  const resetButton = document.getElementById("filter-reset");
-  resetButton.addEventListener("click", async () => {
+  };
+  filters.reset = async () => {
     setupContent();
     copyObject(viewObjects, viewCurrentObjects);
     await render(viewCurrentObjects);
-    scroll();
+    originalScroll();
     setRenderable(viewCurrentObjects);
-  });
+  };
 }
+
+const applyButton = document.getElementById("filter-apply");
+applyButton.addEventListener("click", () => {
+  filters.apply();
+});
+
+const resetButton = document.getElementById("filter-reset");
+resetButton.addEventListener("click", () => {
+  filters.reset();
+});

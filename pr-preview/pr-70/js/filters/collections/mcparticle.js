@@ -1,8 +1,10 @@
-import { CheckboxComponent, checkboxLogic } from "../components/checkbox.js";
-import { RangeComponent } from "../components/range.js";
+import {
+  CheckboxComponent,
+  checkboxLogic,
+  bitfieldCheckboxLogic,
+} from "../components/checkbox.js";
+import { RangeComponent, rangeLogic } from "../components/range.js";
 import { SimStatusBitFieldDisplayValues } from "../../../mappings/sim-status.js";
-import { rangeLogic } from "../components/range.js";
-import { bitfieldCheckboxLogic } from "../components/checkbox.js";
 
 function renderMCParticleFilters() {
   const container = document.createElement("div");
@@ -104,5 +106,3 @@ export function initMCParticleFilters(parentContainer) {
 
   return criteriaFunction;
 }
-
-export function filterMCParticleCollection(criteriaFunction) {}

@@ -324,6 +324,7 @@ class Track extends EDMObject {
     const chi2 = parseInt(this.chi2 * 100) / 100;
     const ndf = parseInt(this.ndf * 100) / 100;
     const chiNdf = `${chi2}/${ndf}`;
+    this.chiNdf = chiNdf;
     lines.push("chi2/ndf = " + chiNdf);
     lines.push("dEdx = " + this.dEdx);
     const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
