@@ -56,19 +56,19 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-const addTask = (() => {
-  let pending = Promise.resolve();
+// const addTask = (() => {
+//   let pending = Promise.resolve();
 
-  const run = async (view) => {
-    try {
-      await pending;
-    } finally {
-      return drawView(view);
-    }
-  };
+//   const run = async (view) => {
+//     try {
+//       await pending;
+//     } finally {
+//       return drawView(view);
+//     }
+//   };
 
-  return (view) => (pending = run(view));
-})();
+//   return (view) => (pending = run(view));
+// })();
 
 const drawView = async (view) => {
   const {
@@ -120,7 +120,8 @@ const drawView = async (view) => {
 
   initFilters({ viewObjects, viewCurrentObjects }, collections, {
     render,
-    scroll,
+    filterScroll: scrollFunction,
+    originalScroll: scroll,
     setRenderable,
   });
 };
@@ -144,7 +145,6 @@ export const getView = () => {
 };
 
 export const drawCurrentView = () => {
-  // addTask(currentView.view);
   drawView(currentView.view);
 };
 
@@ -156,7 +156,7 @@ for (const key in views) {
   button.onclick = () => {
     saveScrollLocation();
     setView(key);
-    addTask(key);
+    drawCurrentView(currentView.view);
   };
   button.className = "view-button";
   buttons.push(button);

@@ -22,11 +22,13 @@ export function parseBits(bit) {
 }
 
 export function getSimStatusDisplayValues(bits) {
-  return bits.map((bit) =>
-    SimStatusBitFieldDisplayValues[bit] !== undefined
-      ? SimStatusBitFieldDisplayValues[bit]
-      : `Bit ${bit}`
-  );
+  const values = Object.entries(SimStatusBitFieldDisplayValues);
+
+  return bits.map((bit) => {
+    const [value, _] = values.find(([_, v]) => v === bit);
+
+    return value;
+  });
 }
 
 export function getSimStatusDisplayValuesFromBit(bit) {
