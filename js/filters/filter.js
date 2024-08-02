@@ -3,6 +3,7 @@ import { initClusterFilters } from "./collections/cluster.js";
 import { initMCParticleFilters } from "./collections/mcparticle.js";
 import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
+import { initVertexFilters } from "./collections/vertex.js";
 import { reconnect } from "./reconnect.js";
 
 const map = {
@@ -10,6 +11,7 @@ const map = {
   "edm4hep::ReconstructedParticle": initRecoParticleFilters,
   "edm4hep::Cluster": initClusterFilters,
   "edm4hep::Track": initTrackFilters,
+  "edm4hep::Vertex": initVertexFilters,
 };
 
 const openFiltersButton = document.getElementById("open-filter");
