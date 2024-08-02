@@ -8,6 +8,7 @@ import { renderObjects } from "../draw/render.js";
 import { getContainer, saveSize } from "../draw/app.js";
 import { setRenderable } from "../draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
+import { setupToggles } from "../toggle/toggle.js";
 
 const currentView = {};
 
@@ -124,6 +125,8 @@ const drawView = async (view) => {
     originalScroll: scroll,
     setRenderable,
   });
+
+  setupToggles(collections);
 };
 
 export function saveScrollLocation() {
