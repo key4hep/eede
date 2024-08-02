@@ -1,5 +1,5 @@
-#toggle {
-  display: none;
+.toggle {
+  display: flex;
   position: fixed;
   flex-direction: row;
   justify-content: center;

@@ -54,6 +54,13 @@ export function initFilters(
         criteriaFunctions[collection] = criteriaFunction;
       }
     }
+
+    const filters = document.getElementById("filters");
+    if (Object.keys(criteriaFunctions).length === 0) {
+      filters.style.display = "none";
+    } else {
+      filters.style.display = "block";
+    }
   };
 
   setupContent();
