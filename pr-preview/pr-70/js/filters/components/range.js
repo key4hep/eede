@@ -1,3 +1,20 @@
+const createInput = (placeholder) => {
+  const input = document.createElement("input");
+  input.type = "number";
+  input.placeholder = placeholder;
+  input.classList.add("range-input");
+
+  return input;
+};
+
+const createUnitElement = (unit) => {
+  const unitElement = document.createElement("span");
+  unitElement.textContent = unit;
+  unitElement.classList.add("range-unit");
+
+  return unitElement;
+};
+
 export class RangeComponent {
   constructor(propertyName, displayedName, unit) {
     this.propertyName = propertyName;
@@ -7,29 +24,25 @@ export class RangeComponent {
 
   render() {
     const div = document.createElement("div");
-    div.style.display = "flex";
-    div.style.flexDirection = "row";
+    div.classList.add("range-filter");
     const displayedName = document.createElement("label");
     displayedName.textContent = this.displayedName;
     div.appendChild(displayedName);
+
     const range = document.createElement("div");
-    const min = document.createElement("input");
+    range.classList.add("range-inputs");
+
+    const min = createInput("min");
     this.min = min;
-    min.type = "number";
-    min.placeholder = "min";
     range.appendChild(min);
-
     range.appendChild(document.createTextNode("-"));
-
-    const max = document.createElement("input");
+    const max = createInput("max");
     this.max = max;
-    max.type = "number";
-    max.placeholder = "max";
     range.appendChild(max);
+
     div.appendChild(range);
 
-    const unit = document.createElement("label");
-    unit.textContent = this.unit;
+    const unit = createUnitElement(this.unit);
     div.appendChild(unit);
 
     return div;

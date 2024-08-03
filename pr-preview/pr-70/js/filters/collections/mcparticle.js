@@ -2,16 +2,21 @@ import {
   CheckboxComponent,
   checkboxLogic,
   bitfieldCheckboxLogic,
+  objectSatisfiesCheckbox,
 } from "../components/checkbox.js";
 import { RangeComponent, rangeLogic } from "../components/range.js";
 import { SimStatusBitFieldDisplayValues } from "../../../mappings/sim-status.js";
+import {
+  addCollectionTitle,
+  collectionFilterContainer,
+  createCheckboxContainer,
+  createCollectionSubtitle,
+  createSubContainer,
+} from "../components/lib.js";
 
-function renderMCParticleFilters() {
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  const title = document.createElement("p");
-  title.textContent = "MC Particle";
+function renderMCParticleFilters(viewObjects) {
+  const container = collectionFilterContainer();
+  const title = addCollectionTitle("MC Particle");
   container.appendChild(title);
 
   const charge = new RangeComponent("charge", "charge", "e");
@@ -27,14 +32,15 @@ function renderMCParticleFilters() {
     container.appendChild(rangeFilter.render());
   });
 
-  const simStatusTitle = document.createElement("p");
-  simStatusTitle.textContent = "Simulation Status";
-  container.appendChild(simStatusTitle);
-
   const checkboxes = {
     simStatus: [],
     generatorStatus: [],
   };
+
+  const simStatusContainer = createSubContainer();
+  const simStatusTitle = createCollectionSubtitle("Simulator Status");
+  simStatusContainer.appendChild(simStatusTitle);
+  const simStatusCheckboxesContainer = createCheckboxContainer();
 
   Object.keys(SimStatusBitFieldDisplayValues).forEach((status) => {
     const checkbox = new CheckboxComponent(
@@ -43,18 +49,34 @@ function renderMCParticleFilters() {
       SimStatusBitFieldDisplayValues[status]
     );
     checkboxes.simStatus.push(checkbox);
-    container.appendChild(checkbox.render());
+    simStatusCheckboxesContainer.appendChild(checkbox.render());
   });
+  simStatusContainer.appendChild(simStatusCheckboxesContainer);
 
-  const generatorStatusTitle = document.createElement("p");
-  generatorStatusTitle.textContent = "Generator Status";
-  container.appendChild(generatorStatusTitle);
+  const generatorStatusContainer = createSubContainer();
+  const generatorStatusTitle = createCollectionSubtitle("Generator Status");
+  generatorStatusContainer.appendChild(generatorStatusTitle);
+  const genStatusCheckboxesContainer = createCheckboxContainer();
 
-  [1, 2, 3, 4].map((status) => {
-    const checkbox = new CheckboxComponent("generatorStatus", status, status);
+  const generatorStatus = new Set();
+  viewObjects.datatypes["edm4hep::MCParticle"].collection.forEach(
+    (mcparticle) => generatorStatus.add(mcparticle.generatorStatus)
+  );
+
+  generatorStatus.forEach((status) => {
+    const checkbox = new CheckboxComponent(
+      "generatorStatus",
+      status,
+      status,
+      false
+    );
     checkboxes.generatorStatus.push(checkbox);
-    container.appendChild(checkbox.render());
+    genStatusCheckboxesContainer.appendChild(checkbox.render());
   });
+  generatorStatusContainer.appendChild(genStatusCheckboxesContainer);
+
+  container.appendChild(simStatusContainer);
+  container.appendChild(generatorStatusContainer);
 
   return {
     container,
@@ -65,8 +87,8 @@ function renderMCParticleFilters() {
   };
 }
 
-export function initMCParticleFilters(parentContainer) {
-  const { container, filters } = renderMCParticleFilters();
+export function initMCParticleFilters(parentContainer, viewObjects) {
+  const { container, filters } = renderMCParticleFilters(viewObjects);
   const { range, checkboxes } = filters;
 
   parentContainer.appendChild(container);
@@ -81,21 +103,20 @@ export function initMCParticleFilters(parentContainer) {
 
     const { simStatus, generatorStatus } = checkboxes;
 
-    for (const checkbox of simStatus) {
-      const { checked, value } = checkbox.getValues();
-      if (!bitfieldCheckboxLogic(checked, value, object, "simulatorStatus")) {
-        return false;
-      }
-    }
+    const someSimStatusCheckbox = objectSatisfiesCheckbox(
+      object,
+      simStatus,
+      "simulatorStatus",
+      bitfieldCheckboxLogic
+    );
+    const someGenStatusCheckbox = objectSatisfiesCheckbox(
+      object,
+      generatorStatus,
+      "generatorStatus",
+      checkboxLogic
+    );
 
-    for (const checkbox of generatorStatus) {
-      const { checked, value } = checkbox.getValues();
-      if (!checkboxLogic(checked, value, object, "generatorStatus")) {
-        return false;
-      }
-    }
-
-    return true;
+    return someSimStatusCheckbox || someGenStatusCheckbox;
   };
 
   return criteriaFunction;

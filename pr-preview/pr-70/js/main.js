@@ -34,7 +34,7 @@ function showEventSwitcher() {
 }
 
 function showViewsMenu() {
-  const viewsMenu = document.getElementById("views");
+  const viewsMenu = document.getElementById("left-menu");
   const aboutButton = document.getElementById("information-button");
 
   viewsMenu.style.display = "flex";

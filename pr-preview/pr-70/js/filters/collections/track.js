@@ -1,11 +1,12 @@
+import {
+  addCollectionTitle,
+  collectionFilterContainer,
+} from "../components/lib.js";
 import { RangeComponent, rangeLogic } from "../components/range.js";
 
 function renderTrackFilters() {
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  const title = document.createElement("p");
-  title.textContent = "Track";
+  const container = collectionFilterContainer();
+  const title = addCollectionTitle("Track");
   container.appendChild(title);
 
   const chiNdf = new RangeComponent("chiNdf", "chi^2/ndf", "");

@@ -4,7 +4,7 @@ import { initMCParticleFilters } from "./collections/mcparticle.js";
 import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
-import { reconnect, restoreObjectsLinks } from "./reconnect.js";
+import { filterOut } from "./filter-out.js";
 
 const map = {
   "edm4hep::MCParticle": initMCParticleFilters,
@@ -50,7 +50,7 @@ export function initFilters(
       delete criteriaFunctions[collection];
       const init = map[collection];
       if (init) {
-        const criteriaFunction = init(content);
+        const criteriaFunction = init(content, viewObjects);
         criteriaFunctions[collection] = criteriaFunction;
       }
     }
@@ -61,19 +61,28 @@ export function initFilters(
     } else {
       filters.style.display = "block";
     }
+
+    const filterOutCheckbox = document.getElementById("invert-filter");
+    filterOutCheckbox.checked = false;
   };
 
   resetFiltersContent();
 
   filters.apply = async () => {
-    reconnect(viewObjects, viewCurrentObjects, criteriaFunctions);
+    const filterOutValue = document.getElementById("invert-filter").checked;
+
+    filterOut(
+      viewObjects,
+      viewCurrentObjects,
+      criteriaFunctions,
+      filterOutValue
+    );
     await render(viewCurrentObjects);
     filterScroll();
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {
     resetFiltersContent();
-    restoreObjectsLinks(viewCurrentObjects);
     copyObject(viewObjects, viewCurrentObjects);
     await render(viewCurrentObjects);
     originalScroll();

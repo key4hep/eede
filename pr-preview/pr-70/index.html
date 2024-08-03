@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="css/logo.css">
   <link rel="stylesheet" href="css/canvas.css">
   <link rel="stylesheet" href="css/modal.css">
-  <link rel="stylesheet" href="css/toggle.css">
   <link rel="stylesheet" href="css/filter.css">
   <link rel="stylesheet" href="css/event.css">
   <link rel="stylesheet" href="css/information.css">
@@ -20,6 +19,7 @@
   <link rel="stylesheet" href="css/information-message.css">
   <link rel="stylesheet" href="css/switch-deploy.css">
   <link rel="stylesheet" href="css/current-file.css">
+  <link rel="stylesheet" href="css/clean-switch.css">
 </head>
 
 <body>
@@ -70,7 +70,7 @@
 
   <div id="filters">
     <div id="filters-header">
-      <span>Filters</span>
+      <span id="filters-title">Filters</span>
       <div id="filter-menu-handler">
         <img id="open-filter" src="img/down_arrow.svg" alt="Open filter" width="20" height="20" />
         <img id="close-filter" src="img/up_arrow.svg" alt="Close filter" width="20" height="20" />
@@ -78,6 +78,10 @@
     </div>
     <div id="filters-body">
       <div id="filters-content">
+      </div>
+      <div id="invert-filters-section">
+        <span>Invert filters?</span>
+        <input type="checkbox" id="invert-filter" name="invert-filter" value="invert-filter" />
       </div>
       <div id="filters-buttons">
         <button id="filter-apply" class="filter-action">Apply</button>
@@ -168,12 +172,21 @@
     </div>
   </div>
 
-  <div id="views">
+  <div id="left-menu">
+    <div id="toggles">
+      <div id="pdg-toggle" class="toggle">
+        <label class="cl-switch cl-switch-black">
+          <input type="checkbox">
+          <span id="pdg-toggle-switch" class="switcher"></span>
+        </label>
+        <span class="toggle-label">Show PDG IDs</span>
+      </div>
+    </div>
     <div id="views-header">
-      <span>Select a view:</span>
+      <span id="views-select-title">Select a view</span>
       <div id="views-menu-handler">
-        <img id="close-views" src="img/close-left.svg" alt="Close" width="20" height="20" />
-        <img id="open-views" src="img/open.svg" alt="Open" width="20" height="20" />
+        <img id="close-views" class="views-handler" src="img/up_arrow.svg" alt="Close" width="20" height="20" />
+        <img id="open-views" class="views-handler" src="img/down_arrow.svg" alt="Open" width="20" height="20" />
       </div>
     </div>
     <div id="view-selector" class="view-selector-menu"></div>

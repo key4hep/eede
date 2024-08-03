@@ -1,21 +1,38 @@
+const createCheckboxContainer = () => {
+  const container = document.createElement("div");
+  container.classList.add("checkbox-title-container");
+  return container;
+};
+
+const createCheckbox = () => {
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.classList.add("filter-checkbox");
+  return checkbox;
+};
+
 export class CheckboxComponent {
-  constructor(propertyName, displayedName, value) {
+  constructor(propertyName, displayedName, value, firstCheckbox = true) {
     this.propertyName = propertyName;
     this.displayedName = displayedName;
     this.value = value;
+    this.firstCheckbox = firstCheckbox;
   }
 
   render() {
-    const div = document.createElement("div");
-    div.style.display = "flex";
-    div.style.flexDirection = "row";
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
+    const div = createCheckboxContainer();
+    const checkbox = createCheckbox();
     this.checkbox = checkbox;
-    div.appendChild(checkbox);
     const displayedName = document.createElement("label");
     displayedName.textContent = this.displayedName;
-    div.appendChild(displayedName);
+
+    if (this.firstCheckbox) {
+      div.appendChild(checkbox);
+      div.appendChild(displayedName);
+    } else {
+      div.appendChild(displayedName);
+      div.appendChild(checkbox);
+    }
 
     return div;
   }
@@ -28,16 +45,30 @@ export class CheckboxComponent {
   }
 }
 
-export function checkboxLogic(checked, value, object, property) {
-  if (checked) {
-    return object[property] === value;
-  }
-  return true;
+export function checkboxLogic(value, object, property) {
+  return object[property] === value;
 }
 
-export function bitfieldCheckboxLogic(checked, value, object, property) {
-  if (checked) {
-    return (parseInt(object[property]) & (1 << parseInt(value))) !== 0;
+export function bitfieldCheckboxLogic(value, object, property) {
+  return (parseInt(object[property]) & (1 << parseInt(value))) !== 0;
+}
+
+export function objectSatisfiesCheckbox(
+  object,
+  checkboxes,
+  property,
+  logicFunction
+) {
+  let satisfiesAny = false;
+
+  for (const checkbox of checkboxes) {
+    const { checked, value } = checkbox.getValues();
+
+    if (checked && logicFunction(value, object, property)) {
+      satisfiesAny = true;
+      break;
+    }
   }
-  return true;
+
+  return satisfiesAny;
 }

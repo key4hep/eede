@@ -1,12 +1,13 @@
+import {
+  addCollectionTitle,
+  collectionFilterContainer,
+} from "../components/lib.js";
 import { magnitudeRangeLogic, RangeComponent } from "../components/range.js";
 import { rangeLogic } from "../components/range.js";
 
 function renderClusterFilters() {
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  const title = document.createElement("p");
-  title.textContent = "Cluster";
+  const container = collectionFilterContainer();
+  const title = addCollectionTitle("Cluster");
   container.appendChild(title);
 
   const position = new RangeComponent("position", "position", "mm");

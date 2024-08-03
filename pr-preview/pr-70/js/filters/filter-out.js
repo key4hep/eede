@@ -1,6 +1,11 @@
 import { emptyCopyObject } from "../lib/copy.js";
 
-export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
+export function filterOut(
+  viewObjects,
+  viewCurrentObjects,
+  criteriaFunctions,
+  inverted = false
+) {
   emptyCopyObject(viewObjects, viewCurrentObjects);
 
   const ids = new Set();
@@ -8,9 +13,18 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
     criteriaFunctions
   )) {
     const originalCollection = viewObjects.datatypes[collection].collection;
-    const filteredCollection = originalCollection.filter((object) =>
-      criteriaFunction(object)
-    );
+    let filteredCollection;
+
+    if (inverted) {
+      filteredCollection = originalCollection.filter(
+        (object) => !criteriaFunction(object)
+      );
+    } else {
+      filteredCollection = originalCollection.filter((object) =>
+        criteriaFunction(object)
+      );
+    }
+
     filteredCollection.forEach((object) =>
       ids.add(`${object.index}-${object.collectionId}`)
     );
@@ -24,16 +38,7 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
       viewCurrentObjects.datatypes[collectionName];
 
     for (const object of collection) {
-      object.saveLinks();
       const { oneToManyRelations, oneToOneRelations } = object;
-
-      for (const relationName in oneToManyRelations) {
-        object.oneToManyRelations[relationName] = [];
-      }
-
-      for (const relationName in oneToOneRelations) {
-        object.oneToOneRelations[relationName] = null;
-      }
 
       for (const [relationName, relations] of Object.entries(
         oneToManyRelations
@@ -43,8 +48,6 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
           const toObjectId = `${toObject.index}-${toObject.collectionId}`;
 
           if (ids.has(toObjectId)) {
-            oneToMany[relationName].push(relation);
-            object.oneToManyRelations[relationName].push(relation);
           } else {
           }
         }
@@ -57,19 +60,9 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
         const toObjectId = `${toObject.index}-${toObject.collectionId}`;
 
         if (ids.has(toObjectId)) {
-          oneToOne[relationName].push(relation);
-          object.oneToOneRelations[relationName] = relation;
         } else {
         }
       }
-    }
-  }
-}
-
-export function restoreObjectsLinks(viewObjects) {
-  for (const { collection } of Object.values(viewObjects.datatypes)) {
-    for (const object of collection) {
-      object.restoreLinks();
     }
   }
 }
