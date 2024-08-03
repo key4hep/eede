@@ -1,13 +1,16 @@
 import { preFilterTree } from "../filters/pre-filter.js";
+import { MCParticle } from "../types/objects.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =
     viewCurrentObjects.datatypes["edm4hep::MCParticle"].collection ?? [];
 
+  MCParticle.setRows(mcCollection);
+
   const getMaxRow = (parentLinks) => {
     let maxRow = -1;
     for (const parentLink of parentLinks) {
-      const parent = parentLink.from;
+      const parent = parentLink.to;
       if (parent.row === -1) {
         return -1;
       }

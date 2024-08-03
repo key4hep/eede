@@ -1,7 +1,8 @@
 export class CheckboxComponent {
-  constructor(propertyName, displayedName) {
+  constructor(propertyName, displayedName, value) {
     this.propertyName = propertyName;
     this.displayedName = displayedName;
+    this.value = value;
   }
 
   render() {
@@ -19,14 +20,17 @@ export class CheckboxComponent {
     return div;
   }
 
-  checked() {
-    return this.checkbox.checked;
+  getValues() {
+    return {
+      checked: this.checkbox.checked,
+      value: this.value,
+    };
   }
 }
 
-export function checkboxLogic(checked, object, property) {
+export function checkboxLogic(checked, value, object, property) {
   if (checked) {
-    return object[property] === checked;
+    return object[property] === value;
   }
   return true;
 }

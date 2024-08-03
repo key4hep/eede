@@ -57,21 +57,7 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-// const addTask = (() => {
-//   let pending = Promise.resolve();
-
-//   const run = async (view) => {
-//     try {
-//       await pending;
-//     } finally {
-//       return drawView(view);
-//     }
-//   };
-
-//   return (view) => (pending = run(view));
-// })();
-
-const drawView = async (view) => {
+export const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
@@ -98,8 +84,13 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
+  const objects = {
+    viewObjects,
+    viewCurrentObjects,
+  };
+
   const render = async (objects) => {
-    const [width, height] = viewFunction(objects);
+    let [width, height] = viewFunction(objects);
     if (width < window.innerWidth) {
       width = window.innerWidth;
     }
@@ -109,6 +100,7 @@ const drawView = async (view) => {
     saveSize(width, height);
     await renderObjects(objects);
   };
+
   await render(viewCurrentObjects);
 
   const scrollIndex = getViewScrollIndex();
@@ -147,10 +139,6 @@ export const getView = () => {
   return currentView.view;
 };
 
-export const drawCurrentView = () => {
-  drawView(currentView.view);
-};
-
 const buttons = [];
 
 for (const key in views) {
@@ -159,7 +147,7 @@ for (const key in views) {
   button.onclick = () => {
     saveScrollLocation();
     setView(key);
-    drawCurrentView(currentView.view);
+    drawView(getView());
   };
   button.className = "view-button";
   buttons.push(button);

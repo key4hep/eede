@@ -2,7 +2,7 @@ import { loadObjects } from "./types/load.js";
 import { copyObject } from "./lib/copy.js";
 import { jsonData, selectedObjectTypes } from "./main.js";
 import { objectTypes } from "./types/objects.js";
-import { drawCurrentView, saveScrollLocation } from "./views/views.js";
+import { drawView, getView, saveScrollLocation } from "./views/views.js";
 
 const eventNumber = document.getElementById("selected-event");
 const previousEvent = document.getElementById("previous-event");
@@ -49,7 +49,7 @@ export function renderEvent(eventNumber) {
   currentEvent.event = eventNumber;
   loadSelectedEvent();
   updateEventNumber();
-  drawCurrentView();
+  drawView(getView());
 }
 
 previousEvent.addEventListener("click", () => {
