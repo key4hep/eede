@@ -73,46 +73,6 @@ class EDMObject {
       y < this.y + this.height
     );
   }
-
-  saveLinks() {
-    const oldLinks = {
-      oneToManyRelations: {},
-      oneToOneRelations: {},
-    };
-
-    if (!this.oldLinks) {
-      const oneToManyRelations = this.oneToManyRelations;
-      for (const relationName in oneToManyRelations) {
-        oldLinks.oneToManyRelations[relationName] =
-          oneToManyRelations[relationName];
-      }
-
-      const oneToOneRelations = this.oneToOneRelations;
-      for (const relationName in oneToOneRelations) {
-        oldLinks.oneToOneRelations[relationName] =
-          oneToOneRelations[relationName];
-      }
-    }
-
-    this.oldLinks = oldLinks;
-  }
-
-  restoreLinks() {
-    if (this.oldLinks) {
-      const { oneToManyRelations, oneToOneRelations } = this.oldLinks;
-      for (const [relationName, relations] of Object.entries(
-        oneToManyRelations
-      )) {
-        this.oneToManyRelations[relationName] = relations;
-      }
-      for (const [relationName, relation] of Object.entries(
-        oneToOneRelations
-      )) {
-        this.oneToOneRelations[relationName] = relation;
-      }
-      this.oldLinks = null;
-    }
-  }
 }
 
 export class MCParticle extends EDMObject {

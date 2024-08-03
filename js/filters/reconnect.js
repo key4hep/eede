@@ -24,16 +24,7 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
       viewCurrentObjects.datatypes[collectionName];
 
     for (const object of collection) {
-      object.saveLinks();
       const { oneToManyRelations, oneToOneRelations } = object;
-
-      for (const relationName in oneToManyRelations) {
-        object.oneToManyRelations[relationName] = [];
-      }
-
-      for (const relationName in oneToOneRelations) {
-        object.oneToOneRelations[relationName] = null;
-      }
 
       for (const [relationName, relations] of Object.entries(
         oneToManyRelations
@@ -43,8 +34,6 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
           const toObjectId = `${toObject.index}-${toObject.collectionId}`;
 
           if (ids.has(toObjectId)) {
-            oneToMany[relationName].push(relation);
-            object.oneToManyRelations[relationName].push(relation);
           } else {
           }
         }
@@ -57,19 +46,9 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
         const toObjectId = `${toObject.index}-${toObject.collectionId}`;
 
         if (ids.has(toObjectId)) {
-          oneToOne[relationName].push(relation);
-          object.oneToOneRelations[relationName] = relation;
         } else {
         }
       }
-    }
-  }
-}
-
-export function restoreObjectsLinks(viewObjects) {
-  for (const { collection } of Object.values(viewObjects.datatypes)) {
-    for (const object of collection) {
-      object.restoreLinks();
     }
   }
 }
