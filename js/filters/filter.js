@@ -50,7 +50,7 @@ export function initFilters(
       delete criteriaFunctions[collection];
       const init = map[collection];
       if (init) {
-        const criteriaFunction = init(content);
+        const criteriaFunction = init(content, viewObjects);
         criteriaFunctions[collection] = criteriaFunction;
       }
     }

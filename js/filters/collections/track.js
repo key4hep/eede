@@ -9,7 +9,7 @@ function renderTrackFilters() {
   const title = addCollectionTitle("Track");
   container.appendChild(title);
 
-  const chiNdf = new RangeComponent("chiNdf", "chi^2/ndf", "chi^2/ndf");
+  const chiNdf = new RangeComponent("chiNdf", "chi^2/ndf", "");
 
   container.appendChild(chiNdf.render());
 

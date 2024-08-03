@@ -45,16 +45,30 @@ export class CheckboxComponent {
   }
 }
 
-export function checkboxLogic(checked, value, object, property) {
-  if (checked) {
-    return object[property] === value;
-  }
-  return true;
+export function checkboxLogic(value, object, property) {
+  return object[property] === value;
 }
 
-export function bitfieldCheckboxLogic(checked, value, object, property) {
-  if (checked) {
-    return (parseInt(object[property]) & (1 << parseInt(value))) !== 0;
+export function bitfieldCheckboxLogic(value, object, property) {
+  return (parseInt(object[property]) & (1 << parseInt(value))) !== 0;
+}
+
+export function objectSatisfiesCheckbox(
+  object,
+  checkboxes,
+  property,
+  logicFunction
+) {
+  let satisfiesAny = false;
+
+  for (const checkbox of checkboxes) {
+    const { checked, value } = checkbox.getValues();
+
+    if (checked && logicFunction(value, object, property)) {
+      satisfiesAny = true;
+      break;
+    }
   }
-  return true;
+
+  return satisfiesAny;
 }
