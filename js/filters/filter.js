@@ -4,7 +4,7 @@ import { initMCParticleFilters } from "./collections/mcparticle.js";
 import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
-import { reconnect } from "./reconnect.js";
+import { reconnect, restoreObjectsLinks } from "./reconnect.js";
 
 const map = {
   "edm4hep::MCParticle": initMCParticleFilters,
@@ -42,7 +42,7 @@ export function initFilters(
 ) {
   const criteriaFunctions = {};
 
-  const setupContent = () => {
+  const resetFiltersContent = () => {
     const content = document.getElementById("filters-content");
     content.replaceChildren();
 
@@ -63,16 +63,17 @@ export function initFilters(
     }
   };
 
-  setupContent();
+  resetFiltersContent();
 
   filters.apply = async () => {
-    reconnect({ viewObjects, viewCurrentObjects }, criteriaFunctions);
+    reconnect(viewObjects, viewCurrentObjects, criteriaFunctions);
     await render(viewCurrentObjects);
     filterScroll();
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {
-    setupContent();
+    resetFiltersContent();
+    restoreObjectsLinks(viewCurrentObjects);
     copyObject(viewObjects, viewCurrentObjects);
     await render(viewCurrentObjects);
     originalScroll();

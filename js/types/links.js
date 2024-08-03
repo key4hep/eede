@@ -58,11 +58,13 @@ export class Link {
 
 class ParentLink extends Link {
   constructor(from, to) {
-    super(to, from);
+    super(from, to);
     this.color = colors["parents"];
     this.xShift = 3;
-    // parent is this.from
-    // current object is this.to
+  }
+
+  draw() {
+    drawBezierLink(this, true);
   }
 }
 
@@ -71,8 +73,6 @@ class DaughterLink extends Link {
     super(from, to);
     this.color = colors["daughters"];
     this.xShift = -3;
-    // current object is this.from
-    // daughter is this.to
   }
 }
 

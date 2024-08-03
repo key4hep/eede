@@ -1,4 +1,4 @@
-import { RangeComponent, rangeLogic } from "../components/range.js";
+import { magnitudeRangeLogic, RangeComponent } from "../components/range.js";
 
 function renderVertexFilters() {
   const container = document.createElement("div");

@@ -39,6 +39,7 @@ function renderMCParticleFilters() {
   Object.keys(SimStatusBitFieldDisplayValues).forEach((status) => {
     const checkbox = new CheckboxComponent(
       "simulatorStatus",
+      status,
       SimStatusBitFieldDisplayValues[status]
     );
     checkboxes.simStatus.push(checkbox);
@@ -50,7 +51,7 @@ function renderMCParticleFilters() {
   container.appendChild(generatorStatusTitle);
 
   [1, 2, 3, 4].map((status) => {
-    const checkbox = new CheckboxComponent("generatorStatus", status);
+    const checkbox = new CheckboxComponent("generatorStatus", status, status);
     checkboxes.generatorStatus.push(checkbox);
     container.appendChild(checkbox.render());
   });
@@ -81,22 +82,15 @@ export function initMCParticleFilters(parentContainer) {
     const { simStatus, generatorStatus } = checkboxes;
 
     for (const checkbox of simStatus) {
-      const checked = checkbox.checked();
-      if (
-        !bitfieldCheckboxLogic(
-          checked,
-          SimStatusBitFieldDisplayValues[checkbox.displayedName],
-          object,
-          "simulatorStatus"
-        )
-      ) {
+      const { checked, value } = checkbox.getValues();
+      if (!bitfieldCheckboxLogic(checked, value, object, "simulatorStatus")) {
         return false;
       }
     }
 
     for (const checkbox of generatorStatus) {
-      const checked = checkbox.checked();
-      if (!checkboxLogic(checked, object, "generatorStatus")) {
+      const { checked, value } = checkbox.getValues();
+      if (!checkboxLogic(checked, value, object, "generatorStatus")) {
         return false;
       }
     }

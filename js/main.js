@@ -47,6 +47,12 @@ function hideDeploySwitch() {
   deploySwitch.style.display = "none";
 }
 
+function showFilters() {
+  const filters = document.getElementById("filters");
+
+  filters.style.display = "block";
+}
+
 document.getElementById("input-file").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
@@ -143,6 +149,7 @@ document
     showEventSwitcher();
     showViewsMenu();
     showFileNameMenu();
+    showFilters();
     selectViewInformation();
     renderEvent(eventNum);
   });
