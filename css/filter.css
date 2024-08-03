@@ -63,7 +63,14 @@
   margin-top: 10px;
 }
 
+#invert-filters-section {
+  font-style: italic;
+  display: flex;
+  flex-direction: row;
+}
+
 #filters-buttons {
+  margin-top: 10px;
   width: fit-content;
 }
 

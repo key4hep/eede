@@ -1,6 +1,11 @@
 import { emptyCopyObject } from "../lib/copy.js";
 
-export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
+export function filterOut(
+  viewObjects,
+  viewCurrentObjects,
+  criteriaFunctions,
+  inverted = false
+) {
   emptyCopyObject(viewObjects, viewCurrentObjects);
 
   const ids = new Set();
@@ -8,9 +13,18 @@ export function reconnect(viewObjects, viewCurrentObjects, criteriaFunctions) {
     criteriaFunctions
   )) {
     const originalCollection = viewObjects.datatypes[collection].collection;
-    const filteredCollection = originalCollection.filter((object) =>
-      criteriaFunction(object)
-    );
+    let filteredCollection;
+
+    if (inverted) {
+      filteredCollection = originalCollection.filter(
+        (object) => !criteriaFunction(object)
+      );
+    } else {
+      filteredCollection = originalCollection.filter((object) =>
+        criteriaFunction(object)
+      );
+    }
+
     filteredCollection.forEach((object) =>
       ids.add(`${object.index}-${object.collectionId}`)
     );
