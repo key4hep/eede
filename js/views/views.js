@@ -124,7 +124,7 @@ export const drawView = async (view) => {
     setRenderable,
   });
 
-  setupToggles(collections);
+  setupToggles(collections, viewCurrentObjects);
 };
 
 export function saveScrollLocation() {

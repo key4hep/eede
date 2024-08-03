@@ -5,30 +5,11 @@
   right: 10px;
   z-index: 1;
   width: 300px;
-  max-height: 50%;
-  overflow-y: auto;
+  max-height: 50vh;
   padding: 10px;
   background-color: #e1e1e1;
   border-radius: 5px;
   border: 1px solid #000;
-}
-
-#filters::-webkit-scrollbar {
-  width: 7px;
-}
-
-#filters::-webkit-scrollbar-track {
-  background: #e1e1e1;
-  border-radius: 5px;
-}
-
-#filters::-webkit-scrollbar-thumb {
-  background: #afafaf;
-  border-radius: 5px;
-}
-
-#filters::-webkit-scrollbar-thumb:hover {
-  background: #858585;
 }
 
 #filters-header {
@@ -36,6 +17,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  max-height: 5vh;
 }
 
 #filters-title {
@@ -61,6 +43,27 @@
   flex-direction: column;
   align-items: center;
   margin-top: 10px;
+  overflow-y: auto;
+  max-height: 45vh;
+  padding-right: 5px;
+}
+
+#filters-body::-webkit-scrollbar {
+  width: 7px;
+}
+
+#filters-body::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 5px;
+}
+
+#filters-body::-webkit-scrollbar-thumb {
+  background: #afafaf;
+  border-radius: 5px;
+}
+
+#filters-body::-webkit-scrollbar-thumb:hover {
+  background: #858585;
 }
 
 #invert-filters-section {
