@@ -41,7 +41,7 @@
   align-items: center;
 }
 
-#open-views {
+#close-views {
   display: none;
 }
 
@@ -56,7 +56,7 @@
 
 #view-selector {
   margin-top: 10px;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
   overflow-y: auto;
