@@ -1,12 +1,13 @@
+import {
+  addCollectionTitle,
+  collectionFilterContainer,
+} from "../components/lib.js";
 import { RangeComponent } from "../components/range.js";
 import { rangeLogic } from "../components/range.js";
 
 function renderRecoParticleFilters() {
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  const title = document.createElement("p");
-  title.textContent = "Reconstructed Particle";
+  const container = collectionFilterContainer();
+  const title = addCollectionTitle("Reconstructed Particle");
   container.appendChild(title);
 
   const energy = new RangeComponent("energy", "energy", "GeV");

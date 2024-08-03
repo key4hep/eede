@@ -2,7 +2,11 @@ import { currentObjects, currentEvent } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
 import { views } from "./views-dictionary.js";
-import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
+import {
+  emptyViewMessage,
+  hideEmptyViewMessage,
+  showMessage,
+} from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
 import { getContainer, saveSize } from "../draw/app.js";
@@ -84,12 +88,14 @@ export const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  const objects = {
-    viewObjects,
-    viewCurrentObjects,
-  };
-
   const render = async (objects) => {
+    const empty = checkEmptyObject(objects);
+
+    if (empty) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
     let [width, height] = viewFunction(objects);
     if (width < window.innerWidth) {
       width = window.innerWidth;

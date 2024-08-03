@@ -1,11 +1,12 @@
+import {
+  addCollectionTitle,
+  collectionFilterContainer,
+} from "../components/lib.js";
 import { magnitudeRangeLogic, RangeComponent } from "../components/range.js";
 
 function renderVertexFilters() {
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  const title = document.createElement("p");
-  title.textContent = "Vertex";
+  const container = collectionFilterContainer();
+  const title = addCollectionTitle("Vertex");
   container.appendChild(title);
 
   const position = new RangeComponent("position", "position", "mm");
