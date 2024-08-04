@@ -59,16 +59,25 @@ export function objectSatisfiesCheckbox(
   property,
   logicFunction
 ) {
-  let satisfiesAny = false;
+  const checkedBoxes = [];
 
   for (const checkbox of checkboxes) {
     const { checked, value } = checkbox.getValues();
 
-    if (checked && logicFunction(value, object, property)) {
-      satisfiesAny = true;
-      break;
+    if (checked) {
+      checkedBoxes.push(value);
     }
   }
 
-  return satisfiesAny;
+  if (checkedBoxes.length === 0) {
+    return true;
+  }
+
+  for (const checked of checkedBoxes) {
+    if (logicFunction(checked, object, property)) {
+      return true;
+    }
+  }
+
+  return false;
 }

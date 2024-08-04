@@ -116,7 +116,7 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       checkboxLogic
     );
 
-    return someSimStatusCheckbox || someGenStatusCheckbox;
+    return someSimStatusCheckbox && someGenStatusCheckbox;
   };
 
   return criteriaFunction;
