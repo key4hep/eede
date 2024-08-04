@@ -5,6 +5,7 @@ import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
 import { filterOut } from "./filter-out.js";
+import { reconnect } from "./reconnect.js";
 
 const map = {
   "edm4hep::MCParticle": initMCParticleFilters,
@@ -70,13 +71,13 @@ export function initFilters(
 
   filters.apply = async () => {
     const filterOutValue = document.getElementById("invert-filter").checked;
-
-    filterOut(
+    const ids = filterOut(
       viewObjects,
       viewCurrentObjects,
       criteriaFunctions,
       filterOutValue
     );
+    reconnect(viewCurrentObjects, collections, ids);
     await render(viewCurrentObjects);
     filterScroll();
     setRenderable(viewCurrentObjects);
