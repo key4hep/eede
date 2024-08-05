@@ -6,6 +6,7 @@ import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
 import { filterOut } from "./filter-out.js";
 import { reconnect } from "./reconnect.js";
+import { restoreRelations } from "./relations.js";
 
 const map = {
   "edm4hep::MCParticle": initMCParticleFilters,
@@ -83,6 +84,7 @@ export function initFilters(
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {
+    restoreRelations(viewCurrentObjects);
     resetFiltersContent();
     copyObject(viewObjects, viewCurrentObjects);
     await render(viewCurrentObjects);
