@@ -18,6 +18,7 @@ import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 import { spanWithColor } from "../lib/html-string.js";
 import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
 import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
+import { reconnectAssociation } from "../filters/reconnect/association.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -80,6 +81,7 @@ export const views = {
     viewFunction: mcRecoAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
+    reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::ReconstructedParticle"],
     description: `<p>Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.</p>`,
   },
@@ -87,6 +89,7 @@ export const views = {
     viewFunction: mcTrackAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTrack,
+    reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::Track"],
     description: `<p>Association between Monte Carlo Particles and Tracks. 1:1 relation.</p>`,
   },
@@ -94,6 +97,7 @@ export const views = {
     viewFunction: mcClusterAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCCluster,
+    reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::Cluster"],
     description: `<p>Association between Monte Carlo Particles and Clusters. 1:1 relation.</p>`,
   },
@@ -101,6 +105,7 @@ export const views = {
     viewFunction: particleIDList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterParticleIDList,
+    reconnectFunction: () => {},
     collections: ["edm4hep::ParticleID"],
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
@@ -108,6 +113,7 @@ export const views = {
     viewFunction: vertexList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterVertexList,
+    reconnectFunction: () => {},
     collections: ["edm4hep::Vertex"],
     description: `<p>A list of Vertices found in the event.</p>`,
   },
