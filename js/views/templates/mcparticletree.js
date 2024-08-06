@@ -62,8 +62,10 @@ export function mcParticleTree(viewCurrentObjects) {
   const horizontalGap = boxWidth * 0.4;
   const verticalGap = boxHeight * 0.3;
 
-  const width =
-    boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 2);
+  let width = boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 2);
+  if (width < window.innerWidth) {
+    width = window.innerWidth;
+  }
   const height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
 
   for (const [i, row] of mcRows.entries()) {
