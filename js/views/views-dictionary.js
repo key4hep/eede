@@ -1,4 +1,4 @@
-import { mcParticleTree, preFilterMCTree } from "./mcparticletree.js";
+import { mcParticleTree, preFilterMCTree } from "./templates/mcparticletree.js";
 import { mcRecoAssociation, preFilterMCReco } from "./mcrecoassociation.js";
 import { recoParticleTree, preFilterRecoTree } from "./recoparticletree.js";
 import { trackTree, preFilterTrackTree } from "./tracktree.js";
@@ -11,7 +11,7 @@ import {
 import {
   recoClusterTrackVertex,
   preFilterRecoClusterTrackVertex,
-} from "./recoclustertrack.js";
+} from "./templates/recoclustertrack.js";
 import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";

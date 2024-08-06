@@ -1,5 +1,5 @@
-import { preFilterTree } from "../filters/pre-filter.js";
-import { MCParticle } from "../types/objects.js";
+import { preFilterTree } from "../../filters/pre-filter.js";
+import { MCParticle } from "../../types/objects.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =

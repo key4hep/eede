@@ -1,4 +1,4 @@
-import { emptyCopyObject } from "../lib/copy.js";
+import { emptyCopyObject } from "../../lib/copy.js";
 
 export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
