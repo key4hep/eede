@@ -1,4 +1,9 @@
-export function reconnect(viewCurrentObjects, collectionsNames, ids) {
+export function reconnect(
+  viewCurrentObjects,
+  collectionsNames,
+  ids,
+  reconnectFunction
+) {
   for (const collectionName of collectionsNames) {
     const { collection, oneToOne, oneToMany } =
       viewCurrentObjects.datatypes[collectionName];
