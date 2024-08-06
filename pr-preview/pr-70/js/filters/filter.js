@@ -97,6 +97,11 @@ const applyButton = document.getElementById("filter-apply");
 applyButton.addEventListener("click", () => {
   filters.apply();
 });
+applyButton.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    filters.apply();
+  }
+});
 
 const resetButton = document.getElementById("filter-reset");
 resetButton.addEventListener("click", () => {
