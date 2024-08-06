@@ -1,1 +1,1 @@
-export function reconnectTree(viewCurrentObjects) {}
+export function reconnectTree(viewCurrentObjects, ids) {}
