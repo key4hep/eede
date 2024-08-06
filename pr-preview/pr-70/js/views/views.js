@@ -68,6 +68,7 @@ export const drawView = async (view) => {
     scrollFunction,
     collections,
     description,
+    reconnectFunction,
   } = views[view];
 
   const viewObjects = {};
@@ -117,12 +118,17 @@ export const drawView = async (view) => {
   scroll();
   setRenderable(viewCurrentObjects);
 
-  initFilters({ viewObjects, viewCurrentObjects }, collections, {
-    render,
-    filterScroll: scrollFunction,
-    originalScroll: scroll,
-    setRenderable,
-  });
+  initFilters(
+    { viewObjects, viewCurrentObjects },
+    collections,
+    reconnectFunction,
+    {
+      render,
+      filterScroll: scrollFunction,
+      originalScroll: scroll,
+      setRenderable,
+    }
+  );
 
   setupToggles(collections, viewCurrentObjects);
 };

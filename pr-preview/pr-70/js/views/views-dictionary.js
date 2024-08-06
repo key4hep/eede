@@ -1,4 +1,4 @@
-import { mcParticleTree, preFilterMCTree } from "./mcparticletree.js";
+import { mcParticleTree, preFilterMCTree } from "./templates/mcparticletree.js";
 import { mcRecoAssociation, preFilterMCReco } from "./mcrecoassociation.js";
 import { recoParticleTree, preFilterRecoTree } from "./recoparticletree.js";
 import { trackTree, preFilterTrackTree } from "./tracktree.js";
@@ -11,18 +11,20 @@ import {
 import {
   recoClusterTrackVertex,
   preFilterRecoClusterTrackVertex,
-} from "./recoclustertrack.js";
+} from "./templates/recoclustertrack.js";
 import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 import { spanWithColor } from "../lib/html-string.js";
 import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
+import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
     viewFunction: mcParticleTree,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTree,
+    reconnectFunction: reconnectMCParticleTree,
     collections: ["edm4hep::MCParticle"],
     description: `<p>${spanWithColor(
       "Red",

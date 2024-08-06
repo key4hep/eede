@@ -5,7 +5,6 @@ import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
 import { filterOut } from "./filter-out.js";
-import { reconnect } from "./reconnect.js";
 import { restoreRelations } from "./relations.js";
 
 const map = {
@@ -40,6 +39,7 @@ const filters = {
 export function initFilters(
   { viewObjects, viewCurrentObjects },
   collections,
+  reconnectFunction,
   { render, filterScroll, originalScroll, setRenderable }
 ) {
   const criteriaFunctions = {};
@@ -78,7 +78,7 @@ export function initFilters(
       criteriaFunctions,
       filterOutValue
     );
-    reconnect(viewCurrentObjects, collections, ids);
+    reconnectFunction(viewCurrentObjects, ids);
     await render(viewCurrentObjects);
     filterScroll();
     setRenderable(viewCurrentObjects);
