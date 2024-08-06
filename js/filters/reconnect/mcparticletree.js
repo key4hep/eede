@@ -55,8 +55,6 @@ export function reconnectMCParticleTree(viewCurrentObjects) {
       "daughters": [],
     };
 
-    console.log(object.row);
-
     const parentRow = findParentRow(object, uniqueRows, rowToIndex);
     if (parentRow !== NaN) {
       const beginIndex = beginRowsIndex[parentRow];
@@ -74,7 +72,6 @@ export function reconnectMCParticleTree(viewCurrentObjects) {
 
     const daughterRow = findDaughterRow(object, uniqueRows, rowToIndex);
     if (daughterRow !== NaN) {
-      console.log(daughterRow);
       const beginIndex = beginRowsIndex[daughterRow];
       const endIndex = beginIndex + rowToObjectsCount[daughterRow];
 
