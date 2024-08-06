@@ -73,6 +73,27 @@ class EDMObject {
       y < this.y + this.height
     );
   }
+
+  saveRelations() {
+    const relations = {};
+
+    if (!this.relations) {
+      relations.oneToManyRelations = this.oneToManyRelations;
+      relations.oneToOneRelations = this.oneToOneRelations;
+      this.relations = relations;
+
+      this.oneToManyRelations = {};
+      this.oneToOneRelations = {};
+    }
+  }
+
+  restoreRelations() {
+    if (this.relations) {
+      this.oneToManyRelations = this.relations.oneToManyRelations;
+      this.oneToOneRelations = this.relations.oneToOneRelations;
+    }
+    this.relations = null;
+  }
 }
 
 export class MCParticle extends EDMObject {
@@ -160,6 +181,8 @@ export class MCParticle extends EDMObject {
 
   static setRows(mcCollection) {
     mcCollection.forEach((mcParticle) => {
+      mcParticle.row = -1;
+
       const parentLength = mcParticle.oneToManyRelations["parents"].length;
       const daughterLength = mcParticle.oneToManyRelations["daughters"].length;
 
