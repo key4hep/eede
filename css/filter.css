@@ -5,7 +5,7 @@
   right: 10px;
   z-index: 1;
   width: 300px;
-  max-height: 50vh;
+  max-height: 65vh;
   padding: 10px;
   background-color: #e1e1e1;
   border-radius: 5px;
@@ -44,7 +44,7 @@
   align-items: center;
   margin-top: 10px;
   overflow-y: auto;
-  max-height: 45vh;
+  max-height: 55vh;
   padding-right: 5px;
 }
 
