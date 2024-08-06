@@ -28,6 +28,8 @@ export const setScroll = (x, y) => {
   container.position.set(x, y);
 };
 
+const addScrollBars = () => {};
+
 export const addScroll = (app, objects) => {
   const container = getContainer();
   const renderer = app.renderer;
