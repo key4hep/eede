@@ -219,52 +219,6 @@ export class MCParticle extends EDMObject {
       mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
     }
   }
-
-  static filter({ collection }, filteredObjects, criteriaFunction) {
-    for (const mcParticle of collection) {
-      if (!criteriaFunction(mcParticle)) {
-        const parentParticles = mcParticle.oneToManyRelations["parents"]
-          .map((link) => link.from)
-          .filter((parent) => criteriaFunction(parent));
-        const childrenParticles = mcParticle.oneToManyRelations["daughters"]
-          .map((link) => link.to)
-          .filter((child) => criteriaFunction(child));
-
-        for (const parent of parentParticles) {
-          for (const child of childrenParticles) {
-            const linkToParent = new linkTypes["parents"](child, parent);
-
-            const linkToChild = new linkTypes["daughters"](parent, child);
-
-            filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
-              linkToParent
-            );
-            filteredObjects["edm4hep::MCParticle"].oneToMany["daughters"].push(
-              linkToChild
-            );
-          }
-        }
-      } else {
-        filteredObjects["edm4hep::MCParticle"].collection.push(mcParticle);
-
-        for (const link of mcParticle.oneToManyRelations["parents"]) {
-          if (criteriaFunction(link.from)) {
-            filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
-              link
-            );
-          }
-        }
-
-        for (const link of mcParticle.oneToManyRelations["daughters"]) {
-          if (criteriaFunction(link.to)) {
-            filteredObjects["edm4hep::MCParticle"].oneToMany["daughters"].push(
-              link
-            );
-          }
-        }
-      }
-    }
-  }
 }
 
 class ReconstructedParticle extends EDMObject {
