@@ -1,3 +1,4 @@
+import { setScroll } from "../draw/scroll.js";
 import { copyObject } from "../lib/copy.js";
 import { initClusterFilters } from "./collections/cluster.js";
 import { initMCParticleFilters } from "./collections/mcparticle.js";
@@ -80,7 +81,8 @@ export function initFilters(
     );
     reconnectFunction(viewCurrentObjects, ids);
     await render(viewCurrentObjects);
-    filterScroll();
+    const { x, y } = filterScroll();
+    setScroll(x, y);
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {

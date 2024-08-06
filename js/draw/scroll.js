@@ -23,6 +23,11 @@ export const scrollTopCenter = () => {
   return { x, y };
 };
 
+export const setScroll = (x, y) => {
+  const container = getContainer();
+  container.position.set(x, y);
+};
+
 export const addScroll = (app, objects) => {
   const container = getContainer();
   const renderer = app.renderer;

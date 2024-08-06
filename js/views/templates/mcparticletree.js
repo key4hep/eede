@@ -63,35 +63,13 @@ export function mcParticleTree(viewCurrentObjects) {
   const verticalGap = boxHeight * 0.3;
 
   const width =
-    boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 1);
+    boxWidth * (maxRowWidth + 1) + horizontalGap * (maxRowWidth + 2);
   const height = boxHeight * (maxRow + 1) + verticalGap * (maxRow + 2);
 
   for (const [i, row] of mcRows.entries()) {
     for (const [j, box] of row.entries()) {
-      if (row.length % 2 === 0) {
-        const distanceFromCenter = j - row.length / 2;
-        if (distanceFromCenter < 0) {
-          box.x =
-            width / 2 -
-            boxWidth -
-            horizontalGap / 2 +
-            (distanceFromCenter + 1) * boxWidth +
-            (distanceFromCenter + 1) * horizontalGap;
-        } else {
-          box.x =
-            width / 2 +
-            horizontalGap / 2 +
-            distanceFromCenter * boxWidth +
-            distanceFromCenter * horizontalGap;
-        }
-      } else {
-        const distanceFromCenter = j - row.length / 2;
-        box.x =
-          width / 2 -
-          boxWidth / 2 +
-          distanceFromCenter * boxWidth +
-          distanceFromCenter * horizontalGap;
-      }
+      const half = Math.floor(row.length / 2);
+      box.x = width / 2 - (half - j) * (boxWidth + horizontalGap);
       box.y = i * verticalGap + verticalGap + i * boxHeight;
     }
   }
