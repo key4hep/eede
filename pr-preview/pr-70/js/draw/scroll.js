@@ -10,6 +10,7 @@ const scrollBars = {
   verticalThumb: null,
   prevVerticalY: NaN,
   currentFunction: null,
+  objects: null,
 };
 
 export const scrollTopLeft = () => {
@@ -37,21 +38,16 @@ export const setScroll = (x, y) => {
   container.position.set(x, y);
 };
 
-function startDragHorizontalThumb(event, objects) {
+function startDragHorizontalThumb(event) {
   const app = getApp();
 
   scrollBars.prevHorizontalX =
     event.data.global.x - scrollBars.horizontalThumb.width / 2;
 
-  const moveFunction = (event) => {
-    moveHorizontalThumb(event, objects);
-  };
-
-  scrollBars.currentFunction = moveFunction;
-  app.stage.on("pointermove", moveFunction);
+  app.stage.on("pointermove", moveHorizontalThumb);
 }
 
-function moveHorizontalThumb(event, objects) {
+function moveHorizontalThumb(event) {
   const horizontalScrollBar = scrollBars.horizontalThumb;
   const app = getApp();
   const container = getContainer();
@@ -72,29 +68,25 @@ function moveHorizontalThumb(event, objects) {
     scrollBars.prevHorizontalX = newThumbX;
   }
 
+  const { objects } = scrollBars;
   setRenderable(objects);
 }
 
 function stopHorizontalThumbDrag() {
   const app = getApp();
-  app.stage.off("pointermove", scrollBars.currentFunction);
+  app.stage.off("pointermove", moveHorizontalThumb);
 }
 
-function startDragVerticalThumb(event, objects) {
+function startDragVerticalThumb(event) {
   const app = getApp();
 
   scrollBars.prevVerticalY =
     event.data.global.y - scrollBars.verticalThumb.height / 2;
 
-  const moveFunction = (event) => {
-    moveVerticalThumb(event, objects);
-  };
-
-  scrollBars.currentFunction = moveFunction;
-  app.stage.on("pointermove", moveFunction);
+  app.stage.on("pointermove", moveVerticalThumb);
 }
 
-function moveVerticalThumb(event, objects) {
+function moveVerticalThumb(event) {
   const verticalScrollBar = scrollBars.verticalThumb;
   const app = getApp();
   const container = getContainer();
@@ -115,15 +107,16 @@ function moveVerticalThumb(event, objects) {
     scrollBars.prevVerticalY = newThumbY;
   }
 
+  const { objects } = scrollBars;
   setRenderable(objects);
 }
 
 function stopVerticalThumbDrag() {
   const app = getApp();
-  app.stage.off("pointermove", scrollBars.currentFunction);
+  app.stage.off("pointermove", moveVerticalThumb);
 }
 
-const addScrollBars = (app, container, objects) => {
+const addScrollBars = (app, container) => {
   const scrollBarColor = "#e1e1e1";
   const renderer = app.renderer;
   const rendererWidth = renderer.width;
@@ -200,17 +193,13 @@ const addScrollBars = (app, container, objects) => {
   horizontalThumb.eventMode = "static";
   horizontalThumb.interactiveChildren = false;
 
-  horizontalThumb.on("pointerdown", (event) => {
-    startDragHorizontalThumb(event, objects);
-  });
+  horizontalThumb.on("pointerdown", startDragHorizontalThumb);
 
   verticalThumb.cursor = "pointer";
   verticalThumb.eventMode = "static";
   verticalThumb.interactiveChildren = false;
 
-  verticalThumb.on("pointerdown", (event) => {
-    startDragVerticalThumb(event, objects);
-  });
+  verticalThumb.on("pointerdown", startDragVerticalThumb);
 
   setScrollBarsPosition();
 };
@@ -254,7 +243,8 @@ export const addScroll = (app, objects) => {
   const screenWidth = renderer.width;
   const screenHeight = renderer.height;
 
-  addScrollBars(app, container, objects);
+  scrollBars.objects = objects;
+  addScrollBars(app, container);
 
   app.stage.on("pointerup", stopHorizontalThumbDrag);
   app.stage.on("pointerupoutside", stopHorizontalThumbDrag);
