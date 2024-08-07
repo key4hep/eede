@@ -1,5 +1,4 @@
 import { getName } from "../lib/getName.js";
-import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
 import {
