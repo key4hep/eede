@@ -13,6 +13,7 @@ import { getContainer, saveSize } from "../draw/app.js";
 import { setRenderable } from "../draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
+import { setScrollBarsPosition } from "../draw/scroll.js";
 
 const currentView = {};
 
@@ -54,6 +55,7 @@ export function scroll() {
   const { x, y } = scrollLocations[index];
 
   container.position.set(x, y);
+  setScrollBarsPosition();
 }
 
 function setInfoButtonName(view) {
