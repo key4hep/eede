@@ -1,17 +1,23 @@
-const SCALE = 1.25;
-
 const store = {};
 
-export async function textToSVG(id, text, size) {
+export async function textToSVG(id, text, maxWidth) {
   if (store[id]) {
     return store[id];
   }
 
-  const mathjaxContainer = await MathJax.tex2svgPromise(`${text}`);
+  const mathjaxContainer = await MathJax.tex2svgPromise(`${text}`, {});
   const svg = mathjaxContainer.firstElementChild;
 
-  svg.setAttribute("width", `${parseInt(size * SCALE)}px`);
-  svg.setAttribute("height", `${parseInt(size * SCALE)}px`);
+  const width = parseFloat(svg.getAttribute("width").replace("ex", ""));
+  const height = parseFloat(svg.getAttribute("height").replace("ex", ""));
+
+  const ratio = width / height;
+
+  const finalWidth = maxWidth;
+  const finalHeight = parseInt(finalWidth / ratio);
+
+  svg.setAttribute("width", `${finalWidth}px`);
+  svg.setAttribute("height", `${finalHeight}px`);
 
   const src =
     "data:image/svg+xml;base64," +
