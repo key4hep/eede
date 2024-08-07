@@ -202,6 +202,8 @@ const addScrollBars = (app, container) => {
   verticalThumb.on("pointerdown", startDragVerticalThumb);
 
   setScrollBarsPosition();
+
+  return [horizontalScrollBar, verticalScrollBar];
 };
 
 export const setScrollBarsPosition = () => {
@@ -244,7 +246,16 @@ export const addScroll = (app, objects) => {
   const screenHeight = renderer.height;
 
   scrollBars.objects = objects;
-  addScrollBars(app, container);
+
+  let [horizontalScrollBar, verticalScrollBar] = addScrollBars(app, container);
+  window.addEventListener("resize", () => {
+    setTimeout(() => {
+      app.stage.removeChild(horizontalScrollBar);
+      app.stage.removeChild(verticalScrollBar);
+
+      [horizontalScrollBar, verticalScrollBar] = addScrollBars(app, container);
+    });
+  });
 
   app.stage.on("pointerup", stopHorizontalThumbDrag);
   app.stage.on("pointerupoutside", stopHorizontalThumbDrag);
