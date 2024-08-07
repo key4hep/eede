@@ -24,7 +24,7 @@ export class Toggle {
 
   display() {
     const toggle = document.getElementById(this.elementId);
-    toggle.style.display = "block";
+    toggle.style.display = "flex";
   }
 
   setViewCurrentObjects(viewCurrentObjects) {
