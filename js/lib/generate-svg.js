@@ -1,6 +1,6 @@
 const store = {};
 
-export async function textToSVG(id, text, maxWidth) {
+export async function textToSVG(id, text, maxWidth, maxHeight) {
   if (store[id]) {
     return store[id];
   }
@@ -11,10 +11,15 @@ export async function textToSVG(id, text, maxWidth) {
   const width = parseFloat(svg.getAttribute("width").replace("ex", ""));
   const height = parseFloat(svg.getAttribute("height").replace("ex", ""));
 
-  const ratio = width / height;
+  const imageRatio = width / height;
 
-  const finalWidth = maxWidth;
-  const finalHeight = parseInt(finalWidth / ratio);
+  let finalHeight = maxHeight;
+  let finalWidth = parseInt(finalHeight * imageRatio);
+
+  if (finalWidth > maxWidth) {
+    finalWidth = maxWidth;
+    finalHeight = parseInt(finalWidth / imageRatio);
+  }
 
   svg.setAttribute("width", `${finalWidth}px`);
   svg.setAttribute("height", `${finalHeight}px`);

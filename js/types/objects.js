@@ -153,13 +153,8 @@ export class MCParticle extends EDMObject {
 
   async drawImage(text, imageY) {
     const id = `${text}-${IMAGE_SIZE}`;
-    const src = await textToSVG(id, text, this.width);
-    const sprite = await svgElementToPixiSprite(
-      id,
-      src,
-      this.width * 0.9,
-      IMAGE_SIZE
-    );
+    const src = await textToSVG(id, text, this.width * 0.9, IMAGE_SIZE);
+    const sprite = await svgElementToPixiSprite(id, src);
     this.image = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
   }
