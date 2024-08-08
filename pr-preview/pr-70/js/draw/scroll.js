@@ -299,8 +299,10 @@ export const addScroll = (app, objects) => {
 
       if (isYInBounds) {
         container.y = newYPosition;
-        scrollBars.verticalThumb.y =
+        const newVerticalThumbY =
           (Math.abs(container.y) / getContainerSize().height) * screenHeight;
+        scrollBars.verticalThumb.y = newVerticalThumbY;
+        scrollBars.prevVerticalY = newVerticalThumbY;
       }
     }
     setRenderable(objects);

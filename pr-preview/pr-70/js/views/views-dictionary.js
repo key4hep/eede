@@ -19,6 +19,8 @@ import { spanWithColor } from "../lib/html-string.js";
 import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
 import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
 import { reconnectAssociation } from "../filters/reconnect/association.js";
+import { reconnectTree } from "../filters/reconnect/tree.js";
+import { reconnectMixedViews } from "../filters/reconnect/mixed.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -39,6 +41,7 @@ export const views = {
     viewFunction: recoParticleTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterRecoTree,
+    reconnectFunction: reconnectTree,
     collections: ["edm4hep::ReconstructedParticle"],
     description: `<p>A tree of the Reconstructed Particles. ${spanWithColor(
       "Purple",
@@ -49,6 +52,7 @@ export const views = {
     viewFunction: trackTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterTrackTree,
+    reconnectFunction: reconnectTree,
     collections: ["edm4hep::Track"],
     description: `<p>A tree of the Tracks.</p>`,
   },
@@ -56,6 +60,7 @@ export const views = {
     viewFunction: clusterTree,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
+    reconnectFunction: reconnectTree,
     collections: ["edm4hep::Cluster"],
     description: `<p>A tree of the Clusters.</p>`,
   },
@@ -63,6 +68,7 @@ export const views = {
     viewFunction: recoClusterTrackVertex,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoClusterTrackVertex,
+    reconnectFunction: reconnectMixedViews,
     collections: [
       "edm4hep::ReconstructedParticle",
       "edm4hep::Cluster",
@@ -121,6 +127,7 @@ export const views = {
     viewFunction: recoParticleID,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoParticleID,
+    reconnectFunction: reconnectMixedViews,
     collections: ["edm4hep::ParticleID", "edm4hep::ReconstructedParticle"],
     description: `<p>1:1 relation from ParticleID to Reconstructed Particle.</p>`,
   },
