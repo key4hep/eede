@@ -4,6 +4,10 @@ export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
     viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection;
 
+  if (recoParticles.length === 0) {
+    return [0, 0];
+  }
+
   const findFirstObject = (relationName) => {
     const object = recoParticles.find((particle) => {
       const relation = particle.oneToManyRelations[relationName];
@@ -11,6 +15,10 @@ export function recoClusterTrackVertex(viewObjects) {
         return relation[0].to;
       }
     });
+
+    if (!object) {
+      return { width: 0, height: 0 };
+    }
     return object;
   };
 

@@ -20,6 +20,7 @@ import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
 import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
 import { reconnectAssociation } from "../filters/reconnect/association.js";
 import { reconnectTree } from "../filters/reconnect/tree.js";
+import { reconnectMixedViews } from "../filters/reconnect/mixed.js";
 
 export const views = {
   "Monte Carlo Particle Tree": {
@@ -67,6 +68,7 @@ export const views = {
     viewFunction: recoClusterTrackVertex,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoClusterTrackVertex,
+    reconnectFunction: reconnectMixedViews,
     collections: [
       "edm4hep::ReconstructedParticle",
       "edm4hep::Cluster",
@@ -125,6 +127,7 @@ export const views = {
     viewFunction: recoParticleID,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoParticleID,
+    reconnectFunction: reconnectMixedViews,
     collections: ["edm4hep::ParticleID", "edm4hep::ReconstructedParticle"],
     description: `<p>1:1 relation from ParticleID to Reconstructed Particle.</p>`,
   },

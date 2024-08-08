@@ -100,6 +100,11 @@ export const drawView = async (view) => {
     }
 
     let [width, height] = viewFunction(objects);
+    if (width === 0 && height === 0) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
     if (width < window.innerWidth) {
       width = window.innerWidth;
     }
