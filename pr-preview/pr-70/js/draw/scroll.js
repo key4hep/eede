@@ -271,8 +271,10 @@ export const addScroll = (app, objects) => {
         newXPosition > screenWidth - getContainerSize().width;
       if (isXInBounds) {
         container.x = newXPosition;
-        scrollBars.horizontalThumb.x =
+        const newHorizontalThumbX =
           (Math.abs(container.x) / getContainerSize().width) * screenWidth;
+        scrollBars.horizontalThumb.x = newHorizontalThumbX;
+        scrollBars.prevHorizontalX = newHorizontalThumbX;
       }
     } else {
       const deltaX = parseInt(e.deltaX * SPEED);
@@ -289,8 +291,10 @@ export const addScroll = (app, objects) => {
 
       if (isXInBounds) {
         container.x = newXPosition;
-        scrollBars.horizontalThumb.x =
+        const newHorizontalThumbX =
           (Math.abs(container.x) / getContainerSize().width) * screenWidth;
+        scrollBars.horizontalThumb.x = newHorizontalThumbX;
+        scrollBars.prevHorizontalX = newHorizontalThumbX;
       }
 
       if (isYInBounds) {
