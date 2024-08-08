@@ -319,7 +319,7 @@ class ParticleID extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 140;
+    this.height = 160;
     this.color = "#c9edf7";
     this.radius = 25;
     this.titleName = "Particle ID";
