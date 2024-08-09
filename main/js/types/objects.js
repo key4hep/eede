@@ -1,5 +1,4 @@
 import { getName } from "../lib/getName.js";
-import { linkTypes } from "./links.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../../mappings/sim-status.js";
 import {
@@ -73,6 +72,27 @@ class EDMObject {
       y < this.y + this.height
     );
   }
+
+  saveRelations() {
+    const relations = {};
+
+    if (!this.relations) {
+      relations.oneToManyRelations = this.oneToManyRelations;
+      relations.oneToOneRelations = this.oneToOneRelations;
+      this.relations = relations;
+
+      this.oneToManyRelations = {};
+      this.oneToOneRelations = {};
+    }
+  }
+
+  restoreRelations() {
+    if (this.relations) {
+      this.oneToManyRelations = this.relations.oneToManyRelations;
+      this.oneToOneRelations = this.relations.oneToOneRelations;
+    }
+    this.relations = null;
+  }
 }
 
 export class MCParticle extends EDMObject {
@@ -82,7 +102,8 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 15;
-    this.height = 270;
+    this.width = 135;
+    this.height = 280;
     this.titleName = "MCParticle";
   }
 
@@ -132,8 +153,8 @@ export class MCParticle extends EDMObject {
 
   async drawImage(text, imageY) {
     const id = `${text}-${IMAGE_SIZE}`;
-    const src = await textToSVG(id, text, IMAGE_SIZE);
-    const sprite = await svgElementToPixiSprite(id, src, IMAGE_SIZE);
+    const src = await textToSVG(id, text, this.width * 0.9, IMAGE_SIZE);
+    const sprite = await svgElementToPixiSprite(id, src);
     this.image = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
   }
@@ -158,8 +179,10 @@ export class MCParticle extends EDMObject {
     return isVisible;
   }
 
-  static setup(mcCollection) {
-    for (const mcParticle of mcCollection) {
+  static setRows(mcCollection) {
+    mcCollection.forEach((mcParticle) => {
+      mcParticle.row = -1;
+
       const parentLength = mcParticle.oneToManyRelations["parents"].length;
       const daughterLength = mcParticle.oneToManyRelations["daughters"].length;
 
@@ -171,7 +194,11 @@ export class MCParticle extends EDMObject {
       if (parentLength === 0) {
         mcParticle.row = 0;
       }
+    });
+  }
 
+  static setup(mcCollection) {
+    for (const mcParticle of mcCollection) {
       const name = getName(mcParticle.PDG);
       mcParticle.name = name;
       mcParticle.textToRender = name;
@@ -190,52 +217,6 @@ export class MCParticle extends EDMObject {
 
       mcParticle.time = Math.round(mcParticle.time * 100) / 100;
       mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
-    }
-  }
-
-  static filter({ collection }, filteredObjects, criteriaFunction) {
-    for (const mcParticle of collection) {
-      if (!criteriaFunction(mcParticle)) {
-        const parentParticles = mcParticle.oneToManyRelations["parents"]
-          .map((link) => link.from)
-          .filter((parent) => criteriaFunction(parent));
-        const childrenParticles = mcParticle.oneToManyRelations["daughters"]
-          .map((link) => link.to)
-          .filter((child) => criteriaFunction(child));
-
-        for (const parent of parentParticles) {
-          for (const child of childrenParticles) {
-            const linkToParent = new linkTypes["parents"](child, parent);
-
-            const linkToChild = new linkTypes["daughters"](parent, child);
-
-            filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
-              linkToParent
-            );
-            filteredObjects["edm4hep::MCParticle"].oneToMany["daughters"].push(
-              linkToChild
-            );
-          }
-        }
-      } else {
-        filteredObjects["edm4hep::MCParticle"].collection.push(mcParticle);
-
-        for (const link of mcParticle.oneToManyRelations["parents"]) {
-          if (criteriaFunction(link.from)) {
-            filteredObjects["edm4hep::MCParticle"].oneToMany["parents"].push(
-              link
-            );
-          }
-        }
-
-        for (const link of mcParticle.oneToManyRelations["daughters"]) {
-          if (criteriaFunction(link.to)) {
-            filteredObjects["edm4hep::MCParticle"].oneToMany["daughters"].push(
-              link
-            );
-          }
-        }
-      }
     }
   }
 }
@@ -270,8 +251,6 @@ class ReconstructedParticle extends EDMObject {
   }
 
   static setup(recoCollection) {}
-
-  static filter() {}
 }
 
 class Cluster extends EDMObject {
@@ -324,6 +303,7 @@ class Track extends EDMObject {
     const chi2 = parseInt(this.chi2 * 100) / 100;
     const ndf = parseInt(this.ndf * 100) / 100;
     const chiNdf = `${chi2}/${ndf}`;
+    this.chiNdf = chiNdf;
     lines.push("chi2/ndf = " + chiNdf);
     lines.push("dEdx = " + this.dEdx);
     const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
@@ -339,7 +319,7 @@ class ParticleID extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 140;
+    this.height = 160;
     this.color = "#c9edf7";
     this.radius = 25;
     this.titleName = "Particle ID";

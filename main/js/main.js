@@ -34,7 +34,7 @@ function showEventSwitcher() {
 }
 
 function showViewsMenu() {
-  const viewsMenu = document.getElementById("views");
+  const viewsMenu = document.getElementById("left-menu");
   const aboutButton = document.getElementById("information-button");
 
   viewsMenu.style.display = "flex";
@@ -45,6 +45,12 @@ function hideDeploySwitch() {
   const deploySwitch = document.getElementById("switch-deploy");
 
   deploySwitch.style.display = "none";
+}
+
+function showFilters() {
+  const filters = document.getElementById("filters");
+
+  filters.style.display = "block";
 }
 
 document.getElementById("input-file").addEventListener("change", (event) => {
@@ -143,6 +149,7 @@ document
     showEventSwitcher();
     showViewsMenu();
     showFileNameMenu();
+    showFilters();
     selectViewInformation();
     renderEvent(eventNum);
   });
