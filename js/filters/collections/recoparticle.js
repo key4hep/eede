@@ -1,11 +1,16 @@
 import {
+  checkboxLogic,
+  objectSatisfiesCheckbox,
+} from "../components/checkbox.js";
+import { buildCollectionCheckboxes } from "../components/common.js";
+import {
   addCollectionTitle,
   collectionFilterContainer,
 } from "../components/lib.js";
 import { RangeComponent } from "../components/range.js";
 import { rangeLogic } from "../components/range.js";
 
-function renderRecoParticleFilters() {
+function renderRecoParticleFilters(viewObjects) {
   const container = collectionFilterContainer();
   const title = addCollectionTitle("Reconstructed Particle");
   container.appendChild(title);
@@ -20,17 +25,25 @@ function renderRecoParticleFilters() {
     container.appendChild(rangeFilter.render());
   });
 
+  const [collectionNamesContainer, collectionCheckboxes] =
+    buildCollectionCheckboxes(
+      viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection
+    );
+
+  container.appendChild(collectionNamesContainer);
+
   return {
     container,
     filters: {
       range,
+      collectionCheckboxes,
     },
   };
 }
 
-export function initRecoParticleFilters(parentContainer) {
-  const { container, filters } = renderRecoParticleFilters();
-  const { range } = filters;
+export function initRecoParticleFilters(parentContainer, viewObjects) {
+  const { container, filters } = renderRecoParticleFilters(viewObjects);
+  const { range, collectionCheckboxes } = filters;
 
   parentContainer.appendChild(container);
 
@@ -41,6 +54,17 @@ export function initRecoParticleFilters(parentContainer) {
       if (!rangeLogic(min, max, object, filter.propertyName)) {
         return false;
       }
+    }
+
+    if (
+      !objectSatisfiesCheckbox(
+        object,
+        collectionCheckboxes,
+        "collectionName",
+        checkboxLogic
+      )
+    ) {
+      return false;
     }
 
     return true;

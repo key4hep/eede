@@ -13,6 +13,10 @@ import {
   createCollectionSubtitle,
   createSubContainer,
 } from "../components/lib.js";
+import {
+  buildCollectionCheckboxes,
+  filterOutByNormalCheckboxes,
+} from "../components/common.js";
 
 function renderMCParticleFilters(viewObjects) {
   const container = collectionFilterContainer();
@@ -75,8 +79,15 @@ function renderMCParticleFilters(viewObjects) {
   });
   generatorStatusContainer.appendChild(genStatusCheckboxesContainer);
 
+  const [collectionNamesContainer, collectionCheckboxes] =
+    buildCollectionCheckboxes(
+      viewObjects.datatypes["edm4hep::MCParticle"].collection
+    );
+  checkboxes.collectionNames = collectionCheckboxes;
+
   container.appendChild(simStatusContainer);
   container.appendChild(generatorStatusContainer);
+  container.appendChild(collectionNamesContainer);
 
   return {
     container,
@@ -101,7 +112,7 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       }
     }
 
-    const { simStatus, generatorStatus } = checkboxes;
+    const { simStatus, generatorStatus, collectionNames } = checkboxes;
 
     const someSimStatusCheckbox = objectSatisfiesCheckbox(
       object,
@@ -109,14 +120,12 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       "simulatorStatus",
       bitfieldCheckboxLogic
     );
-    const someGenStatusCheckbox = objectSatisfiesCheckbox(
-      object,
+    const normalCheckboxes = filterOutByNormalCheckboxes(object, [
       generatorStatus,
-      "generatorStatus",
-      checkboxLogic
-    );
+      collectionNames,
+    ]);
 
-    return someSimStatusCheckbox && someGenStatusCheckbox;
+    return someSimStatusCheckbox && normalCheckboxes;
   };
 
   return criteriaFunction;
