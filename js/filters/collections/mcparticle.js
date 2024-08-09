@@ -68,7 +68,7 @@ function renderMCParticleFilters(viewObjects) {
       "generatorStatus",
       status,
       status,
-      false
+      true
     );
     checkboxes.generatorStatus.push(checkbox);
     genStatusCheckboxesContainer.appendChild(checkbox.render());
