@@ -147,17 +147,14 @@ export function addLinesToBox(lines, box, y) {
   return text.position.y + text.height;
 }
 
-export async function svgElementToPixiSprite(id, src, size) {
-  let asset;
-
+export async function svgElementToPixiSprite(id, src) {
   if (!Cache.has(id)) {
-    Cache.set(id, await Assets.load(src));
+    const texture = await Assets.load(src);
+    Cache.set(id, texture);
   }
+  const texture = Cache.get(id);
+  const sprite = Sprite.from(texture);
 
-  asset = Cache.get(id);
-  const sprite = Sprite.from(asset);
-  sprite.width = size;
-  sprite.height = size;
   return sprite;
 }
 

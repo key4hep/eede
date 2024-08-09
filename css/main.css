@@ -6,10 +6,6 @@ body {
   font-size: 16px;
 }
 
-.manipulation-tool {
-  display: none;
-}
-
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -29,4 +25,8 @@ button {
   border: none;
   background: none;
   padding: 0;
+}
+
+#input-file {
+  cursor: pointer;
 }

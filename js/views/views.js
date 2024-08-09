@@ -2,11 +2,18 @@ import { currentObjects, currentEvent } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
 import { views } from "./views-dictionary.js";
-import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
+import {
+  emptyViewMessage,
+  hideEmptyViewMessage,
+  showMessage,
+} from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
 import { renderObjects } from "../draw/render.js";
 import { getContainer, saveSize } from "../draw/app.js";
 import { setRenderable } from "../draw/renderable.js";
+import { initFilters } from "../filters/filter.js";
+import { setupToggles } from "../toggle/toggle.js";
+import { setScrollBarsPosition } from "../draw/scroll.js";
 
 const currentView = {};
 
@@ -48,6 +55,7 @@ export function scroll() {
   const { x, y } = scrollLocations[index];
 
   container.position.set(x, y);
+  setScrollBarsPosition();
 }
 
 function setInfoButtonName(view) {
@@ -55,27 +63,14 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-const addTask = (() => {
-  let pending = Promise.resolve();
-
-  const run = async (view) => {
-    try {
-      await pending;
-    } finally {
-      return drawView(view);
-    }
-  };
-
-  return (view) => (pending = run(view));
-})();
-
-const drawView = async (view) => {
+export const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
     scrollFunction,
-    filters,
+    collections,
     description,
+    reconnectFunction,
   } = views[view];
 
   const viewObjects = {};
@@ -96,26 +91,53 @@ const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  let [width, height] = viewFunction(viewObjects);
-  if (width < window.innerWidth) {
-    width = window.innerWidth;
-  }
-  if (height < window.innerHeight) {
-    height = window.innerHeight;
-  }
-  saveSize(width, height);
+  const render = async (objects) => {
+    const empty = checkEmptyObject(objects);
+
+    if (empty) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
+    let [width, height] = viewFunction(objects);
+    if (width === 0 && height === 0) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
+    if (width < window.innerWidth) {
+      width = window.innerWidth;
+    }
+    if (height < window.innerHeight) {
+      height = window.innerHeight;
+    }
+    saveSize(width, height);
+    await renderObjects(objects);
+  };
+
+  await render(viewCurrentObjects);
 
   const scrollIndex = getViewScrollIndex();
   if (scrollLocations[scrollIndex] === undefined) {
     const viewScrollLocation = scrollFunction();
     scrollLocations[scrollIndex] = viewScrollLocation;
   }
-
-  await renderObjects(viewObjects);
   scroll();
   setRenderable(viewCurrentObjects);
 
-  filters(viewObjects, viewCurrentObjects);
+  initFilters(
+    { viewObjects, viewCurrentObjects },
+    collections,
+    reconnectFunction,
+    {
+      render,
+      filterScroll: scrollFunction,
+      originalScroll: scroll,
+      setRenderable,
+    }
+  );
+
+  setupToggles(collections, viewCurrentObjects);
 };
 
 export function saveScrollLocation() {
@@ -136,10 +158,6 @@ export const getView = () => {
   return currentView.view;
 };
 
-export const drawCurrentView = () => {
-  addTask(currentView.view);
-};
-
 const buttons = [];
 
 for (const key in views) {
@@ -148,7 +166,7 @@ for (const key in views) {
   button.onclick = () => {
     saveScrollLocation();
     setView(key);
-    addTask(key);
+    drawView(getView());
   };
   button.className = "view-button";
   buttons.push(button);

@@ -5,6 +5,10 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const fromCollection = relations.map((relation) => relation.from);
   const toCollection = relations.map((relation) => relation.to);
 
+  if (fromCollection.length === 0 || toCollection.length === 0) {
+    return [0, 0];
+  }
+
   const fromWidth = fromCollection[0].width;
   const toWidth = toCollection[0].width;
   const fromHorizontalGap = 0.3 * fromWidth;

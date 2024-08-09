@@ -46,7 +46,9 @@ export function dragMove(event) {
 }
 
 export function dragEnd() {
-  currentObject.zIndex = 1;
+  if (currentObject) {
+    currentObject.zIndex = 1;
+  }
   const app = getApp();
   app.stage.off("pointermove", dragMove);
 }
