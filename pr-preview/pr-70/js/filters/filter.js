@@ -2,6 +2,7 @@ import { setScroll, setScrollBarsPosition } from "../draw/scroll.js";
 import { copyObject } from "../lib/copy.js";
 import { initClusterFilters } from "./collections/cluster.js";
 import { initMCParticleFilters } from "./collections/mcparticle.js";
+import { initParticleIdFilters } from "./collections/particleid.js";
 import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
@@ -14,6 +15,7 @@ const map = {
   "edm4hep::Cluster": initClusterFilters,
   "edm4hep::Track": initTrackFilters,
   "edm4hep::Vertex": initVertexFilters,
+  "edm4hep::ParticleID": initParticleIdFilters,
 };
 
 const openFiltersButton = document.getElementById("open-filter");
