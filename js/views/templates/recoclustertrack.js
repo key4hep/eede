@@ -135,17 +135,24 @@ export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
 
   const fromCollection = fromDatatype.collection;
 
+  const added = new Set();
+
   const recoParticles = [];
   const clusters = [];
   const tracks = [];
   const vertexCollection = [];
 
   fromCollection.forEach((particle) => {
+    const id = `${particle.index}-${particle.collectionId}`;
+
     const clusterRelations = particle.oneToManyRelations["clusters"];
     const trackRelations = particle.oneToManyRelations["tracks"];
     const vertexRelation = particle.oneToOneRelations["startVertex"];
 
-    const total = clusterRelations.length + trackRelations.length;
+    const total =
+      clusterRelations.length +
+      trackRelations.length +
+      (vertexRelation !== undefined ? 1 : 0);
 
     if (total === 0) {
       return;
@@ -153,20 +160,38 @@ export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
 
     clusterRelations.forEach((clusterRelation) => {
       const cluster = clusterRelation.to;
-      clusters.push(cluster);
+      const clusterId = `${cluster.index}-${cluster.collectionId}`;
+
+      if (!added.has(clusterId)) {
+        added.add(clusterId);
+        clusters.push(cluster);
+      }
     });
 
     trackRelations.forEach((trackRelation) => {
       const track = trackRelation.to;
-      tracks.push(track);
+      const trackId = `${track.index}-${track.collectionId}`;
+
+      if (!added.has(trackId)) {
+        added.add(trackId);
+        tracks.push(track);
+      }
     });
 
     if (vertexRelation !== undefined) {
       const vertex = vertexRelation.to;
-      vertexCollection.push(vertex);
+      const vertexId = `${vertex.index}-${vertex.collectionId}`;
+
+      if (!added.has(vertexId)) {
+        added.add(vertexId);
+        vertexCollection.push(vertex);
+      }
     }
 
-    recoParticles.push(particle);
+    if (!added.has(id)) {
+      added.add(id);
+      recoParticles.push(particle);
+    }
   });
 
   viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection =
