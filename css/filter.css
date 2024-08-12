@@ -158,3 +158,20 @@
 .filter-checkbox {
   margin: 2px;
 }
+
+.collection-checkboxes-handler {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.checkbox-button {
+  padding: 4px;
+  margin: 0 5px;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.checkbox-button:hover {
+  background-color: #c5c5c5;
+}
