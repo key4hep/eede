@@ -13,7 +13,10 @@ export function listView(collection) {
   let cols = (width - objHorizontalGap) / (objWidth + objHorizontalGap);
   const decimal = cols % 1;
 
-  if (decimal >= 0.5) {
+  const minDecimal =
+    (objWidth + 0.5 * objHorizontalGap) / (objWidth + objHorizontalGap);
+
+  if (decimal >= minDecimal) {
     cols = cols + 1;
   }
   cols = Math.floor(cols);
