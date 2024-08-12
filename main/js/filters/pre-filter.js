@@ -11,14 +11,30 @@ export function preFilterAssociation(
 
   const association = currentObjects.associations[associationName];
 
-  const fromCollection = association.map((association) => association.from);
+  const added = new Set();
+  const fromCollection = [];
+  const toCollection = [];
 
-  const toCollection = association.map((association) => association.to);
+  association.forEach((relation) => {
+    const from = relation.from;
+    const fromId = `${from.index}-${from.collectionId}`;
+
+    if (!added.has(fromId)) {
+      added.add(fromId);
+      fromCollection.push(from);
+    }
+
+    const to = relation.to;
+    const toId = `${to.index}-${to.collectionId}`;
+
+    if (!added.has(toId)) {
+      added.add(toId);
+      toCollection.push(to);
+    }
+  });
 
   viewObjects.datatypes[fromCollectionName].collection = fromCollection;
-
   viewObjects.datatypes[toCollectionName].collection = toCollection;
-
   viewObjects.associations[associationName] = association;
 }
 
@@ -58,7 +74,18 @@ export function preFilterOneWay(
     currentObjects.datatypes[fromCollectionName].oneToOne[relationName];
 
   const fromCollection = relations.map((relation) => relation.from);
-  const toCollection = relations.map((relation) => relation.to);
+
+  const added = new Set();
+  const toCollection = [];
+  relations.forEach((relation) => {
+    const to = relation.to;
+    const toId = `${to.index}-${to.collectionId}`;
+
+    if (!added.has(toId)) {
+      added.add(toId);
+      toCollection.push(to);
+    }
+  });
 
   viewObjects.datatypes[fromCollectionName].oneToOne[relationName] = relations;
   viewObjects.datatypes[fromCollectionName].collection = fromCollection;
