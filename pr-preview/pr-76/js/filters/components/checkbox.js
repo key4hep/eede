@@ -37,6 +37,10 @@ export class CheckboxComponent {
     return div;
   }
 
+  checked(value) {
+    this.checkbox.checked = value;
+  }
+
   getValues() {
     return {
       checked: this.checkbox.checked,

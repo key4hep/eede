@@ -4,6 +4,7 @@ import {
   objectSatisfiesCheckbox,
 } from "./checkbox.js";
 import {
+  createButtonForCheckboxes,
   createCheckboxContainer,
   createCollectionSubtitle,
   createSubContainer,
@@ -11,8 +12,17 @@ import {
 
 export function buildCollectionCheckboxes(collection) {
   const container = createSubContainer();
+  const div = document.createElement("div");
+  div.classList.add("collection-checkboxes-handler");
   const title = createCollectionSubtitle("Collection");
-  container.appendChild(title);
+  const buttonsDiv = document.createElement("div");
+  const selectAll = createButtonForCheckboxes("Select all");
+  const clearAll = createButtonForCheckboxes("Clear all");
+  div.appendChild(title);
+  buttonsDiv.appendChild(selectAll);
+  buttonsDiv.appendChild(clearAll);
+  div.appendChild(buttonsDiv);
+  container.appendChild(div);
   const checkboxesContainer = createCheckboxContainer();
 
   const checkboxes = [];
@@ -30,6 +40,14 @@ export function buildCollectionCheckboxes(collection) {
     checkboxesContainer.appendChild(checkbox.render());
   });
   container.appendChild(checkboxesContainer);
+
+  selectAll.addEventListener("click", () => {
+    checkboxes.forEach((checkbox) => checkbox.checked(true));
+  });
+
+  clearAll.addEventListener("click", () => {
+    checkboxes.forEach((checkbox) => checkbox.checked(false));
+  });
 
   return [container, checkboxes];
 }
