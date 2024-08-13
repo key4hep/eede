@@ -38,6 +38,7 @@ export function buildCollectionCheckboxes(collection) {
     );
     checkboxes.push(checkbox);
     checkboxesContainer.appendChild(checkbox.render());
+    checkbox.checked(true);
   });
   container.appendChild(checkboxesContainer);
 
