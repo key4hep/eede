@@ -1,25 +1,31 @@
-const horizontalGapPercentage = 0.4;
+const minHorizontalGapPercentage = 0.3;
 const verticalGapPercentage = 0.3;
+
+const bestHorizontalFit = (windowWidth, objectWidth) => {
+  let columns = 1;
+  let percentage =
+    (windowWidth - columns * objectWidth) / (objectWidth * (1 + columns));
+  let prevPercentage = percentage;
+
+  while (percentage >= minHorizontalGapPercentage) {
+    prevPercentage = percentage;
+    columns += 1;
+    percentage =
+      (windowWidth - columns * objectWidth) / (objectWidth * (1 + columns));
+  }
+
+  return [columns - 1, prevPercentage];
+};
 
 export function listView(collection) {
   const width = window.innerWidth;
   const length = collection.length;
 
-  const objWidth = collection[0].width;
-  const objHorizontalGap = parseInt(horizontalGapPercentage * objWidth);
   const objHeight = collection[0].height;
   const objVerticalGap = parseInt(verticalGapPercentage * objHeight);
-
-  let cols = (width - objHorizontalGap) / (objWidth + objHorizontalGap);
-  const decimal = cols % 1;
-
-  const minDecimal =
-    (objWidth + 0.5 * objHorizontalGap) / (objWidth + objHorizontalGap);
-
-  if (decimal >= minDecimal) {
-    cols = cols + 1;
-  }
-  cols = Math.floor(cols);
+  const objWidth = collection[0].width;
+  const [cols, horizontalGapPercentage] = bestHorizontalFit(width, objWidth);
+  const objHorizontalGap = parseInt(horizontalGapPercentage * objWidth);
 
   const rows = Math.ceil(length / cols);
 
