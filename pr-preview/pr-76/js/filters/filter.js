@@ -47,6 +47,8 @@ export function initFilters(
 ) {
   const criteriaFunctions = {};
 
+  let someInputChanged = false;
+
   const resetFiltersContent = () => {
     const content = document.getElementById("filters-content");
     content.replaceChildren();
@@ -69,11 +71,32 @@ export function initFilters(
 
     const filterOutCheckbox = document.getElementById("invert-filter");
     filterOutCheckbox.checked = false;
+
+    const allCheckboxes = document.getElementsByClassName(
+      "filter-input-checkbox"
+    );
+
+    for (const input of allCheckboxes) {
+      input.addEventListener("change", () => {
+        someInputChanged = true;
+      });
+    }
+
+    const allInputs = document.getElementsByClassName("filter-input-range");
+
+    for (const input of allInputs) {
+      input.addEventListener("input", () => {
+        someInputChanged = true;
+      });
+    }
   };
 
   resetFiltersContent();
 
   filters.apply = async () => {
+    if (!someInputChanged) {
+      return;
+    }
     const filterOutValue = document.getElementById("invert-filter").checked;
     const ids = filterOut(
       viewObjects,

@@ -38,15 +38,22 @@ export function buildCollectionCheckboxes(collection) {
     );
     checkboxes.push(checkbox);
     checkboxesContainer.appendChild(checkbox.render());
+    checkbox.checked(true);
   });
   container.appendChild(checkboxesContainer);
 
   selectAll.addEventListener("click", () => {
-    checkboxes.forEach((checkbox) => checkbox.checked(true));
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked(true);
+      checkbox.checkbox.dispatchEvent(new Event("change"));
+    });
   });
 
   clearAll.addEventListener("click", () => {
-    checkboxes.forEach((checkbox) => checkbox.checked(false));
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked(false);
+      checkbox.checkbox.dispatchEvent(new Event("change"));
+    });
   });
 
   return [container, checkboxes];
