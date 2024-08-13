@@ -3,6 +3,7 @@ const createInput = (placeholder) => {
   input.type = "number";
   input.placeholder = placeholder;
   input.classList.add("range-input");
+  input.classList.add("filter-input-range");
 
   return input;
 };

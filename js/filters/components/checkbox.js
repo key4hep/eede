@@ -8,6 +8,8 @@ const createCheckbox = () => {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.classList.add("filter-checkbox");
+  checkbox.classList.add("filter-input-checkbox");
+
   return checkbox;
 };
 
