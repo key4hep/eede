@@ -7,7 +7,7 @@ import {
   addCollectionTitle,
   collectionFilterContainer,
 } from "../components/lib.js";
-import { RangeComponent } from "../components/range.js";
+import { magnitudeRangeLogic, RangeComponent } from "../components/range.js";
 import { rangeLogic } from "../components/range.js";
 
 function renderRecoParticleFilters(viewObjects) {
@@ -19,11 +19,13 @@ function renderRecoParticleFilters(viewObjects) {
   const charge = new RangeComponent("charge", "charge", "e");
   const momentum = new RangeComponent("momentum", "momentum", "GeV");
 
-  const range = [energy, charge, momentum];
+  const range = [energy, charge];
 
   range.forEach((rangeFilter) => {
     container.appendChild(rangeFilter.render());
   });
+
+  container.appendChild(momentum.render());
 
   const [collectionNamesContainer, collectionCheckboxes] =
     buildCollectionCheckboxes(
@@ -37,13 +39,14 @@ function renderRecoParticleFilters(viewObjects) {
     filters: {
       range,
       collectionCheckboxes,
+      momentum,
     },
   };
 }
 
 export function initRecoParticleFilters(parentContainer, viewObjects) {
   const { container, filters } = renderRecoParticleFilters(viewObjects);
-  const { range, collectionCheckboxes } = filters;
+  const { range, collectionCheckboxes, momentum } = filters;
 
   parentContainer.appendChild(container);
 
@@ -54,6 +57,11 @@ export function initRecoParticleFilters(parentContainer, viewObjects) {
       if (!rangeLogic(min, max, object, filter.propertyName)) {
         return false;
       }
+    }
+
+    const { min, max } = momentum.getValues();
+    if (!magnitudeRangeLogic(min, max, object, "momentum")) {
+      return false;
     }
 
     if (
