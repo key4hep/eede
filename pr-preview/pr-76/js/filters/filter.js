@@ -1,5 +1,7 @@
 import { setScroll, setScrollBarsPosition } from "../draw/scroll.js";
 import { copyObject } from "../lib/copy.js";
+import { checkEmptyObject } from "../lib/empty-object.js";
+import { showMessage } from "../lib/messages.js";
 import { initClusterFilters } from "./collections/cluster.js";
 import { initMCParticleFilters } from "./collections/mcparticle.js";
 import { initParticleIdFilters } from "./collections/particleid.js";
@@ -39,6 +41,34 @@ const filters = {
   reset: null,
 };
 
+const filterOptionsChanged = (initialValues) => {
+  const allCheckboxes = document.getElementsByClassName(
+    "filter-input-checkbox"
+  );
+
+  for (let i = 0; i < allCheckboxes.length; i++) {
+    const checked = allCheckboxes[i].checked;
+    const initialValue = initialValues.checkboxes[i];
+
+    if (checked !== initialValue) {
+      return true;
+    }
+  }
+
+  const allInputs = document.getElementsByClassName("filter-input-range");
+
+  for (let i = 0; i < allInputs.length; i++) {
+    const input = allInputs[i].value;
+    const initialInput = initialValues.range[i];
+
+    if (input !== initialInput) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export function initFilters(
   { viewObjects, viewCurrentObjects },
   collections,
@@ -47,7 +77,10 @@ export function initFilters(
 ) {
   const criteriaFunctions = {};
 
-  let someInputChanged = false;
+  const initialValues = {
+    range: [],
+    checkboxes: [],
+  };
 
   const resetFiltersContent = () => {
     const content = document.getElementById("filters-content");
@@ -76,27 +109,32 @@ export function initFilters(
       "filter-input-checkbox"
     );
 
+    initialValues.checkboxes = [];
+
     for (const input of allCheckboxes) {
-      input.addEventListener("change", () => {
-        someInputChanged = true;
-      });
+      const checked = input.checked;
+      initialValues.checkboxes.push(checked);
     }
 
     const allInputs = document.getElementsByClassName("filter-input-range");
 
+    initialValues.range = [];
+
     for (const input of allInputs) {
-      input.addEventListener("input", () => {
-        someInputChanged = true;
-      });
+      const value = input.value;
+      initialValues.range.push(value);
     }
   };
 
   resetFiltersContent();
 
   filters.apply = async () => {
-    if (!someInputChanged) {
+    const filtersChanged = filterOptionsChanged(initialValues);
+
+    if (!filtersChanged) {
       return;
     }
+
     const filterOutValue = document.getElementById("invert-filter").checked;
     const ids = filterOut(
       viewObjects,
@@ -104,6 +142,14 @@ export function initFilters(
       criteriaFunctions,
       filterOutValue
     );
+
+    const isEmpty = checkEmptyObject(viewCurrentObjects);
+
+    if (isEmpty) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
     reconnectFunction(viewCurrentObjects, ids);
     await render(viewCurrentObjects);
     const { x, y } = filterScroll();

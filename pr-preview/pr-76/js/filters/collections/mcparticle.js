@@ -118,6 +118,16 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
 
     const { simStatus, generatorStatus, collectionNames } = checkboxes;
 
+    let areSimStatusChecked = false;
+
+    simStatus.forEach((checkbox) => {
+      const { checked } = checkbox.getValues();
+
+      if (checked) {
+        areSimStatusChecked = true;
+      }
+    });
+
     const someSimStatusCheckbox = objectSatisfiesCheckbox(
       object,
       simStatus,
@@ -129,7 +139,11 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       collectionNames,
     ]);
 
-    return someSimStatusCheckbox && normalCheckboxes;
+    if (areSimStatusChecked) {
+      return someSimStatusCheckbox && normalCheckboxes;
+    } else {
+      return normalCheckboxes;
+    }
   };
 
   return criteriaFunction;

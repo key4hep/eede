@@ -45,14 +45,12 @@ export function buildCollectionCheckboxes(collection) {
   selectAll.addEventListener("click", () => {
     checkboxes.forEach((checkbox) => {
       checkbox.checked(true);
-      checkbox.checkbox.dispatchEvent(new Event("change"));
     });
   });
 
   clearAll.addEventListener("click", () => {
     checkboxes.forEach((checkbox) => {
       checkbox.checked(false);
-      checkbox.checkbox.dispatchEvent(new Event("change"));
     });
   });
 
