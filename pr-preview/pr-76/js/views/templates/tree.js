@@ -98,7 +98,7 @@ export function buildTree(collection, relationOfReference) {
 
   matrix.forEach((row, i) => {
     row.forEach((object, j) => {
-      const row = i + startingRow;
+      const row = i + startingRow - 1;
       const col = j;
       object.x = col * horizontalGap + col * boxWidth + horizontalGap;
       object.y = row * verticalGap + row * boxHeight + verticalGap;
