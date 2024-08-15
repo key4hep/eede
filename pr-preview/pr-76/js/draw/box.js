@@ -92,29 +92,34 @@ export function buildBox(object) {
 }
 
 export function addHoverModal(box, lines) {
-  let objectModal = null;
+  const objectModal = createObjectModal(lines, box.width);
+  const objectModalWidth = parseInt(objectModal.width);
+  const boxWidth = parseInt(box.width);
+
+  let showModal = false;
+
+  const clean = () => {
+    showModal = false;
+    removeObjectModal(objectModal);
+  };
 
   box.on("pointerover", () => {
-    objectModal = createObjectModal(lines, box.width);
-    const objectModalWidth = parseInt(objectModal.width);
-    const boxWidth = parseInt(box.width);
-    const x = parseInt(box.position.x);
-    const xPosition = (boxWidth - objectModalWidth) / 2 + x;
-    const y = box.position.y;
-
-    const timeout = setTimeout(() => {
+    if (showModal) {
+      return;
+    }
+    showModal = true;
+    setTimeout(() => {
+      if (!showModal) {
+        return;
+      }
+      const x = parseInt(box.position.x);
+      const xPosition = (boxWidth - objectModalWidth) / 2 + x;
+      const y = box.position.y;
       renderObjectModal(objectModal, xPosition, y);
     }, 500);
-
-    const clean = () => {
-      clearTimeout(timeout);
-      removeObjectModal(objectModal);
-      objectModal = null;
-    };
-
-    box.on("pointerdown", clean);
-    box.on("pointerout", clean);
   });
+  box.on("pointerdown", clean);
+  box.on("pointerout", clean);
 }
 
 export function addTitleToBox(title, box) {
