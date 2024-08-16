@@ -13,12 +13,12 @@ const findParticles = (otherObject, relationName, ids) => {
 
   if (relationObjects.length === 0) return [];
 
-  relationObjects.filter((object) =>
+  const validObjects = relationObjects.filter((object) =>
     ids.has(`${object.index}-${object.collectionId}`)
   );
 
-  return relationObjects.length > 0
-    ? relationObjects
+  return validObjects.length > 0
+    ? validObjects
     : relationObjects
         .map((object) => findParticles(object, relationName, ids))
         .flat();
