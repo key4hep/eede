@@ -9,19 +9,18 @@ const findParticles = (otherObject, relationName, ids) => {
   }
 
   const relations = oneToManyRelations[relationName];
+  const relationObjects = relations.map((relation) => relation.to);
 
-  if (relations.length === 0) return [];
+  if (relationObjects.length === 0) return [];
 
-  let hasAny = 0;
-
-  relations.forEach((object) =>
-    ids.has(`${object.index}-${object.collectionId}`) ? (hasAny += 1) : null
+  relationObjects.filter((object) =>
+    ids.has(`${object.index}-${object.collectionId}`)
   );
 
-  return hasAny > 0
-    ? relations
-    : relations
-        .map((parentLink) => findParticles(parentLink.to, relationName, ids))
+  return relationObjects.length > 0
+    ? relationObjects
+    : relationObjects
+        .map((object) => findParticles(object, relationName, ids))
         .flat();
 };
 
