@@ -38,6 +38,7 @@ function renderParticleIdFilters(viewObjects) {
     const checkbox = new CheckboxComponent("type", type, type, true);
     checkboxes.type.push(checkbox);
     typeCheckboxesContainer.appendChild(checkbox.render());
+    checkbox.checked(true);
   });
   typeContainer.appendChild(typeCheckboxesContainer);
 
@@ -53,6 +54,7 @@ function renderParticleIdFilters(viewObjects) {
     const checkbox = new CheckboxComponent("PDG", pdg, pdg, true);
     checkboxes.pdg.push(checkbox);
     pdgCheckboxesContainer.appendChild(checkbox.render());
+    checkbox.checked(true);
   });
   pdgContainer.appendChild(pdgCheckboxesContainer);
 
@@ -73,6 +75,7 @@ function renderParticleIdFilters(viewObjects) {
     );
     checkboxes.algorithmType.push(checkbox);
     algorithmTypeCheckboxesContainer.appendChild(checkbox.render());
+    checkbox.checked(true);
   });
   algorithmTypeContainer.appendChild(algorithmTypeCheckboxesContainer);
 

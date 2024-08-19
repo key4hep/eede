@@ -150,7 +150,7 @@ export function initFilters(
       return;
     }
 
-    reconnectFunction(viewCurrentObjects, ids);
+    reconnectFunction(viewCurrentObjects, ids, collections);
     await render(viewCurrentObjects);
     const { x, y } = filterScroll();
     setScroll(x, y);
@@ -158,7 +158,7 @@ export function initFilters(
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {
-    restoreRelations(viewCurrentObjects);
+    restoreRelations(viewObjects);
     resetFiltersContent();
     copyObject(viewObjects, viewCurrentObjects);
     await render(viewCurrentObjects);

@@ -1,5 +1,10 @@
-export function reconnectMixedViews(viewCurrentObjects, ids) {
+import { getRelationsFromCollections } from "../../lib/extract-relations.js";
+
+export function reconnectMixedViews(viewCurrentObjects, ids, collections) {
   const idsToRemove = new Set();
+  const idsToShow = new Set();
+
+  const relationsToCheck = getRelationsFromCollections(collections);
 
   for (const { collection, oneToMany, oneToOne } of Object.values(
     viewCurrentObjects.datatypes
@@ -17,6 +22,10 @@ export function reconnectMixedViews(viewCurrentObjects, ids) {
         for (const [relationName, relations] of Object.entries(
           oneToManyRelations
         )) {
+          if (!relationsToCheck.has(relationName)) {
+            continue;
+          }
+
           object.oneToManyRelations[relationName] = [];
           for (const relation of relations) {
             const { to } = relation;
@@ -25,6 +34,8 @@ export function reconnectMixedViews(viewCurrentObjects, ids) {
             if (ids.has(toId)) {
               oneToMany[relationName].push(relation);
               object.oneToManyRelations[relationName].push(relation);
+              idsToShow.add(objectId);
+              idsToShow.add(toId);
             } else {
               idsToRemove.add(objectId);
             }
@@ -34,12 +45,18 @@ export function reconnectMixedViews(viewCurrentObjects, ids) {
         for (const [relationName, relation] of Object.entries(
           oneToOneRelations
         )) {
+          if (!relationsToCheck.has(relationName)) {
+            continue;
+          }
+
           const { to } = relation;
           const toId = `${to.index}-${to.collectionId}`;
 
           if (ids.has(toId)) {
             oneToOne[relationName].push(relation);
             object.oneToOneRelations[relationName] = relation;
+            idsToShow.add(objectId);
+            idsToShow.add(toId);
           } else {
             idsToRemove.add(objectId);
           }
@@ -53,6 +70,14 @@ export function reconnectMixedViews(viewCurrentObjects, ids) {
   )) {
     viewCurrentObjects.datatypes[collectionName].collection = collection.filter(
       (object) => !idsToRemove.has(`${object.index}-${object.collectionId}`)
+    );
+  }
+
+  for (const [collectionName, { collection }] of Object.entries(
+    viewCurrentObjects.datatypes
+  )) {
+    viewCurrentObjects.datatypes[collectionName].collection = collection.filter(
+      (object) => idsToShow.has(`${object.index}-${object.collectionId}`)
     );
   }
 }
