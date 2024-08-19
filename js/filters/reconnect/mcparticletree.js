@@ -1,87 +1,76 @@
 import { linkTypes } from "../../types/links.js";
 
-const findParentRow = (object, uniqueRows, rowToIndex) => {
-  const thisRowIndex = rowToIndex[object.row];
-  if (thisRowIndex > 0 && thisRowIndex < uniqueRows.length) {
-    return uniqueRows[thisRowIndex - 1];
+const findParticles = (otherObject, relationName, ids) => {
+  let oneToManyRelations;
+  if (otherObject.relations) {
+    oneToManyRelations = otherObject.relations.oneToManyRelations;
+  } else {
+    oneToManyRelations = otherObject.oneToManyRelations;
   }
-  return NaN;
+
+  const relations = oneToManyRelations[relationName];
+  const relationObjects = relations.map((relation) => relation.to);
+
+  if (relationObjects.length === 0) return [];
+
+  const validObjects = relationObjects.filter((object) =>
+    ids.has(`${object.index}-${object.collectionId}`)
+  );
+
+  return validObjects.length > 0
+    ? validObjects
+    : relationObjects
+        .map((object) => findParticles(object, relationName, ids))
+        .flat();
 };
 
-const findDaughterRow = (object, uniqueRows, rowToIndex) => {
-  const thisRowIndex = rowToIndex[object.row];
-  if (thisRowIndex >= 0 && thisRowIndex < uniqueRows.length - 1) {
-    return uniqueRows[thisRowIndex + 1];
-  }
-  return NaN;
-};
-
-export function reconnectMCParticleTree(viewCurrentObjects) {
+export function reconnectMCParticleTree(viewCurrentObjects, ids) {
   const { collection, oneToMany } =
     viewCurrentObjects.datatypes["edm4hep::MCParticle"];
 
-  const sortedCollection = collection.sort((a, b) => a.row - b.row);
-
-  const beginRowsIndex = {};
-  sortedCollection.forEach((object, index) => {
-    if (beginRowsIndex[object.row] === undefined) {
-      beginRowsIndex[object.row] = index;
-    }
-  });
-
-  const rows = sortedCollection.map((object) => object.row);
-  const uniqueRows = [...new Set(rows)];
-
-  const rowToIndex = {};
-  for (const [index, row] of uniqueRows.entries()) {
-    rowToIndex[row] = index;
-  }
-
-  const rowToObjectsCount = {};
-
-  sortedCollection.forEach((object) => {
-    if (rowToObjectsCount[object.row] === undefined) {
-      rowToObjectsCount[object.row] = 1;
-      return;
-    }
-    rowToObjectsCount[object.row] += 1;
-  });
-
-  for (const object of sortedCollection) {
+  for (const object of collection) {
+    const { oneToManyRelations } = object;
     object.saveRelations();
+
+    const parentRelations = oneToManyRelations["parents"];
+    const daughterRelations = oneToManyRelations["daughters"];
 
     object.oneToManyRelations = {
       "parents": [],
       "daughters": [],
     };
 
-    const parentRow = findParentRow(object, uniqueRows, rowToIndex);
-    if (parentRow !== NaN) {
-      const beginIndex = beginRowsIndex[parentRow];
-      const endIndex = beginIndex + rowToObjectsCount[parentRow];
+    for (const parentRelation of parentRelations) {
+      const parent = parentRelation.to;
+      const parentIndex = `${parent.index}-${parent.collectionId}`;
 
-      for (let i = beginIndex; i < endIndex; i++) {
-        const newParentLink = new linkTypes["parents"](
-          object,
-          sortedCollection[i]
-        );
-        object.oneToManyRelations["parents"].push(newParentLink);
-        oneToMany["parents"].push(newParentLink);
+      if (ids.has(parentIndex)) {
+        object.oneToManyRelations["parents"].push(parentRelation);
+        oneToMany["parents"].push(parentRelation);
+      } else {
+        const newParents = findParticles(parent, "parents", ids);
+        for (const newParent of newParents) {
+          const link = new linkTypes["parents"](object, newParent);
+          object.oneToManyRelations["parents"].push(link);
+          oneToMany["parents"].push(link);
+        }
       }
     }
 
-    const daughterRow = findDaughterRow(object, uniqueRows, rowToIndex);
-    if (daughterRow !== NaN) {
-      const beginIndex = beginRowsIndex[daughterRow];
-      const endIndex = beginIndex + rowToObjectsCount[daughterRow];
+    for (const daughterRelation of daughterRelations) {
+      const daughter = daughterRelation.to;
+      const daughterIndex = `${daughter.index}-${daughter.collectionId}`;
 
-      for (let i = beginIndex; i < endIndex; i++) {
-        const newDaughterLink = new linkTypes["daughters"](
-          object,
-          sortedCollection[i]
-        );
-        object.oneToManyRelations["daughters"].push(newDaughterLink);
-        oneToMany["daughters"].push(newDaughterLink);
+      if (ids.has(daughterIndex)) {
+        object.oneToManyRelations["daughters"].push(daughterRelation);
+        oneToMany["daughters"].push(daughterRelation);
+      } else {
+        const newDaughters = findParticles(daughter, "daughters", ids);
+        for (const newDaughter of newDaughters) {
+          const link = new linkTypes["daughters"](object, newDaughter);
+          object.oneToManyRelations["daughters"].push(link);
+          oneToMany["daughters"].push(link);
+        }
       }
     }
   }

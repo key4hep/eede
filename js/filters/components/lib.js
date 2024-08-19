@@ -29,3 +29,10 @@ export function createCheckboxContainer() {
   container.classList.add("filter-checkbox-container");
   return container;
 }
+
+export function createButtonForCheckboxes(text) {
+  const button = document.createElement("button");
+  button.classList.add("checkbox-button");
+  button.innerText = text;
+  return button;
+}

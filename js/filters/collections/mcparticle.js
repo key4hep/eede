@@ -1,6 +1,5 @@
 import {
   CheckboxComponent,
-  checkboxLogic,
   bitfieldCheckboxLogic,
   objectSatisfiesCheckbox,
 } from "../components/checkbox.js";
@@ -13,6 +12,10 @@ import {
   createCollectionSubtitle,
   createSubContainer,
 } from "../components/lib.js";
+import {
+  buildCollectionCheckboxes,
+  filterOutByNormalCheckboxes,
+} from "../components/common.js";
 
 function renderMCParticleFilters(viewObjects) {
   const container = collectionFilterContainer();
@@ -42,14 +45,18 @@ function renderMCParticleFilters(viewObjects) {
   simStatusContainer.appendChild(simStatusTitle);
   const simStatusCheckboxesContainer = createCheckboxContainer();
 
-  Object.keys(SimStatusBitFieldDisplayValues).forEach((status) => {
-    const checkbox = new CheckboxComponent(
-      "simulatorStatus",
-      status,
-      SimStatusBitFieldDisplayValues[status]
-    );
+  Object.entries(SimStatusBitFieldDisplayValues).forEach(([status, value]) => {
+    const checkbox = new CheckboxComponent("simulatorStatus", status, value);
     checkboxes.simStatus.push(checkbox);
     simStatusCheckboxesContainer.appendChild(checkbox.render());
+
+    viewObjects.datatypes["edm4hep::MCParticle"].collection.forEach(
+      (mcparticle) => {
+        if (bitfieldCheckboxLogic(value, mcparticle, "simulatorStatus")) {
+          checkbox.checked(true);
+        }
+      }
+    );
   });
   simStatusContainer.appendChild(simStatusCheckboxesContainer);
 
@@ -72,11 +79,19 @@ function renderMCParticleFilters(viewObjects) {
     );
     checkboxes.generatorStatus.push(checkbox);
     genStatusCheckboxesContainer.appendChild(checkbox.render());
+    checkbox.checked(true);
   });
   generatorStatusContainer.appendChild(genStatusCheckboxesContainer);
 
+  const [collectionNamesContainer, collectionCheckboxes] =
+    buildCollectionCheckboxes(
+      viewObjects.datatypes["edm4hep::MCParticle"].collection
+    );
+  checkboxes.collectionNames = collectionCheckboxes;
+
   container.appendChild(simStatusContainer);
   container.appendChild(generatorStatusContainer);
+  container.appendChild(collectionNamesContainer);
 
   return {
     container,
@@ -101,7 +116,17 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       }
     }
 
-    const { simStatus, generatorStatus } = checkboxes;
+    const { simStatus, generatorStatus, collectionNames } = checkboxes;
+
+    let areSimStatusChecked = false;
+
+    simStatus.forEach((checkbox) => {
+      const { checked } = checkbox.getValues();
+
+      if (checked) {
+        areSimStatusChecked = true;
+      }
+    });
 
     const someSimStatusCheckbox = objectSatisfiesCheckbox(
       object,
@@ -109,14 +134,16 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       "simulatorStatus",
       bitfieldCheckboxLogic
     );
-    const someGenStatusCheckbox = objectSatisfiesCheckbox(
-      object,
+    const normalCheckboxes = filterOutByNormalCheckboxes(object, [
       generatorStatus,
-      "generatorStatus",
-      checkboxLogic
-    );
+      collectionNames,
+    ]);
 
-    return someSimStatusCheckbox && someGenStatusCheckbox;
+    if (areSimStatusChecked) {
+      return someSimStatusCheckbox && normalCheckboxes;
+    } else {
+      return normalCheckboxes;
+    }
   };
 
   return criteriaFunction;

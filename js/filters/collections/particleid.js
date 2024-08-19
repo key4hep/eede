@@ -4,6 +4,10 @@ import {
   objectSatisfiesCheckbox,
 } from "../components/checkbox.js";
 import {
+  buildCollectionCheckboxes,
+  filterOutByNormalCheckboxes,
+} from "../components/common.js";
+import {
   addCollectionTitle,
   collectionFilterContainer,
   createCheckboxContainer,
@@ -72,9 +76,16 @@ function renderParticleIdFilters(viewObjects) {
   });
   algorithmTypeContainer.appendChild(algorithmTypeCheckboxesContainer);
 
+  const [collectionNamesContainer, collectionCheckboxes] =
+    buildCollectionCheckboxes(
+      viewObjects.datatypes["edm4hep::ParticleID"].collection
+    );
+  checkboxes.collectionNames = collectionCheckboxes;
+
   container.appendChild(typeContainer);
   container.appendChild(pdgContainer);
   container.appendChild(algorithmTypeContainer);
+  container.appendChild(collectionNamesContainer);
 
   return {
     container,
@@ -91,19 +102,7 @@ export function initParticleIdFilters(parentContainer, viewObjects) {
   parentContainer.appendChild(container);
 
   const criteriaFunction = (particleId) => {
-    let satisfies = true;
-
-    Object.values(checkboxes).forEach((checkboxes) => {
-      const res = objectSatisfiesCheckbox(
-        particleId,
-        checkboxes,
-        checkboxes[0].propertyName,
-        checkboxLogic
-      );
-      satisfies = satisfies && res;
-    });
-
-    return satisfies;
+    return filterOutByNormalCheckboxes(particleId, Object.values(checkboxes));
   };
 
   return criteriaFunction;
