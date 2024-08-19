@@ -306,13 +306,17 @@ class Track extends EDMObject {
     this.chiNdf = chiNdf;
     lines.push("chi2/ndf = " + chiNdf);
     lines.push("dEdx = " + this.dEdx);
-    const trackerHitsCount = this.oneToManyRelations["trackerHits"].length;
+    const trackerHitsCount = this.trackerHitsCount;
     lines.push("tracker hits: " + trackerHitsCount);
 
     addLinesToBox(lines, box, nextY);
   }
 
-  static setup(trackCollection) {}
+  static setup(trackCollection) {
+    trackCollection.forEach((track) => {
+      track.trackerHitsCount = track.oneToManyRelations["trackerHits"].length;
+    });
+  }
 }
 
 class ParticleID extends EDMObject {
