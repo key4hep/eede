@@ -33,7 +33,7 @@ function createText(
 
 function createObjectModal(lines) {
   const text = createText(lines.join("\n"), {
-    fontFamily: "sans-serif",
+    fontFamily: ["Arial", "sans-serif"],
     fontSize: 14,
     fontWeight: "normal",
     align: "center",

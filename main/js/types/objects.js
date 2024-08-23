@@ -224,8 +224,8 @@ export class MCParticle extends EDMObject {
 class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
-    this.width = 145;
-    this.height = 190;
+    this.width = 170;
+    this.height = 200;
     this.color = "#fbffdf";
     this.radius = 30;
     this.titleName = "Reconstructed\nParticle";
@@ -256,8 +256,8 @@ class ReconstructedParticle extends EDMObject {
 class Cluster extends EDMObject {
   constructor() {
     super();
-    this.width = 140;
-    this.height = 170;
+    this.width = 145;
+    this.height = 200;
     this.color = "#ffe8df";
     this.radius = 20;
     this.titleName = "Cluster";
@@ -288,7 +288,7 @@ class Track extends EDMObject {
   constructor() {
     super();
     this.width = 140;
-    this.height = 150;
+    this.height = 180;
     this.color = "#fff6df";
     this.radius = 25;
     this.titleName = "Track";
@@ -348,8 +348,8 @@ class ParticleID extends EDMObject {
 class Vertex extends EDMObject {
   constructor() {
     super();
-    this.width = 140;
-    this.height = 150;
+    this.width = 155;
+    this.height = 175;
     this.color = "#f5d3ef";
     this.radius = 25;
     this.titleName = "Vertex";
