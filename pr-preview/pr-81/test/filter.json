@@ -1,0 +1,94 @@
+{
+    "Event 0": {
+        "Collection": {
+            "collID": 0,
+            "collType": "edm4hep::MCParticleCollection",
+            "collection": [
+                {
+                    "momentum": 0,
+                    "charge": 0,
+                    "mass": 0,
+                    "simulatorStatus": 70,
+                    "parents": [],
+                    "daughters": [
+                        {
+                            "collectionID": 0,
+                            "index": 1
+                        }
+                    ]
+                },
+                {
+                    "momentum": 100,
+                    "charge": 1,
+                    "mass": 10,
+                    "simulatorStatus": 24,
+                    "daughters": [
+                        {
+                            "collectionID": 0,
+                            "index": 3
+                        }
+                    ],
+                    "parents": [
+                        {
+                            "collectionID": 0,
+                            "index": 0
+                        }
+                    ]
+                },
+                {
+                    "momentum": 200,
+                    "charge": 2,
+                    "mass": 20,
+                    "simulatorStatus": 25,
+                    "daughters": [
+                        {
+                            "collectionID": 0,
+                            "index": 4
+                        }
+                    ],
+                    "parents": [
+                        {
+                            "collectionID": 0,
+                            "index": 0
+                        }
+                    ]
+                },
+                {
+                    "momentum": 300,
+                    "charge": 3,
+                    "mass": 30,
+                    "simulatorStatus": 26,
+                    "daughters": [
+                        {
+                            "collectionID": 0,
+                            "index": 4
+                        }
+                    ],
+                    "parents": [
+                        {
+                            "collectionID": 0,
+                            "index": 1
+                        }
+                    ]
+                },
+                {
+                    "momentum": 400,
+                    "charge": 4,
+                    "mass": 40,
+                    "simulatorStatus": 27,
+                    "parents": [
+                        {
+                            "collectionID": 0,
+                            "index": 2
+                        },
+                        {
+                            "collectionID": 0,
+                            "index": 3
+                        }
+                    ],
+                    "daughters": []
+                }
+            ]
+        }
+    }
+}
