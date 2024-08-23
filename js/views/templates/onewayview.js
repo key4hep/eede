@@ -1,3 +1,6 @@
+const topMargin = 50;
+const horizontalGapPercentage = 0.5;
+
 export function oneWayView(viewObjects, fromCollectionName, relationName) {
   const relations =
     viewObjects.datatypes[fromCollectionName].oneToOne[relationName];
@@ -11,8 +14,8 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
 
   const fromWidth = fromCollection[0].width;
   const toWidth = toCollection[0].width;
-  const fromHorizontalGap = 0.3 * fromWidth;
-  const toHorizontalGap = 0.3 * toWidth;
+  const fromHorizontalGap = horizontalGapPercentage * fromWidth;
+  const toHorizontalGap = horizontalGapPercentage * toWidth;
   const gap = 2 * (fromWidth + toWidth);
   const totalWidth = gap + fromWidth + toWidth;
 
@@ -38,10 +41,10 @@ export function oneWayView(viewObjects, fromCollectionName, relationName) {
     toCollection[i].x = toX;
 
     const space = height + verticalGap;
-    fromCollection[i].y = accHeight + space / 2 - fromHeight / 2;
-    toCollection[i].y = accHeight + space / 2 - toHeight / 2;
+    fromCollection[i].y = topMargin + accHeight + space / 2 - fromHeight / 2;
+    toCollection[i].y = topMargin + accHeight + space / 2 - toHeight / 2;
     accHeight += height + verticalGap;
   }
 
-  return [width, totalHeight];
+  return [width, totalHeight + topMargin];
 }
