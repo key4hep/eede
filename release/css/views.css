@@ -19,22 +19,44 @@
   height: fit-content;
 }
 
-#views {
+#left-menu {
   display: none;
   flex-direction: column;
   position: fixed;
-  top: 25%;
+  top: 10px;
   left: 10px;
-  width: fit-content;
-  height: 50%;
+  width: 260px;
+  height: fit-content;
+  max-height: 63vh;
   background-color: #e1e1e1;
-  padding: 15px;
+  padding: 15px 0px 15px 10px;
   border: 1px solid #000;
   border-radius: 5px;
 }
 
-#view-selector {
+#views-header {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#close-views {
+  display: none;
+}
+
+.views-handler {
+  margin-right: 12px;
+}
+
+#views-menu-handler {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+#view-selector {
+  margin-top: 10px;
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
   overflow-y: auto;

@@ -1,12 +1,12 @@
-import { buildTree } from "./tree.js";
-import { preFilterTree } from "./pre-filter.js";
+import { buildTree } from "./templates/tree.js";
+import { preFilterTree } from "../filters/pre-filter.js";
 
 export function recoParticleTree(viewCurrentObjects) {
   const recoCollection =
     viewCurrentObjects.datatypes["edm4hep::ReconstructedParticle"].collection ??
     [];
 
-  buildTree(recoCollection, "particles");
+  return buildTree(recoCollection, "particles");
 }
 
 export function preFilterRecoTree(currentObjects, viewObjects) {
