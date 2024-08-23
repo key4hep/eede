@@ -1,26 +1,39 @@
 import { currentObjects, currentEvent } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
-import { getVisible } from "../events.js";
-import { drawAll } from "../draw.js";
-import { canvas } from "../main.js";
 import { views } from "./views-dictionary.js";
 import {
-  mouseDown,
-  mouseUp,
-  mouseOut,
-  mouseMove,
-  onScroll,
-} from "../events.js";
-import { emptyViewMessage, hideEmptyViewMessage } from "../lib/messages.js";
+  emptyViewMessage,
+  hideEmptyViewMessage,
+  showMessage,
+} from "../lib/messages.js";
 import { showViewInformation, hideViewInformation } from "../information.js";
-import { emptyCanvas } from "../draw.js";
+import { renderObjects } from "../draw/render.js";
+import { getContainer, saveSize } from "../draw/app.js";
+import { setRenderable } from "../draw/renderable.js";
+import { initFilters } from "../filters/filter.js";
+import { setupToggles } from "../toggle/toggle.js";
+import { setScrollBarsPosition } from "../draw/scroll.js";
 
 const currentView = {};
 
 const viewOptions = document.getElementById("view-selector");
+const openViewsButton = document.getElementById("open-views");
+const closeViewsButton = document.getElementById("close-views");
 
-const scrollLocations = {};
+openViewsButton.addEventListener("click", () => {
+  viewOptions.style.display = "flex";
+  openViewsButton.style.display = "none";
+  closeViewsButton.style.display = "block";
+});
+
+closeViewsButton.addEventListener("click", () => {
+  viewOptions.style.display = "none";
+  openViewsButton.style.display = "block";
+  closeViewsButton.style.display = "none";
+});
+
+export const scrollLocations = {};
 
 function paintButton(view) {
   for (const button of buttons) {
@@ -36,9 +49,13 @@ function getViewScrollIndex() {
   return `${currentEvent.event}-${getView()}`;
 }
 
-function scroll() {
+export function scroll() {
+  const container = getContainer();
   const index = getViewScrollIndex();
-  window.scrollTo(scrollLocations[index].x, scrollLocations[index].y);
+  const { x, y } = scrollLocations[index];
+
+  container.position.set(x, y);
+  setScrollBarsPosition();
 }
 
 function setInfoButtonName(view) {
@@ -46,78 +63,90 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-const drawView = (view) => {
-  paintButton(view);
-
-  const dragTools = {
-    draggedObject: null,
-    isDragging: false,
-    prevMouseX: 0,
-    prevMouseY: 0,
-  };
-
+export const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
     scrollFunction,
-    filters,
+    collections,
     description,
+    reconnectFunction,
   } = views[view];
 
   const viewObjects = {};
-  const viewCurrentObjects = {};
-  const viewVisibleObjects = {};
-
   preFilterFunction(currentObjects, viewObjects);
+  paintButton(view);
   const isEmpty = checkEmptyObject(viewObjects);
 
   if (isEmpty) {
-    emptyCanvas();
     emptyViewMessage();
     hideViewInformation();
     return;
   }
+
   showViewInformation(view, description);
+  setInfoButtonName(getView());
   hideEmptyViewMessage();
-  viewFunction(viewObjects);
+
+  const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  const scrollIndex = getViewScrollIndex();
+  const render = async (objects) => {
+    const empty = checkEmptyObject(objects);
 
+    if (empty) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
+    let [width, height] = viewFunction(objects);
+    if (width === 0 && height === 0) {
+      showMessage("No objects satisfy the filter options");
+      return;
+    }
+
+    if (width < window.innerWidth) {
+      width = window.innerWidth;
+    }
+    if (height < window.innerHeight) {
+      height = window.innerHeight;
+    }
+    saveSize(width, height);
+    await renderObjects(objects);
+  };
+
+  await render(viewCurrentObjects);
+
+  const scrollIndex = getViewScrollIndex();
   if (scrollLocations[scrollIndex] === undefined) {
     const viewScrollLocation = scrollFunction();
     scrollLocations[scrollIndex] = viewScrollLocation;
   }
-
   scroll();
-  drawAll(viewCurrentObjects);
-  getVisible(viewCurrentObjects, viewVisibleObjects);
-  filters(viewObjects, viewCurrentObjects, viewVisibleObjects);
-  setInfoButtonName(getView());
+  setRenderable(viewCurrentObjects);
 
-  canvas.onmousedown = (event) => {
-    mouseDown(event, viewVisibleObjects, dragTools);
-  };
-  canvas.onmouseup = (event) => {
-    mouseUp(event, viewCurrentObjects, dragTools);
-  };
-  canvas.onmouseout = (event) => {
-    mouseOut(event, dragTools);
-  };
-  canvas.onmousemove = (event) => {
-    mouseMove(event, viewVisibleObjects, dragTools);
-  };
-  window.onscroll = () => {
-    onScroll(viewCurrentObjects, viewVisibleObjects);
-  };
+  initFilters(
+    { viewObjects, viewCurrentObjects },
+    collections,
+    reconnectFunction,
+    {
+      render,
+      filterScroll: scrollFunction,
+      originalScroll: scroll,
+      setRenderable,
+    }
+  );
+
+  setupToggles(collections, viewCurrentObjects);
 };
 
 export function saveScrollLocation() {
   const index = getViewScrollIndex();
   if (scrollLocations[index] === undefined) return;
+  const container = getContainer();
   scrollLocations[index] = {
-    x: window.scrollX,
-    y: window.scrollY,
+    x: container.x,
+    y: container.y,
   };
 }
 
@@ -129,10 +158,6 @@ export const getView = () => {
   return currentView.view;
 };
 
-export const drawCurrentView = () => {
-  drawView(currentView.view);
-};
-
 const buttons = [];
 
 for (const key in views) {
@@ -141,7 +166,7 @@ for (const key in views) {
   button.onclick = () => {
     saveScrollLocation();
     setView(key);
-    drawView(key);
+    drawView(getView());
   };
   button.className = "view-button";
   buttons.push(button);

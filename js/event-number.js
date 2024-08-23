@@ -2,16 +2,15 @@ import { loadObjects } from "./types/load.js";
 import { copyObject } from "./lib/copy.js";
 import { jsonData, selectedObjectTypes } from "./main.js";
 import { objectTypes } from "./types/objects.js";
-import { drawCurrentView, saveScrollLocation } from "./views/views.js";
+import { drawView, getView, saveScrollLocation } from "./views/views.js";
 
 const eventNumber = document.getElementById("selected-event");
 const previousEvent = document.getElementById("previous-event");
 const nextEvent = document.getElementById("next-event");
 
-const currentEvent = {};
-
-const eventCollection = {};
-const currentObjects = {};
+const currentEvent = {}; // only store event number
+const eventCollection = {}; // store all events info (gradually store data for each event)
+const currentObjects = {}; // store data (objects) for current event number
 
 function updateEventNumber() {
   if (eventNumber.firstChild) {
@@ -50,7 +49,7 @@ export function renderEvent(eventNumber) {
   currentEvent.event = eventNumber;
   loadSelectedEvent();
   updateEventNumber();
-  drawCurrentView();
+  drawView(getView());
 }
 
 previousEvent.addEventListener("click", () => {
@@ -70,4 +69,4 @@ eventNumber.addEventListener("click", () => {
   }
 });
 
-export { currentObjects, currentEvent };
+export { eventCollection, currentObjects, currentEvent };

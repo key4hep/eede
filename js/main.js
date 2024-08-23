@@ -3,15 +3,10 @@ import { renderEvent } from "./event-number.js";
 import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+import { startPixi } from "./draw/app.js";
+import { setFileName, showFileNameMenu } from "./current-file.js";
 
 const jsonData = {};
-
 const selectedObjectTypes = {
   types: [
     "edm4hep::MCParticle",
@@ -39,7 +34,7 @@ function showEventSwitcher() {
 }
 
 function showViewsMenu() {
-  const viewsMenu = document.getElementById("views");
+  const viewsMenu = document.getElementById("left-menu");
   const aboutButton = document.getElementById("information-button");
 
   viewsMenu.style.display = "flex";
@@ -52,6 +47,12 @@ function hideDeploySwitch() {
   deploySwitch.style.display = "none";
 }
 
+function showFilters() {
+  const filters = document.getElementById("filters");
+
+  filters.style.display = "block";
+}
+
 document.getElementById("input-file").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
@@ -61,6 +62,8 @@ document.getElementById("input-file").addEventListener("change", (event) => {
     if (!file.type.endsWith("/json")) {
       errorMsg("ERROR: Provided file is not EDM4hep JSON!");
     }
+
+    setFileName(file.name);
 
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
@@ -125,7 +128,7 @@ document.getElementById("input-file").addEventListener("change", (event) => {
 
 document
   .getElementById("visualize-button")
-  .addEventListener("click", (event) => {
+  .addEventListener("click", async (event) => {
     event.preventDefault();
 
     if (jsonData.data === undefined) {
@@ -140,12 +143,15 @@ document
 
     const eventNum = document.getElementById("event-number").value;
 
+    await startPixi();
     hideInputModal();
+    hideDeploySwitch();
     showEventSwitcher();
     showViewsMenu();
-    renderEvent(eventNum);
+    showFileNameMenu();
+    showFilters();
     selectViewInformation();
-    hideDeploySwitch();
+    renderEvent(eventNum);
   });
 
-export { canvas, ctx, jsonData, selectedObjectTypes };
+export { jsonData, selectedObjectTypes };

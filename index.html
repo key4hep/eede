@@ -11,14 +11,15 @@
   <link rel="stylesheet" href="css/logo.css">
   <link rel="stylesheet" href="css/canvas.css">
   <link rel="stylesheet" href="css/modal.css">
-  <link rel="stylesheet" href="css/toggle.css">
   <link rel="stylesheet" href="css/filter.css">
   <link rel="stylesheet" href="css/event.css">
   <link rel="stylesheet" href="css/information.css">
   <link rel="stylesheet" href="css/contact.css">
   <link rel="stylesheet" href="css/views.css">
-  <link rel="stylesheet" href="css/empty-view.css">
+  <link rel="stylesheet" href="css/information-message.css">
   <link rel="stylesheet" href="css/switch-deploy.css">
+  <link rel="stylesheet" href="css/current-file.css">
+  <link rel="stylesheet" href="css/clean-switch.css">
 </head>
 
 <body>
@@ -67,26 +68,22 @@
     </div>
   </div>
 
-  <div id="toggle" class="manipulation-tool">
-    <span class="toggle-label">Show PDG IDs</span>
-    <label class="switch">
-      <input type="checkbox">
-      <span id="show-pdg" class="slider round"></span>
-    </label>
-  </div>
-
-  <div id="filter" class="manipulation-tool">
-    <div id="filter-header">
-      <span>Filters</span>
-      <div id="filter-button">
+  <div id="filters">
+    <div id="filters-header">
+      <span id="filters-title">Filters</span>
+      <div id="filter-menu-handler">
         <img id="open-filter" src="img/down_arrow.svg" alt="Open filter" width="20" height="20" />
         <img id="close-filter" src="img/up_arrow.svg" alt="Close filter" width="20" height="20" />
       </div>
     </div>
-    <div id="filter-content">
-      <div id="filters">
+    <div id="filters-body">
+      <div id="filters-content">
       </div>
-      <div>
+      <div id="invert-filters-section">
+        <input type="checkbox" id="invert-filter" name="invert-filter" value="invert-filter" />
+        <span>Invert filters?</span>
+      </div>
+      <div id="filters-buttons">
         <button id="filter-apply" class="filter-action">Apply</button>
         <button id="filter-reset" class="filter-action">Reset</button>
       </div>
@@ -176,14 +173,29 @@
     </div>
   </div>
 
-  <div id="views">
-    <p>Select a view:</p>
+  <div id="left-menu">
+    <div id="toggles">
+      <div id="pdg-toggle" class="toggle">
+        <span class="toggle-label">Show PDG IDs</span>
+        <label class="cl-switch cl-switch-black">
+          <input type="checkbox">
+          <span id="pdg-toggle-switch" class="switcher"></span>
+        </label>
+      </div>
+    </div>
+    <div id="views-header">
+      <span id="views-select-title">Select a view</span>
+      <div id="views-menu-handler">
+        <img id="close-views" class="views-handler" src="img/up_arrow.svg" alt="Close" width="20" height="20" />
+        <img id="open-views" class="views-handler" src="img/down_arrow.svg" alt="Open" width="20" height="20" />
+      </div>
+    </div>
     <div id="view-selector" class="view-selector-menu"></div>
   </div>
 
-  <div id="empty-view">
+  <div id="information-message-modal">
     <img src="img/blue-info.svg" alt="Empty view" width="20" height="20" />
-    <p>This view has no elements</p>
+    <p id="information-text">This view has no elements</p>
   </div>
 
   <div id="switch-deploy">
@@ -191,13 +203,21 @@
     <button id="switch-deploy-button">release</button>
   </div>
 
-  <canvas id="canvas" width="100vw" height="100vh"></canvas>
+  <input id="change-file-input" type="file" accept=".json" hidden>
+
+  <div id="current-file">
+    <span>Current file: <span id="current-file-name">some file name</span></span>
+    <button id="change-file">
+      <img src="img/upload.svg" alt="Change file" width="20" height="20" />
+    </button>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" type="text/javascript"></script>
+  <script type="module" src="js/pixi.min.mjs"> </script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/information.js"></script>
   <script type="module" src="js/views/views.js"></script>
-  <script type="module" src="js/menu/filter/filter.js"></script>
+  <script type="module" src="js/current-file.js"></script>
   <script type="module" src="js/switch-deploy.js"></script>
 </body>
 
