@@ -1,12 +1,12 @@
 export const SimStatusBitFieldDisplayValues = {
-  "Overlay": 23,
-  "Stopped": 24,
-  "LeftDetector": 25,
-  "DecayedInCalorimeter": 26,
-  "DecayedInTracker": 27,
-  "VertexIsNotEndpointOfParent": 28,
-  "Backscatter": 29,
-  "CreatedInSimulation": 30,
+  23: "Overlay",
+  24: "Stopped",
+  25: "LeftDetector",
+  26: "DecayedInCalorimeter",
+  27: "DecayedInTracker",
+  28: "VertexIsNotEndpointOfParent",
+  29: "Backscatter",
+  30: "CreatedInSimulation",
 };
 
 export function parseBits(bit) {
@@ -22,13 +22,16 @@ export function parseBits(bit) {
 }
 
 export function getSimStatusDisplayValues(bits) {
-  const values = Object.entries(SimStatusBitFieldDisplayValues);
+  const statuses = [];
 
-  return bits.map((bit) => {
-    const [value, _] = values.find(([_, v]) => v === bit);
-
-    return value;
+  bits.forEach((bit) => {
+    const value = SimStatusBitFieldDisplayValues[bit];
+    if (value !== undefined) {
+      statuses.push(value);
+    }
   });
+
+  return statuses;
 }
 
 export function getSimStatusDisplayValuesFromBit(bit) {
