@@ -7,6 +7,7 @@ export const SimStatusBitFieldDisplayValues = {
   28: "VertexIsNotEndpointOfParent",
   29: "Backscatter",
   30: "CreatedInSimulation",
+  31: "Endpoint",
 };
 
 export function parseBits(bit) {
