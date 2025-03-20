@@ -26,9 +26,8 @@ export function getSimStatusDisplayValues(bits) {
   const statuses = [];
 
   bits.forEach((bit) => {
-    const value = SimStatusBitFieldDisplayValues[bit];
-    if (value !== undefined) {
-      statuses.push(value);
+    if (bit in SimStatusBitFieldDisplayValues) {
+      statuses.push(SimStatusBitFieldDisplayValues[bit]);
     }
   });
 
