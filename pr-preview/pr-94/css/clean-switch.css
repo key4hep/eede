@@ -1,0 +1,82 @@
+#toggles {
+  margin-bottom: 10px;
+}
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  padding-right: 12px;
+}
+
+/* 
+https://miladd3.github.io/clean-switch/
+MIT License 
+*/
+.cl-switch input[type="checkbox"] {
+  display: none;
+  visibility: hidden;
+}
+.switcher {
+  display: inline-block;
+  border-radius: 100px;
+  width: 35px;
+  height: 15px;
+  background-color: #ccc;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+.switcher {
+  cursor: pointer;
+}
+.switcher:before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  margin-top: -2.5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-right: 0;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.switcher:active:before {
+  transition: all, 0.1s;
+}
+.toggle-label {
+  font-family: sans-serif;
+  font-size: 16px;
+  vertical-align: middle;
+}
+.cl-switch input[type="checkbox"]:checked + .switcher {
+  background-color: #8591d5;
+}
+.cl-switch input[type="checkbox"]:checked + .switcher:before {
+  left: 100%;
+  margin-left: -20px;
+  background-color: #3f51b5;
+}
+.cl-switch [disabled]:not([disabled="false"]) + .switcher {
+  background: #ccc !important;
+}
+.cl-switch [disabled]:not([disabled="false"]) + .switcher:before {
+  background-color: #e2e2e2 !important;
+}
+.cl-switch.cl-switch-black input[type="checkbox"]:checked + .switcher {
+  background-color: #676767;
+}
+.cl-switch.cl-switch-black input[type="checkbox"]:checked + .switcher:before {
+  background-color: #343434;
+}
