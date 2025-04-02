@@ -111,7 +111,7 @@ export const mappings = {
   "1093224": "R^{+}_{{\\widetilde{g}}suu}",
   "1093314": "R^{-}_{{\\widetilde{g}}ssd}",
   "1093324": "R^{0}_{{\\widetilde{g}}ssu}",
-  "1093324": "R^{-}_{{\\widetilde{g}}sss}",
+  "1093334": "R^{-}_{{\\widetilde{g}}sss}",
   "1000612": "R^{+}_{{\\widetilde{t_{1}}}{\\bar{d}}}",
   "1000622": "R^{0}_{{\\widetilde{t_{1}}}{\\bar{u}}}",
   "1000632": "R^{+}_{{\\widetilde{t_{1}}}{\\bar{s}}}",
@@ -319,7 +319,7 @@ export const mappings = {
 
   // Charmed Mesons
   "411": "D^{+}",
-  "-411": "d^{-}",
+  "-411": "D^{-}",
   "421": "D^{0}",
   "-421": "{\\bar D}^{0}",
   "10411": "D^{*}_{0}(2400)^{+}",
@@ -436,10 +436,11 @@ export const mappings = {
   "3122": "\\Lambda",
   "-3122": "{\\bar \\Lambda}",
   "3222": "\\Sigma^{+}",
-  "-3222": "\\Sigma^{-}",
+  "-3222": "{\\bar \\Sigma}^{+}",
   "3212": "\\Sigma^{0}",
   "-3212": "{\\bar \\Sigma}^{0}",
   "3112": "\\Sigma^{-}",
+  "-3112": "{\\bar \\Sigma}^{-}",
   "3224": "\\Sigma^{*+}",
   "-3224": "{\\bar \\Sigma}^{*+}",
   "3214": "\\Sigma^{*0}",
@@ -484,7 +485,7 @@ export const mappings = {
 
   // Bottom Baryons
   "5122": "\\Lambda^{0}_{b}",
-  "-5122": "\\bar\\Lambda_{b}^{0}",
+  "-5122": "{\\bar \\Lambda}_{b}^{0}",
   "5112": "\\Sigma^{-}_{b}",
   "5212": "\\Sigma^{0}_{b}",
   "5222": "\\Sigma^{+}_{b}",
