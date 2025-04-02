@@ -37,20 +37,32 @@
         <div class="mb-20">
           <label class="mr-10" for="input-file">Select EDM4hep JSON:</label>
           <input id="input-file" name="input-file" type="file" accept=".json">
-          <p class="small-text ml-20">Example input files (right click to save):
-          <ul class="small-text">
-            <li>
-              Delphes: <a
-                href="https://fccsw.web.cern.ch/fccsw/eede/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a>
-              [5.6 MB]
-            </li>
-            <li>
-              Full Sim: <a
-                href="https://fccsw.web.cern.ch/fccsw/eede/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json">wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json</a>
-              [28 MB]
-            </li>
-          </ul>
-          </p>
+          <div class="small-text">
+            <p class="ml-20">
+              To convert your EDM4hep ROOT file into the JSON representation of
+              EDM4hep use:
+            </p>
+            <pre class="ml-30"><code>edm4hep2json my-file.edm4hep.root</code></pre>
+            <p class="ml-20">
+              Make sure to limit the number of events converted, otherwise the
+              JSON might become very large.<br>To limit the total number of
+              converted events use <code>-t</code> flag and to provide comma
+              separated list of event numbers use <code>-e</code> flag.
+            </p>
+            <p class="ml-20">
+              Example input files (right click to save):
+            </p>
+            <ul>
+              <li>
+                Delphes: <a href="https://fccsw.web.cern.ch/fccsw/eede/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a>
+                [5.6 MB]
+              </li>
+              <li>
+                Full Sim: <a href="https://fccsw.web.cern.ch/fccsw/eede/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json">wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json</a>
+                [28 MB]
+              </li>
+            </ul>
+          </div>
         </div>
         <div id="event-selector">
           <label class="mr-10" for="event-number">Select event number:</label>
