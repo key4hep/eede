@@ -1,36 +1,41 @@
 # eede
+
 *EDM4hep Event Data Explorer*
 
-Warning: **Experimental**
+Explore the structure of the EDM4hep events using
+[eede](https://key4hep.github.io/eede/)!
 
-Explore your events at [eede](https://key4hep.github.io/eede/).
+To generate your JSON file from the EDM4hep ROOT file use `edm4hep2json`,
+available in the
+[Key4hep stack](https://key4hep.github.io/key4hep-doc/getting_started/setup.html).
 
-To generate your `.json` file use `edm4hep2json` available in the Key4hep stack.
-Example usage for the events from FCC `winter2023` campaign:
+> Example usage for the events from the
+> [FCC `winter2023`](https://fcc-physics-events.web.cern.ch/fcc-ee/delphes/winter2023/)
+> campaign:
+> ```
+> source /cvmfs/sw.hsf.org/key4hep/setup.sh
+> edm4hep2json -l Particle \
+>              -n 10 \
+>              -o p8_ee_WW_ecm240.json \
+>              /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_WW_ecm240/events_059793334.root
+> ```
+
+
+## Running locally
+
+This is Node.js based project, where the graphics part is written using the
+[PixiJS](https://github.com/pixijs/pixijs) engine.
+
+To run the local version of the project, clone the repository
+```sh
+git clone https://github.com/key4hep/eede.git
 ```
-source /cvmfs/sw.hsf.org/key4hep/setup.sh
-edm4hep2json -l Particle \
-             -n 10 \
-             -o p8_ee_WW_ecm240.json \
-             /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_WW_ecm240/events_059793334.root
+install the packages:
+```sh
+npm install
 ```
-
-
-## Development
-
-The tool is written in pure JS and draws on HTML Cavas.
-To run a local version, clone the repo and create simple web server:
-```bash
-python -m http.server
+and start the local server:
+```sh
+npm run serve
 ```
-after that visit localhost (`http://0.0.0.0:8000/`) in your browser.
-
-## ToDo
-
-* Filters:
-  * generator status
-  * generation
-  * ancestor
-* Event switcher
-* Status box
-* Details box
+afterwards visit `http://127.0.0.1:8008/` in your browser.
