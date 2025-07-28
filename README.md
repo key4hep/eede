@@ -38,4 +38,4 @@ and start the local server:
 ```sh
 npm run serve
 ```
-afterwards visit `http://127.0.0.1:8000/` in your browser.
+afterwards visit `http://127.0.0.1:8008/` in your browser.
