@@ -34,6 +34,8 @@ fileInput.addEventListener("change", (event) => {
         return;
       }
 
+      window.sessionStorage.setItem('event-numbers', eventOptions);
+
       const eventNumber = eventOptions[0];
       clearAllData();
       selectViewInformation();

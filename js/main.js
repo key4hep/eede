@@ -79,6 +79,9 @@ document.getElementById("input-file").addEventListener("change", (event) => {
         errorMsg("No events found in the file!");
         return;
       }
+
+      window.sessionStorage.setItem('event-numbers', options);
+
       eventNumberInput.value = options[0];
       document.getElementById("event-selector").style.display = "block";
       const eventOptions = document.getElementById("event-number");
