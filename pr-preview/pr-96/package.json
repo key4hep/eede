@@ -3,7 +3,7 @@
 	"type": "module",
 	"version": "1.0.0",
 	"scripts": {
-		"serve": "node ./js/serve.js",
+		"serve": "node ./bin/serve.js",
 		"build": "node ./model/index.js",
 		"download": "node ./model/download.js",
 		"update": "npm run download && npm run build",
