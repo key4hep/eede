@@ -1,8 +1,11 @@
 import { eventCollection, renderEvent } from "./event-number.js";
 import { selectViewInformation } from "./information.js";
-import { showMessage } from "./lib/messages.js";
-import { jsonData } from "./main.js";
-import { scrollLocations } from "./views/views.js";
+import { showMessage, errorMsg } from "./lib/messages.js";
+import { clearScrollPositions } from "./globals.js";
+import { setFileData,
+         setCurrentEventIndex,
+         getCurrentEventIndex,
+         getEventNumbers } from "./globals.js"
 
 const fileInput = document.getElementById("change-file-input");
 
@@ -23,28 +26,23 @@ fileInput.addEventListener("change", (event) => {
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
       const fileText = event.target.result;
-      jsonData.data = JSON.parse(fileText);
+      let ret = setFileData(JSON.parse(fileText));
 
-      const eventOptions = Object.keys(jsonData.data).map((event) =>
-        parseInt(event.replace("Event ", ""))
-      );
-
-      if (eventOptions.length === 0) {
-        errorMsg("ERROR: No events found in file!");
+      if (ret.err === true) {
+        errorMsg(ret.msg);
         return;
       }
 
-      window.sessionStorage.setItem('event-numbers', eventOptions);
+      setCurrentEventIndex(0);
 
-      const eventNumber = eventOptions[0];
       clearAllData();
       selectViewInformation();
-      renderEvent(eventNumber);
+      renderEvent(getCurrentEventIndex());
 
       const eventSelectorMenu = document.getElementById("event-selector-menu");
       eventSelectorMenu.replaceChildren();
 
-      eventOptions.forEach((option) => {
+      getEventNumbers().forEach((option) => {
         const optionElementMenu = document.createElement("div");
         optionElementMenu.className = "event-option";
         optionElementMenu.appendChild(document.createTextNode(option));
@@ -66,9 +64,7 @@ function clearAllData() {
     delete eventCollection[key];
   });
 
-  Object.keys(scrollLocations).forEach((key) => {
-    delete scrollLocations[key];
-  });
+  clearScrollPositions();
 }
 
 function handleFileInput() {
@@ -81,6 +77,7 @@ button.addEventListener("click", handleFileInput);
 export function setFileName(name) {
   const fileName = document.getElementById("current-file-name");
   fileName.textContent = name;
+  window.sessionStorage.setItem('current-file-name', name);
 }
 
 export function showFileNameMenu() {

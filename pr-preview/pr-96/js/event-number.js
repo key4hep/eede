@@ -1,42 +1,48 @@
 import { loadObjects } from "./types/load.js";
 import { copyObject } from "./lib/copy.js";
-import { jsonData, selectedObjectTypes } from "./main.js";
 import { objectTypes } from "./types/objects.js";
-import { drawView, getView, saveScrollLocation } from "./views/views.js";
+import { drawView } from "./views/views.js";
+import { getContainer } from "./draw/app.js";
+import { supportedEDM4hepTypes } from "./configuration.js";
+import { getFileData,
+         setCurrentEventIndex,
+         getCurrentEventIndex,
+         getCurrentEventName,
+         getEventNumbers,
+         getCurrentView,
+         saveCurrentScrollPosition } from "./globals.js";
 
-const currentEvent = {
-  number: null
-}; // only store event number
 const eventCollection = {}; // store all events info (gradually store data for each event)
 const currentObjects = {}; // store data (objects) for current event number
 
 function loadSelectedEvent() {
-  if (eventCollection[currentEvent.number] === undefined) {
+  const currentEventIndex = getCurrentEventIndex();
+  if (eventCollection[currentEventIndex] === undefined) {
     const objects = loadObjects(
-      jsonData.data,
-      currentEvent.number,
-      selectedObjectTypes.types
+      getFileData(),
+      currentEventIndex,
+      supportedEDM4hepTypes.types
     );
 
-    eventCollection[currentEvent.number] = objects;
+    eventCollection[currentEventIndex] = objects;
 
-    for (const datatype in eventCollection[currentEvent.number].datatypes) {
+    for (const datatype in eventCollection[currentEventIndex].datatypes) {
       const classType = objectTypes[datatype];
-      const collection = eventCollection[currentEvent.number].datatypes[datatype].collection;
+      const collection = eventCollection[currentEventIndex].datatypes[datatype].collection;
       classType.setup(collection);
     }
     copyObject(objects, currentObjects);
   } else {
-    copyObject(eventCollection[currentEvent.number], currentObjects);
+    copyObject(eventCollection[currentEventIndex], currentObjects);
   }
 }
 
-export function renderEvent(eventNumber) {
-  saveScrollLocation();
-  currentEvent.number = eventNumber;
+export function renderEvent(eventIndex) {
+  saveCurrentScrollPosition(getContainer());
+  setCurrentEventIndex(eventIndex);
   loadSelectedEvent();
   updateEventNumber();
-  drawView(getView());
+  drawView(getCurrentView());
 }
 
 // Page updates
@@ -49,23 +55,13 @@ function updateEventNumber() {
     eventNumber.removeChild(eventNumber.firstChild);
   }
   eventNumber.appendChild(
-    document.createTextNode(`Event: ${currentEvent.number}`)
+    document.createTextNode(getCurrentEventName())
   );
-}
-
-function getEventNumbers() {
-  const eventNumbersString = window.sessionStorage.getItem('event-numbers');
-  return JSON.parse('[' + eventNumbersString + ']');
-}
-
-function getEventIndex(currentEventNumber) {
-  const eventNumbers = getEventNumbers();
-  return eventNumbers.findIndex((elem) => elem === Number(currentEventNumber));
 }
 
 previousEvent.addEventListener("click", () => {
   const eventNumbers = getEventNumbers();
-  const currentEventIndex = getEventIndex(currentEvent.number);
+  const currentEventIndex = getCurrentEventIndex();
 
   if (currentEventIndex <= 0) {
     return;
@@ -77,7 +73,7 @@ previousEvent.addEventListener("click", () => {
 
 nextEvent.addEventListener("click", () => {
   const eventNumbers = getEventNumbers();
-  const currentEventIndex = getEventIndex(currentEvent.number);
+  const currentEventIndex = getCurrentEventIndex();
 
   if ((currentEventIndex + 1) >= eventNumbers.length) {
     return;
@@ -96,4 +92,4 @@ eventNumber.addEventListener("click", () => {
   }
 });
 
-export { eventCollection, currentObjects, currentEvent };
+export { eventCollection, currentObjects };
