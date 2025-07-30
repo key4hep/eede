@@ -44,8 +44,8 @@ export function loadPlainObject(
   return objects;
 }
 
-export function loadObjects(jsonData, eventNum, objectsToLoad) {
-  const eventData = jsonData["Event " + eventNum];
+export function loadObjects(fileData, eventNum, objectsToLoad) {
+  const eventData = fileData["Event " + eventNum];
 
   if (eventData === undefined) {
     return;

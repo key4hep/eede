@@ -1,25 +1,15 @@
 import { errorMsg } from "./lib/messages.js";
 import { renderEvent } from "./event-number.js";
-import { setView, getView } from "./views/views.js";
 import { views } from "./views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
 import { startPixi } from "./draw/app.js";
 import { setFileName, showFileNameMenu } from "./current-file.js";
-
-const jsonData = {};
-const selectedObjectTypes = {
-  types: [
-    "edm4hep::MCParticle",
-    "edm4hep::ReconstructedParticle",
-    "edm4hep::MCRecoParticleAssociation",
-    "edm4hep::MCRecoTrackParticleAssociation",
-    "edm4hep::MCRecoClusterParticleAssociation",
-    "edm4hep::Cluster",
-    "edm4hep::Track",
-    "edm4hep::Vertex",
-    "edm4hep::ParticleID",
-  ],
-};
+import { setFileData,
+         getFileData,
+         getEventNumbers,
+         setCurrentEventIndex,
+         setCurrentView,
+         getCurrentView } from "./globals.js"
 
 function hideInputModal() {
   const modal = document.getElementById("input-modal");
@@ -68,37 +58,34 @@ document.getElementById("input-file").addEventListener("change", (event) => {
     const reader = new FileReader();
     reader.addEventListener("load", (event) => {
       const fileText = event.target.result;
-      jsonData.data = JSON.parse(fileText);
+      let ret = setFileData(JSON.parse(fileText));
 
-      const eventNumberInput = document.getElementById("event-number");
-      const options = Object.keys(jsonData.data).map((event) =>
-        parseInt(event.replace("Event ", ""))
-      );
-      eventNumberInput.max = Object.keys(options).length - 1;
-      if (options.length === 0) {
-        errorMsg("No events found in the file!");
+      if (ret.err === true) {
+        errorMsg(ret.msg);
         return;
       }
 
-      window.sessionStorage.setItem('event-numbers', options);
+      setCurrentEventIndex(0);
 
-      eventNumberInput.value = options[0];
+      const eventNumbers = getEventNumbers();
+      const eventNumberSelector = document.getElementById("event-number");
+      for (const [i, eventNumber] of eventNumbers.entries()) {
+        const option = document.createElement('option');
+        option.text = `Event ${eventNumber}`;
+        eventNumberSelector.add(option, i);
+      }
+      eventNumberSelector.value = `Event ${eventNumbers[0]}`;
       document.getElementById("event-selector").style.display = "block";
-      const eventOptions = document.getElementById("event-number");
-      const eventSelectorMenu = document.getElementById("event-selector-menu");
-      eventOptions.replaceChildren();
-      eventSelectorMenu.replaceChildren();
-      options.forEach((option) => {
-        const optionElement = document.createElement("option");
-        optionElement.appendChild(document.createTextNode(option));
-        eventOptions.appendChild(optionElement);
 
+      const eventSelectorMenu = document.getElementById("event-selector-menu");
+      eventSelectorMenu.replaceChildren();
+      eventNumbers.forEach((eventNumber) => {
         const optionElementMenu = document.createElement("div");
         optionElementMenu.className = "event-option";
-        optionElementMenu.appendChild(document.createTextNode(option));
+        optionElementMenu.appendChild(document.createTextNode(`Event ${eventNumber}`));
         eventSelectorMenu.appendChild(optionElementMenu);
         optionElementMenu.addEventListener("click", () => {
-          renderEvent(option);
+          renderEvent(eventNumber);
           eventSelectorMenu.style.display = "none";
         });
       });
@@ -112,7 +99,7 @@ document.getElementById("input-file").addEventListener("change", (event) => {
         button.className = "view-button";
         button.onclick = (event) => {
           event.preventDefault();
-          setView(key);
+          setCurrentView(key);
           for (const otherButton of buttons) {
             if (otherButton !== button) {
               otherButton.style.backgroundColor = "#f1f1f1";
@@ -123,6 +110,7 @@ document.getElementById("input-file").addEventListener("change", (event) => {
         buttons.push(button);
         availableViews.appendChild(button);
       }
+      document.getElementById("view-selector").style.display = "initial";
     });
     reader.readAsText(file);
     break;
@@ -134,17 +122,17 @@ document
   .addEventListener("click", async (event) => {
     event.preventDefault();
 
-    if (jsonData.data === undefined) {
+    if (getFileData() === null) {
       errorMsg("No data loaded!");
       return;
     }
 
-    if (getView() === undefined) {
+    if (getCurrentView() === undefined) {
       errorMsg("No view selected!");
       return;
     }
 
-    const eventNum = document.getElementById("event-number").value;
+    const eventIndex = document.getElementById("event-number").selectedIndex;
 
     await startPixi();
     hideInputModal();
@@ -154,7 +142,5 @@ document
     showFileNameMenu();
     showFilters();
     selectViewInformation();
-    renderEvent(eventNum);
+    renderEvent(eventIndex);
   });
-
-export { jsonData, selectedObjectTypes };
