@@ -12,13 +12,30 @@ export function getPixiState() {
   return pixiState;
 }
 
+export function isPixiRunning() {
+  if (pixiState.app === null) {
+    return false
+  } else {
+    return true
+  }
+}
+
 
 /*
  * File
  */
 const fileData = {
   json: null,
+  name: null
 };
+
+export function setFileName(fileName) {
+  fileData.name = fileName;
+}
+
+export function getFileName() {
+  return fileData.name;
+}
 
 export function setFileData(jsonData) {
   fileData.json = jsonData;
@@ -45,6 +62,9 @@ export function getFileData() {
 /*
  * Event
  */
+export const eventCollection = {}; // store all events info (gradually store data for each event)
+export const currentObjects = {}; // store data (objects) for current event number
+
 export function getEventNumbers() {
   const eventNumbersString = window.sessionStorage.getItem('event-numbers');
   return JSON.parse(eventNumbersString);
@@ -83,13 +103,13 @@ export function getCurrentEventName() {
  */
 const scrollPositions = {};
 
-export const setCurrentView = (view) => {
-  window.sessionStorage.setItem('current-view', view);
-};
+export function setCurrentView(viewName) {
+  window.sessionStorage.setItem('current-view', viewName);
+}
 
-export const getCurrentView = () => {
+export function getCurrentView() {
   return window.sessionStorage.getItem('current-view');
-};
+}
 
 function getViewScrollIndex() {
   return `${getCurrentEventIndex()}-${getCurrentView()}`;
@@ -121,4 +141,18 @@ export function clearScrollPositions() {
   Object.keys(scrollPositions).forEach((key) => {
     delete scrollPositions[key];
   });
+}
+
+
+/*
+ * Clearings
+ */
+export function clearAllEventData() {
+  window.sessionStorage.clear();
+
+  Object.keys(eventCollection).forEach((key) => {
+    delete eventCollection[key];
+  });
+
+  clearScrollPositions();
 }
