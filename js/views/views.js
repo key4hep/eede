@@ -1,7 +1,7 @@
 import { currentObjects } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
-import { views } from "./views-dictionary.js";
+import { possibleViews } from "./views-dictionary.js";
 import {
   emptyViewMessage,
   hideEmptyViewMessage,
@@ -67,7 +67,7 @@ export const drawView = async (view) => {
     collections,
     description,
     reconnectFunction,
-  } = views[view];
+  } = possibleViews[view];
 
   const viewObjects = {};
   preFilterFunction(currentObjects, viewObjects);
@@ -136,7 +136,7 @@ export const drawView = async (view) => {
 
 const buttons = [];
 
-for (const key in views) {
+for (const key in possibleViews) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
   button.onclick = () => {

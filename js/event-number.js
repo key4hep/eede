@@ -8,12 +8,11 @@ import { getFileData,
          setCurrentEventIndex,
          getCurrentEventIndex,
          getCurrentEventName,
+         eventCollection,
+         currentObjects,
          getEventNumbers,
          getCurrentView,
          saveCurrentScrollPosition } from "./globals.js";
-
-const eventCollection = {}; // store all events info (gradually store data for each event)
-const currentObjects = {}; // store data (objects) for current event number
 
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();
@@ -38,12 +37,30 @@ function loadSelectedEvent() {
 }
 
 export function renderEvent(eventIndex) {
-  saveCurrentScrollPosition(getContainer());
   setCurrentEventIndex(eventIndex);
   loadSelectedEvent();
   updateEventNumber();
   drawView(getCurrentView());
 }
+
+export function updateEventSelectorMenu() {
+  const eventSelectorMenu = document.getElementById("event-selector-menu");
+  eventSelectorMenu.replaceChildren();
+
+  const eventNumbers = getEventNumbers();
+  for (const [eventIndex, eventNumber] of eventNumbers.entries()) {
+    const optionElementMenu = document.createElement("div");
+    optionElementMenu.className = "event-option";
+    optionElementMenu.appendChild(document.createTextNode(`Event ${eventNumber}`));
+    eventSelectorMenu.appendChild(optionElementMenu);
+    optionElementMenu.addEventListener("click", () => {
+      saveCurrentScrollPosition(getContainer());
+      renderEvent(eventIndex);
+      eventSelectorMenu.style.display = "none";
+    });
+  }
+}
+
 
 // Page updates
 const eventNumber = document.getElementById("selected-event");
@@ -68,6 +85,7 @@ previousEvent.addEventListener("click", () => {
   }
 
   const newEventNum = `${eventNumbers[currentEventIndex - 1]}`;
+  saveCurrentScrollPosition(getContainer());
   renderEvent(newEventNum);
 });
 
@@ -80,6 +98,7 @@ nextEvent.addEventListener("click", () => {
   }
 
   const newEventNum = `${eventNumbers[currentEventIndex + 1]}`;
+  saveCurrentScrollPosition(getContainer());
   renderEvent(newEventNum);
 });
 
