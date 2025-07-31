@@ -1,7 +1,7 @@
-import { currentObjects, currentEvent } from "../event-number.js";
+import { currentObjects } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
-import { views } from "./views-dictionary.js";
+import { possibleViews } from "./views-dictionary.js";
 import {
   emptyViewMessage,
   hideEmptyViewMessage,
@@ -14,8 +14,10 @@ import { setRenderable } from "../draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
 import { setScrollBarsPosition } from "../draw/scroll.js";
-
-const currentView = {};
+import { setCurrentView,
+         getCurrentView,
+         saveCurrentScrollPosition,
+         getSavedScrollPosition } from "../globals.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");
@@ -33,7 +35,6 @@ closeViewsButton.addEventListener("click", () => {
   closeViewsButton.style.display = "none";
 });
 
-export const scrollLocations = {};
 
 function paintButton(view) {
   for (const button of buttons) {
@@ -45,14 +46,9 @@ function paintButton(view) {
   }
 }
 
-function getViewScrollIndex() {
-  return `${currentEvent.event}-${getView()}`;
-}
-
 export function scroll() {
   const container = getContainer();
-  const index = getViewScrollIndex();
-  const { x, y } = scrollLocations[index];
+  const { x, y } = getSavedScrollPosition();
 
   container.position.set(x, y);
   setScrollBarsPosition();
@@ -71,7 +67,7 @@ export const drawView = async (view) => {
     collections,
     description,
     reconnectFunction,
-  } = views[view];
+  } = possibleViews[view];
 
   const viewObjects = {};
   preFilterFunction(currentObjects, viewObjects);
@@ -85,7 +81,7 @@ export const drawView = async (view) => {
   }
 
   showViewInformation(view, description);
-  setInfoButtonName(getView());
+  setInfoButtonName(getCurrentView());
   hideEmptyViewMessage();
 
   const viewCurrentObjects = {};
@@ -117,10 +113,8 @@ export const drawView = async (view) => {
 
   await render(viewCurrentObjects);
 
-  const scrollIndex = getViewScrollIndex();
-  if (scrollLocations[scrollIndex] === undefined) {
-    const viewScrollLocation = scrollFunction();
-    scrollLocations[scrollIndex] = viewScrollLocation;
+  if (getSavedScrollPosition() === undefined) {
+    saveCurrentScrollPosition(scrollFunction());
   }
   scroll();
   setRenderable(viewCurrentObjects);
@@ -140,33 +134,15 @@ export const drawView = async (view) => {
   setupToggles(collections, viewCurrentObjects);
 };
 
-export function saveScrollLocation() {
-  const index = getViewScrollIndex();
-  if (scrollLocations[index] === undefined) return;
-  const container = getContainer();
-  scrollLocations[index] = {
-    x: container.x,
-    y: container.y,
-  };
-}
-
-export const setView = (view) => {
-  currentView.view = view;
-};
-
-export const getView = () => {
-  return currentView.view;
-};
-
 const buttons = [];
 
-for (const key in views) {
+for (const key in possibleViews) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
   button.onclick = () => {
-    saveScrollLocation();
-    setView(key);
-    drawView(getView());
+    saveCurrentScrollPosition(getContainer());
+    setCurrentView(key);
+    drawView(getCurrentView());
   };
   button.className = "view-button";
   buttons.push(button);

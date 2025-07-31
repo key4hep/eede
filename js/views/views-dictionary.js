@@ -22,7 +22,7 @@ import { reconnectAssociation } from "../filters/reconnect/association.js";
 import { reconnectTree } from "../filters/reconnect/tree.js";
 import { reconnectMixedViews } from "../filters/reconnect/mixed.js";
 
-export const views = {
+export const possibleViews = {
   "Monte Carlo Particle Tree": {
     viewFunction: mcParticleTree,
     scrollFunction: scrollTopCenter,

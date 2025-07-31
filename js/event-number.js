@@ -1,65 +1,107 @@
 import { loadObjects } from "./types/load.js";
 import { copyObject } from "./lib/copy.js";
-import { jsonData, selectedObjectTypes } from "./main.js";
 import { objectTypes } from "./types/objects.js";
-import { drawView, getView, saveScrollLocation } from "./views/views.js";
+import { drawView } from "./views/views.js";
+import { getContainer } from "./draw/app.js";
+import { supportedEDM4hepTypes } from "./configuration.js";
+import { getFileData,
+         setCurrentEventIndex,
+         getCurrentEventIndex,
+         getCurrentEventName,
+         eventCollection,
+         currentObjects,
+         getEventNumbers,
+         getCurrentView,
+         saveCurrentScrollPosition } from "./globals.js";
 
+function loadSelectedEvent() {
+  const currentEventIndex = getCurrentEventIndex();
+  if (eventCollection[currentEventIndex] === undefined) {
+    const objects = loadObjects(
+      getFileData(),
+      currentEventIndex,
+      supportedEDM4hepTypes.types
+    );
+
+    eventCollection[currentEventIndex] = objects;
+
+    for (const datatype in eventCollection[currentEventIndex].datatypes) {
+      const classType = objectTypes[datatype];
+      const collection = eventCollection[currentEventIndex].datatypes[datatype].collection;
+      classType.setup(collection);
+    }
+    copyObject(objects, currentObjects);
+  } else {
+    copyObject(eventCollection[currentEventIndex], currentObjects);
+  }
+}
+
+export function renderEvent(eventIndex) {
+  setCurrentEventIndex(eventIndex);
+  loadSelectedEvent();
+  updateEventNumber();
+  drawView(getCurrentView());
+}
+
+export function updateEventSelectorMenu() {
+  const eventSelectorMenu = document.getElementById("event-selector-menu");
+  eventSelectorMenu.replaceChildren();
+
+  const eventNumbers = getEventNumbers();
+  for (const [eventIndex, eventNumber] of eventNumbers.entries()) {
+    const optionElementMenu = document.createElement("div");
+    optionElementMenu.className = "event-option";
+    optionElementMenu.appendChild(document.createTextNode(`Event ${eventNumber}`));
+    eventSelectorMenu.appendChild(optionElementMenu);
+    optionElementMenu.addEventListener("click", () => {
+      saveCurrentScrollPosition(getContainer());
+      renderEvent(eventIndex);
+      eventSelectorMenu.style.display = "none";
+    });
+  }
+}
+
+
+// Page updates
 const eventNumber = document.getElementById("selected-event");
 const previousEvent = document.getElementById("previous-event");
 const nextEvent = document.getElementById("next-event");
-
-const currentEvent = {}; // only store event number
-const eventCollection = {}; // store all events info (gradually store data for each event)
-const currentObjects = {}; // store data (objects) for current event number
 
 function updateEventNumber() {
   if (eventNumber.firstChild) {
     eventNumber.removeChild(eventNumber.firstChild);
   }
   eventNumber.appendChild(
-    document.createTextNode(`Event: ${currentEvent.event}`)
+    document.createTextNode(getCurrentEventName())
   );
 }
 
-function loadSelectedEvent() {
-  if (eventCollection[currentEvent.event] === undefined) {
-    const objects = loadObjects(
-      jsonData.data,
-      currentEvent.event,
-      selectedObjectTypes.types
-    );
-
-    eventCollection[currentEvent.event] = objects;
-
-    for (const [key, value] of Object.entries(
-      eventCollection[currentEvent.event].datatypes
-    )) {
-      const classType = objectTypes[key];
-      const collection = value.collection;
-      classType.setup(collection);
-    }
-    copyObject(objects, currentObjects);
-  } else {
-    copyObject(eventCollection[currentEvent.event], currentObjects);
-  }
-}
-
-export function renderEvent(eventNumber) {
-  saveScrollLocation();
-  currentEvent.event = eventNumber;
-  loadSelectedEvent();
-  updateEventNumber();
-  drawView(getView());
-}
-
 previousEvent.addEventListener("click", () => {
-  const newEventNum = `${parseInt(currentEvent.event) - 1}`;
+  const eventNumbers = getEventNumbers();
+  const currentEventIndex = getCurrentEventIndex();
+
+  if (currentEventIndex <= 0) {
+    return;
+  }
+
+  const newEventNum = `${eventNumbers[currentEventIndex - 1]}`;
+  saveCurrentScrollPosition(getContainer());
   renderEvent(newEventNum);
 });
+
 nextEvent.addEventListener("click", () => {
-  const newEventNum = `${parseInt(currentEvent.event) + 1}`;
+  const eventNumbers = getEventNumbers();
+  const currentEventIndex = getCurrentEventIndex();
+
+  if ((currentEventIndex + 1) >= eventNumbers.length) {
+    return;
+  }
+
+  const newEventNum = `${eventNumbers[currentEventIndex + 1]}`;
+  saveCurrentScrollPosition(getContainer());
   renderEvent(newEventNum);
 });
+
 eventNumber.addEventListener("click", () => {
   const eventSelectorMenu = document.getElementById("event-selector-menu");
   if (eventSelectorMenu.style.display === "flex") {
@@ -69,4 +111,4 @@ eventNumber.addEventListener("click", () => {
   }
 });
 
-export { eventCollection, currentObjects, currentEvent };
+export { eventCollection, currentObjects };

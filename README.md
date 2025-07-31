@@ -23,8 +23,8 @@ available in the
 
 ## Running locally
 
-This is Node.js based project, where the graphics part is written using the
-[PixiJS](https://github.com/pixijs/pixijs) engine.
+This is [Node.js](https://nodejs.org/en) based project, where the graphics part
+is written using the [PixiJS](https://github.com/pixijs/pixijs) engine.
 
 To run the local version of the project, clone the repository
 ```sh
@@ -38,4 +38,5 @@ and start the local server:
 ```sh
 npm run serve
 ```
-afterwards visit `http://127.0.0.1:8008/` in your browser.
+afterwards visit [http://127.0.0.1:8008/](http://127.0.0.1:8008/) in your web
+browser.

@@ -1,0 +1,35 @@
+#input-modal {
+  display: none;
+}
+
+#visualize-button {
+  border: 2px solid #4caf50;
+  border-radius: 15px;
+  color: #4caf50;
+  font-weight: bold;
+  background-color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+#visualize-button:hover,
+#visualize-button:focus {
+  background-color: #4caf50;
+  color: white;
+}
+
+#input-modal-file-input {
+  cursor: pointer;
+}
+
+#event-selector {
+  display: none;
+}
+
+#input-modal-view-selector {
+  display: none;
+}

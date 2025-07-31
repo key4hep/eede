@@ -1,13 +1,9 @@
 import { Application, Container, Culler } from "../pixi.min.mjs";
 import { dragEnd } from "./drag.js";
 import { addScroll } from "./scroll.js";
+import { getPixiState } from "../globals.js";
 
-const pixi = {
-  app: null,
-  container: null,
-  width: NaN,
-  height: NaN,
-};
+const pixi = getPixiState();
 
 const createApp = async () => {
   const app = new Application();
