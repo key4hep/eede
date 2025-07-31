@@ -1,4 +1,4 @@
-import { errorMsg } from "../lib/messages.js";
+import { warningMsg, errorMsg } from "../lib/messages.js";
 import { isPixiRunning,
          setFileData,
          getFileData,
@@ -40,11 +40,12 @@ export function clearInputModal() {
 document.getElementById("input-modal-file-input").addEventListener("change", (event) => {
   for (const file of event.target.files) {
     if (!file.name.endsWith("edm4hep.json")) {
-      errorMsg("Provided file is not EDM4hep JSON!");
+      warningMsg("Provided file might not contain EDM4hep event data!");
     }
 
     if (!file.type.endsWith("/json")) {
-      errorMsg("ERROR: Provided file is not EDM4hep JSON!");
+      errorMsg("Provided file type is not JSON!");
+      return;
     }
 
     const reader = new FileReader();
