@@ -1,4 +1,4 @@
-import { infoMsg, errorMsg } from "../js/lib/messages.js";
+import { infoMsg, warningMsg, errorMsg } from "../js/lib/messages.js";
 
 let msgDiv;
 
@@ -13,7 +13,17 @@ describe("infoMsg", () => {
 
     expect(msgDiv.classList.contains("mb-20")).toBe(true);
     expect(msgDiv.style.color).toBe("gray");
-    expect(msgDiv.innerHTML).toBe("<p>INFO: Test message</p>");
+    expect(msgDiv.innerHTML).toBe("<p>Info: Test message</p>");
+  });
+});
+
+describe("warningMsg", () => {
+  it("should add a warning message to the input-message div", () => {
+    warningMsg("Test warning message");
+
+    expect(msgDiv.classList.contains("mb-20")).toBe(true);
+    expect(msgDiv.style.color).toBe("orange");
+    expect(msgDiv.innerHTML).toBe("<p>Warning: Test warning message</p>");
   });
 });
 
@@ -23,6 +33,6 @@ describe("errorMsg", () => {
 
     expect(msgDiv.classList.contains("mb-20")).toBe(true);
     expect(msgDiv.style.color).toBe("red");
-    expect(msgDiv.innerHTML).toBe("<p>ERROR: Test error message</p>");
+    expect(msgDiv.innerHTML).toBe("<p>Error: Test error message</p>");
   });
 });
