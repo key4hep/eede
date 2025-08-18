@@ -1,5 +1,5 @@
 import { loadObjects } from "../js/types/load.js";
-import json from "./load.json" assert { type: "json" };
+import json from "./load.json" with { type: "json" };
 
 test("load a json file with a collection of objects", () => {
   const objects = loadObjects(json, 1, [
