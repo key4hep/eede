@@ -1,3 +1,12 @@
+#logo {
+  font-size: 40px;
+  font-family: serif;
+}
+
+#logo-background {
+  background-color: "#a6a6a6";
+}
+
 .logo-letter {
   font-style: italic;
   font-size: 45px;
