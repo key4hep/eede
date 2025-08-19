@@ -4,13 +4,15 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>eede</title>
+  <title>eede: EDM4hep EventData Explorer</title>
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
 
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/logo.css">
   <link rel="stylesheet" href="css/canvas.css">
   <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/modals/welcome.css">
+  <link rel="stylesheet" href="css/modals/input.css">
   <link rel="stylesheet" href="css/filter.css">
   <link rel="stylesheet" href="css/event.css">
   <link rel="stylesheet" href="css/information.css">
@@ -23,55 +25,77 @@
 </head>
 
 <body>
-  <div id="input-modal" class="modal-background">
+  <div id="welcome-modal" class="modal-background">
     <div class="modal-content">
 
-      <p>Welcome to <span id="logo">
-          <span class="logo-letter e1">e</span><span class="logo-letter e2">e</span><span
-            class="logo-letter d">d</span><span class="logo-letter e3">E</span>
-        </span></p>
+      <p class='text-align-center'>
+        Welcome to
+        <br>
+        <span id="logo">
+          <span class="logo-letter e1">e</span><span class="logo-letter e2">e</span><span class="logo-letter d">d</span><span class="logo-letter e3">E</span>
+        </span>
+        <br>
+        Simple visualizer of the
+        <a href="https://edm4hep.web.cern.ch/">EDM4hep</a> events.
+      </p>
+
+      <div class="small-text mt-30">
+        <p class="ml-20">
+          To convert your EDM4hep ROOT file into its JSON representation use:
+        </p>
+        <pre class="ml-30"><code>edm4hep2json my-file.edm4hep.root</code></pre>
+        <p class="ml-20">
+          Make sure to limit the number of events converted, otherwise the
+          JSON might become very large.<br>To limit the total number of
+          converted events use the <code>-n</code> flag and to provide comma
+          separated list of event numbers use the <code>-e</code> flag.
+        </p>
+        <p class="ml-20">
+          Example input files (right click to save):
+        </p>
+        <ul>
+          <li>
+            Delphes: <a href="https://fccsw.web.cern.ch/fccsw/eede/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a>
+            [5.6 MB]
+          </li>
+          <li>
+            Full Sim: <a href="https://fccsw.web.cern.ch/fccsw/eede/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json">wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json</a>
+            [28 MB]
+          </li>
+        </ul>
+      </div>
+
+      <div class="align-right">
+        <button id="start-button">Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="input-modal" class="modal-background">
+    <div class="modal-content">
+      <h1>Input File Loader</h1>
 
       <div id="input-message">
       </div>
-      <form>
-        <div class="mb-20">
-          <label class="mr-10" for="input-file">Select EDM4hep JSON:</label>
-          <input id="input-file" name="input-file" type="file" accept=".json">
-          <div class="small-text">
-            <p class="ml-20">
-              To convert your EDM4hep ROOT file into the JSON representation of
-              EDM4hep use:
-            </p>
-            <pre class="ml-30"><code>edm4hep2json my-file.edm4hep.root</code></pre>
-            <p class="ml-20">
-              Make sure to limit the number of events converted, otherwise the
-              JSON might become very large.<br>To limit the total number of
-              converted events use <code>-t</code> flag and to provide comma
-              separated list of event numbers use <code>-e</code> flag.
-            </p>
-            <p class="ml-20">
-              Example input files (right click to save):
-            </p>
-            <ul>
-              <li>
-                Delphes: <a href="https://fccsw.web.cern.ch/fccsw/eede/p8_ee_ZH_ecm240.edm4hep.json">p8_ee_ZH_ecm240.edm4hep.json</a>
-                [5.6 MB]
-              </li>
-              <li>
-                Full Sim: <a href="https://fccsw.web.cern.ch/fccsw/eede/wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json">wzp6_ee_mumuH_ecm240_CLD_RECO.edm4hep.json</a>
-                [28 MB]
-              </li>
-            </ul>
-          </div>
+
+      <form id="input-modal-form">
+        <div class="mt-30 mb-20">
+          <label class="mr-10" for="input-modal-file-input">Select EDM4hep JSON:</label>
+          <input id="input-modal-file-input" name="input-modal-file-input" type="file" accept=".json">
         </div>
-        <div id="event-selector">
-          <label class="mr-10" for="event-number">Select event number:</label>
+
+        <div id="event-selector" class="mb-20">
+          <label class="mr-10" for="event-number">Select one of the events:</label>
           <select name="event-number" id="event-number"></select>
         </div>
-        <div id="available-views" class="view-selector-menu">
+
+        <div id="input-modal-view-selector" class="mb-20">
+          <p>Select one of the available views:</p>
+          <div id="available-views" class="view-selector-menu">
+          </div>
         </div>
-        <br>
-        <div class="align-right">
+
+        <div class="align-right mt-30">
           <button id="visualize-button">Visualize</button>
         </div>
       </form>
@@ -103,17 +127,29 @@
   </div>
 
   <div id="event-switcher">
-    <img id="previous-event" class="event-switch-arrow event-switch-tool" src="img/left_arrow.svg" alt="Previous event"
-      width="20" height="20" />
+    <img id="previous-event"
+         class="event-switch-arrow event-switch-tool"
+         src="img/left_arrow.svg"
+         alt="Previous event"
+         width="20"
+         height="20" />
     <div>
       <span id="selected-event" class="event-switch-tool"></span>
       <div id="event-selector-menu"></div>
     </div>
-    <img id="next-event" class="event-switch-arrow event-switch-tool" src="img/right_arrow.svg" alt="Next event"
-      width="20" height="20" />
+    <img id="next-event"
+         class="event-switch-arrow event-switch-tool"
+         src="img/right_arrow.svg"
+         alt="Next event"
+         width="20"
+         height="20" />
   </div>
 
-  <img id="information-icon" src="img/information.svg" alt="Information" width="35" height="35" />
+  <img id="information-icon"
+       src="img/information.svg"
+       alt="Information"
+       width="35"
+       height="35" />
 
   <div id="information-modal">
     <img id="close-information" src="img/close.svg" alt="Close" width="35" height="35" />
@@ -140,7 +176,7 @@
             <li class="contact-element">Juraj Smiesko:
               <address class="email">
                 <a href="mailto:juraj.smiesko@cern.ch">
-                  <img src="img/juraj-email.webp" alt="juraj-email" height="21px" />
+                  <img src="img/juraj-email.webp" alt="juraj-email" height="21" />
                 </a>
               </address>
               <button class="copy-email-button" data-email="juraj.smiesko@cern.ch">
@@ -153,7 +189,7 @@
             <li class="contact-element">Thomas Madlener:
               <address class="email">
                 <a href="mailto:thomas.madlener@desy.de">
-                  <img src="img/thomas-email.webp" alt="thomas-email" height="21px" />
+                  <img src="img/thomas-email.webp" alt="thomas-email" height="21" />
                 </a>
               </address>
               <button class="copy-email-button" data-email="thomas.madlener@desy.de">
@@ -165,7 +201,7 @@
             <li class="contact-element">Braulio Rivas:
               <address class="email">
                 <a href="mailto:brauliorivas@pm.me">
-                  <img src="img/braulio-email.webp" alt="braulio-email" height="21px" />
+                  <img src="img/braulio-email.webp" alt="braulio-email" height="21" />
                 </a>
               </address>
               <button class="copy-email-button" data-email="brauliorivas@pm.me">
@@ -214,18 +250,18 @@
     <button id="switch-deploy-button">release</button>
   </div>
 
-  <input id="change-file-input" type="file" accept=".json" hidden>
-
   <div id="current-file">
-    <span>Current file: <span id="current-file-name">some file name</span></span>
+    <span>Current file: <span id="current-file-name"></span></span>
     <button id="change-file">
-      <img src="img/upload.svg" alt="Change file" width="20" height="20" />
+      <img src="img/upload.svg" alt="Change file" width="23" height="23" />
     </button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" type="text/javascript"></script>
   <script type="module" src="js/pixi.min.mjs"> </script>
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/modals/welcome.js"></script>
+  <script type="module" src="js/modals/input.js"></script>
   <script type="module" src="js/information.js"></script>
   <script type="module" src="js/views/views.js"></script>
   <script type="module" src="js/current-file.js"></script>

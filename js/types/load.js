@@ -44,11 +44,24 @@ export function loadPlainObject(
   return objects;
 }
 
-export function loadObjects(jsonData, event, objectsToLoad) {
-  const eventData = jsonData["Event " + event];
+export function loadObjects(fileData, eventNum, objectsToLoad) {
+  const eventData = fileData["Event " + eventNum];
+
+  if (eventData === undefined) {
+    return;
+  }
 
   const datatypesToLoad = objectsToLoad.filter(
-    (object) => !object.includes("Association")
+    (object) => {
+      if (object.includes("Association")) {
+        return false;
+      }
+      if (object.includes("Link")) {
+        return false;
+      }
+
+      return true;
+    }
   );
   const associations = objectsToLoad.filter((object) =>
     object.includes("Association")
@@ -71,31 +84,44 @@ export function loadObjects(jsonData, event, objectsToLoad) {
     objects.associations[association] = [];
   });
 
-  for (const datatype of datatypesToLoad) {
-    Object.entries(eventData).forEach(([key, element]) => {
-      const collectionName = `${datatype}Collection`;
-      if (element.collType === collectionName) {
-        const collection = element.collection;
-        const collectionId = element.collID;
-        const objectCollection = loadPlainObject(
-          collection,
-          datatype,
-          collectionId,
-          key
-        );
-        objects.datatypes[datatype].collection.push(...objectCollection);
+  for (const typeName of datatypesToLoad) {
+    for (const collName in eventData) {
+      const fullTypeName = `${typeName}Collection`;
+      if (eventData[collName].collType !== fullTypeName) {
+        continue;
       }
-    });
+
+      const collection = eventData[collName].collection;
+      const collectionId = eventData[collName].collID;
+
+      if (collection.length === 0) {
+        continue;
+      }
+
+      // Check for subset collection
+      // TODO: Do not ignore subset collections
+      if ('index' in collection[0] && 'collectionID' in collection[0]) {
+        continue;
+      }
+
+      const objectCollection = loadPlainObject(
+        collection,
+        typeName,
+        collectionId,
+        collName
+      );
+      objects.datatypes[typeName].collection.push(...objectCollection);
+    }
   }
 
   for (const datatype of datatypesToLoad) {
-    const oneToOneRelations = datatypes?.[datatype]?.oneToOneRelations ?? [];
-    oneToOneRelations.forEach((relation) => {
+    const possibleOneToOneRelations = datatypes?.[datatype]?.oneToOneRelations ?? [];
+    possibleOneToOneRelations.forEach((relation) => {
       objects.datatypes[datatype].oneToOne[relation.name] = [];
     });
 
-    const oneToManyRelations = datatypes?.[datatype]?.oneToManyRelations ?? [];
-    oneToManyRelations.forEach((relation) => {
+    const possibleOneToManyRelations = datatypes?.[datatype]?.oneToManyRelations ?? [];
+    possibleOneToManyRelations.forEach((relation) => {
       objects.datatypes[datatype].oneToMany[relation.name] = [];
     });
 
@@ -107,7 +133,7 @@ export function loadObjects(jsonData, event, objectsToLoad) {
         );
 
         // load One To One Relations
-        for (const { type, name } of oneToOneRelations) {
+        for (const { type, name } of possibleOneToOneRelations) {
           if (objects.datatypes?.[type] === undefined) continue;
           const oneToOneRelationData = element.collection
             .map((object) => object[name])
@@ -139,7 +165,7 @@ export function loadObjects(jsonData, event, objectsToLoad) {
         }
 
         // load One To Many Relations
-        for (const { type, name } of oneToManyRelations) {
+        for (const { type, name } of possibleOneToManyRelations) {
           if (objects.datatypes?.[type] === undefined) continue;
           const oneToManyRelationData = element.collection
             .map((object) => object[name])
