@@ -11,6 +11,7 @@ const colors = {
   "mcclusters": "#D8F1A0",
   "mctracks": "#fe5e41",
   "vertex": "#593746",
+  "particle-id": "#00FF00",
 };
 
 export class Link {
@@ -116,6 +117,13 @@ class Vertex extends Link {
   }
 }
 
+class ParticleIDLink extends Link {
+  constructor(from, to) {
+    super(from, to);
+    this.color = colors["particle-id"];
+  }
+}
+
 class MCRecoTrackParticleAssociation extends Link {
   constructor(from, to, weight) {
     super(from, to);
@@ -151,5 +159,7 @@ export const linkTypes = {
   "particles": Particles,
   "particle": Particles,
   "startVertex": Vertex,
+  "decayVertex": Vertex,
   "associatedParticle": Vertex,
+  "particleIDs": ParticleIDLink,
 };

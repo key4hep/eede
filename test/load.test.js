@@ -2,10 +2,7 @@ import { loadObjects } from "../js/types/load.js";
 import json from "./load.json" with { type: "json" };
 
 test("load a json file with a collection of objects", () => {
-  const objects = loadObjects(json, 1, [
-    "edm4hep::MCParticle",
-    "edm4hep::ReconstructedParticle",
-  ]);
+  const objects = loadObjects(json, 1);
 
   const datatypes = objects.datatypes;
 

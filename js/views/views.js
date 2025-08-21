@@ -1,4 +1,4 @@
-import { currentObjects } from "../event-number.js";
+import { currentObjects } from "../load-event.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
 import { possibleViews } from "./views-dictionary.js";

@@ -71,7 +71,7 @@ export function preFilterOneWay(
   emptyCopyObject(currentObjects, viewObjects);
 
   const relations =
-    currentObjects.datatypes[fromCollectionName].oneToOne[relationName];
+    currentObjects.datatypes[fromCollectionName].oneToOne[relationName] ?? [];
 
   const fromCollection = relations.map((relation) => relation.from);
 

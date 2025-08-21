@@ -4,9 +4,9 @@
 	"version": "1.0.0",
 	"scripts": {
 		"serve": "node ./bin/serve.js",
-		"build": "node ./model/index.js",
-		"download": "node ./model/download.js",
-		"update": "npm run download && npm run build",
+		"convert": "node ./bin/convert-yaml.cjs",
+		"download": "node ./bin/download-yaml.cjs",
+		"update-model": "npm run download && npm run convert",
 		"test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
 	},
 	"devDependencies": {

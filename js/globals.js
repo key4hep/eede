@@ -22,6 +22,24 @@ export function isPixiRunning() {
 
 
 /*
+ * Datatypes
+ */
+import supportedEDM4hepTypes from '../model/datatypes.json' with { type: 'json' };
+
+export function getSupportedEDM4hepTypes(schemaVersion) {
+  return supportedEDM4hepTypes[schemaVersion];
+}
+
+export function setCurrentSchemaVersion(schemaVersion) {
+  window.sessionStorage.setItem('current-schema-version', schemaVersion);
+}
+
+export function getCurrentSchemaVersion() {
+  return window.sessionStorage.getItem('current-schema-version');
+}
+
+
+/*
  * File
  */
 const fileData = {

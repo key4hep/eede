@@ -13,7 +13,7 @@ import { hideDeploySwitch,
          showViewsMenu,
          showFilters } from "../main.js";
 import { updateFileName, showFileNameMenu } from "../current-file.js";
-import { renderEvent, updateEventSelectorMenu } from "../event-number.js";
+import { renderEvent, updateEventSelectorMenu } from "../load-event.js";
 import { possibleViews } from "../views/views-dictionary.js";
 import { selectViewInformation } from "../information.js";
 
