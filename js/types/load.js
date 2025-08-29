@@ -9,14 +9,16 @@ import { handleSchema4Event } from "./loadSchema4Event.js";
 export function loadObjects(fileData, eventNum) {
   const eventData = fileData["Event " + eventNum];
 
-  if (eventData === undefined) {
+  if (typeof eventData === "undefined") {
     return;
   }
 
   const schemaVersion = determineSchemaVersion(eventData);
+  if (typeof schemaVersion === "undefined") {
+    return;
+  }
   setCurrentSchemaVersion(schemaVersion);
-  console.log('schemaVersion:');
-  console.log(schemaVersion);
+  console.log(`Info: schemaVersion = ${schemaVersion}`);
 
   if (schemaVersion === 'old') {
     return handleOldEvent(eventData);
@@ -41,8 +43,8 @@ function determineSchemaVersion(eventData) {
 
   // Find schema version from the EDM4hep version
   const edm4hepVersion = String(eventData.edm4hepVersion);
-  if (edm4hepVersion) {
-    console.log(`Info: EDM4hep version: ${edm4hepVersion}`);
+  if (typeof edm4hepVersion !== "undefined") {
+    console.log(`Info: EDM4hep version = ${edm4hepVersion}`);
     const schema1versions = ['0.9.0', '0.10.0', '0.10.1', '0.10.2', '0.10.3',
                              '0.10.4', '0.10.5', '0.10.99'];
     const schema2versions = ['0.99.0', '0.99.1'];
@@ -60,5 +62,7 @@ function determineSchemaVersion(eventData) {
     }
   }
 
-  return undefined;
+  // TODO: Should return undefined and an erorr that the file in no longer supported.
+  console.log('Very old file!');
+  return 'old';
 }

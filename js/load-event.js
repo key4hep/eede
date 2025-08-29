@@ -20,8 +20,8 @@ function loadSelectedEvent() {
     const objects = loadObjects(getFileData(), getCurrentEventNumber());
 
     eventCollection[currentEventIndex] = objects;
-    console.log(`eventCollection[${currentEventIndex}]:`);
-    console.log(eventCollection[currentEventIndex]);
+    // console.log(`eventCollection[${currentEventIndex}]:`);
+    // console.log(eventCollection[currentEventIndex]);
 
     for (const datatype in eventCollection[currentEventIndex].datatypes) {
       const classType = objectTypes[datatype];

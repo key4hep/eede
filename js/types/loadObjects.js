@@ -22,7 +22,7 @@ function loadEmptyRelations(object, relations) {
 
 export function loadPlainObject(
   collection,
-  datatype,
+  dataTypeName,
   collectionId,
   collectionName,
   schemaVersion
@@ -30,14 +30,14 @@ export function loadPlainObject(
   const objects = [];
   const supportedEDM4hepTypes = getSupportedEDM4hepTypes(schemaVersion);
 
-  for (const [index, particle] of collection.entries()) {
-    const newObject = new objectTypes[datatype]();
+  for (const [index, collElem] of collection.entries()) {
+    const newObject = new objectTypes[dataTypeName]();
     newObject.index = index;
     newObject.collectionId = collectionId;
     newObject.collectionName = collectionName;
 
-    loadMembers(newObject, particle, supportedEDM4hepTypes[datatype].members);
-    loadEmptyRelations(newObject, supportedEDM4hepTypes[datatype]);
+    loadMembers(newObject, collElem, supportedEDM4hepTypes[dataTypeName].members);
+    loadEmptyRelations(newObject, supportedEDM4hepTypes[dataTypeName]);
 
     objects.push(newObject);
   }

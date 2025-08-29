@@ -99,8 +99,7 @@ export function handleSchema2Event(eventData) {
           if (objects.datatypes?.[type] === undefined) continue;
           const oneToOneRelationData = element.collection
             .map((object) => object[name])
-            .filter((object) => object !== undefined)
-            .filter((object) => object.to !== undefined);
+            .filter((object) => object !== undefined);
 
           if (oneToOneRelationData.length === 0) continue;
 
@@ -133,32 +132,47 @@ export function handleSchema2Event(eventData) {
 
           const oneToManyRelationData = element.collection
             .map((object) => object[name])
-            .filter((object) => object !== undefined)
-            .filter((object) => object.to !== undefined);
+            .filter((object) => object !== undefined);
 
           if (oneToManyRelationData.length === 0) continue;
 
           const toCollectionID =
             oneToManyRelationData.find(
               (relation) => relation?.[0]?.collectionID !== undefined
-            )?.[0]?.collectionID ?? NaN;
+            )?.[0]?.collectionID ?? null;
+
+          if (!toCollectionID) {
+            continue;
+          }
+
           const toCollection = objects.datatypes[type].collection.filter(
             (object) => object.collectionId === toCollectionID
           );
 
-          if (toCollection) {
-            for (const [index, relation] of oneToManyRelationData.entries()) {
-              if (relation.length === 0) continue;
-              const fromObject = fromCollection[index];
-              for (const relationElement of relation) {
-                if (relationElement.index < 0) continue;
-                const toObject = toCollection[relationElement.index];
+          for (const [index, relation] of oneToManyRelationData.entries()) {
+            if (relation.length === 0) {
+              continue;
+            }
 
-                const linkType = linkTypes[name];
-                const link = new linkType(fromObject, toObject);
-                fromObject.oneToManyRelations[name].push(link);
-                objects.datatypes[typeName].oneToMany[name].push(link);
+            const fromObject = fromCollection[index];
+            if (!fromObject) {
+              continue;
+            }
+
+            for (const relationElement of relation) {
+              if (relationElement.index < 0) {
+                continue;
               }
+
+              const toObject = toCollection[relationElement.index];
+              if (!toObject) {
+                continue;
+              }
+
+              const linkType = linkTypes[name];
+              const link = new linkType(fromObject, toObject);
+              fromObject.oneToManyRelations[name].push(link);
+              objects.datatypes[typeName].oneToMany[name].push(link);
             }
           }
         }
