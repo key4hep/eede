@@ -99,7 +99,8 @@ export function handleSchema3Event(eventData) {
           if (objects.datatypes?.[type] === undefined) continue;
           const oneToOneRelationData = element.collection
             .map((object) => object[name])
-            .filter((object) => object !== undefined);
+            .filter((object) => object !== undefined)
+            .map((object) => object[0]);
 
           if (oneToOneRelationData.length === 0) continue;
 
