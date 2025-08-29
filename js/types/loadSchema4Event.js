@@ -4,19 +4,17 @@ import { loadPlainObject } from "./loadObjects.js";
 
 
 export function handleSchema4Event(eventData) {
-  const objects = {
+  const visObjects = {
     "datatypes": {},
     "associations": {},
   };
 
   const supportedEDM4hepTypes = getSupportedEDM4hepTypes('4');
+  console.log(supportedEDM4hepTypes);
 
   // Select only Datatype collections
-  const supportedDataTypes = Object.keys(supportedEDM4hepTypes).filter(
+  const supportedDataTypeNames = Object.keys(supportedEDM4hepTypes).filter(
     (type) => {
-      if (type.includes("Association")) {
-        return false;
-      }
       if (type.includes("Link")) {
         return false;
       }
@@ -24,164 +22,211 @@ export function handleSchema4Event(eventData) {
       return true;
     }
   );
+  console.log(supportedDataTypeNames);
 
   // Select only Link collections
-  const supportedAssociations = Object.keys(supportedEDM4hepTypes).filter((object) =>
-    object.includes("Association")
+  const supportedLinkNames = Object.keys(supportedEDM4hepTypes).filter((object) =>
+    object.includes("Link")
   );
 
-  supportedDataTypes.forEach((typeName) => {
-    objects.datatypes[typeName] = {
+  supportedDataTypeNames.forEach((dataTypeName) => {
+    visObjects.datatypes[dataTypeName] = {
       collection: [],
       oneToMany: {},
       oneToOne: {},
     };
   });
 
-  supportedAssociations.forEach((association) => {
-    objects.associations[association] = [];
+  supportedLinkNames.forEach((linkName) => {
+    visObjects.associations[linkName] = [];
   });
 
-  for (const supportedDataType of supportedDataTypes) {
-    const supportedCollName = `${supportedDataType}Collection`;
-    for (const collName in eventData) {
-      if (eventData[collName].collType !== supportedCollName) {
+  for (const dataTypeName of supportedDataTypeNames) {
+    const supportedCollName = `${dataTypeName}Collection`;
+    const possibleOneToOneRelations = supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
+    const possibleOneToManyRelations = supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
+
+    for (const [collName, collObj] of Object.entries(eventData)) {
+      if (collObj.collType !== supportedCollName) {
         continue;
       }
 
-      const collection = eventData[collName].collection;
-      const collectionId = eventData[collName].collID;
+      const collection = collObj.collection;
+      const collectionId = collObj.collID;
 
       if (collection.length === 0) {
         continue;
       }
 
-      // console.log(`Loading collection: ${supportedCollName}`);
+      // console.log(`Loading collection: ${collObj.collType}`);
       // console.log(`  - size: ${collection.length}`);
+      // console.log(collObj);
 
       // Check for subset collection
       // TODO: Do not ignore subset collections
-      if ('index' in collection[0] && 'collectionID' in collection[0]) {
+      if (collObj.isSubsetColl) {
         continue;
       }
 
       const objectCollection = loadPlainObject(
         collection,
-        supportedDataType,
+        dataTypeName,
         collectionId,
         collName,
         '4'
       );
-      objects.datatypes[supportedDataType].collection.push(...objectCollection);
+      visObjects.datatypes[dataTypeName].collection.push(...objectCollection);
     }
+
+    possibleOneToOneRelations.forEach((relation) => {
+      visObjects.datatypes[dataTypeName].oneToOne[relation.name] = [];
+    });
+
+    possibleOneToManyRelations.forEach((relation) => {
+      visObjects.datatypes[dataTypeName].oneToMany[relation.name] = [];
+    });
   }
 
-  for (const typeName of supportedDataTypes) {
-    const possibleOneToOneRelations = supportedEDM4hepTypes[typeName].oneToOneRelations ?? [];
-    possibleOneToOneRelations.forEach((relation) => {
-      objects.datatypes[typeName].oneToOne[relation.name] = [];
-    });
+  console.log("visObjects:");
+  console.log(visObjects);
 
-    const possibleOneToManyRelations = supportedEDM4hepTypes[typeName].oneToManyRelations ?? [];
-    possibleOneToManyRelations.forEach((relation) => {
-      objects.datatypes[typeName].oneToMany[relation.name] = [];
-    });
+  for (const dataTypeName of supportedDataTypeNames) {
+    const supportedCollType = `${dataTypeName}Collection`;
+    const possibleOneToOneRelations = supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
+    const possibleOneToManyRelations = supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
+    console.log("supportedCollType:");
+    console.log(supportedCollType);
+    console.log("possibleOneToManyRelations:");
+    console.log(possibleOneToManyRelations);
 
-    Object.values(eventData).forEach((element) => {
-      const collectionName = `${typeName}Collection`;
-      if (element.collType === collectionName) {
-        const fromCollection = objects.datatypes[typeName].collection.filter(
-          (object) => object.collectionId === element.collID
-        );
+    for (const collObj of Object.values(eventData)) {
+      if (collObj.collType !== supportedCollType) {
+        continue;
+      }
 
-        // load One To One Relations
-        for (const { type, name } of possibleOneToOneRelations) {
-          if (objects.datatypes?.[type] === undefined) continue;
-          const oneToOneRelationData = element.collection
-            .map((object) => object[name])
-            .filter((object) => object !== undefined);
+      const fromVisCollection = visObjects.datatypes[dataTypeName].collection.filter(
+        (object) => object.collectionId === collObj.collID
+      );
+      if (!fromVisCollection) {
+        continue;
+      }
 
-          if (oneToOneRelationData.length === 0) continue;
-
-          const toCollectionID =
-            oneToOneRelationData.find(
-              (relation) => relation.collectionID !== undefined
-            ).collectionID ?? NaN;
-
-          const toCollection = objects.datatypes[type].collection.filter(
-            (object) => object.collectionId === toCollectionID
-          );
-
-          if (toCollection) {
-            for (const [index, relation] of oneToOneRelationData.entries()) {
-              if (relation.index < 0) continue;
-              const fromObject = fromCollection[index];
-              const toObject = toCollection[relation.index];
-
-              const linkType = linkTypes[name];
-              const link = new linkType(fromObject, toObject);
-              fromObject.oneToOneRelations[name] = link;
-              objects.datatypes[typeName].oneToOne[name].push(link);
-            }
-          }
+      // Load One To One Relations
+      possibleOneToOneRelations.forEach((rel) => {
+        if (!(rel.type in visObjects.datatypes)) {
+          return;
         }
 
-        // load One To Many Relations
-        for (const { type, name } of possibleOneToManyRelations) {
-          if (objects.datatypes?.[type] === undefined) continue;
+        const oneToOneRelationData = collObj.collection
+          .map((object) => object[rel.name])
+          .filter((object) => object !== undefined)
+          .map((object) => object[0]);
 
-          const oneToManyRelationData = element.collection
-            .map((object) => object[name])
-            .filter((object) => object !== undefined);
+        if (oneToOneRelationData.length === 0) {
+          return;
+        }
 
-          if (oneToManyRelationData.length === 0) continue;
+        const toCollectionID =
+          oneToOneRelationData.find(
+            (relation) => "collectionID" in relation
+          ).collectionID ?? null;
 
-          const toCollectionID =
-            oneToManyRelationData.find(
-              (relation) => relation?.[0]?.collectionID !== undefined
-            )?.[0]?.collectionID ?? null;
+        if (!toCollectionID) {
+          return;
+        }
 
-          if (!toCollectionID) {
+        const toVisCollection = visObjects.datatypes[rel.type].collection.filter(
+          (object) => object.collectionId === toCollectionID
+        );
+
+        if (!toVisCollection) {
+          return;
+        }
+
+        for (const [index, relation] of oneToOneRelationData.entries()) {
+          if (relation.index < 0) {
             continue;
           }
 
-          const toCollection = objects.datatypes[type].collection.filter(
-            (object) => object.collectionId === toCollectionID
-          );
+          const fromObject = fromVisCollection[index];
+          if (!fromObject) {
+            continue;
+          }
+          const toObject = toVisCollection[relation.index];
+          if (!toObject) {
+            continue;
+          }
 
-          for (const [index, relation] of oneToManyRelationData.entries()) {
-            if (relation.length === 0) {
+          const linkType = linkTypes[rel.name];
+          const link = new linkType(fromObject, toObject);
+          fromObject.oneToOneRelations[rel.name] = link;
+          visObjects.datatypes[dataTypeName].oneToOne[rel.name].push(link);
+        }
+      });
+
+      // Load One To Many Relations
+      possibleOneToManyRelations.forEach((rel) => {
+        // console.log(`rel.name: ${rel.name}, rel.type: ${rel.type}`);
+        if (!(rel.type in visObjects.datatypes)) {
+          return;
+        }
+
+        const oneToManyRelationData = collObj.collection
+          .map((object) => object[rel.name])
+          .filter((object) => object !== undefined);
+
+        if (oneToManyRelationData.length === 0) {
+          return;
+        }
+
+        console.log("oneToManyRelationData:");
+        console.log(oneToManyRelationData);
+
+        const toCollectionID =
+          oneToManyRelationData.find(
+            (relation) => relation?.[0]?.collectionID !== undefined
+          )?.[0]?.collectionID ?? null;
+
+        if (!toCollectionID) {
+          return;
+        }
+
+        const toCollection = visObjects.datatypes[rel.type].collection.filter(
+          (object) => object.collectionId === toCollectionID
+        );
+
+        for (const [index, relation] of oneToManyRelationData.entries()) {
+          if (relation.length === 0) {
+            continue;
+          }
+
+          const fromObject = fromVisCollection[index];
+          if (!fromObject) {
+            continue;
+          }
+
+          for (const relationElement of relation) {
+            if (relationElement.index < 0) {
               continue;
             }
 
-            const fromObject = fromCollection[index];
-            if (!fromObject) {
+            const toObject = toCollection[relationElement.index];
+            if (!toObject) {
               continue;
             }
 
-            for (const relationElement of relation) {
-              if (relationElement.index < 0) {
-                continue;
-              }
-
-              const toObject = toCollection[relationElement.index];
-              if (!toObject) {
-                continue;
-              }
-
-              const linkType = linkTypes[name];
-              const link = new linkType(fromObject, toObject);
-              fromObject.oneToManyRelations[name].push(link);
-              objects.datatypes[typeName].oneToMany[name].push(link);
-            }
+            const linkType = linkTypes[rel.name];
+            const link = new linkType(fromObject, toObject);
+            fromObject.oneToManyRelations[rel.name].push(link);
+            visObjects.datatypes[dataTypeName].oneToMany[rel.name].push(link);
           }
         }
-      }
-    });
+      });
+    }
   }
 
   // Currently, all associations are one-to-one
-  for (const association of supportedAssociations) {
+  for (const association of supportedLinkNames) {
     Object.values(eventData).forEach((element) => {
       const collectionName = `${association}Collection`;
       if (element.collType === collectionName) {
@@ -203,10 +248,10 @@ export function handleSchema4Event(eventData) {
           (relation) => relation[toName].collectionID !== undefined
         )[toName].collectionID;
 
-        const fromCollection = objects.datatypes[fromType].collection.filter(
+        const fromCollection = visObjects.datatypes[fromType].collection.filter(
           (object) => object.collectionId === fromCollectionID
         );
-        const toCollection = objects.datatypes[toType].collection.filter(
+        const toCollection = visObjects.datatypes[toType].collection.filter(
           (object) => object.collectionId === toCollectionID
         );
 
@@ -220,7 +265,7 @@ export function handleSchema4Event(eventData) {
             toObject,
             associationElement.weight
           );
-          objects.associations[association].push(link);
+          visObjects.associations[association].push(link);
           fromObject.associations = {};
           fromObject.associations[association] = link;
           toObject.associations = {};
@@ -230,5 +275,5 @@ export function handleSchema4Event(eventData) {
     });
   }
 
-  return objects;
+  return visObjects;
 }
