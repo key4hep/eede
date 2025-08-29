@@ -27,6 +27,10 @@ export function isPixiRunning() {
 import supportedEDM4hepTypes from '../model/datatypes.json' with { type: 'json' };
 
 export function getSupportedEDM4hepTypes(schemaVersion) {
+  if (typeof schemaVersion === 'undefined') {
+    return supportedEDM4hepTypes[getCurrentSchemaVersion()];
+  }
+
   return supportedEDM4hepTypes[schemaVersion];
 }
 
@@ -63,13 +67,15 @@ export function setFileData(jsonData) {
   );
 
   if (eventNumbers.length === 0) {
-    return {'err': true,
-            'mgs': 'ERROR: No events found in the provided EDM4hep JSON file!'};
+    return {
+      'err': true,
+      'mgs': 'ERROR: No events found in the provided EDM4hep JSON file!'
+    };
   }
 
   setEventNumbers(eventNumbers);
 
-  return {'err': false}
+  return { 'err': false }
 }
 
 export function getFileData() {
@@ -90,7 +96,7 @@ export function getEventNumbers() {
 
 export function setEventNumbers(eventNumbers) {
   window.sessionStorage.setItem('event-numbers',
-                                JSON.stringify(eventNumbers));
+    JSON.stringify(eventNumbers));
 }
 
 export function getEventIndex(eventNumber) {
