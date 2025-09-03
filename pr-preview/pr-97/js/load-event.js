@@ -9,7 +9,7 @@ import { getFileData,
          getCurrentEventNumber,
          getCurrentEventName,
          eventCollection,
-         currentObjects,
+         currentVisObjects,
          getEventNumbers,
          getCurrentView,
          saveCurrentScrollPosition } from "./globals.js";
@@ -28,9 +28,9 @@ function loadSelectedEvent() {
       const collection = eventCollection[currentEventIndex].datatypes[datatype].collection;
       classType.setup(collection);
     }
-    copyObject(objects, currentObjects);
+    copyObject(objects, currentVisObjects);
   } else {
-    copyObject(eventCollection[currentEventIndex], currentObjects);
+    copyObject(eventCollection[currentEventIndex], currentVisObjects);
   }
 }
 
@@ -109,4 +109,4 @@ eventNumber.addEventListener("click", () => {
   }
 });
 
-export { eventCollection, currentObjects };
+export { eventCollection };

@@ -10,7 +10,6 @@ export function handleSchema4Event(eventData) {
   };
 
   const supportedEDM4hepTypes = getSupportedEDM4hepTypes('4');
-  console.log(supportedEDM4hepTypes);
 
   // Select only Datatype collections
   const supportedDataTypeNames = Object.keys(supportedEDM4hepTypes).filter(
@@ -22,7 +21,6 @@ export function handleSchema4Event(eventData) {
       return true;
     }
   );
-  console.log(supportedDataTypeNames);
 
   // Select only Link collections
   const supportedLinkNames = Object.keys(supportedEDM4hepTypes).filter((object) =>
@@ -87,17 +85,10 @@ export function handleSchema4Event(eventData) {
     });
   }
 
-  console.log("visObjects:");
-  console.log(visObjects);
-
   for (const dataTypeName of supportedDataTypeNames) {
     const supportedCollType = `${dataTypeName}Collection`;
     const possibleOneToOneRelations = supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
     const possibleOneToManyRelations = supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
-    console.log("supportedCollType:");
-    console.log(supportedCollType);
-    console.log("possibleOneToManyRelations:");
-    console.log(possibleOneToManyRelations);
 
     for (const collObj of Object.values(eventData)) {
       if (collObj.collType !== supportedCollType) {
@@ -179,9 +170,6 @@ export function handleSchema4Event(eventData) {
           return;
         }
 
-        console.log("oneToManyRelationData:");
-        console.log(oneToManyRelationData);
-
         const toCollectionID =
           oneToManyRelationData.find(
             (relation) => relation?.[0]?.collectionID !== undefined
@@ -225,21 +213,20 @@ export function handleSchema4Event(eventData) {
     }
   }
 
-  // Currently, all associations are one-to-one
-  for (const association of supportedLinkNames) {
+  // Currently, all links are one-to-one
+  for (const linkCollectionName of supportedLinkNames) {
     Object.values(eventData).forEach((element) => {
-      const collectionName = `${association}Collection`;
-      if (element.collType === collectionName) {
+      if (element.collType === linkCollectionName) {
         const collection = element.collection;
         if (collection.length === 0) return;
 
-        // console.log(`Loading collection: ${collectionName}`);
+        // console.log(`Loading link collection: ${linkCollectionName}`);
         // console.log(`  - size: ${collection.length}`);
 
         const { type: fromType, name: fromName } =
-          supportedEDM4hepTypes[association].oneToOneRelations[0];
+          supportedEDM4hepTypes[linkCollectionName].oneToOneRelations[0];
         const { type: toType, name: toName } =
-          supportedEDM4hepTypes[association].oneToOneRelations[1];
+          supportedEDM4hepTypes[linkCollectionName].oneToOneRelations[1];
 
         const fromCollectionID = collection.find(
           (relation) => relation[fromName].collectionID !== undefined
@@ -259,17 +246,17 @@ export function handleSchema4Event(eventData) {
           const fromObject = fromCollection[associationElement[fromName].index];
           const toObject = toCollection[associationElement[toName].index];
 
-          const linkType = linkTypes[association];
+          const linkType = linkTypes[linkCollectionName];
           const link = new linkType(
             fromObject,
             toObject,
             associationElement.weight
           );
-          visObjects.associations[association].push(link);
+          visObjects.associations[linkCollectionName].push(link);
           fromObject.associations = {};
-          fromObject.associations[association] = link;
+          fromObject.associations[linkCollectionName] = link;
           toObject.associations = {};
-          toObject.associations[association] = link;
+          toObject.associations[linkCollectionName] = link;
         }
       }
     });

@@ -42,6 +42,23 @@ export function getCurrentSchemaVersion() {
   return window.sessionStorage.getItem('current-schema-version');
 }
 
+export function schemaWithLinks() {
+  const currentSchemaVersion = getCurrentSchemaVersion();
+
+  if (typeof currentSchemaVersion === 'undefined') {
+    return false;
+  }
+
+  if (currentSchemaVersion === "old") {
+    return false;
+  }
+  if (currentSchemaVersion == 1) {
+    return false;
+  }
+
+  return true;
+}
+
 
 /*
  * File
@@ -87,7 +104,6 @@ export function getFileData() {
  * Event
  */
 export const eventCollection = {}; // store all events info (gradually store data for each event)
-export const currentObjects = {}; // store data (objects) for current event number
 
 export function getEventNumbers() {
   const eventNumbersString = window.sessionStorage.getItem('event-numbers');
@@ -121,6 +137,17 @@ export function getCurrentEventNumber() {
 export function getCurrentEventName() {
   return `Event ${getCurrentEventNumber()}`;
 }
+
+
+/*
+ * Visual Objects
+ */
+export const currentVisObjects = {}; // store data (objects) for current event number
+
+export function getCurrentVisObjects() {
+  return currentVisObjects;
+}
+
 
 /*
  * View
