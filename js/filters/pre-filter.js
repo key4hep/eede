@@ -11,6 +11,10 @@ export function preFilterAssociation(
 
   const association = currentObjects.associations[associationName];
 
+  if (typeof association === "undefined") {
+    return;
+  }
+
   const added = new Set();
   const fromCollection = [];
   const toCollection = [];

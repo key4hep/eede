@@ -14,9 +14,6 @@ export function handleSchema3Event(eventData) {
   // Select only Datatype collections
   const supportedDataTypes = Object.keys(supportedEDM4hepTypes).filter(
     (type) => {
-      if (type.includes("Association")) {
-        return false;
-      }
       if (type.includes("Link")) {
         return false;
       }
@@ -27,7 +24,7 @@ export function handleSchema3Event(eventData) {
 
   // Select only Link collections
   const supportedAssociations = Object.keys(supportedEDM4hepTypes).filter((object) =>
-    object.includes("Association")
+    object.includes("Link")
   );
 
   supportedDataTypes.forEach((typeName) => {
@@ -184,8 +181,8 @@ export function handleSchema3Event(eventData) {
   // Currently, all associations are one-to-one
   for (const association of supportedAssociations) {
     Object.values(eventData).forEach((element) => {
-      const collectionName = `${association}Collection`;
-      if (element.collType === collectionName) {
+      // const collectionName = `${association}Collection`;
+      if (element.collType === association) {
         const collection = element.collection;
         if (collection.length === 0) return;
 

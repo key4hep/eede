@@ -9,7 +9,15 @@ const inFileData = fs.readFileSync(inFilePath, "utf-8");
 const edm4hepDefinitions = jsYaml.load(inFileData);
 
 const datatypes = edm4hepDefinitions.datatypes;
+const linktypes = edm4hepDefinitions.links;
 const schemaVersion = edm4hepDefinitions.schema_version;
+
+
+if (schemaVersion < 3) {
+  console.warn("The schema version too old, edit the datatypes.json file manually!");
+  return;
+}
+
 
 const supportedTypes = {
   "old": [
@@ -41,6 +49,10 @@ const supportedTypes = {
     "edm4hep::Vertex",
     "edm4hep::ReconstructedParticle",
     "edm4hep::Track",
+    // TODO: make Links work
+    // "edm4hep::RecoMCParticleLink",
+    // "edm4hep::TrackMCParticleLink",
+    // "edm4hep::ClusterMCParticleLink",
   ],
   "3": [
     "edm4hep::Cluster",
@@ -49,6 +61,9 @@ const supportedTypes = {
     "edm4hep::Vertex",
     "edm4hep::ReconstructedParticle",
     "edm4hep::Track",
+    "edm4hep::RecoMCParticleLink",
+    "edm4hep::TrackMCParticleLink",
+    "edm4hep::ClusterMCParticleLink",
   ],
   "4": [
     "edm4hep::Cluster",
@@ -57,11 +72,18 @@ const supportedTypes = {
     "edm4hep::Vertex",
     "edm4hep::ReconstructedParticle",
     "edm4hep::Track",
+    "edm4hep::RecoMCParticleLink",
+    "edm4hep::TrackMCParticleLink",
+    "edm4hep::ClusterMCParticleLink",
   ],
 }
 
 
 const selectedTypes = Object.entries(datatypes).filter(([typeName,]) =>
+  supportedTypes[schemaVersion].includes(typeName)
+);
+
+const selectedLinkTypes = Object.entries(linktypes).filter(([typeName,]) =>
   supportedTypes[schemaVersion].includes(typeName)
 );
 
@@ -126,6 +148,28 @@ selectedTypes.forEach(([name, values]) => {
     members: parsedMembers,
     oneToManyRelations: parsedOneToManyRelations,
     oneToOneRelations: parsedOneToOneRelations,
+  };
+});
+
+selectedLinkTypes.forEach(([, typeObj]) => {
+  const members = [
+    {"name": "weight"}
+  ];
+  const oneToOneRelations = [
+    {
+      "type": typeObj.From,
+      "name": "from"
+    },
+    {
+      "type": typeObj.To,
+      "name": "to"
+    }
+  ];
+  const typeName = `podio::LinkCollection<${typeObj.From},${typeObj.To}>`;
+  datatypesDefinition[typeName] = {
+   members: members,
+    oneToManyRelations: [],
+    oneToOneRelations: oneToOneRelations
   };
 });
 
