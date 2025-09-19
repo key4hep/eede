@@ -29,13 +29,13 @@ export const possibleViews = {
     preFilterFunction: preFilterMCTree,
     reconnectFunction: reconnectMCParticleTree,
     collections: ["edm4hep::MCParticle"],
-    description: `<p>${spanWithColor(
+    description: `<p>A tree of Monte Carlo particles with their relationships:<ul><li>${spanWithColor(
       "Red",
       "#AA0000"
-    )} relations mean parent relation (from bottom to top), ${spanWithColor(
-      "green",
+    )} relations mean parent relation (from bottom to top)</li><li>${spanWithColor(
+      "Green",
       "#00AA00"
-    )} relations mean daughter relation (from top to bottom).</p>`,
+    )} relations mean daughter relation (from top to bottom).</li></ul></p>`,
   },
   "Reconstructed Particle Tree": {
     viewFunction: recoParticleTree,
@@ -43,10 +43,10 @@ export const possibleViews = {
     preFilterFunction: preFilterRecoTree,
     reconnectFunction: reconnectTree,
     collections: ["edm4hep::ReconstructedParticle"],
-    description: `<p>A tree of the Reconstructed Particles. ${spanWithColor(
+    description: `<p>A tree of Reconstructed Particles with possible relationships:<ul><li>${spanWithColor(
       "Purple",
       "#AA00AA"
-    )} relations mean relation between particles.</p>`,
+    )} relations mean relation between particles</li></ul></p>`,
   },
   "Track Tree": {
     viewFunction: trackTree,
@@ -111,7 +111,7 @@ export const possibleViews = {
     viewFunction: particleIDList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterParticleIDList,
-    reconnectFunction: () => {},
+    reconnectFunction: () => { },
     collections: ["edm4hep::ParticleID"],
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
@@ -119,7 +119,7 @@ export const possibleViews = {
     viewFunction: vertexList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterVertexList,
-    reconnectFunction: () => {},
+    reconnectFunction: () => { },
     collections: ["edm4hep::Vertex"],
     description: `<p>A list of Vertices found in the event.</p>`,
   },

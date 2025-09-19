@@ -102,13 +102,13 @@ export function showViewInformation(title, description) {
   }
 
   const viewTitle = document.getElementById("view-title-info");
-  viewTitle.innerText = `Learn more about ${title} view`;
+  viewTitle.innerText = `${title} view`;
 
   const viewDescription = document.getElementById("view-description-info");
   viewDescription.replaceChildren();
   const newElement = document.createElement("div");
   newElement.innerHTML = description;
-  viewDescription.appendChild(newElement.firstChild);
+  viewDescription.appendChild(newElement);
 }
 
 export function hideViewInformation() {
