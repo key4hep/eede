@@ -22,6 +22,45 @@ export function isPixiRunning() {
 
 
 /*
+ * Datatypes
+ */
+import supportedEDM4hepTypes from '../model/datatypes.json' with { type: 'json' };
+
+export function getSupportedEDM4hepTypes(schemaVersion) {
+  if (typeof schemaVersion === 'undefined') {
+    return supportedEDM4hepTypes[getCurrentSchemaVersion()];
+  }
+
+  return supportedEDM4hepTypes[schemaVersion];
+}
+
+export function setCurrentSchemaVersion(schemaVersion) {
+  window.sessionStorage.setItem('current-schema-version', schemaVersion);
+}
+
+export function getCurrentSchemaVersion() {
+  return window.sessionStorage.getItem('current-schema-version');
+}
+
+export function schemaWithLinks() {
+  const currentSchemaVersion = getCurrentSchemaVersion();
+
+  if (typeof currentSchemaVersion === 'undefined') {
+    return false;
+  }
+
+  if (currentSchemaVersion === "old") {
+    return false;
+  }
+  if (currentSchemaVersion == 1) {
+    return false;
+  }
+
+  return true;
+}
+
+
+/*
  * File
  */
 const fileData = {
@@ -45,13 +84,15 @@ export function setFileData(jsonData) {
   );
 
   if (eventNumbers.length === 0) {
-    return {'err': true,
-            'mgs': 'ERROR: No events found in the provided EDM4hep JSON file!'};
+    return {
+      'err': true,
+      'mgs': 'ERROR: No events found in the provided EDM4hep JSON file!'
+    };
   }
 
   setEventNumbers(eventNumbers);
 
-  return {'err': false}
+  return { 'err': false }
 }
 
 export function getFileData() {
@@ -63,7 +104,6 @@ export function getFileData() {
  * Event
  */
 export const eventCollection = {}; // store all events info (gradually store data for each event)
-export const currentObjects = {}; // store data (objects) for current event number
 
 export function getEventNumbers() {
   const eventNumbersString = window.sessionStorage.getItem('event-numbers');
@@ -72,7 +112,7 @@ export function getEventNumbers() {
 
 export function setEventNumbers(eventNumbers) {
   window.sessionStorage.setItem('event-numbers',
-                                JSON.stringify(eventNumbers));
+    JSON.stringify(eventNumbers));
 }
 
 export function getEventIndex(eventNumber) {
@@ -97,6 +137,17 @@ export function getCurrentEventNumber() {
 export function getCurrentEventName() {
   return `Event ${getCurrentEventNumber()}`;
 }
+
+
+/*
+ * Visual Objects
+ */
+export const currentVisObjects = {}; // store data (objects) for current event number
+
+export function getCurrentVisObjects() {
+  return currentVisObjects;
+}
+
 
 /*
  * View

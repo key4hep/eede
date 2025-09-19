@@ -22,7 +22,7 @@ const all = {
 };
 
 beforeAll(() => {
-  objects = loadObjects(data, 0, ["edm4hep::MCParticle"]);
+  objects = loadObjects(data, 0);
 });
 
 test("filter by ranges", () => {

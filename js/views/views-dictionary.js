@@ -83,29 +83,29 @@ export const possibleViews = {
       "#00AAAA"
     )} connections are towards Clusters.</p>`,
   },
-  "Monte Carlo-Reconstructed Particle": {
+  "Reconstructed Particle - MC Particle": {
     viewFunction: mcRecoAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
     reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::ReconstructedParticle"],
-    description: `<p>Association between Monte Carlo Particles and Reconstructed Particles. 1:1 relation.</p>`,
+    description: `<p>Links between Reconstructed Particles and Monte Carlo Particles, 1:1 relation.</p>`,
   },
-  "Monte Carlo Particle-Track": {
+  "Track - MC Particle": {
     viewFunction: mcTrackAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTrack,
     reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::Track"],
-    description: `<p>Association between Monte Carlo Particles and Tracks. 1:1 relation.</p>`,
+    description: `<p>Link between Tracks and Monte Carlo Particles, 1:1 relation.</p>`,
   },
-  "Monte Carlo Particle-Cluster": {
+  "Cluster - MC Particle": {
     viewFunction: mcClusterAssociation,
     scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCCluster,
     reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::Cluster"],
-    description: `<p>Association between Monte Carlo Particles and Clusters. 1:1 relation.</p>`,
+    description: `<p>Link between Clusters and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "ParticleID List": {
     viewFunction: particleIDList,

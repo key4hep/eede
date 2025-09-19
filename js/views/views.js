@@ -1,4 +1,3 @@
-import { currentObjects } from "../event-number.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
 import { possibleViews } from "./views-dictionary.js";
@@ -14,7 +13,8 @@ import { setRenderable } from "../draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
 import { setScrollBarsPosition } from "../draw/scroll.js";
-import { setCurrentView,
+import { getCurrentVisObjects,
+         setCurrentView,
          getCurrentView,
          saveCurrentScrollPosition,
          getSavedScrollPosition } from "../globals.js";
@@ -69,8 +69,10 @@ export const drawView = async (view) => {
     reconnectFunction,
   } = possibleViews[view];
 
+  const allVisObjects = getCurrentVisObjects();
+
   const viewObjects = {};
-  preFilterFunction(currentObjects, viewObjects);
+  preFilterFunction(allVisObjects, viewObjects);
   paintButton(view);
   const isEmpty = checkEmptyObject(viewObjects);
 

@@ -15,13 +15,21 @@ export function checkEmptyObject(obj) {
   Object.values(datatypes).forEach((datatype) => {
     updateEmpty(empty, datatype.collection.length);
 
-    Object.values(datatype.oneToMany).forEach((oneToMany) => {
-      updateEmpty(empty, oneToMany.length);
-    });
+    if (datatype.oneToMany) {
+      Object.values(datatype.oneToMany)
+        .filter((oneToOne) => oneToOne !== undefined)
+        .forEach((oneToMany) => {
+          updateEmpty(empty, oneToMany.length);
+      });
+    }
 
-    Object.values(datatype.oneToOne).forEach((oneToOne) => {
-      updateEmpty(empty, oneToOne.length);
-    });
+    if (datatype.oneToOne) {
+      Object.values(datatype.oneToOne)
+        .filter((oneToOne) => oneToOne !== undefined)
+        .forEach((oneToOne) => {
+          updateEmpty(empty, oneToOne.length);
+      });
+    }
   });
 
   Object.values(associations).forEach((association) => {

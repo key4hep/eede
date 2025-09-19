@@ -1,13 +1,12 @@
 import { loadObjects } from "../js/types/load.js";
-import json from "./load.json" with { type: "json" };
+import eventsData from "./load.json" with { type: "json" };
 
 test("load a json file with a collection of objects", () => {
-  const objects = loadObjects(json, 1, [
-    "edm4hep::MCParticle",
-    "edm4hep::ReconstructedParticle",
-  ]);
+  const objects = loadObjects(eventsData, 1);
 
   const datatypes = objects.datatypes;
+
+  console.log(datatypes);
 
   expect(datatypes["edm4hep::MCParticle"]).toBeDefined();
   expect(datatypes["edm4hep::ReconstructedParticle"]).toBeDefined();

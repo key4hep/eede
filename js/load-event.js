@@ -3,13 +3,13 @@ import { copyObject } from "./lib/copy.js";
 import { objectTypes } from "./types/objects.js";
 import { drawView } from "./views/views.js";
 import { getContainer } from "./draw/app.js";
-import { supportedEDM4hepTypes } from "./configuration.js";
 import { getFileData,
          setCurrentEventIndex,
          getCurrentEventIndex,
+         getCurrentEventNumber,
          getCurrentEventName,
          eventCollection,
-         currentObjects,
+         currentVisObjects,
          getEventNumbers,
          getCurrentView,
          saveCurrentScrollPosition } from "./globals.js";
@@ -17,22 +17,20 @@ import { getFileData,
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();
   if (eventCollection[currentEventIndex] === undefined) {
-    const objects = loadObjects(
-      getFileData(),
-      currentEventIndex,
-      supportedEDM4hepTypes.types
-    );
+    const objects = loadObjects(getFileData(), getCurrentEventNumber());
 
     eventCollection[currentEventIndex] = objects;
+    // console.log(`eventCollection[${currentEventIndex}]:`);
+    // console.log(eventCollection[currentEventIndex]);
 
     for (const datatype in eventCollection[currentEventIndex].datatypes) {
       const classType = objectTypes[datatype];
       const collection = eventCollection[currentEventIndex].datatypes[datatype].collection;
       classType.setup(collection);
     }
-    copyObject(objects, currentObjects);
+    copyObject(objects, currentVisObjects);
   } else {
-    copyObject(eventCollection[currentEventIndex], currentObjects);
+    copyObject(eventCollection[currentEventIndex], currentVisObjects);
   }
 }
 
@@ -111,4 +109,4 @@ eventNumber.addEventListener("click", () => {
   }
 });
 
-export { eventCollection, currentObjects };
+export { eventCollection };
