@@ -1,8 +1,10 @@
-import { datatypes } from "../../../output/datatypes.js";
+import { getSupportedEDM4hepTypes } from "../../globals.js";
 
 export function reconnectTree(viewCurrentObjects, ids) {
+  const datatypes = getSupportedEDM4hepTypes();
+
   const tree = Object.entries(viewCurrentObjects.datatypes).filter(
-    ([_, { collection }]) => collection.length !== 0
+    ([, { collection }]) => collection.length !== 0
   )[0];
   const collectionName = tree[0];
   const { collection } = tree[1];

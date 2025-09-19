@@ -1,6 +1,8 @@
-import { datatypes } from "../../output/datatypes.js";
+import { getSupportedEDM4hepTypes } from "../globals.js";
 
 export function getRelationsFromCollections(collections) {
+  const datatypes = getSupportedEDM4hepTypes();
+
   const collectionsSet = new Set(collections);
   const relationsFromCollection = new Set();
 

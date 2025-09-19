@@ -1,6 +1,6 @@
 import { loadObjects } from "../js/types/load.js";
 import { filterOut } from "../js/filters/filter-out.js";
-import data from "./filter.json" assert { type: "json" };
+import data from "./filter.json" with { type: "json" };
 
 let objects = {};
 
@@ -22,7 +22,7 @@ const all = {
 };
 
 beforeAll(() => {
-  objects = loadObjects(data, 0, ["edm4hep::MCParticle"]);
+  objects = loadObjects(data, 0);
 });
 
 test("filter by ranges", () => {
