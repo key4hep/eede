@@ -4,7 +4,7 @@ export function getName(pdg) {
   const particle = mappings[pdg];
 
   if (particle !== undefined) {
-    console.log("Name: " + particle);
+    // console.log("Name: " + particle);
     return particle;
   }
 

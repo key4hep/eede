@@ -45,7 +45,7 @@ function renderMCParticleFilters(viewObjects) {
   simStatusContainer.appendChild(simStatusTitle);
   const simStatusCheckboxesContainer = createCheckboxContainer();
 
-  Object.entries(SimStatusBitFieldDisplayValues).forEach(([status, value]) => {
+  Object.entries(SimStatusBitFieldDisplayValues).forEach(([value, status]) => {
     const checkbox = new CheckboxComponent("simulatorStatus", status, value);
     checkboxes.simStatus.push(checkbox);
     simStatusCheckboxesContainer.appendChild(checkbox.render());
