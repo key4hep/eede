@@ -15,12 +15,6 @@ export function showViewsMenu() {
   aboutButton.style.display = "block";
 }
 
-export function hideDeploySwitch() {
-  const deploySwitch = document.getElementById("switch-deploy");
-
-  deploySwitch.style.display = "none";
-}
-
 export function showFilters() {
   const filters = document.getElementById("filters");
 
