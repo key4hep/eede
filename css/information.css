@@ -2,26 +2,23 @@
   position: fixed;
   right: 20px;
   bottom: 20px;
-  z-index: 1;
+  z-index: 3;
+  cursor: pointer;
 }
 
 #information-icon:hover {
-  cursor: pointer;
   border-radius: 50%;
   background-color: #e1e1e1;
 }
 
-#close-information:hover {
-  cursor: pointer;
-}
-
 #close-information {
   margin-left: auto;
+  cursor: pointer;
 }
 
 #information-modal {
   position: fixed;
-  z-index: 2;
+  z-index: 3;
   display: none;
   width: 500px;
   height: 500px;

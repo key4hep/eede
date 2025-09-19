@@ -11,11 +11,11 @@ import {
 } from "../globals.js";
 import { startPixi } from "../draw/app.js";
 import {
-  hideDeploySwitch,
   showEventSwitcher,
   showViewsMenu,
   showFilters
 } from "../main.js";
+import { hideDeploySwitch } from "../switch-deploy.js";
 import { updateFileName, showFileNameMenu } from "../current-file.js";
 import { renderEvent, updateEventSelectorMenu } from "../load-event.js";
 import { possibleViews } from "../views/views-dictionary.js";
@@ -27,6 +27,14 @@ export function hideInputModal() {
 
 export function showInputModal() {
   document.getElementById("input-modal").style.display = "block";
+}
+
+export function hideInputModalCloseButton() {
+  document.getElementById("input-modal-close-button").style.display = "none";
+}
+
+export function showInputModalCloseButton() {
+  document.getElementById("input-modal-close-button").style.display = "block";
 }
 
 export function clearInputModal() {
@@ -41,67 +49,71 @@ export function clearInputModal() {
   document.getElementById("input-modal-view-selector").style.display = "none";
 }
 
-document.getElementById("input-modal-file-input").addEventListener("change", (event) => {
-  for (const file of event.target.files) {
-    if (!file.name.endsWith("edm4hep.json")) {
-      warningMsg("Provided file might not contain EDM4hep event data!");
-    }
+document
+  .getElementById("input-modal-file-input")
+  .addEventListener("change", (event) => {
+    hideInputModalCloseButton();
 
-    if (!file.type.endsWith("/json")) {
-      errorMsg("Provided file type is not JSON!");
-      return;
-    }
+    for (const file of event.target.files) {
+      if (!file.name.endsWith("edm4hep.json")) {
+        warningMsg("Provided file might not contain EDM4hep event data!");
+      }
 
-    const reader = new FileReader();
-    reader.addEventListener("load", (event) => {
-      const fileText = event.target.result;
-      let ret = setFileData(JSON.parse(fileText));
-
-      if (ret.err === true) {
-        errorMsg(ret.msg);
+      if (!file.type.endsWith("/json")) {
+        errorMsg("Provided file type is not JSON!");
         return;
       }
 
-      setFileName(file.name);
+      const reader = new FileReader();
+      reader.addEventListener("load", (event) => {
+        const fileText = event.target.result;
+        let ret = setFileData(JSON.parse(fileText));
 
-      setCurrentEventIndex(0);
+        if (ret.err === true) {
+          errorMsg(ret.msg);
+          return;
+        }
 
-      const eventNumbers = getEventNumbers();
-      const eventNumberSelector = document.getElementById("event-number");
-      for (const [i, eventNumber] of eventNumbers.entries()) {
-        const option = document.createElement('option');
-        option.text = `Event ${eventNumber}`;
-        eventNumberSelector.add(option, i);
-      }
-      eventNumberSelector.value = `Event ${eventNumbers[0]}`;
-      document.getElementById("event-selector").style.display = "block";
+        setFileName(file.name);
 
-      const availableViewsElem = document.getElementById("available-views");
-      availableViewsElem.replaceChildren();
-      const buttons = [];
-      for (const viewName in possibleViews) {
-        const button = document.createElement("button");
-        button.appendChild(document.createTextNode(viewName));
-        button.className = "view-button";
-        button.onclick = (event) => {
-          event.preventDefault();
-          setCurrentView(viewName);
-          for (const otherButton of buttons) {
-            if (otherButton !== button) {
-              otherButton.style.backgroundColor = "#f1f1f1";
+        setCurrentEventIndex(0);
+
+        const eventNumbers = getEventNumbers();
+        const eventNumberSelector = document.getElementById("event-number");
+        for (const [i, eventNumber] of eventNumbers.entries()) {
+          const option = document.createElement('option');
+          option.text = `Event ${eventNumber}`;
+          eventNumberSelector.add(option, i);
+        }
+        eventNumberSelector.value = `Event ${eventNumbers[0]}`;
+        document.getElementById("event-selector").style.display = "block";
+
+        const availableViewsElem = document.getElementById("available-views");
+        availableViewsElem.replaceChildren();
+        const buttons = [];
+        for (const viewName in possibleViews) {
+          const button = document.createElement("button");
+          button.appendChild(document.createTextNode(viewName));
+          button.className = "view-button";
+          button.onclick = (event) => {
+            event.preventDefault();
+            setCurrentView(viewName);
+            for (const otherButton of buttons) {
+              if (otherButton !== button) {
+                otherButton.style.backgroundColor = "#f1f1f1";
+              }
             }
-          }
-          button.style.backgroundColor = "#c5c5c5";
-        };
-        buttons.push(button);
-        availableViewsElem.appendChild(button);
-      }
-      document.getElementById("input-modal-view-selector").style.display = "initial";
-    });
-    reader.readAsText(file);
-    break;
-  }
-});
+            button.style.backgroundColor = "#c5c5c5";
+          };
+          buttons.push(button);
+          availableViewsElem.appendChild(button);
+        }
+        document.getElementById("input-modal-view-selector").style.display = "initial";
+      });
+      reader.readAsText(file);
+      break;
+    }
+  });
 
 document
   .getElementById("visualize-button")
@@ -134,3 +146,8 @@ document
     selectViewInformation();
     renderEvent(eventIndex);
   });
+
+
+document
+  .getElementById("input-modal-close-button")
+  .addEventListener("click", hideInputModal);

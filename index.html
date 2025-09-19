@@ -27,7 +27,6 @@
 <body>
   <div id="welcome-modal" class="modal-background">
     <div class="modal-content">
-
       <p class='text-align-center'>
         Welcome to
         <br>
@@ -73,7 +72,17 @@
 
   <div id="input-modal" class="modal-background">
     <div class="modal-content">
-      <h1>Input File Loader</h1>
+      <div class="align-right">
+        <img id="input-modal-close-button"
+             src="img/close.svg"
+             alt="Close Input File Loader"
+             width="35"
+             height="35" />
+      </div>
+
+      <div class="text-align-center">
+        <h1>Input File Loader</h1>
+      </div>
 
       <div id="input-message">
       </div>
@@ -154,24 +163,44 @@
   <div id="information-modal">
     <img id="close-information" src="img/close.svg" alt="Close" width="35" height="35" />
     <div class="info-modal-content">
-      <span class="logo-letter e1">e</span><span class="logo-letter e2">e</span><span
-        class="logo-letter d">d</span><span class="logo-letter e3">E</span>
+      <div class='text-align-center'>
+        <span id="logo">
+          <span class="logo-letter e1">e</span><span class="logo-letter e2">e</span><span class="logo-letter d">d</span><span class="logo-letter e3">E</span>
+        </span>
+        <br>
+        Simple visualizer of the
+        <a href="https://edm4hep.web.cern.ch/">EDM4hep</a> events.
+      </div>
+
       <div id="information-buttons">
         <button id="view-information-button" class="information-button">This view</button>
         <button id="information-button" class="information-button">About eede</button>
       </div>
+
       <div id="information-options">
         <div id="information-content">
-          <p>Welcome to eede, an EDM4hep Event Data Explorer. Learn more about eede on the <a
-              href="https://github.com/key4hep/eede/wiki" target="_blank" rel="noopener noreferrer">wiki</a>.
-            Want to learn more about EDM4hep? Check out the <a href="https://edm4hep.web.cern.ch" target="_blank"
-              rel="noopener noreferrer">EDM4hep</a> website.
-          </p>
           <p>
-            Found a bug or have a feature request? Open a new <a href="https://github.com/key4hep/eede/issues"
-              target="_blank" rel="noopener noreferrer">issue</a>.
+            Learn more about eede in the
+            <a href="https://github.com/key4hep/eede/wiki"
+               target="_blank"
+               rel="noopener noreferrer">wiki</a>.
           </p>
-          <p>Contact:</p>
+
+          <p>
+            Want to learn more about the EDM4hep itself? Check out the
+            <a href="https://edm4hep.web.cern.ch"
+               target="_blank"
+               rel="noopener noreferrer">EDM4hep</a> website.
+          </p>
+
+          <p>
+            Found a bug or have a feature request? Open new
+            <a href="https://github.com/key4hep/eede/issues"
+               target="_blank"
+               rel="noopener noreferrer">issue</a>.
+          </p>
+
+          <p>Contacts:</p>
           <ul>
             <li class="contact-element">Juraj Smiesko:
               <address class="email">
@@ -184,7 +213,6 @@
                   <img src="img/copy.svg" alt="Copy" width="16" height="16" />
                 </abbr>
               </button>
-
             </li>
             <li class="contact-element">Thomas Madlener:
               <address class="email">
@@ -212,6 +240,7 @@
             </li>
           </ul>
         </div>
+
         <div id="view-information-content">
           <h2 id="view-title-info"></h2>
           <div id="view-description-info"></div>
@@ -247,7 +276,7 @@
 
   <div id="switch-deploy">
     <p id="switch-deploy-text">Switch to</p>
-    <button id="switch-deploy-button">release</button>
+    <button id="switch-deploy-button">Release</button>
   </div>
 
   <div id="current-file">
