@@ -49,7 +49,7 @@ export function buildTree(collection, relationOfReference) {
   const boxWidth = collection[0].width;
   const boxHeight = collection[0].height;
 
-  const [_, listHeight] = listView(childlessRootNodes);
+  const [, listHeight] = listView(childlessRootNodes);
 
   let cols = (window.innerWidth - horizontalGap) / (boxWidth + horizontalGap);
   const decimal = cols % 1;
