@@ -1,19 +1,23 @@
 import { warningMsg, errorMsg } from "../lib/messages.js";
-import { isPixiRunning,
-         setFileData,
-         getFileData,
-         setFileName,
-         getEventNumbers,
-         setCurrentEventIndex,
-         setCurrentView,
-         getCurrentView } from "../globals.js";
+import {
+  isPixiRunning,
+  setFileData,
+  getFileData,
+  setFileName,
+  getEventNumbers,
+  setCurrentEventIndex,
+  setCurrentView,
+  getCurrentView
+} from "../globals.js";
 import { startPixi } from "../draw/app.js";
-import { hideDeploySwitch,
-         showEventSwitcher,
-         showViewsMenu,
-         showFilters } from "../main.js";
+import {
+  hideDeploySwitch,
+  showEventSwitcher,
+  showViewsMenu,
+  showFilters
+} from "../main.js";
 import { updateFileName, showFileNameMenu } from "../current-file.js";
-import { renderEvent, updateEventSelectorMenu } from "../event-number.js";
+import { renderEvent, updateEventSelectorMenu } from "../load-event.js";
 import { possibleViews } from "../views/views-dictionary.js";
 import { selectViewInformation } from "../information.js";
 

@@ -11,6 +11,10 @@ export function preFilterAssociation(
 
   const association = currentObjects.associations[associationName];
 
+  if (typeof association === "undefined") {
+    return;
+  }
+
   const added = new Set();
   const fromCollection = [];
   const toCollection = [];
@@ -71,7 +75,7 @@ export function preFilterOneWay(
   emptyCopyObject(currentObjects, viewObjects);
 
   const relations =
-    currentObjects.datatypes[fromCollectionName].oneToOne[relationName];
+    currentObjects.datatypes[fromCollectionName].oneToOne[relationName] ?? [];
 
   const fromCollection = relations.map((relation) => relation.from);
 

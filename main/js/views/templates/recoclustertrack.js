@@ -1,4 +1,5 @@
 import { emptyCopyObject } from "../../lib/copy.js";
+import { getCurrentSchemaVersion } from "../../globals.js";
 
 export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
@@ -22,6 +23,8 @@ export function recoClusterTrackVertex(viewObjects) {
     return object;
   };
 
+  const vertexRelStr = getCurrentSchemaVersion() < 2 ? "startVertex" : "decayVertex";
+
   const firstRecoParticle = recoParticles[0];
   const recoHeight = firstRecoParticle.height;
   const recoVerticalGap = parseInt(recoHeight * 0.3);
@@ -40,7 +43,7 @@ export function recoClusterTrackVertex(viewObjects) {
   const trackWidth = firstTrack.width;
 
   const firstVertex = recoParticles.find((particle) => {
-    const vertexRelation = particle.oneToOneRelations["startVertex"];
+    const vertexRelation = particle.oneToOneRelations[vertexRelStr];
     if (vertexRelation !== undefined) {
       return vertexRelation.to;
     }
@@ -75,7 +78,7 @@ export function recoClusterTrackVertex(viewObjects) {
   recoParticles.forEach((particle) => {
     const clusterRelations = particle.oneToManyRelations["clusters"];
     const trackRelations = particle.oneToManyRelations["tracks"];
-    const vertexRelation = particle.oneToOneRelations["startVertex"];
+    const vertexRelation = particle.oneToOneRelations[vertexRelStr];
 
     const relationsHeight = parseInt(
       clusterRelations.length * (clusterHeight + clusterVerticalGap) +
@@ -142,12 +145,14 @@ export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
   const tracks = [];
   const vertexCollection = [];
 
+  const vertexRelStr = getCurrentSchemaVersion() < 2 ? "startVertex" : "decayVertex";
+
   fromCollection.forEach((particle) => {
     const id = `${particle.index}-${particle.collectionId}`;
 
     const clusterRelations = particle.oneToManyRelations["clusters"];
     const trackRelations = particle.oneToManyRelations["tracks"];
-    const vertexRelation = particle.oneToOneRelations["startVertex"];
+    const vertexRelation = particle.oneToOneRelations[vertexRelStr];
 
     const total =
       clusterRelations.length +
@@ -207,10 +212,10 @@ export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
       "tracks"
     ];
   viewObjects.datatypes["edm4hep::ReconstructedParticle"].oneToOne[
-    "startVertex"
+    vertexRelStr
   ] =
     currentObjects.datatypes["edm4hep::ReconstructedParticle"].oneToOne[
-      "startVertex"
+      vertexRelStr
     ];
 
   viewObjects.datatypes["edm4hep::Cluster"].collection = clusters;
