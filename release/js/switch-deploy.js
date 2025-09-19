@@ -1,6 +1,13 @@
-const button = document.getElementById("switch-deploy-button");
+const switchDeployButton = document.getElementById("switch-deploy-button");
 
-button.addEventListener("click", () => {
+const url = window.location.href;
+if (url.includes("/release")) {
+  switchDeployButton.innerText = "Development";
+} else {
+  switchDeployButton.innerText = "Release";
+}
+
+switchDeployButton.addEventListener("click", () => {
   const currentUrl = window.location.href;
 
   if (currentUrl.includes("/release")) {
@@ -10,9 +17,8 @@ button.addEventListener("click", () => {
   }
 });
 
-const url = window.location.href;
-if (url.includes("/release")) {
-  button.innerText = "Develop";
-} else {
-  button.innerText = "Release";
+export function hideDeploySwitch() {
+  const deploySwitch = document.getElementById("switch-deploy");
+
+  deploySwitch.style.display = "none";
 }

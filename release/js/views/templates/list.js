@@ -18,6 +18,10 @@ const bestHorizontalFit = (windowWidth, objectWidth) => {
 };
 
 export function listView(collection) {
+  if (collection.length < 1) {
+    return [0, 0];
+  }
+
   const width = window.innerWidth;
   const length = collection.length;
 
