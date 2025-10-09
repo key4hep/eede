@@ -24,12 +24,7 @@ export function isPixiRunning() {
 /*
  * Datatypes
  */
-// Oct 2025:
-// Simple import is not yet fully supported by all the browsers in the wild.
-// Notable mention: Firefox on AlmaLinux 9.
-// import supportedEDM4hepTypes from '../model/datatypes.json' with { type: 'json' };
-const supportedEDM4hepTypes = await fetch('../model/datatypes.json')
-  .then(res => res.json());
+import { supportedEDM4hepTypes } from '../model/datatypes.js';
 
 export function getSupportedEDM4hepTypes(schemaVersion) {
   if (typeof schemaVersion === 'undefined') {

@@ -1,4 +1,4 @@
-{
+export const supportedEDM4hepTypes = {
   "1": {
     "edm4hep::MCParticle": {
       "members": [
@@ -1355,4 +1355,4 @@
       ]
     }
   }
-}
+};
