@@ -2,10 +2,10 @@ const { argv } = require('node:process');
 const fs = require('node:fs');
 const jsYaml = require('js-yaml');
 
-const inFilePath = argv[2] ?? "model/edm4hep.yaml";
-const outFilePath = argv[3] ?? "model/datatypes.json";
+const inFilePath = argv[2] ?? 'model/edm4hep.yaml';
+const outFilePath = argv[3] ?? 'model/datatypes.js';
 
-const inFileData = fs.readFileSync(inFilePath, "utf-8");
+const inFileData = fs.readFileSync(inFilePath, 'utf-8');
 const edm4hepDefinitions = jsYaml.load(inFileData);
 
 const datatypes = edm4hepDefinitions.datatypes;
@@ -153,7 +153,7 @@ selectedTypes.forEach(([name, values]) => {
 
 selectedLinkTypes.forEach(([, typeObj]) => {
   const members = [
-    {"name": "weight"}
+    { "name": "weight" }
   ];
   const oneToOneRelations = [
     {
@@ -167,7 +167,7 @@ selectedLinkTypes.forEach(([, typeObj]) => {
   ];
   const typeName = `podio::LinkCollection<${typeObj.From},${typeObj.To}>`;
   datatypesDefinition[typeName] = {
-   members: members,
+    members: members,
     oneToManyRelations: [],
     oneToOneRelations: oneToOneRelations
   };
@@ -175,18 +175,30 @@ selectedLinkTypes.forEach(([, typeObj]) => {
 
 // Replace/Update datatypes for the found schema version
 try {
-  var datatypesAll = JSON.parse(fs.readFileSync(outFilePath, 'utf8'));
+  var supportedEDM4hepTypesTxt = fs.readFileSync(outFilePath, 'utf8');
+  supportedEDM4hepTypesTxt = supportedEDM4hepTypesTxt.replace(
+    'export const supportedEDM4hepTypes = {', '{');
+  supportedEDM4hepTypesTxt = supportedEDM4hepTypesTxt.replace(
+    '};', '}');
+  var supportedEDM4hepTypes = JSON.parse(supportedEDM4hepTypesTxt);
 } catch {
-  datatypesAll = {};
+  supportedEDM4hepTypes = {};
 }
-if (schemaVersion in datatypesAll) {
+
+if (Object.keys(supportedEDM4hepTypes).length > 0) {
+  console.log(`Info: Found these EDM4hep versions: ${Object.keys(supportedEDM4hepTypes)}`);
+}
+
+if (schemaVersion in supportedEDM4hepTypes) {
   console.log('Warning: Overwriting datatypes for existing schema!')
   console.log(`          - schemaVersion: ${schemaVersion}`);
 }
 
-datatypesAll[schemaVersion] = datatypesDefinition;
+supportedEDM4hepTypes[schemaVersion] = datatypesDefinition;
 
-fs.writeFileSync(outFilePath, JSON.stringify(datatypesAll, null, 2));
+fs.writeFileSync(outFilePath,
+  'export const supportedEDM4hepTypes = ' +
+  JSON.stringify(supportedEDM4hepTypes, null, 2) + ';');
 console.log('Info: Updated datatypes has been writen to:')
 console.log(`       - filePath: ${outFilePath}`)
 console.log(`       - schemaVersion: ${schemaVersion}`);
