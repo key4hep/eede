@@ -24,7 +24,7 @@ export function isPixiRunning() {
 /*
  * Datatypes
  */
-import supportedEDM4hepTypes from '../model/datatypes.json' with { type: 'json' };
+import { supportedEDM4hepTypes } from '../model/datatypes.js';
 
 export function getSupportedEDM4hepTypes(schemaVersion) {
   if (typeof schemaVersion === 'undefined') {
