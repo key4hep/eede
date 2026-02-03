@@ -1,11 +1,11 @@
-import { removeImageFromBox } from "../draw/box.js";
+import { removeParticleNameFromBox } from "../draw/box.js";
 
-const toggleImage = (object, newText) => {
+const toggleText = (object, newText) => {
   object.textToRender = newText;
   const renderedBox = object.renderedBox;
-  removeImageFromBox(object.image, renderedBox);
+  removeParticleNameFromBox(object.image, renderedBox);
   if (renderedBox.renderable) {
-    object.drawImage(object.textToRender, object.imageY);
+    object.renderText(object.textToRender, object.imageY);
   }
 };
 
@@ -13,7 +13,7 @@ export const togglePDG = (objects) => {
   const collection = objects.datatypes["edm4hep::MCParticle"].collection;
 
   collection.map((object) => {
-    toggleImage(object, object.name);
+    toggleText(object, object.name);
   });
 };
 
@@ -21,6 +21,6 @@ export const toggleId = (objects) => {
   const collection = objects.datatypes["edm4hep::MCParticle"].collection;
 
   collection.map((object) => {
-    toggleImage(object, object.PDG);
+    toggleText(object, object.PDG);
   });
 };

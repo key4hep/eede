@@ -184,7 +184,7 @@ export async function svgElementToPixiSprite(id, src) {
 //   box.removeChild(sprite);
 // }
 
-export function addParticleNameToBox(text, box, y, maxWidth) {
+export function addParticleNameToBox(text, box, y) {
   const particleName = createText(text, {
     fontFamily: ["STIX Two Text", "serif"],
     fontSize: 28,
