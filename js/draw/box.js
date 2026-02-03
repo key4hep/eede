@@ -36,7 +36,7 @@ function createObjectModal(lines) {
     fontFamily: ["Arial", "sans-serif"],
     fontSize: 14,
     fontWeight: "normal",
-    align: "center",
+    align: "left",
     fill: "black",
   });
 
