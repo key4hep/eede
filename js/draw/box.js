@@ -92,7 +92,6 @@ export function buildBox(object) {
 }
 
 export function addHoverModal(box, lines) {
-  const objectModalWidth = parseInt(objectModal.width);
   const boxWidth = parseInt(box.width);
 
   let showModal = false;
@@ -123,6 +122,8 @@ export function addHoverModal(box, lines) {
       if (!showModal) {
         return;
       }
+      objectModal = createObjectModal(lines);
+      const objectModalWidth = parseInt(objectModal.width);
       const x = parseInt(box.position.x);
       const xPosition = (boxWidth - objectModalWidth) / 2 + x;
       const y = box.position.y;
