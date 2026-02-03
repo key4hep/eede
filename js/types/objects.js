@@ -6,12 +6,10 @@ import {
   addBox,
   addTitleToBox,
   addLinesToBox,
-  svgElementToPixiSprite,
-  addImageToBox,
   addHoverModal,
-  removeImageFromBox,
+  addParticleNameToBox,
+  removeParticleNameFromBox,
 } from "../draw/box.js";
-import { textToSVG } from "../lib/generate-svg.js";
 import { dragStart } from "../draw/drag.js";
 import { getApp, getContainer } from "../draw/app.js";
 import { Rectangle } from "../pixi.min.mjs";
@@ -151,12 +149,13 @@ export class MCParticle extends EDMObject {
     return [collectionName, ...simulatorStatus];
   }
 
-  async drawImage(text, imageY) {
-    const id = `${text}-${IMAGE_SIZE}`;
-    const src = await textToSVG(id, text, this.width * 0.9, IMAGE_SIZE);
-    const sprite = await svgElementToPixiSprite(id, src);
-    this.image = sprite;
-    addImageToBox(sprite, this.renderedBox, imageY);
+  renderText(text, imageY) {
+    this.image = addParticleNameToBox(
+      text,
+      this.renderedBox,
+      imageY,
+      this.width * 0.9,
+    );
   }
 
   isVisible() {
@@ -165,11 +164,11 @@ export class MCParticle extends EDMObject {
     if (isVisible) {
       if (!this.hasImage) {
         this.hasImage = true;
-        this.drawImage(this.textToRender, this.imageY);
+        this.renderText(this.textToRender, this.imageY);
       }
     } else {
       if (this.image) {
-        removeImageFromBox(this.image, this.renderedBox);
+        removeParticleNameFromBox(this.image, this.renderedBox);
         this.image.destroy();
         this.image = null;
         this.hasImage = false;

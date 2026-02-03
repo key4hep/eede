@@ -1,4 +1,4 @@
-import { mappings } from "../../mappings/particles.js";
+import { mappings } from "../../mappings/particles-unicode.js";
 
 export function getName(pdg) {
   const particle = mappings[pdg];
