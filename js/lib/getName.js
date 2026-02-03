@@ -1,7 +1,7 @@
 import { mappings } from "../../mappings/particles-unicode.js";
 
 export function getName(pdg) {
-  const particle = mappings[pdg];
+  const particle = mappings.get(String(pdg));
 
   if (particle !== undefined) {
     // console.log("Name: " + particle);
