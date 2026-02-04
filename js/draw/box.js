@@ -175,30 +175,12 @@ export async function svgElementToPixiSprite(id, src) {
   return sprite;
 }
 
-// export function addImageToBox(sprite, box, y) {
-//   box.addChild(sprite);
-//   sprite.position.set((box.width - sprite.width) / 2, y);
-//   return sprite.position.y + sprite.height;
-// }
-
-// export function removeImageFromBox(sprite, box) {
-//   box.removeChild(sprite);
-// }
-
-export function addParticleNameToBox(text, box, y) {
-  const particleName = createText(text, {
-    fontFamily: ["STIX Two Text", "serif"],
-    fontSize: 28,
-    fontWeight: "normal",
-    align: "center",
-    fill: "black",
-  });
-
-  box.addChild(particleName);
-  particleName.position.set((box.width - particleName.width) / 2, y);
-  return particleName;
+export function addImageToBox(sprite, box, y) {
+  box.addChild(sprite);
+  sprite.position.set((box.width - sprite.width) / 2, y);
+  return sprite.position.y + sprite.height;
 }
 
-export function removeParticleNameFromBox(text, box) {
-  box.removeChild(text);
+export function removeImageFromBox(sprite, box) {
+  box.removeChild(sprite);
 }
