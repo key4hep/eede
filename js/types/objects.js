@@ -114,7 +114,7 @@ export class MCParticle extends EDMObject {
     topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
-      this.simulatorStatus
+      this.simulatorStatus,
     );
     const simulatorStatusFirstLetter = simulatorStatus
       .map((s) => s[0])
@@ -138,6 +138,11 @@ export class MCParticle extends EDMObject {
     bottomLines.push("d = " + this.vertex + " mm");
     bottomLines.push("t = " + this.time + " ns");
     bottomLines.push("m = " + this.mass + " GeV");
+
+    bottomLines.push(`pT = ${this.transverseMomentum} GeV`);
+    bottomLines.push(`cos θ = ${this.cosTheta}`);
+    bottomLines.push(`φ = ${this.phi}`);
+
     bottomLines.push(parseCharge(this.charge));
 
     addLinesToBox(bottomLines, box, nextY);
@@ -146,7 +151,7 @@ export class MCParticle extends EDMObject {
   objectModalLines() {
     const collectionName = "Collection: " + this.collectionName;
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
-      this.simulatorStatus
+      this.simulatorStatus,
     );
     return [collectionName, ...simulatorStatus];
   }
@@ -200,21 +205,36 @@ export class MCParticle extends EDMObject {
   static setup(mcCollection) {
     for (const mcParticle of mcCollection) {
       const name = getName(mcParticle.PDG);
+      const momentum = mcParticle.momentum;
+
       mcParticle.name = name;
       mcParticle.textToRender = name;
+
       mcParticle.momentum = Math.sqrt(
-        Math.pow(mcParticle.momentum.x, 2) +
-          Math.pow(mcParticle.momentum.y, 2) +
-          Math.pow(mcParticle.momentum.z, 2)
+        Math.pow(momentum.x, 2) +
+          Math.pow(momentum.y, 2) +
+          Math.pow(momentum.z, 2),
       );
-      mcParticle.momentum = Math.round(mcParticle.momentum * 100) / 100;
+
       mcParticle.vertex = Math.sqrt(
         Math.pow(mcParticle.vertex.x, 2) +
           Math.pow(mcParticle.vertex.y, 2) +
-          Math.pow(mcParticle.vertex.z, 2)
+          Math.pow(mcParticle.vertex.z, 2),
       );
-      mcParticle.vertex = Math.round(mcParticle.vertex * 100) / 100;
 
+      mcParticle.cosTheta = momentum.z / mcParticle.momentum;
+      mcParticle.phi = Math.atan2(momentum.y, momentum.x);
+      mcParticle.transverseMomentum = Math.sqrt(
+        Math.pow(momentum.x, 2) + Math.pow(momentum.y, 2),
+      );
+
+      mcParticle.cosTheta = Math.round(mcParticle.cosTheta * 100) / 100;
+      mcParticle.phi = Math.round(mcParticle.phi * 100) / 100;
+      mcParticle.transverseMomentum =
+        Math.round(mcParticle.transverseMomentum * 100) / 100;
+
+      mcParticle.momentum = Math.round(mcParticle.momentum * 100) / 100;
+      mcParticle.vertex = Math.round(mcParticle.vertex * 100) / 100;
       mcParticle.time = Math.round(mcParticle.time * 100) / 100;
       mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
     }
