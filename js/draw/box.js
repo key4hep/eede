@@ -14,7 +14,7 @@ const TITLE_MARGIN = 12;
 
 function createText(
   text,
-  { fontFamily, fontSize, fontWeight, align, fill, wrap = false, maxWidth }
+  { fontFamily, fontSize, fontWeight, align, fill, wrap = false, maxWidth },
 ) {
   return new Text({
     text,
@@ -36,7 +36,7 @@ function createObjectModal(lines) {
     fontFamily: ["Arial", "sans-serif"],
     fontSize: 14,
     fontWeight: "normal",
-    align: "center",
+    align: "left",
     fill: "black",
   });
 
@@ -92,15 +92,24 @@ export function buildBox(object) {
 }
 
 export function addHoverModal(box, lines) {
-  const objectModal = createObjectModal(lines, box.width);
-  const objectModalWidth = parseInt(objectModal.width);
   const boxWidth = parseInt(box.width);
 
   let showModal = false;
+  let objectModal = null;
+  let hoverTimeout = null;
 
   const clean = () => {
     showModal = false;
-    removeObjectModal(objectModal);
+
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = null;
+    }
+
+    if (objectModal) {
+      removeObjectModal(objectModal);
+      objectModal = null;
+    }
   };
 
   box.on("pointerover", () => {
@@ -108,10 +117,13 @@ export function addHoverModal(box, lines) {
       return;
     }
     showModal = true;
-    setTimeout(() => {
+    hoverTimeout = setTimeout(() => {
+      hoverTimeout = null;
       if (!showModal) {
         return;
       }
+      objectModal = createObjectModal(lines);
+      const objectModalWidth = parseInt(objectModal.width);
       const x = parseInt(box.position.x);
       const xPosition = (boxWidth - objectModalWidth) / 2 + x;
       const y = box.position.y;
