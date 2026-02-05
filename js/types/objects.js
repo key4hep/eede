@@ -139,12 +139,6 @@ export class MCParticle extends EDMObject {
     bottomLines.push("t = " + this.time + " ns");
     bottomLines.push("m = " + this.mass + " GeV");
 
-    bottomLines.push(`pT = ${this.transverseMomentum} GeV`);
-    bottomLines.push(`cos θ = ${this.cosTheta}`);
-    bottomLines.push(`φ = ${this.phi}`);
-
-    bottomLines.push(parseCharge(this.charge));
-
     addLinesToBox(bottomLines, box, nextY);
   }
 
