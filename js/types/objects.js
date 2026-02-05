@@ -149,11 +149,20 @@ export class MCParticle extends EDMObject {
   }
 
   objectModalLines() {
-    const collectionName = "Collection: " + this.collectionName;
+    const modalLines = [];
+
+    modalLines.push(`Collection: ${this.collectionName}`);
+    modalLines.push(`PDG ID: ${this.PDG}`);
+    modalLines.push("t = " + this.time + " ns");
+    modalLines.push("m = " + this.mass + " GeV");
+    modalLines.push(`φ = ${this.phi}`);
+    modalLines.push(parseCharge(this.charge));
+
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus,
     );
-    return [collectionName, ...simulatorStatus];
+
+    return [...modalLines, ...simulatorStatus];
   }
 
   async drawImage(text, imageY) {
