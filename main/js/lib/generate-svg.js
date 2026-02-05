@@ -5,7 +5,10 @@ export async function textToSVG(id, text, maxWidth, maxHeight) {
     return store[id];
   }
 
-  const mathjaxContainer = await MathJax.tex2svgPromise(`${text}`, {});
+  const mathjaxContainer = await MathJax.tex2svgPromise(
+    `\\vphantom{X_{y}^{z}}${text}`,
+    {}
+  );
   const svg = mathjaxContainer.firstElementChild;
 
   const width = parseFloat(svg.getAttribute("width").replace("ex", ""));
