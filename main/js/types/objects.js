@@ -114,7 +114,7 @@ export class MCParticle extends EDMObject {
     topLines.push("ID: " + this.index);
     topLines.push("Gen. stat.: " + this.generatorStatus);
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
-      this.simulatorStatus
+      this.simulatorStatus,
     );
     const simulatorStatusFirstLetter = simulatorStatus
       .map((s) => s[0])
@@ -144,11 +144,14 @@ export class MCParticle extends EDMObject {
   }
 
   objectModalLines() {
-    const collectionName = "Collection: " + this.collectionName;
+    const collectionName = `Collection: ${this.collectionName}`;
+    const pdgId = `PDG ID: ${this.PDG}`;
+
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
-      this.simulatorStatus
+      this.simulatorStatus,
     );
-    return [collectionName, ...simulatorStatus];
+
+    return [collectionName, pdgId, ...simulatorStatus];
   }
 
   async drawImage(text, imageY) {
@@ -205,13 +208,13 @@ export class MCParticle extends EDMObject {
       mcParticle.momentum = Math.sqrt(
         Math.pow(mcParticle.momentum.x, 2) +
           Math.pow(mcParticle.momentum.y, 2) +
-          Math.pow(mcParticle.momentum.z, 2)
+          Math.pow(mcParticle.momentum.z, 2),
       );
       mcParticle.momentum = Math.round(mcParticle.momentum * 100) / 100;
       mcParticle.vertex = Math.sqrt(
         Math.pow(mcParticle.vertex.x, 2) +
           Math.pow(mcParticle.vertex.y, 2) +
-          Math.pow(mcParticle.vertex.z, 2)
+          Math.pow(mcParticle.vertex.z, 2),
       );
       mcParticle.vertex = Math.round(mcParticle.vertex * 100) / 100;
 
