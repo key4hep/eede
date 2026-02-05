@@ -17,7 +17,7 @@ import { getApp, getContainer } from "../draw/app.js";
 import { Rectangle } from "../pixi.min.mjs";
 
 const IMAGE_MARGIN = 10;
-const IMAGE_SIZE = 40;
+const IMAGE_SIZE = 60;
 
 class EDMObject {
   constructor() {
