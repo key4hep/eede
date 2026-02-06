@@ -13,7 +13,7 @@ import {
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
 import { dragStart } from "../draw/drag.js";
-import { getApp, getContainer } from "../draw/app.js";
+import { getContainer } from "../draw/app.js";
 import { Rectangle } from "../pixi.min.mjs";
 
 class EDMObject {
@@ -54,19 +54,13 @@ class EDMObject {
   }
 
   isVisible() {
-    const app = getApp();
-    const container = getContainer();
-
-    const x = Math.abs(container.x);
-    const y = Math.abs(container.y);
-    const width = app.renderer.width;
-    const height = app.renderer.height;
+    const viewport = getContainer();
 
     return (
-      x + width > this.x &&
-      x < this.x + this.width &&
-      y + height > this.y &&
-      y < this.y + this.height
+      viewport.right > this.x &&
+      viewport.left < this.x + this.width &&
+      viewport.bottom > this.y &&
+      viewport.top < this.y + this.height
     );
   }
 

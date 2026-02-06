@@ -1,4 +1,4 @@
-import { getApp, getContainer } from "../draw/app.js";
+import { getContainer } from "../draw/app.js";
 import { drawBezierLink } from "../draw/link.js";
 
 const colors = {
@@ -40,19 +40,13 @@ export class Link {
     const boxY = Math.min(fromY, toY);
     const boxHeight = Math.abs(fromY - toY);
 
-    const app = getApp();
-    const container = getContainer();
-
-    const x = Math.abs(container.x);
-    const y = Math.abs(container.y);
-    const width = app.renderer.width;
-    const height = app.renderer.height;
+    const viewport = getContainer();
 
     return (
-      x + width > boxX &&
-      x < boxX + boxWidth &&
-      y + height > boxY &&
-      y < boxY + boxHeight
+      viewport.right > boxX &&
+      viewport.left < boxX + boxWidth &&
+      viewport.bottom > boxY &&
+      viewport.top < boxY + boxHeight
     );
   }
 }
