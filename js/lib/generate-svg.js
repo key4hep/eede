@@ -6,7 +6,7 @@ export async function textToSVG(id, text, maxWidth, maxHeight) {
   }
 
   const mathjaxContainer = await MathJax.tex2svgPromise(
-    `\\vphantom{X_{y}^{z}}${text}`,
+    `\\vphantom{\\overline{X}_{y}^{z}}${text}`,
     {}
   );
   const svg = mathjaxContainer.firstElementChild;
