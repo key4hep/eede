@@ -151,7 +151,7 @@ export function initFilters(
 
     reconnectFunction(viewCurrentObjects, ids, collections);
     await render(viewCurrentObjects);
-    filterScroll(); // Calls scrollFunction
+    filterScroll(); // Calls scrollFunction (sets new scroll position)
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {

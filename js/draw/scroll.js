@@ -1,15 +1,15 @@
 import { getContainerSize, getContainer } from "./app.js";
 
 export const scrollTopLeft = () => {
-  const viewport = getContainer();
-  viewport.moveCenter(0, 0);
+  const container = getContainer();
+  container.moveCenter(0, 0);
 };
 
 export const scrollTopCenter = () => {
-  const viewport = getContainer();
+  const container = getContainer();
   const { width } = getContainerSize();
 
-  viewport.moveCenter(width / 2, 0);
+  container.moveCenter(width / 2, 0);
 };
 
 // export const setScroll = (x, y) => {

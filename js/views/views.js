@@ -46,11 +46,11 @@ function paintButton(view) {
   }
 }
 
-export function scroll() {
+export function saveScrollPosition() {
   const container = getContainer();
   const { x, y } = getSavedScrollPosition();
 
-  container.position.set(x, y);
+  container.moveCenter(x, y);
 }
 
 function setInfoButtonName(view) {
@@ -115,10 +115,10 @@ export const drawView = async (view) => {
   await render(viewCurrentObjects);
 
   if (getSavedScrollPosition() === undefined) {
-    scrollFunction(); // Set position
-    saveCurrentScrollPosition(getContainer()); // Assign position
+    scrollFunction(); // Sets new scroll position
+    saveCurrentScrollPosition(getContainer()); // Saves current scroll position
   }
-  scroll();
+  saveScrollPosition();
   setRenderable(viewCurrentObjects);
 
   initFilters(
@@ -128,7 +128,7 @@ export const drawView = async (view) => {
     {
       render,
       filterScroll: scrollFunction,
-      originalScroll: scroll,
+      originalScroll: saveScrollPosition,
       setRenderable,
     },
   );
