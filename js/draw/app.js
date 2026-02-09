@@ -1,7 +1,6 @@
-import { Application, Culler } from "../pixi.min.mjs";
+import { Application } from "../pixi.min.mjs";
 import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
-import { addScroll } from "./scroll.js";
 import { setRenderable } from "./renderable.js";
 import { getPixiState } from "../globals.js";
 
@@ -34,27 +33,37 @@ export const createContainer = (app, objects) => {
   });
   pixi.container = viewport;
 
-  const culler = new Culler();
-  culler.cull(viewport, {
-    x: 0,
-    y: 0,
-    width: app.renderer.width,
-    height: app.renderer.height,
-  });
-
   app.stage.addChild(viewport);
-  viewport.pinch().wheel().decelerate();
+  viewport
+    .drag({
+      pressDrag: false, // disables click to drag
+      wheel: false, // prevents the drag method from handling wheel events
+    })
+    .pinch()
+    .decelerate();
+
+  app.canvas.addEventListener(
+    "wheel",
+    (e) => {
+      e.preventDefault();
+
+      if (e.ctrlKey) {
+        const newScale = viewport.scaled * (1 - e.deltaY * 0.005);
+        viewport.setZoom(newScale, true);
+      } else {
+        viewport.x -= e.deltaX;
+        viewport.y -= e.deltaY;
+      }
+
+      setRenderable(objects);
+    },
+    { passive: false }, // Override default listener behaviour
+  );
 
   app.stage.eventMode = "static";
   app.stage.hitArea = app.screen;
   app.stage.on("pointerup", dragEnd);
   app.stage.on("pointerupoutside", dragEnd);
-
-  addScroll(app, objects);
-
-  viewport.on("moved", () => {
-    setRenderable(objects);
-  });
 };
 
 export const saveSize = (width, height) => {
