@@ -103,7 +103,7 @@ export class MCParticle extends EDMObject {
     this.color = "#dff6ff";
     this.radius = 15;
     this.width = 135;
-    this.height = 280;
+    this.height = 264;
     this.titleName = "MCParticle";
   }
 
