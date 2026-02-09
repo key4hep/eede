@@ -1,4 +1,3 @@
-import { setScroll, setScrollBarsPosition } from "../draw/scroll.js";
 import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
 import { showMessage } from "../lib/messages.js";
@@ -43,7 +42,7 @@ const filters = {
 
 const filterOptionsChanged = (initialValues) => {
   const allCheckboxes = document.getElementsByClassName(
-    "filter-input-checkbox"
+    "filter-input-checkbox",
   );
 
   for (let i = 0; i < allCheckboxes.length; i++) {
@@ -73,7 +72,7 @@ export function initFilters(
   { viewObjects, viewCurrentObjects },
   collections,
   reconnectFunction,
-  { render, filterScroll, originalScroll, setRenderable }
+  { render, filterScroll, originalScroll, setRenderable },
 ) {
   const criteriaFunctions = {};
 
@@ -106,7 +105,7 @@ export function initFilters(
     filterOutCheckbox.checked = false;
 
     const allCheckboxes = document.getElementsByClassName(
-      "filter-input-checkbox"
+      "filter-input-checkbox",
     );
 
     initialValues.checkboxes = [];
@@ -140,7 +139,7 @@ export function initFilters(
       viewObjects,
       viewCurrentObjects,
       criteriaFunctions,
-      filterOutValue
+      filterOutValue,
     );
 
     const isEmpty = checkEmptyObject(viewCurrentObjects);
@@ -152,9 +151,7 @@ export function initFilters(
 
     reconnectFunction(viewCurrentObjects, ids, collections);
     await render(viewCurrentObjects);
-    const { x, y } = filterScroll();
-    setScroll(x, y);
-    setScrollBarsPosition();
+    filterScroll(); // Calls scrollFunction
     setRenderable(viewCurrentObjects);
   };
   filters.reset = async () => {
