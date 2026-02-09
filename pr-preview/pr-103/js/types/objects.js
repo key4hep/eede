@@ -136,7 +136,6 @@ export class MCParticle extends EDMObject {
     const bottomLines = [];
     bottomLines.push("p = " + this.momentum + " GeV");
     bottomLines.push("d = " + this.vertex + " mm");
-    bottomLines.push("t = " + this.time + " ns");
     bottomLines.push("m = " + this.mass + " GeV");
 
     addLinesToBox(bottomLines, box, nextY);
@@ -147,6 +146,7 @@ export class MCParticle extends EDMObject {
 
     modalLines.push(`Collection: ${this.collectionName}`);
     modalLines.push(`PDG ID: ${this.PDG}`);
+    modalLines.push("");
     modalLines.push("t = " + this.time + " ns");
     modalLines.push("m = " + this.mass + " GeV");
     modalLines.push(`φ = ${this.phi}`);
