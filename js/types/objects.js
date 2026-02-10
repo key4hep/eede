@@ -101,18 +101,15 @@ export class MCParticle extends EDMObject {
     this.row = -1;
     this.texImg = null;
     this.color = "#dff6ff";
-    this.radius = 15;
-    this.width = 135;
-    this.height = 264;
+    this.radius = 8;
+    this.width = 225; // 3:4 format
+    this.height = 300;
     this.titleName = "MCParticle";
   }
 
   async draw() {
     let [box, nextY] = await super.draw();
 
-    const topLines = [];
-    topLines.push("ID: " + this.index);
-    topLines.push("Gen. stat.: " + this.generatorStatus);
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus,
     );
@@ -123,9 +120,27 @@ export class MCParticle extends EDMObject {
       simulatorStatusFirstLetter !== ""
         ? simulatorStatusFirstLetter
         : this.simulatorStatus;
-    topLines.push("Sim. stat.: " + simulatorStatusString);
 
-    nextY = addLinesToBox(topLines, box, nextY);
+    const topLine = `<div style="display: flex; flex-direction: row; margin: 0;
+      padding: 0; gap: 4px; width: ${this.width - 40}px;">
+      <div style="flex: 1; text-align: right;">
+        <div>ID</div>
+        <div>Gen. stat.</div>
+        <div>Sim. stat.</div>
+      </div>
+      <div style="text-align: center;">
+        <div>:</div>
+        <div>:</div>
+        <div>:</div>
+      </div>
+      <div style="flex: 1; text-align: left;">
+        <div>${this.index}</div>
+        <div>${this.generatorStatus}</div>
+        <div>${simulatorStatusString}</div>
+      </div>
+    </div>`.replace(/\n\s+/g, "");
+
+    nextY = addLinesToBox([topLine], box, nextY);
 
     const imageY = nextY + IMAGE_MARGIN;
     this.imageY = imageY;
@@ -133,24 +148,67 @@ export class MCParticle extends EDMObject {
 
     nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
 
-    const bottomLines = [];
-    bottomLines.push("p = " + this.momentum + " GeV");
-    bottomLines.push("d = " + this.vertex + " mm");
-    bottomLines.push("m = " + this.mass + " GeV");
+    const bottomLine =
+      `<div style="display: flex; flex-direction: row; margin: 0;
+      padding: 0; gap: 4px; width: ${this.width - 40}px;">
+      <div style="flex: 1; text-align: right;">
+        <div>cos(θ)</div>
+        <div><i>P</i><sub>T</sub></div>
+        <div>p</div>
+        <div>d</div>
+      </div>
+      <div style="text-align: center;">
+        <div>:</div>
+        <div>:</div>
+        <div>:</div>
+        <div>:</div>
+      </div>
+      <div style="flex: 1; text-align: left;">
+        <div>${this.cosTheta}</div>
+        <div>${this.transverseMomentum}</div>
+        <div>${this.momentum} GeV</div>
+        <div>${this.vertex} mm</div>
+      </div>
+    </div>`.replace(/\n\s+/g, "");
 
-    addLinesToBox(bottomLines, box, nextY);
+    addLinesToBox([bottomLine], box, nextY);
   }
 
   objectModalLines() {
     const modalLines = [];
 
-    modalLines.push(`Collection: ${this.collectionName}`);
-    modalLines.push(`PDG ID: ${this.PDG}`);
-    modalLines.push("");
-    modalLines.push("t = " + this.time + " ns");
-    modalLines.push("m = " + this.mass + " GeV");
-    modalLines.push(`φ = ${this.phi}`);
-    modalLines.push(parseCharge(this.charge));
+    modalLines.push(
+      `<div style="display: flex; flex-direction: row; margin: 0; padding: 0;
+        gap: 4px;">
+        <div style="flex: 1; text-align: right;">
+          <div>Collection</div>
+          <div>PDG ID</div>
+          <div style="height: 8px;"></div>
+          <div>t</div>
+          <div>m</div>
+          <div>φ</div>
+          <div>charge</div>
+        </div>
+        <div style="text-align: center;">
+          <div>:</div>
+          <div>:</div>
+          <div style="height: 8px;"></div>
+          <div>:</div>
+          <div>:</div>
+          <div>:</div>
+          <div>:</div>
+        </div>
+        <div style="flex: 1; text-align: left;">
+          <div>${this.collectionName}</div>
+          <div>${this.PDG}</div>
+          <div style="height: 8px;"></div>
+          <div>${this.time} ns</div>
+          <div>${this.mass} GeV</div>
+          <div>${this.phi}</div>
+          <div>${parseCharge(this.charge)}</div>
+        </div>
+      </div>`.replace(/\n\s+/g, ""),
+    );
 
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus,

@@ -2,7 +2,7 @@ import {
   Graphics,
   Assets,
   Sprite,
-  Text,
+  HTMLText,
   TextStyle,
   Cache,
 } from "../pixi.min.mjs";
@@ -16,7 +16,7 @@ function createText(
   text,
   { fontFamily, fontSize, fontWeight, align, fill, wrap = false, maxWidth },
 ) {
-  return new Text({
+  return new HTMLText({
     text,
     style: new TextStyle({
       fontFamily,
@@ -27,7 +27,6 @@ function createText(
       wordWrap: wrap,
       wordWrapWidth: maxWidth,
     }),
-    resolution: 2,
   });
 }
 
@@ -36,7 +35,6 @@ function createObjectModal(lines) {
     fontFamily: ["Arial", "sans-serif"],
     fontSize: 14,
     fontWeight: "normal",
-    align: "left",
     fill: "black",
   });
 
@@ -138,7 +136,6 @@ export function addTitleToBox(title, box) {
   const boxTitle = createText(title, {
     fontFamily: "sans-serif",
     fontSize: 20,
-    align: "center",
     fill: "black",
     fontWeight: "bold",
     wrap: true,
@@ -154,7 +151,6 @@ export function addLinesToBox(lines, box, y) {
     fontFamily: "sans-serif",
     fontSize: 16,
     fontWeight: "normal",
-    align: "center",
     fill: "black",
     wrap: true,
     maxWidth: box.width,
