@@ -102,8 +102,8 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 8;
-    this.width = 225; // 3:4 format
-    this.height = 300;
+    this.width = 210; // 3:4 format
+    this.height = 280;
     this.titleName = "MCParticle";
   }
 
@@ -123,7 +123,7 @@ export class MCParticle extends EDMObject {
 
     const topLine = `<div style="display: flex; flex-direction: row; margin: 0;
       padding: 0; gap: 4px; width: ${this.width - 40}px;">
-      <div style="flex: 1; text-align: right;">
+      <div style="flex: 1; text-align: left;">
         <div>ID</div>
         <div>Gen. stat.</div>
         <div>Sim. stat.</div>
@@ -151,21 +151,21 @@ export class MCParticle extends EDMObject {
     const bottomLine =
       `<div style="display: flex; flex-direction: row; margin: 0;
       padding: 0; gap: 4px; width: ${this.width - 40}px;">
-      <div style="flex: 1; text-align: right;">
-        <div>cos(θ)</div>
+      <div style="flex: 1; text-align: left;">
         <div><i>P</i><sub>T</sub></div>
+        <div>cos(θ)</div>
         <div>p</div>
         <div>d</div>
       </div>
       <div style="text-align: center;">
-        <div>:</div>
-        <div>:</div>
-        <div>:</div>
-        <div>:</div>
+        <div>=</div>
+        <div>=</div>
+        <div>=</div>
+        <div>=</div>
       </div>
       <div style="flex: 1; text-align: left;">
+        <div>${this.transverseMomentum} GeV</div>
         <div>${this.cosTheta}</div>
-        <div>${this.transverseMomentum}</div>
         <div>${this.momentum} GeV</div>
         <div>${this.vertex} mm</div>
       </div>
@@ -180,7 +180,7 @@ export class MCParticle extends EDMObject {
     modalLines.push(
       `<div style="display: flex; flex-direction: row; margin: 0; padding: 0;
         gap: 4px;">
-        <div style="flex: 1; text-align: right;">
+        <div style="flex: 1; text-align: left;">
           <div>Collection</div>
           <div>PDG ID</div>
           <div style="height: 8px;"></div>
