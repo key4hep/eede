@@ -16,9 +16,6 @@ import { dragStart } from "../draw/drag.js";
 import { getApp, getContainer } from "../draw/app.js";
 import { Rectangle } from "../pixi.min.mjs";
 
-const IMAGE_MARGIN = 10;
-const IMAGE_SIZE = 60;
-
 class EDMObject {
   constructor() {
     this.x = NaN;
@@ -102,9 +99,13 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 8;
-    this.width = 210; // 3:4 format
-    this.height = 280;
+    this.width = 170; // 16:9 format
+    this.height = 272;
     this.titleName = "MCParticle";
+    this.margin = 16;
+    this.padding = 8;
+    this.imageMargin = 4;
+    this.imageSize = 60;
   }
 
   async draw() {
@@ -121,36 +122,25 @@ export class MCParticle extends EDMObject {
         ? simulatorStatusFirstLetter
         : this.simulatorStatus;
 
-    const topLine = `<div style="display: flex; flex-direction: row; margin: 0;
-      padding: 0; gap: 4px; width: ${this.width - 40}px;">
+    const topLine =
+      `<div style="display: flex; flex-direction: row; gap: 4px; width: ${this.width}px;">
       <div style="flex: 1; text-align: left;">
-        <div>ID</div>
-        <div>Gen. stat.</div>
-        <div>Sim. stat.</div>
-      </div>
-      <div style="text-align: center;">
-        <div>:</div>
-        <div>:</div>
-        <div>:</div>
-      </div>
-      <div style="flex: 1; text-align: left;">
-        <div>${this.index}</div>
-        <div>${this.generatorStatus}</div>
-        <div>${simulatorStatusString}</div>
+        <div>ID: ${this.index}</div>
+        <div>Gen. stat.: ${this.generatorStatus}</div>
+        <div>Sim. stat.: ${simulatorStatusString}</div>
       </div>
     </div>`.replace(/\n\s+/g, "");
 
     nextY = addLinesToBox([topLine], box, nextY);
 
-    const imageY = nextY + IMAGE_MARGIN;
+    const imageY = nextY + this.imageMargin;
     this.imageY = imageY;
     this.hasImage = false;
 
-    nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
+    nextY += this.imageSize + this.imageMargin;
 
     const bottomLine =
-      `<div style="display: flex; flex-direction: row; margin: 0;
-      padding: 0; gap: 4px; width: ${this.width - 40}px;">
+      `<div style="display: flex; flex-direction: row; gap: 4px; width: ${this.width}px;">
       <div style="flex: 1; text-align: left;">
         <div><i>P</i><sub>T</sub></div>
         <div>cos(θ)</div>
@@ -163,7 +153,7 @@ export class MCParticle extends EDMObject {
         <div>=</div>
         <div>=</div>
       </div>
-      <div style="flex: 1; text-align: left;">
+      <div style="flex: 2; text-align: left;">
         <div>${this.transverseMomentum} GeV</div>
         <div>${this.cosTheta}</div>
         <div>${this.momentum} GeV</div>
@@ -178,36 +168,30 @@ export class MCParticle extends EDMObject {
     const modalLines = [];
 
     modalLines.push(
-      `<div style="display: flex; flex-direction: row; margin: 0; padding: 0;
-        gap: 4px;">
+      `
+      <div>Collection: ${this.collectionName}</div>
+      <div>PDG ID: ${this.PDG}</div>
+      <div style="display: flex; flex-direction: row; margin-top: 8px; gap: 4px;">
         <div style="flex: 1; text-align: left;">
-          <div>Collection</div>
-          <div>PDG ID</div>
-          <div style="height: 8px;"></div>
           <div>t</div>
           <div>m</div>
           <div>φ</div>
-          <div>charge</div>
+          <div>q</div>
         </div>
         <div style="text-align: center;">
-          <div>:</div>
-          <div>:</div>
-          <div style="height: 8px;"></div>
-          <div>:</div>
-          <div>:</div>
-          <div>:</div>
-          <div>:</div>
+          <div>=</div>
+          <div>=</div>
+          <div>=</div>
+          <div>=</div>
         </div>
-        <div style="flex: 1; text-align: left;">
-          <div>${this.collectionName}</div>
-          <div>${this.PDG}</div>
-          <div style="height: 8px;"></div>
+        <div style="flex: 2; text-align: left;">
           <div>${this.time} ns</div>
           <div>${this.mass} GeV</div>
           <div>${this.phi}</div>
           <div>${parseCharge(this.charge)}</div>
         </div>
-      </div>`.replace(/\n\s+/g, ""),
+      </div>
+      `.replace(/\n\s+/g, ""),
     );
 
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
@@ -218,8 +202,8 @@ export class MCParticle extends EDMObject {
   }
 
   async drawImage(text, imageY) {
-    const id = `${text}-${IMAGE_SIZE}`;
-    const src = await textToSVG(id, text, this.width * 0.9, IMAGE_SIZE);
+    const id = `${text}-${this.imageSize}`;
+    const src = await textToSVG(id, text, this.width * 0.9, this.imageSize);
     const sprite = await svgElementToPixiSprite(id, src);
     this.image = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
