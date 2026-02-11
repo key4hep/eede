@@ -13,6 +13,8 @@ const createApp = async () => {
     antialias: true,
     useContextAlpha: false,
     resizeTo: window,
+    resolution: window.devicePixelRatio,
+    autoDensity: true,
     preference: "webgpu",
     webgpu: {
       powerPreference: "high-performance",
