@@ -8,9 +8,8 @@ import {
 } from "../pixi.min.mjs";
 import { getApp, getContainer } from "./app.js";
 
-const MARGIN = 20;
-const PADDING = 5;
-const TITLE_MARGIN = 12;
+const MARGIN = 16;
+const PADDING = 8;
 
 function createText(
   text,
@@ -143,7 +142,7 @@ export function addTitleToBox(title, box) {
   });
   box.addChild(boxTitle);
   boxTitle.position.set((box.width - boxTitle.width) / 2, MARGIN);
-  return boxTitle.position.y + boxTitle.height + TITLE_MARGIN;
+  return boxTitle.position.y + boxTitle.height + MARGIN;
 }
 
 export function addLinesToBox(lines, box, y) {
@@ -153,10 +152,10 @@ export function addLinesToBox(lines, box, y) {
     fontWeight: "normal",
     fill: "black",
     wrap: true,
-    maxWidth: box.width,
+    maxWidth: box.width - 2 * MARGIN,
   });
   box.addChild(text);
-  text.position.set((box.width - text.width) / 2, y);
+  text.position.set(MARGIN, y);
   return text.position.y + text.height;
 }
 
