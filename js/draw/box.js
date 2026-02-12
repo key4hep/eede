@@ -13,7 +13,16 @@ const PADDING = 8;
 
 function createText(
   text,
-  { fontFamily, fontSize, fontWeight, align, fill, wrap = false, maxWidth },
+  {
+    fontFamily,
+    fontSize,
+    fontWeight,
+    align,
+    fill,
+    wrap = false,
+    maxWidth,
+    lineHeight,
+  },
 ) {
   return new HTMLText({
     text,
@@ -25,6 +34,7 @@ function createText(
       fill,
       wordWrap: wrap,
       wordWrapWidth: maxWidth,
+      lineHeight,
     }),
   });
 }
@@ -142,7 +152,7 @@ export function addTitleToBox(title, box) {
   });
   box.addChild(boxTitle);
   boxTitle.position.set((box.width - boxTitle.width) / 2, MARGIN);
-  return boxTitle.position.y + boxTitle.height + MARGIN;
+  return boxTitle.position.y + boxTitle.height + PADDING;
 }
 
 export function addLinesToBox(lines, box, y) {
@@ -153,6 +163,7 @@ export function addLinesToBox(lines, box, y) {
     fill: "black",
     wrap: true,
     maxWidth: box.width - 2 * MARGIN,
+    lineHeight: 18, // Consistent box height between different browsers
   });
   box.addChild(text);
   text.position.set(MARGIN, y);
