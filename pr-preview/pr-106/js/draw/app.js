@@ -42,7 +42,9 @@ export const createContainer = (app, objects) => {
       wheel: false, // prevents the drag method from handling wheel events
     })
     .pinch()
-    .decelerate();
+    .decelerate()
+    .clamp({ direction: "all" })
+    .clampZoom({ minScale: 0.1, maxScale: 2 });
 
   app.canvas.addEventListener(
     "wheel",
@@ -50,7 +52,11 @@ export const createContainer = (app, objects) => {
       e.preventDefault();
 
       if (e.ctrlKey) {
-        const newScale = viewport.scaled * (1 - e.deltaY * 0.005);
+        const newScale = Math.max(
+          0.1,
+          Math.min(2, viewport.scaled * (1 - e.deltaY * 0.005)),
+        );
+
         viewport.setZoom(newScale, true);
       } else {
         viewport.x -= e.deltaX;
