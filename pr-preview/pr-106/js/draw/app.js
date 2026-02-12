@@ -43,7 +43,6 @@ export const createContainer = (app, objects) => {
     })
     .pinch()
     .decelerate()
-    .clamp({ direction: "all" })
     .clampZoom({ minScale: 0.1, maxScale: 2 });
 
   app.canvas.addEventListener(
