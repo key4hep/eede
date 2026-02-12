@@ -99,8 +99,8 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 8;
-    this.width = 170; // 16:9 format
-    this.height = 272;
+    this.width = 170; // 2:3 format
+    this.height = 255;
     this.titleName = "MCParticle";
     this.margin = 16;
     this.padding = 8;
@@ -141,23 +141,17 @@ export class MCParticle extends EDMObject {
 
     const bottomLine =
       `<div style="display: flex; flex-direction: row; gap: 4px; width: ${this.width}px;">
-      <div style="flex: 1; text-align: left;">
+      <div>
         <div><i>P</i><sub>T</sub></div>
         <div>cos(θ)</div>
         <div>p</div>
         <div>d</div>
       </div>
-      <div style="text-align: center;">
-        <div>=</div>
-        <div>=</div>
-        <div>=</div>
-        <div>=</div>
-      </div>
-      <div style="flex: 2; text-align: left;">
-        <div>${this.transverseMomentum} GeV</div>
-        <div>${this.cosTheta}</div>
-        <div>${this.momentum} GeV</div>
-        <div>${this.vertex} mm</div>
+      <div>
+        <div>= ${this.transverseMomentum} GeV</div>
+        <div>= ${this.cosTheta}</div>
+        <div>= ${this.momentum} GeV</div>
+        <div>= ${this.vertex} mm</div>
       </div>
     </div>`.replace(/\n\s+/g, "");
 
@@ -172,23 +166,17 @@ export class MCParticle extends EDMObject {
       <div>Collection: ${this.collectionName}</div>
       <div>PDG ID: ${this.PDG}</div>
       <div style="display: flex; flex-direction: row; margin-top: 8px; gap: 4px;">
-        <div style="flex: 1; text-align: left;">
+        <div>
           <div>t</div>
           <div>m</div>
           <div>φ</div>
           <div>q</div>
         </div>
-        <div style="text-align: center;">
-          <div>=</div>
-          <div>=</div>
-          <div>=</div>
-          <div>=</div>
-        </div>
-        <div style="flex: 2; text-align: left;">
-          <div>${this.time} ns</div>
-          <div>${this.mass} GeV</div>
-          <div>${this.phi}</div>
-          <div>${parseCharge(this.charge)}</div>
+        <div>
+          <div>= ${this.time} ns</div>
+          <div>= ${this.mass} GeV</div>
+          <div>= ${this.phi}</div>
+          <div>= ${parseCharge(this.charge)}</div>
         </div>
       </div>
       `.replace(/\n\s+/g, ""),
