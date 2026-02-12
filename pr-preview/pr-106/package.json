@@ -1,0 +1,38 @@
+{
+	"name": "eede",
+	"type": "module",
+	"version": "1.1.0",
+	"scripts": {
+		"serve": "node ./bin/serve.js",
+		"convert-model": "node ./bin/convert-yaml.cjs",
+		"download-model": "node ./bin/download-yaml.cjs",
+		"update-model": "npm run download-model && npm run convert-model",
+		"test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
+	},
+	"devDependencies": {
+		"@eslint/css": "^0.10.0",
+		"@eslint/js": "^9.32.0",
+		"@eslint/json": "^0.13.1",
+		"eslint": "^9.32.0",
+		"express": "^5.1.0",
+		"globals": "^16.3.0",
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/key4hep/eede.git"
+	},
+	"keywords": [
+		"eede",
+		"EDM4hep",
+		"HEP",
+		"Key4hep"
+	],
+	"license": "BSD-2-Clause",
+	"homepage": "https://key4hep.github.io/eede/",
+	"dependencies": {
+		"js-yaml": "^4.1.0",
+		"pixi-viewport": "^6.0.3"
+	}
+}
