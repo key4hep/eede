@@ -1,4 +1,4 @@
-import { Graphics } from "../pixi.min.mjs";
+import { Graphics } from "pixi.js";
 import { getApp, getContainer } from "./app.js";
 
 function fromPoints(boxFrom) {

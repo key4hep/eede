@@ -14,7 +14,7 @@ import {
 import { textToSVG } from "../lib/generate-svg.js";
 import { dragStart } from "../draw/drag.js";
 import { getContainer } from "../draw/app.js";
-import { Rectangle } from "../pixi.min.mjs";
+import { Rectangle } from "pixi.js";
 
 class EDMObject {
   constructor() {

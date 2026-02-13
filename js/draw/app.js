@@ -1,4 +1,4 @@
-import { Application } from "../pixi.min.mjs";
+import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
 import { setRenderable } from "./renderable.js";
