@@ -99,8 +99,8 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 8;
-    this.width = 170; // 2:3 format
-    this.height = 255;
+    this.width = 172; // 2:3 format
+    this.height = 258;
     this.titleName = "MCParticle";
     this.margin = 16;
     this.padding = 8;
@@ -148,7 +148,7 @@ export class MCParticle extends EDMObject {
         <div>d</div>
       </div>
       <div>
-        <div>= ${this.transverseMomentum} GeV</div>
+        <div>= ${this.transverseMomentum} GeV<sub></sub></div>
         <div>= ${this.cosTheta}</div>
         <div>= ${this.momentum} GeV</div>
         <div>= ${this.vertex} mm</div>
