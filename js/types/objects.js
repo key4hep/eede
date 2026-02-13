@@ -13,8 +13,8 @@ import {
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
 import { dragStart } from "../draw/drag.js";
-import { getApp, getContainer } from "../draw/app.js";
-import { Rectangle } from "../pixi.min.mjs";
+import { getContainer } from "../draw/app.js";
+import { Rectangle } from "pixi.js";
 
 class EDMObject {
   constructor() {
@@ -54,19 +54,13 @@ class EDMObject {
   }
 
   isVisible() {
-    const app = getApp();
-    const container = getContainer();
-
-    const x = Math.abs(container.x);
-    const y = Math.abs(container.y);
-    const width = app.renderer.width;
-    const height = app.renderer.height;
+    const viewport = getContainer();
 
     return (
-      x + width > this.x &&
-      x < this.x + this.width &&
-      y + height > this.y &&
-      y < this.y + this.height
+      viewport.right > this.x &&
+      viewport.left < this.x + this.width &&
+      viewport.bottom > this.y &&
+      viewport.top < this.y + this.height
     );
   }
 
@@ -99,8 +93,8 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 8;
-    this.width = 172; // 2:3 format
-    this.height = 258;
+    this.width = 174; // 2:3 format
+    this.height = 261;
     this.titleName = "MCParticle";
     this.margin = 16;
     this.padding = 8;

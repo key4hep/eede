@@ -12,12 +12,13 @@ import { getContainer, saveSize } from "../draw/app.js";
 import { setRenderable } from "../draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
-import { setScrollBarsPosition } from "../draw/scroll.js";
-import { getCurrentVisObjects,
-         setCurrentView,
-         getCurrentView,
-         saveCurrentScrollPosition,
-         getSavedScrollPosition } from "../globals.js";
+import {
+  getCurrentVisObjects,
+  setCurrentView,
+  getCurrentView,
+  saveCurrentScrollPosition,
+  getSavedScrollPosition,
+} from "../globals.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");
@@ -35,7 +36,6 @@ closeViewsButton.addEventListener("click", () => {
   closeViewsButton.style.display = "none";
 });
 
-
 function paintButton(view) {
   for (const button of buttons) {
     if (button.innerText === view) {
@@ -46,12 +46,11 @@ function paintButton(view) {
   }
 }
 
-export function scroll() {
+export function saveScrollPosition() {
   const container = getContainer();
   const { x, y } = getSavedScrollPosition();
 
-  container.position.set(x, y);
-  setScrollBarsPosition();
+  container.moveCenter(x, y);
 }
 
 function setInfoButtonName(view) {
@@ -116,9 +115,10 @@ export const drawView = async (view) => {
   await render(viewCurrentObjects);
 
   if (getSavedScrollPosition() === undefined) {
-    saveCurrentScrollPosition(scrollFunction());
+    scrollFunction(); // Sets new scroll position
+    saveCurrentScrollPosition(getContainer()); // Saves current scroll position
   }
-  scroll();
+  saveScrollPosition();
   setRenderable(viewCurrentObjects);
 
   initFilters(
@@ -128,9 +128,9 @@ export const drawView = async (view) => {
     {
       render,
       filterScroll: scrollFunction,
-      originalScroll: scroll,
+      originalScroll: saveScrollPosition,
       setRenderable,
-    }
+    },
   );
 
   setupToggles(collections, viewCurrentObjects);
