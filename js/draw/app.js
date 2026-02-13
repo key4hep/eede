@@ -42,8 +42,9 @@ export const createContainer = (app, objects) => {
       wheel: false, // prevents the drag method from handling wheel events
     })
     .pinch()
-    .decelerate()
     .clampZoom({ minScale: 0.1, maxScale: 2 });
+
+  viewport.scale.set(1);
 
   app.canvas.addEventListener(
     "wheel",

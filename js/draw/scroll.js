@@ -9,7 +9,7 @@ export const scrollTopCenter = () => {
   const container = getContainer();
   const { width } = getContainerSize();
 
-  container.position.set(width / 2, 0);
+  container.position.set(width / 2, 500);
 };
 
 // export const setScroll = (x, y) => {
