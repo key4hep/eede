@@ -93,8 +93,8 @@ export class MCParticle extends EDMObject {
     this.texImg = null;
     this.color = "#dff6ff";
     this.radius = 8;
-    this.width = 172; // 2:3 format
-    this.height = 258;
+    this.width = 174; // 2:3 format
+    this.height = 261;
     this.titleName = "MCParticle";
     this.margin = 16;
     this.padding = 8;
