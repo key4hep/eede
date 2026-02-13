@@ -6,6 +6,7 @@ export class Sprite {
   }
 }
 export class Text {}
+export class HTMLText {}
 export class TextStyle {}
 export const Cache = { has: () => false, get: () => null, set: () => {} };
 export class Application {}
