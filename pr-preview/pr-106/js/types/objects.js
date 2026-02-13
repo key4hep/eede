@@ -16,9 +16,6 @@ import { dragStart } from "../draw/drag.js";
 import { getContainer } from "../draw/app.js";
 import { Rectangle } from "../pixi.min.mjs";
 
-const IMAGE_MARGIN = 10;
-const IMAGE_SIZE = 40;
-
 class EDMObject {
   constructor() {
     this.x = NaN;
@@ -95,18 +92,19 @@ export class MCParticle extends EDMObject {
     this.row = -1;
     this.texImg = null;
     this.color = "#dff6ff";
-    this.radius = 15;
-    this.width = 135;
-    this.height = 280;
+    this.radius = 8;
+    this.width = 174; // 2:3 format
+    this.height = 261;
     this.titleName = "MCParticle";
+    this.margin = 16;
+    this.padding = 8;
+    this.imageMargin = 4;
+    this.imageSize = 60;
   }
 
   async draw() {
     let [box, nextY] = await super.draw();
 
-    const topLines = [];
-    topLines.push("ID: " + this.index);
-    topLines.push("Gen. stat.: " + this.generatorStatus);
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus,
     );
@@ -117,40 +115,77 @@ export class MCParticle extends EDMObject {
       simulatorStatusFirstLetter !== ""
         ? simulatorStatusFirstLetter
         : this.simulatorStatus;
-    topLines.push("Sim. stat.: " + simulatorStatusString);
 
-    nextY = addLinesToBox(topLines, box, nextY);
+    const topLine =
+      `<div style="display: flex; flex-direction: row; gap: 4px; width: ${this.width}px;">
+      <div style="flex: 1; text-align: left;">
+        <div>ID: ${this.index}</div>
+        <div>Gen. stat.: ${this.generatorStatus}</div>
+        <div>Sim. stat.: ${simulatorStatusString}</div>
+      </div>
+    </div>`.replace(/\n\s+/g, "");
 
-    const imageY = nextY + IMAGE_MARGIN;
+    nextY = addLinesToBox([topLine], box, nextY);
+
+    const imageY = nextY + this.imageMargin;
     this.imageY = imageY;
     this.hasImage = false;
 
-    nextY += IMAGE_SIZE + 2 * IMAGE_MARGIN;
+    nextY += this.imageSize + this.imageMargin;
 
-    const bottomLines = [];
-    bottomLines.push("p = " + this.momentum + " GeV");
-    bottomLines.push("d = " + this.vertex + " mm");
-    bottomLines.push("t = " + this.time + " ns");
-    bottomLines.push("m = " + this.mass + " GeV");
-    bottomLines.push(parseCharge(this.charge));
+    const bottomLine =
+      `<div style="display: flex; flex-direction: row; gap: 4px; width: ${this.width}px;">
+      <div>
+        <div><i>P</i><sub>T</sub></div>
+        <div>cos(θ)</div>
+        <div>p</div>
+        <div>d</div>
+      </div>
+      <div>
+        <div>= ${this.transverseMomentum} GeV<sub></sub></div>
+        <div>= ${this.cosTheta}</div>
+        <div>= ${this.momentum} GeV</div>
+        <div>= ${this.vertex} mm</div>
+      </div>
+    </div>`.replace(/\n\s+/g, "");
 
-    addLinesToBox(bottomLines, box, nextY);
+    addLinesToBox([bottomLine], box, nextY);
   }
 
   objectModalLines() {
-    const collectionName = `Collection: ${this.collectionName}`;
-    const pdgId = `PDG ID: ${this.PDG}`;
+    const modalLines = [];
+
+    modalLines.push(
+      `
+      <div>Collection: ${this.collectionName}</div>
+      <div>PDG ID: ${this.PDG}</div>
+      <div style="display: flex; flex-direction: row; margin-top: 8px; gap: 4px;">
+        <div>
+          <div>t</div>
+          <div>m</div>
+          <div>φ</div>
+          <div>q</div>
+        </div>
+        <div>
+          <div>= ${this.time} ns</div>
+          <div>= ${this.mass} GeV</div>
+          <div>= ${this.phi}</div>
+          <div>= ${parseCharge(this.charge)}</div>
+        </div>
+      </div>
+      `.replace(/\n\s+/g, ""),
+    );
 
     const simulatorStatus = getSimStatusDisplayValuesFromBit(
       this.simulatorStatus,
     );
 
-    return [collectionName, pdgId, ...simulatorStatus];
+    return [...modalLines, ...simulatorStatus];
   }
 
   async drawImage(text, imageY) {
-    const id = `${text}-${IMAGE_SIZE}`;
-    const src = await textToSVG(id, text, this.width * 0.9, IMAGE_SIZE);
+    const id = `${text}-${this.imageSize}`;
+    const src = await textToSVG(id, text, this.width * 0.9, this.imageSize);
     const sprite = await svgElementToPixiSprite(id, src);
     this.image = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
@@ -197,21 +232,36 @@ export class MCParticle extends EDMObject {
   static setup(mcCollection) {
     for (const mcParticle of mcCollection) {
       const name = getName(mcParticle.PDG);
+      const momentum = mcParticle.momentum;
+
       mcParticle.name = name;
       mcParticle.textToRender = name;
+
       mcParticle.momentum = Math.sqrt(
-        Math.pow(mcParticle.momentum.x, 2) +
-          Math.pow(mcParticle.momentum.y, 2) +
-          Math.pow(mcParticle.momentum.z, 2),
+        Math.pow(momentum.x, 2) +
+          Math.pow(momentum.y, 2) +
+          Math.pow(momentum.z, 2),
       );
-      mcParticle.momentum = Math.round(mcParticle.momentum * 100) / 100;
+
       mcParticle.vertex = Math.sqrt(
         Math.pow(mcParticle.vertex.x, 2) +
           Math.pow(mcParticle.vertex.y, 2) +
           Math.pow(mcParticle.vertex.z, 2),
       );
-      mcParticle.vertex = Math.round(mcParticle.vertex * 100) / 100;
 
+      mcParticle.cosTheta = momentum.z / mcParticle.momentum;
+      mcParticle.phi = Math.atan2(momentum.y, momentum.x);
+      mcParticle.transverseMomentum = Math.sqrt(
+        Math.pow(momentum.x, 2) + Math.pow(momentum.y, 2),
+      );
+
+      mcParticle.cosTheta = Math.round(mcParticle.cosTheta * 100) / 100;
+      mcParticle.phi = Math.round(mcParticle.phi * 100) / 100;
+      mcParticle.transverseMomentum =
+        Math.round(mcParticle.transverseMomentum * 100) / 100;
+
+      mcParticle.momentum = Math.round(mcParticle.momentum * 100) / 100;
+      mcParticle.vertex = Math.round(mcParticle.vertex * 100) / 100;
       mcParticle.time = Math.round(mcParticle.time * 100) / 100;
       mcParticle.mass = Math.round(mcParticle.mass * 100) / 100;
     }
