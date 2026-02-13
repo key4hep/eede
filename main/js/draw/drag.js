@@ -1,4 +1,4 @@
-import { Rectangle } from "../pixi.min.mjs";
+import { Rectangle } from "pixi.js";
 import { getApp, getContainer } from "./app.js";
 
 let currentObject;

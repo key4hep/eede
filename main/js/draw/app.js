@@ -1,6 +1,7 @@
-import { Application, Container, Culler } from "../pixi.min.mjs";
+import { Application } from "pixi.js";
+import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
-import { addScroll } from "./scroll.js";
+import { setRenderable } from "./renderable.js";
 import { getPixiState } from "../globals.js";
 
 const pixi = getPixiState();
@@ -12,6 +13,8 @@ const createApp = async () => {
     antialias: true,
     useContextAlpha: false,
     resizeTo: window,
+    resolution: window.devicePixelRatio,
+    autoDensity: true,
     preference: "webgpu",
     webgpu: {
       powerPreference: "high-performance",
@@ -23,23 +26,52 @@ const createApp = async () => {
 };
 
 export const createContainer = (app, objects) => {
-  const container = new Container();
-  pixi.container = container;
-
-  const culler = new Culler();
-  culler.cull(container, {
-    x: 0,
-    y: 0,
-    width: app.renderer.width,
-    height: app.renderer.height,
+  const viewport = new Viewport({
+    screenWidth: window.innerWidth,
+    screenHeight: window.innerHeight,
+    worldWidth: pixi.width,
+    worldHeight: pixi.height,
+    events: app.renderer.events,
   });
+  pixi.container = viewport;
 
-  app.stage.addChild(container);
+  app.stage.addChild(viewport);
+  viewport
+    .drag({
+      pressDrag: false, // disables click to drag
+      wheel: false, // prevents the drag method from handling wheel events
+    })
+    .pinch()
+    .clampZoom({ minScale: 0.1, maxScale: 2 });
+
+  viewport.scale.set(1);
+
+  app.canvas.addEventListener(
+    "wheel",
+    (e) => {
+      e.preventDefault();
+
+      if (e.ctrlKey) {
+        const newScale = Math.max(
+          0.1,
+          Math.min(2, viewport.scaled * (1 - e.deltaY * 0.005)),
+        );
+
+        viewport.setZoom(newScale, true);
+      } else {
+        viewport.x -= e.deltaX;
+        viewport.y -= e.deltaY;
+      }
+
+      setRenderable(objects);
+    },
+    { passive: false }, // Override default listener behaviour
+  );
+
   app.stage.eventMode = "static";
   app.stage.hitArea = app.screen;
   app.stage.on("pointerup", dragEnd);
   app.stage.on("pointerupoutside", dragEnd);
-  addScroll(app, objects);
 };
 
 export const saveSize = (width, height) => {
