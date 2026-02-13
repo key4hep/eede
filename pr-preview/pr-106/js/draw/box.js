@@ -5,7 +5,7 @@ import {
   HTMLText,
   TextStyle,
   Cache,
-} from "../pixi.min.mjs";
+} from "pixi.js";
 import { getApp, getContainer } from "./app.js";
 
 const MARGIN = 16;

@@ -1,4 +1,4 @@
-import { Rectangle } from "../pixi.min.mjs";
+import { Rectangle } from "pixi.js";
 
 export function setRenderable(objects) {
   for (const { collection, oneToMany, oneToOne } of Object.values(
