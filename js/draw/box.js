@@ -2,21 +2,29 @@ import {
   Graphics,
   Assets,
   Sprite,
-  Text,
+  HTMLText,
   TextStyle,
   Cache,
 } from "../pixi.min.mjs";
 import { getApp, getContainer } from "./app.js";
 
-const MARGIN = 20;
-const PADDING = 5;
-const TITLE_MARGIN = 12;
+const MARGIN = 16;
+const PADDING = 8;
 
 function createText(
   text,
-  { fontFamily, fontSize, fontWeight, align, fill, wrap = false, maxWidth },
+  {
+    fontFamily,
+    fontSize,
+    fontWeight,
+    align,
+    fill,
+    wrap = false,
+    maxWidth,
+    lineHeight,
+  },
 ) {
-  return new Text({
+  return new HTMLText({
     text,
     style: new TextStyle({
       fontFamily,
@@ -26,8 +34,8 @@ function createText(
       fill,
       wordWrap: wrap,
       wordWrapWidth: maxWidth,
+      lineHeight,
     }),
-    resolution: 2,
   });
 }
 
@@ -36,7 +44,6 @@ function createObjectModal(lines) {
     fontFamily: ["Arial", "sans-serif"],
     fontSize: 14,
     fontWeight: "normal",
-    align: "left",
     fill: "black",
   });
 
@@ -138,7 +145,6 @@ export function addTitleToBox(title, box) {
   const boxTitle = createText(title, {
     fontFamily: "sans-serif",
     fontSize: 20,
-    align: "center",
     fill: "black",
     fontWeight: "bold",
     wrap: true,
@@ -146,7 +152,7 @@ export function addTitleToBox(title, box) {
   });
   box.addChild(boxTitle);
   boxTitle.position.set((box.width - boxTitle.width) / 2, MARGIN);
-  return boxTitle.position.y + boxTitle.height + TITLE_MARGIN;
+  return boxTitle.position.y + boxTitle.height + PADDING;
 }
 
 export function addLinesToBox(lines, box, y) {
@@ -154,13 +160,13 @@ export function addLinesToBox(lines, box, y) {
     fontFamily: "sans-serif",
     fontSize: 16,
     fontWeight: "normal",
-    align: "center",
     fill: "black",
     wrap: true,
-    maxWidth: box.width,
+    maxWidth: box.width - 2 * MARGIN,
+    lineHeight: 18, // Consistent box height between different browsers
   });
   box.addChild(text);
-  text.position.set((box.width - text.width) / 2, y);
+  text.position.set(MARGIN, y);
   return text.position.y + text.height;
 }
 
