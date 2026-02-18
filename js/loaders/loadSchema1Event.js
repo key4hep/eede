@@ -1,4 +1,4 @@
-import { linkTypes } from "../types/links.js";
+import { linkTypes } from "../visualization/types/links.js";
 import { getSupportedEDM4hepTypes } from "../globals.js";
 import { loadPlainObject } from "./loadObjects.js";
 
