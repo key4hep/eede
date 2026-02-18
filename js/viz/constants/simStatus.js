@@ -1,4 +1,4 @@
-export const SimStatusBitFieldDisplayValues = {
+export const simStatusBitFieldDisplayValues = {
   23: "Overlay",
   24: "Stopped",
   25: "LeftDetector",

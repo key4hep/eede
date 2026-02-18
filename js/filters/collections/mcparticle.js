@@ -4,7 +4,7 @@ import {
   objectSatisfiesCheckbox,
 } from "../components/checkbox.js";
 import { RangeComponent, rangeLogic } from "../components/range.js";
-import { SimStatusBitFieldDisplayValues } from "../../viz/constants/sim-status.js";
+import { simStatusBitFieldDisplayValues } from "../../viz/constants/simStatus.js";
 import {
   addCollectionTitle,
   collectionFilterContainer,
@@ -45,7 +45,7 @@ function renderMCParticleFilters(viewObjects) {
   simStatusContainer.appendChild(simStatusTitle);
   const simStatusCheckboxesContainer = createCheckboxContainer();
 
-  Object.entries(SimStatusBitFieldDisplayValues).forEach(([value, status]) => {
+  Object.entries(simStatusBitFieldDisplayValues).forEach(([value, status]) => {
     const checkbox = new CheckboxComponent("simulatorStatus", status, value);
     checkboxes.simStatus.push(checkbox);
     simStatusCheckboxesContainer.appendChild(checkbox.render());

@@ -1,4 +1,4 @@
-export const mappings = new Map([
+export const particlesMap = new Map([
   // Quarks
   ["1", "d"],
   ["-1", "{\\bar d}"],

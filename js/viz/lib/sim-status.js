@@ -1,4 +1,4 @@
-import { SimStatusBitFieldDisplayValues } from "../constants/sim-status.js";
+import { simStatusBitFieldDisplayValues } from "../constants/simStatus.js";
 
 export function parseBits(bit) {
   const bits = [];
@@ -16,8 +16,8 @@ export function getSimStatusDisplayValues(bits) {
   const statuses = [];
 
   bits.forEach((bit) => {
-    if (bit in SimStatusBitFieldDisplayValues) {
-      statuses.push(SimStatusBitFieldDisplayValues[bit]);
+    if (bit in simStatusBitFieldDisplayValues) {
+      statuses.push(simStatusBitFieldDisplayValues[bit]);
     }
   });
 
