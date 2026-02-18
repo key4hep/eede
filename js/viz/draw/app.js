@@ -3,13 +3,14 @@ import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
 import { setRenderable } from "./renderable.js";
 import { getPixiState } from "../pixi.js";
+import { objectColor } from "../lib/constants.js";
 
 const pixi = getPixiState();
 
 const createApp = async () => {
   const app = new Application();
   await app.init({
-    background: "#ffffff",
+    background: objectColor.neutral50,
     antialias: true,
     useContextAlpha: false,
     resizeTo: window,
