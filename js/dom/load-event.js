@@ -3,16 +3,18 @@ import { copyObject } from "./lib/copy.js";
 import { objectTypes } from "./types/objects.js";
 import { drawView } from "./views/views.js";
 import { getContainer } from "./draw/app.js";
-import { getFileData,
-         setCurrentEventIndex,
-         getCurrentEventIndex,
-         getCurrentEventNumber,
-         getCurrentEventName,
-         eventCollection,
-         currentVisObjects,
-         getEventNumbers,
-         getCurrentView,
-         saveCurrentScrollPosition } from "./globals.js";
+import {
+  getFileData,
+  setCurrentEventIndex,
+  getCurrentEventIndex,
+  getCurrentEventNumber,
+  getCurrentEventName,
+  eventCollection,
+  currentVisObjects,
+  getEventNumbers,
+  getCurrentView,
+  saveCurrentScrollPosition,
+} from "../globals.js";
 
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();
@@ -25,7 +27,8 @@ function loadSelectedEvent() {
 
     for (const datatype in eventCollection[currentEventIndex].datatypes) {
       const classType = objectTypes[datatype];
-      const collection = eventCollection[currentEventIndex].datatypes[datatype].collection;
+      const collection =
+        eventCollection[currentEventIndex].datatypes[datatype].collection;
       classType.setup(collection);
     }
     copyObject(objects, currentVisObjects);
@@ -49,7 +52,9 @@ export function updateEventSelectorMenu() {
   for (const [eventIndex, eventNumber] of eventNumbers.entries()) {
     const optionElementMenu = document.createElement("div");
     optionElementMenu.className = "event-option";
-    optionElementMenu.appendChild(document.createTextNode(`Event ${eventNumber}`));
+    optionElementMenu.appendChild(
+      document.createTextNode(`Event ${eventNumber}`),
+    );
     eventSelectorMenu.appendChild(optionElementMenu);
     optionElementMenu.addEventListener("click", () => {
       saveCurrentScrollPosition(getContainer());
@@ -58,7 +63,6 @@ export function updateEventSelectorMenu() {
     });
   }
 }
-
 
 // Page updates
 const eventNumber = document.getElementById("selected-event");
@@ -69,9 +73,7 @@ function updateEventNumber() {
   if (eventNumber.firstChild) {
     eventNumber.removeChild(eventNumber.firstChild);
   }
-  eventNumber.appendChild(
-    document.createTextNode(getCurrentEventName())
-  );
+  eventNumber.appendChild(document.createTextNode(getCurrentEventName()));
 }
 
 previousEvent.addEventListener("click", () => {
@@ -91,7 +93,7 @@ nextEvent.addEventListener("click", () => {
   const eventNumbers = getEventNumbers();
   const currentEventIndex = getCurrentEventIndex();
 
-  if ((currentEventIndex + 1) >= eventNumbers.length) {
+  if (currentEventIndex + 1 >= eventNumbers.length) {
     return;
   }
 

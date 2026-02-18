@@ -7,19 +7,15 @@ import {
   getEventNumbers,
   setCurrentEventIndex,
   setCurrentView,
-  getCurrentView
-} from "../globals.js";
+  getCurrentView,
+} from "../../globals.js";
 import { startPixi } from "../draw/app.js";
-import {
-  showEventSwitcher,
-  showViewsMenu,
-  showFilters
-} from "../main.js";
+import { showEventSwitcher, showViewsMenu, showFilters } from "../../main.js";
 import { hideDeploySwitch } from "../switch-deploy.js";
-import { updateFileName, showFileNameMenu } from "../current-file.js";
+import { updateFileName, showFileNameMenu } from "../../current-file.js";
 import { renderEvent, updateEventSelectorMenu } from "../load-event.js";
 import { possibleViews } from "../views/views-dictionary.js";
-import { selectViewInformation } from "../information.js";
+import { selectViewInformation } from "../../information.js";
 
 export function hideInputModal() {
   document.getElementById("input-modal").style.display = "none";
@@ -38,9 +34,9 @@ export function showInputModalCloseButton() {
 }
 
 export function clearInputModal() {
-  document.getElementById('input-message').replaceChildren();
+  document.getElementById("input-message").replaceChildren();
 
-  document.getElementById('input-modal-form').reset();
+  document.getElementById("input-modal-form").reset();
 
   document.getElementById("event-number").replaceChildren();
   document.getElementById("event-selector").style.display = "none";
@@ -81,7 +77,7 @@ document
         const eventNumbers = getEventNumbers();
         const eventNumberSelector = document.getElementById("event-number");
         for (const [i, eventNumber] of eventNumbers.entries()) {
-          const option = document.createElement('option');
+          const option = document.createElement("option");
           option.text = `Event ${eventNumber}`;
           eventNumberSelector.add(option, i);
         }
@@ -108,7 +104,8 @@ document
           buttons.push(button);
           availableViewsElem.appendChild(button);
         }
-        document.getElementById("input-modal-view-selector").style.display = "initial";
+        document.getElementById("input-modal-view-selector").style.display =
+          "initial";
       });
       reader.readAsText(file);
       break;
@@ -146,7 +143,6 @@ document
     selectViewInformation();
     renderEvent(eventIndex);
   });
-
 
 document
   .getElementById("input-modal-close-button")
