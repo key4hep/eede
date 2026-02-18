@@ -33,6 +33,11 @@
   border-radius: 5px;
 }
 
+#particle-details:not(:empty) {
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
 #views-header {
   display: flex;
   flex-direction: row;

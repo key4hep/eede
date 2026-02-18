@@ -2,7 +2,7 @@ import {
   buildBox,
   addBox,
   addTitleToBox,
-  addHoverModal,
+  showParticleDetails,
 } from "../draw/box.js";
 import { dragStart } from "../draw/drag.js";
 import { getContainer } from "../draw/app.js";
@@ -36,7 +36,7 @@ export class EDMObject {
     box.cullable = true;
     box.cullArea = new Rectangle(box.x, box.y, box.width, box.height);
 
-    addHoverModal(box, this.objectModalLines());
+    showParticleDetails(box, this.objectModalLines());
     return [box, nextY];
   }
 
