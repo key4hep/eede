@@ -1,5 +1,5 @@
 import { HTMLText, TextStyle } from "pixi.js";
-import { color, size } from "./constants.js";
+import { objectColor, size } from "../constants/vizStyles.js";
 
 const MARGIN = 16;
 const PADDING = 8;
@@ -37,7 +37,7 @@ export function addTitleToBox(title, box) {
     fontFamily: "sans-serif",
     fontWeight: "bold",
     fontSize: size.textXl,
-    fill: color.neutral950,
+    fill: objectColor.neutral950,
     wrap: true,
     maxWidth: box.width,
   });
@@ -51,7 +51,7 @@ export function addLinesToBox(lines, box, y) {
     fontFamily: "sans-serif",
     fontWeight: "normal",
     fontSize: size.textBase,
-    fill: color.neutral950,
+    fill: objectColor.neutral950,
     wrap: true,
     maxWidth: box.width - 2 * MARGIN,
     lineHeight: size.textLg,

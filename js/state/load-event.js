@@ -1,12 +1,12 @@
-import { loadObjects } from "../loaders/load.js";
-import { copyObject } from "../lib/copy.js";
-import { objectTypes } from "../viz/constants/objectTypes.js";
-import { drawView } from "../views/views.js";
-import { getViewportPosition } from "../viz/draw/app.js";
+import { loadObjects } from "./types/load.js";
+import { copyObject } from "./lib/copy.js";
+import { objectTypes } from "./types/objects.js";
+import { drawView } from "./views/views.js";
+import { getViewportPosition } from "./draw/app.js";
 import { getFileData } from "./file.js";
 import {
-  setCurrentEventIndex,
   getCurrentEventIndex,
+  setCurrentEventIndex,
   getCurrentEventNumber,
   getCurrentEventName,
   eventCollection,
@@ -21,8 +21,6 @@ function loadSelectedEvent() {
     const objects = loadObjects(getFileData(), getCurrentEventNumber());
 
     eventCollection[currentEventIndex] = objects;
-    // console.log(`eventCollection[${currentEventIndex}]:`);
-    // console.log(eventCollection[currentEventIndex]);
 
     for (const datatype in eventCollection[currentEventIndex].datatypes) {
       const classType = objectTypes[datatype];
