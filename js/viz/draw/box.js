@@ -1,11 +1,4 @@
-import {
-  Graphics,
-  Assets,
-  Sprite,
-  HTMLText,
-  TextStyle,
-  Cache,
-} from "pixi.js";
+import { Graphics, Assets, Sprite, HTMLText, TextStyle, Cache } from "pixi.js";
 import { getApp, getContainer } from "./app.js";
 
 const MARGIN = 16;
@@ -39,41 +32,6 @@ function createText(
   });
 }
 
-function createObjectModal(lines) {
-  const text = createText(lines.join("\n"), {
-    fontFamily: ["Arial", "sans-serif"],
-    fontSize: 14,
-    fontWeight: "normal",
-    fill: "black",
-  });
-
-  const width = text.width + PADDING;
-  const height = text.height + 2 * MARGIN;
-
-  const box = new Graphics();
-  box.roundRect(0, 0, width + PADDING, height + PADDING, 5);
-  box.fill("#f1f1f1");
-  box.stroke({ width: 1, color: "#000000" });
-  box.addChild(text);
-  box.zIndex = 2;
-  text.position.set((box.width - text.width) / 2, MARGIN);
-
-  return box;
-}
-
-function renderObjectModal(objectModal, x, y) {
-  const container = getContainer();
-  objectModal.position.set(x, y);
-  container.addChild(objectModal);
-}
-
-function removeObjectModal(objectModal) {
-  const container = getContainer();
-  if (objectModal !== null) {
-    container.removeChild(objectModal);
-  }
-}
-
 export function addBox(box) {
   const container = getContainer();
   container.addChild(box);
@@ -98,47 +56,39 @@ export function buildBox(object) {
   return box;
 }
 
-export function addHoverModal(box, lines) {
-  const boxWidth = parseInt(box.width);
+const particleDetails = document.getElementById("particle-details");
+let selectedBox = null;
 
-  let showModal = false;
-  let objectModal = null;
-  let hoverTimeout = null;
+export function showParticleDetails(box, lines) {
+  let changeSelection = false;
 
-  const clean = () => {
-    showModal = false;
-
-    if (hoverTimeout) {
-      clearTimeout(hoverTimeout);
-      hoverTimeout = null;
-    }
-
-    if (objectModal) {
-      removeObjectModal(objectModal);
-      objectModal = null;
-    }
-  };
-
-  box.on("pointerover", () => {
-    if (showModal) {
-      return;
-    }
-    showModal = true;
-    hoverTimeout = setTimeout(() => {
-      hoverTimeout = null;
-      if (!showModal) {
-        return;
-      }
-      objectModal = createObjectModal(lines);
-      const objectModalWidth = parseInt(objectModal.width);
-      const x = parseInt(box.position.x);
-      const xPosition = (boxWidth - objectModalWidth) / 2 + x;
-      const y = box.position.y;
-      renderObjectModal(objectModal, xPosition, y);
-    }, 500);
+  box.on("pointerdown", () => {
+    changeSelection = true;
   });
-  box.on("pointerdown", clean);
-  box.on("pointerout", clean);
+
+  box.on("pointermove", () => {
+    changeSelection = false;
+  });
+
+  box.on("pointerup", () => {
+    // Do not change selection if particle was dragged
+    if (!changeSelection) return;
+
+    if (selectedBox === box) {
+      // Undo selection when selected particle is clicked again
+      selectedBox.tint = 0xffffff;
+      selectedBox = null;
+      particleDetails.innerHTML = "";
+    } else {
+      // Change selection when a different particle is clicked
+      if (selectedBox) selectedBox.tint = 0xffffff;
+
+      // Select particle
+      box.tint = 0xcfe6ef;
+      selectedBox = box;
+      particleDetails.innerHTML = lines.join("");
+    }
+  });
 }
 
 export function addTitleToBox(title, box) {
