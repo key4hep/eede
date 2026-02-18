@@ -1,4 +1,4 @@
-import { objectTypes } from "./objects.js";
+import { objectTypes } from "../types/objects.js";
 import { getSupportedEDM4hepTypes } from "../globals.js";
 
 function loadMembers(object, data, membersToLoad) {
@@ -25,7 +25,7 @@ export function loadPlainObject(
   dataTypeName,
   collectionId,
   collectionName,
-  schemaVersion
+  schemaVersion,
 ) {
   const objects = [];
   const supportedEDM4hepTypes = getSupportedEDM4hepTypes(schemaVersion);
@@ -36,7 +36,11 @@ export function loadPlainObject(
     newObject.collectionId = collectionId;
     newObject.collectionName = collectionName;
 
-    loadMembers(newObject, collElem, supportedEDM4hepTypes[dataTypeName].members);
+    loadMembers(
+      newObject,
+      collElem,
+      supportedEDM4hepTypes[dataTypeName].members,
+    );
     loadEmptyRelations(newObject, supportedEDM4hepTypes[dataTypeName]);
 
     objects.push(newObject);

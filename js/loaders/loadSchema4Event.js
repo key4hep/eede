@@ -1,15 +1,14 @@
-import { linkTypes } from "./links.js";
+import { linkTypes } from "../types/links.js";
 import { getSupportedEDM4hepTypes } from "../globals.js";
 import { loadPlainObject } from "./loadObjects.js";
 
-
 export function handleSchema4Event(eventData) {
   const visObjects = {
-    "datatypes": {},
-    "associations": {},
+    datatypes: {},
+    associations: {},
   };
 
-  const supportedEDM4hepTypes = getSupportedEDM4hepTypes('4');
+  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("4");
 
   // Select only Datatype collections
   const supportedDataTypeNames = Object.keys(supportedEDM4hepTypes).filter(
@@ -19,12 +18,12 @@ export function handleSchema4Event(eventData) {
       }
 
       return true;
-    }
+    },
   );
 
   // Select only Link collections
-  const supportedLinkNames = Object.keys(supportedEDM4hepTypes).filter((object) =>
-    object.includes("Link")
+  const supportedLinkNames = Object.keys(supportedEDM4hepTypes).filter(
+    (object) => object.includes("Link"),
   );
 
   supportedDataTypeNames.forEach((dataTypeName) => {
@@ -41,8 +40,10 @@ export function handleSchema4Event(eventData) {
 
   for (const dataTypeName of supportedDataTypeNames) {
     const supportedCollName = `${dataTypeName}Collection`;
-    const possibleOneToOneRelations = supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
-    const possibleOneToManyRelations = supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
+    const possibleOneToOneRelations =
+      supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
+    const possibleOneToManyRelations =
+      supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
 
     for (const [collName, collObj] of Object.entries(eventData)) {
       if (collObj.collType !== supportedCollName) {
@@ -71,7 +72,7 @@ export function handleSchema4Event(eventData) {
         dataTypeName,
         collectionId,
         collName,
-        '4'
+        "4",
       );
       visObjects.datatypes[dataTypeName].collection.push(...objectCollection);
     }
@@ -87,17 +88,19 @@ export function handleSchema4Event(eventData) {
 
   for (const dataTypeName of supportedDataTypeNames) {
     const supportedCollType = `${dataTypeName}Collection`;
-    const possibleOneToOneRelations = supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
-    const possibleOneToManyRelations = supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
+    const possibleOneToOneRelations =
+      supportedEDM4hepTypes[dataTypeName].oneToOneRelations ?? [];
+    const possibleOneToManyRelations =
+      supportedEDM4hepTypes[dataTypeName].oneToManyRelations ?? [];
 
     for (const collObj of Object.values(eventData)) {
       if (collObj.collType !== supportedCollType) {
         continue;
       }
 
-      const fromVisCollection = visObjects.datatypes[dataTypeName].collection.filter(
-        (object) => object.collectionId === collObj.collID
-      );
+      const fromVisCollection = visObjects.datatypes[
+        dataTypeName
+      ].collection.filter((object) => object.collectionId === collObj.collID);
       if (!fromVisCollection) {
         continue;
       }
@@ -118,17 +121,16 @@ export function handleSchema4Event(eventData) {
         }
 
         const toCollectionID =
-          oneToOneRelationData.find(
-            (relation) => "collectionID" in relation
-          ).collectionID ?? null;
+          oneToOneRelationData.find((relation) => "collectionID" in relation)
+            .collectionID ?? null;
 
         if (!toCollectionID) {
           return;
         }
 
-        const toVisCollection = visObjects.datatypes[rel.type].collection.filter(
-          (object) => object.collectionId === toCollectionID
-        );
+        const toVisCollection = visObjects.datatypes[
+          rel.type
+        ].collection.filter((object) => object.collectionId === toCollectionID);
 
         if (!toVisCollection) {
           return;
@@ -172,7 +174,7 @@ export function handleSchema4Event(eventData) {
 
         const toCollectionID =
           oneToManyRelationData.find(
-            (relation) => relation?.[0]?.collectionID !== undefined
+            (relation) => relation?.[0]?.collectionID !== undefined,
           )?.[0]?.collectionID ?? null;
 
         if (!toCollectionID) {
@@ -180,7 +182,7 @@ export function handleSchema4Event(eventData) {
         }
 
         const toCollection = visObjects.datatypes[rel.type].collection.filter(
-          (object) => object.collectionId === toCollectionID
+          (object) => object.collectionId === toCollectionID,
         );
 
         for (const [index, relation] of oneToManyRelationData.entries()) {
@@ -229,17 +231,17 @@ export function handleSchema4Event(eventData) {
           supportedEDM4hepTypes[linkCollectionName].oneToOneRelations[1];
 
         const fromCollectionID = collection.find(
-          (relation) => relation[fromName].collectionID !== undefined
+          (relation) => relation[fromName].collectionID !== undefined,
         )[fromName].collectionID;
         const toCollectionID = collection.find(
-          (relation) => relation[toName].collectionID !== undefined
+          (relation) => relation[toName].collectionID !== undefined,
         )[toName].collectionID;
 
         const fromCollection = visObjects.datatypes[fromType].collection.filter(
-          (object) => object.collectionId === fromCollectionID
+          (object) => object.collectionId === fromCollectionID,
         );
         const toCollection = visObjects.datatypes[toType].collection.filter(
-          (object) => object.collectionId === toCollectionID
+          (object) => object.collectionId === toCollectionID,
         );
 
         for (const associationElement of collection) {
@@ -250,7 +252,7 @@ export function handleSchema4Event(eventData) {
           const link = new linkType(
             fromObject,
             toObject,
-            associationElement.weight
+            associationElement.weight,
           );
           visObjects.associations[linkCollectionName].push(link);
           fromObject.associations = {};

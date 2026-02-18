@@ -1,15 +1,14 @@
-import { linkTypes } from "./links.js";
+import { linkTypes } from "../types/links.js";
 import { getSupportedEDM4hepTypes } from "../globals.js";
 import { loadPlainObject } from "./loadObjects.js";
 
-
 export function handleSchema2Event(eventData) {
   const objects = {
-    "datatypes": {},
-    "associations": {},
+    datatypes: {},
+    associations: {},
   };
 
-  const supportedEDM4hepTypes = getSupportedEDM4hepTypes('2');
+  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("2");
 
   // Select only Datatype collections
   const supportedDataTypes = Object.keys(supportedEDM4hepTypes).filter(
@@ -22,12 +21,12 @@ export function handleSchema2Event(eventData) {
       }
 
       return true;
-    }
+    },
   );
 
   // Select only Link collections
-  const supportedAssociations = Object.keys(supportedEDM4hepTypes).filter((object) =>
-    object.includes("Link")
+  const supportedAssociations = Object.keys(supportedEDM4hepTypes).filter(
+    (object) => object.includes("Link"),
   );
 
   supportedDataTypes.forEach((typeName) => {
@@ -61,7 +60,7 @@ export function handleSchema2Event(eventData) {
 
       // Check for subset collection
       // TODO: Do not ignore subset collections
-      if ('index' in collection[0] && 'collectionID' in collection[0]) {
+      if ("index" in collection[0] && "collectionID" in collection[0]) {
         continue;
       }
 
@@ -70,19 +69,21 @@ export function handleSchema2Event(eventData) {
         supportedDataType,
         collectionId,
         collName,
-        '2'
+        "2",
       );
       objects.datatypes[supportedDataType].collection.push(...objectCollection);
     }
   }
 
   for (const typeName of supportedDataTypes) {
-    const possibleOneToOneRelations = supportedEDM4hepTypes[typeName].oneToOneRelations ?? [];
+    const possibleOneToOneRelations =
+      supportedEDM4hepTypes[typeName].oneToOneRelations ?? [];
     possibleOneToOneRelations.forEach((relation) => {
       objects.datatypes[typeName].oneToOne[relation.name] = [];
     });
 
-    const possibleOneToManyRelations = supportedEDM4hepTypes[typeName].oneToManyRelations ?? [];
+    const possibleOneToManyRelations =
+      supportedEDM4hepTypes[typeName].oneToManyRelations ?? [];
     possibleOneToManyRelations.forEach((relation) => {
       objects.datatypes[typeName].oneToMany[relation.name] = [];
     });
@@ -91,7 +92,7 @@ export function handleSchema2Event(eventData) {
       const collectionName = `${typeName}Collection`;
       if (element.collType === collectionName) {
         const fromCollection = objects.datatypes[typeName].collection.filter(
-          (object) => object.collectionId === element.collID
+          (object) => object.collectionId === element.collID,
         );
 
         // load One To One Relations
@@ -106,11 +107,11 @@ export function handleSchema2Event(eventData) {
 
           const toCollectionID =
             oneToOneRelationData.find(
-              (relation) => relation.collectionID !== undefined
+              (relation) => relation.collectionID !== undefined,
             ).collectionID ?? NaN;
 
           const toCollection = objects.datatypes[type].collection.filter(
-            (object) => object.collectionId === toCollectionID
+            (object) => object.collectionId === toCollectionID,
           );
 
           if (toCollection) {
@@ -139,7 +140,7 @@ export function handleSchema2Event(eventData) {
 
           const toCollectionID =
             oneToManyRelationData.find(
-              (relation) => relation?.[0]?.collectionID !== undefined
+              (relation) => relation?.[0]?.collectionID !== undefined,
             )?.[0]?.collectionID ?? null;
 
           if (!toCollectionID) {
@@ -147,7 +148,7 @@ export function handleSchema2Event(eventData) {
           }
 
           const toCollection = objects.datatypes[type].collection.filter(
-            (object) => object.collectionId === toCollectionID
+            (object) => object.collectionId === toCollectionID,
           );
 
           for (const [index, relation] of oneToManyRelationData.entries()) {
@@ -198,17 +199,17 @@ export function handleSchema2Event(eventData) {
           supportedEDM4hepTypes[association].oneToOneRelations[1];
 
         const fromCollectionID = collection.find(
-          (relation) => relation[fromName].collectionID !== undefined
+          (relation) => relation[fromName].collectionID !== undefined,
         )[fromName].collectionID;
         const toCollectionID = collection.find(
-          (relation) => relation[toName].collectionID !== undefined
+          (relation) => relation[toName].collectionID !== undefined,
         )[toName].collectionID;
 
         const fromCollection = objects.datatypes[fromType].collection.filter(
-          (object) => object.collectionId === fromCollectionID
+          (object) => object.collectionId === fromCollectionID,
         );
         const toCollection = objects.datatypes[toType].collection.filter(
-          (object) => object.collectionId === toCollectionID
+          (object) => object.collectionId === toCollectionID,
         );
 
         for (const associationElement of collection) {
@@ -219,7 +220,7 @@ export function handleSchema2Event(eventData) {
           const link = new linkType(
             fromObject,
             toObject,
-            associationElement.weight
+            associationElement.weight,
           );
           objects.associations[association].push(link);
           fromObject.associations = {};
