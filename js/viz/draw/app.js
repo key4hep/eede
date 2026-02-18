@@ -87,6 +87,15 @@ export const getContainer = () => {
   return pixi.container;
 };
 
+export const getViewportPosition = () => {
+  const center = pixi.container.center;
+  return { x: center.x, y: center.y };
+};
+
+export const setViewportPosition = (x, y) => {
+  pixi.container.moveCenter(x, y);
+};
+
 export const getContainerSize = () => {
   return { width: pixi.width, height: pixi.height };
 };
