@@ -1,4 +1,4 @@
-import { preFilterOneWay } from "../../filters/pre-filter.js";
+import { preFilterOneWay } from "../filters/pre-filter.js";
 import { oneWayView } from "./templates/onewayview.js";
 
 export function recoParticleID(viewObjects) {
