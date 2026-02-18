@@ -9,19 +9,19 @@ import {
   removeImageFromBox,
 } from "../draw/box.js";
 import { textToSVG } from "../lib/generate-svg.js";
+import { objectColor } from "../constants/vizStyles.js";
 
 export class MCParticle extends EDMObject {
   constructor() {
     super();
-    this.row = -1;
-    this.texImg = null;
-    this.color = "#dff6ff";
-    this.radius = 8;
     this.width = 174; // 2:3 format
     this.height = 261;
     this.titleName = "MCParticle";
-    this.margin = 16;
-    this.padding = 8;
+    this.color = objectColor.sky100;
+    this.colorOnHover = objectColor.sky200;
+    this.colorOnClick = objectColor.sky400;
+    this.lineColor = objectColor.sky400;
+    this.row = -1;
     this.imageMargin = 4;
     this.imageSize = 60;
   }

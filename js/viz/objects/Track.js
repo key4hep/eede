@@ -1,14 +1,17 @@
 import { EDMObject } from "./EDMObject.js";
 import { addLinesToBox } from "../draw/box.js";
+import { objectColor } from "../constants/vizStyles.js";
 
 class Track extends EDMObject {
   constructor() {
     super();
     this.width = 140;
     this.height = 180;
-    this.color = "#fff6df";
-    this.radius = 25;
     this.titleName = "Track";
+    this.color = objectColor.violet100;
+    this.colorOnHover = objectColor.violet200;
+    this.colorOnClick = objectColor.violet300;
+    this.lineColor = objectColor.violet400;
   }
 
   async draw() {

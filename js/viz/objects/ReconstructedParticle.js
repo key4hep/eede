@@ -1,15 +1,18 @@
 import { EDMObject } from "./EDMObject.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { addLinesToBox } from "../draw/box.js";
+import { objectColor } from "../constants/vizStyles.js";
 
 class ReconstructedParticle extends EDMObject {
   constructor() {
     super();
     this.width = 170;
     this.height = 200;
-    this.color = "#fbffdf";
-    this.radius = 30;
     this.titleName = "Reconstructed\nParticle";
+    this.color = objectColor.blue100;
+    this.colorOnHover = objectColor.blue200;
+    this.colorOnClick = objectColor.blue300;
+    this.lineColor = objectColor.blue400;
   }
 
   async draw() {

@@ -1,14 +1,17 @@
 import { EDMObject } from "./EDMObject.js";
 import { addLinesToBox } from "../draw/box.js";
+import { objectColor } from "../constants/vizStyles.js";
 
 class ParticleID extends EDMObject {
   constructor() {
     super();
     this.width = 140;
     this.height = 160;
-    this.color = "#c9edf7";
-    this.radius = 25;
     this.titleName = "Particle ID";
+    this.color = objectColor.purple100;
+    this.colorOnHover = objectColor.purple200;
+    this.colorOnClick = objectColor.purple300;
+    this.lineColor = objectColor.purple400;
   }
 
   async draw() {

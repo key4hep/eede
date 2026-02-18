@@ -1,14 +1,17 @@
 import { EDMObject } from "./EDMObject.js";
 import { addLinesToBox } from "../draw/box.js";
+import { objectColor } from "../constants/vizStyles.js";
 
 class Vertex extends EDMObject {
   constructor() {
     super();
     this.width = 155;
     this.height = 175;
-    this.color = "#f5d3ef";
-    this.radius = 25;
     this.titleName = "Vertex";
+    this.color = objectColor.fuchsia100;
+    this.colorOnHover = objectColor.fuchsia200;
+    this.colorOnClick = objectColor.fuchsia300;
+    this.lineColor = objectColor.fuchsia400;
   }
 
   async draw() {

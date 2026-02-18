@@ -1,14 +1,17 @@
 import { EDMObject } from "./EDMObject.js";
 import { addLinesToBox } from "../draw/box.js";
+import { objectColor } from "../constants/vizStyles.js";
 
 class Cluster extends EDMObject {
   constructor() {
     super();
     this.width = 145;
     this.height = 200;
-    this.color = "#ffe8df";
-    this.radius = 20;
     this.titleName = "Cluster";
+    this.color = objectColor.indigo100;
+    this.colorOnHover = objectColor.indigo200;
+    this.colorOnClick = objectColor.indigo300;
+    this.lineColor = objectColor.indigo400;
   }
 
   async draw() {

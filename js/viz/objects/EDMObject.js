@@ -14,11 +14,8 @@ export class EDMObject {
     this.y = NaN;
     this.index = NaN;
     this.collectionId = NaN;
-    this.width = 120;
-    this.height = 260;
-    this.lineColor = "black";
-    this.lineWidth = 2;
-    this.color = "white";
+    this.lineWidth = 1;
+    this.radius = 8;
   }
 
   async draw() {
