@@ -1,5 +1,6 @@
 import { Graphics, Assets, Sprite, HTMLText, TextStyle, Cache } from "pixi.js";
 import { getApp, getContainer } from "./app.js";
+import { objectColor, size } from "../constants/vizStyles.js";
 
 const MARGIN = 16;
 const PADDING = 8;
@@ -40,13 +41,13 @@ export function addBox(box) {
 const boxes = {};
 
 export function buildBox(object) {
-  const key = `${object.width}-${object.height}-${object.color}-${object.radius}`;
+  const key = `${object.width}-${object.height}-${object.color}-${object.lineColor}-${object.radius}`;
 
   if (boxes[key] === undefined) {
     const box = new Graphics();
     box.roundRect(0, 0, object.width, object.height, object.radius);
     box.fill(object.color);
-    box.stroke({ width: 2, color: "#000000" });
+    box.stroke({ width: object.lineWidth, color: object.lineColor });
     const app = getApp();
     const texture = app.renderer.generateTexture(box);
     boxes[key] = texture;
@@ -59,15 +60,34 @@ export function buildBox(object) {
 const particleDetails = document.getElementById("particle-details");
 let selectedBox = null;
 
-export function showParticleDetails(box, lines) {
+export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
   let changeSelection = false;
+  let clickPostion = null;
 
-  box.on("pointerdown", () => {
-    changeSelection = true;
+  box.on("pointerenter", () => {
+    if (selectedBox !== box) {
+      box.tint = colorOnHover;
+    }
   });
 
-  box.on("pointermove", () => {
-    changeSelection = false;
+  box.on("pointerleave", () => {
+    if (selectedBox !== box) {
+      box.tint = 0xffffff;
+    }
+  });
+
+  box.on("pointerdown", (event) => {
+    changeSelection = true;
+    clickPostion = { x: event.global.x, y: event.global.y };
+  });
+
+  box.on("pointermove", (event) => {
+    if (clickPostion === null) return;
+
+    const dx = event.global.x - clickPostion.x;
+    const dy = event.global.y - clickPostion.y;
+
+    if (dx * dx + dy * dy > 4) changeSelection = false;
   });
 
   box.on("pointerup", () => {
@@ -84,7 +104,7 @@ export function showParticleDetails(box, lines) {
       if (selectedBox) selectedBox.tint = 0xffffff;
 
       // Select particle
-      box.tint = 0xcfe6ef;
+      box.tint = colorOnClick;
       selectedBox = box;
       particleDetails.innerHTML = lines.join("");
     }
@@ -94,9 +114,9 @@ export function showParticleDetails(box, lines) {
 export function addTitleToBox(title, box) {
   const boxTitle = createText(title, {
     fontFamily: "sans-serif",
-    fontSize: 20,
-    fill: "black",
     fontWeight: "bold",
+    fontSize: size.textXl,
+    fill: objectColor.neutral950,
     wrap: true,
     maxWidth: box.width,
   });
@@ -108,12 +128,12 @@ export function addTitleToBox(title, box) {
 export function addLinesToBox(lines, box, y) {
   const text = createText(lines.join("\n"), {
     fontFamily: "sans-serif",
-    fontSize: 16,
     fontWeight: "normal",
-    fill: "black",
+    fontSize: size.textBase,
+    fill: objectColor.neutral950,
     wrap: true,
     maxWidth: box.width - 2 * MARGIN,
-    lineHeight: 18, // Consistent box height between different browsers
+    lineHeight: size.textLg, // Consistent box height between different browsers
   });
   box.addChild(text);
   text.position.set(MARGIN, y);
