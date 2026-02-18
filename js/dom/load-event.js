@@ -3,8 +3,8 @@ import { copyObject } from "./lib/copy.js";
 import { objectTypes } from "./types/objects.js";
 import { drawView } from "./views/views.js";
 import { getContainer } from "./draw/app.js";
+import { getFileData } from "./state/file.js";
 import {
-  getFileData,
   setCurrentEventIndex,
   getCurrentEventIndex,
   getCurrentEventNumber,
@@ -12,9 +12,8 @@ import {
   eventCollection,
   currentVisObjects,
   getEventNumbers,
-  getCurrentView,
-  saveCurrentScrollPosition,
-} from "../globals.js";
+} from "./state/event.js";
+import { getCurrentView, saveCurrentScrollPosition } from "./state/view.js";
 
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();

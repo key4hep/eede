@@ -12,13 +12,13 @@ import { getContainer, saveSize } from "../draw/app.js";
 import { setRenderable } from "../draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
+import { getCurrentVisObjects } from "../state/event.js";
 import {
-  getCurrentVisObjects,
   setCurrentView,
   getCurrentView,
   saveCurrentScrollPosition,
   getSavedScrollPosition,
-} from "../globals.js";
+} from "../state/view.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");

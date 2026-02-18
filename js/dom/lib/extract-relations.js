@@ -1,4 +1,4 @@
-import { getSupportedEDM4hepTypes } from "../globals.js";
+import { getSupportedEDM4hepTypes } from "../../globals.js";
 
 export function getRelationsFromCollections(collections) {
   const datatypes = getSupportedEDM4hepTypes();

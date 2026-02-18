@@ -2,7 +2,7 @@ import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
 import { setRenderable } from "./renderable.js";
-import { getPixiState } from "../globals.js";
+import { getPixiState } from "../pixi.js";
 
 const pixi = getPixiState();
 
