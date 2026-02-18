@@ -15,8 +15,8 @@ import {
 import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
-import { spanWithColor } from "../lib/html-string.js";
-import { scrollTopCenter, scrollTopLeft } from "../draw/scroll.js";
+import { spanWithColor } from "../../viz/lib/html-string.js";
+import { scrollTopCenter, scrollTopLeft } from "../../viz/draw/scroll.js";
 import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
 import { reconnectAssociation } from "../filters/reconnect/association.js";
 import { reconnectTree } from "../filters/reconnect/tree.js";

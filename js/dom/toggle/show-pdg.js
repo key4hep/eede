@@ -1,4 +1,4 @@
-import { removeImageFromBox } from "../draw/box.js";
+import { removeImageFromBox } from "../../viz/draw/box.js";
 
 const toggleImage = (object, newText) => {
   object.textToRender = newText;

@@ -1,4 +1,4 @@
-import { linkTypes } from "../../types/links.js";
+import { linkTypes } from "../../../viz/constants/links.js";
 
 const findParticles = (otherObject, relationName, ids) => {
   let oneToManyRelations;
