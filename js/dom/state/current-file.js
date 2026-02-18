@@ -1,10 +1,10 @@
-import { getFileName } from "./state/file.js";
-import { clearAllEventData } from "./state/event.js";
+import { getFileName } from "./file.js";
+import { clearAllEventData } from "./event.js";
 import {
   clearInputModal,
   showInputModal,
   showInputModalCloseButton,
-} from "./modals/input.js";
+} from "../modals/input.js";
 
 document.getElementById("change-file").addEventListener("click", () => {
   clearInputModal();

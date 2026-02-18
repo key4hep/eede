@@ -1,9 +1,9 @@
-import { loadObjects } from "./types/load.js";
-import { copyObject } from "./lib/copy.js";
-import { objectTypes } from "./types/objects.js";
-import { drawView } from "./views/views.js";
-import { getContainer } from "./draw/app.js";
-import { getFileData } from "./state/file.js";
+import { loadObjects } from "../../loaders/load.js";
+import { copyObject } from "../lib/copy.js";
+import { objectTypes } from "../../viz/classes/objects.js";
+import { drawView } from "../views/views.js";
+import { getContainer } from "../../viz/draw/app.js";
+import { getFileData } from "./file.js";
 import {
   setCurrentEventIndex,
   getCurrentEventIndex,
@@ -12,8 +12,8 @@ import {
   eventCollection,
   currentVisObjects,
   getEventNumbers,
-} from "./state/event.js";
-import { getCurrentView, saveCurrentScrollPosition } from "./state/view.js";
+} from "./event.js";
+import { getCurrentView, saveCurrentScrollPosition } from "./view.js";
 
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();
