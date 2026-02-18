@@ -16,11 +16,20 @@ import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
 import { spanWithColor } from "../viz/lib/html-string.js";
-import { scrollTopCenter, scrollTopLeft } from "../viz/draw/scroll.js";
 import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
 import { reconnectAssociation } from "../filters/reconnect/association.js";
 import { reconnectTree } from "../filters/reconnect/tree.js";
 import { reconnectMixedViews } from "../filters/reconnect/mixed.js";
+import { setViewportPosition, getContainerSize } from "../viz/draw/app.js";
+
+const scrollTopLeft = () => {
+  setViewportPosition(0, 0);
+};
+
+const scrollTopCenter = () => {
+  const { width } = getContainerSize();
+  setViewportPosition(width / 2, 500);
+};
 
 export const possibleViews = {
   "Monte Carlo Particle Tree": {

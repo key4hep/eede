@@ -2,7 +2,7 @@ import { loadObjects } from "../loaders/load.js";
 import { copyObject } from "../lib/copy.js";
 import { objectTypes } from "../viz/constants/objectTypes.js";
 import { drawView } from "../views/views.js";
-import { getContainer } from "../viz/draw/app.js";
+import { getViewportPosition } from "../viz/draw/app.js";
 import { getFileData } from "./file.js";
 import {
   setCurrentEventIndex,
@@ -56,7 +56,7 @@ export function updateEventSelectorMenu() {
     );
     eventSelectorMenu.appendChild(optionElementMenu);
     optionElementMenu.addEventListener("click", () => {
-      saveCurrentScrollPosition(getContainer());
+      saveCurrentScrollPosition(getViewportPosition());
       renderEvent(eventIndex);
       eventSelectorMenu.style.display = "none";
     });
@@ -84,7 +84,7 @@ previousEvent.addEventListener("click", () => {
   }
 
   const newEventNum = `${eventNumbers[currentEventIndex - 1]}`;
-  saveCurrentScrollPosition(getContainer());
+  saveCurrentScrollPosition(getViewportPosition());
   renderEvent(newEventNum);
 });
 
@@ -97,7 +97,7 @@ nextEvent.addEventListener("click", () => {
   }
 
   const newEventNum = `${eventNumbers[currentEventIndex + 1]}`;
-  saveCurrentScrollPosition(getContainer());
+  saveCurrentScrollPosition(getViewportPosition());
   renderEvent(newEventNum);
 });
 
