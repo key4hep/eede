@@ -6,23 +6,26 @@ import {
   hideEmptyViewMessage,
   showMessage,
 } from "../lib/messages.js";
-import { showViewInformation, hideViewInformation } from "../information.js";
-import { renderObjects } from "../draw/render.js";
+import {
+  showViewInformation,
+  hideViewInformation,
+} from "../modals/information.js";
+import { renderObjects } from "../viz/draw/render.js";
 import {
   getViewportPosition,
   setViewportPosition,
   saveSize,
-} from "../draw/app.js";
-import { setRenderable } from "../draw/renderable.js";
+} from "../viz/draw/app.js";
+import { setRenderable } from "../viz/draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
+import { getCurrentVisObjects } from "../state/event.js";
 import {
-  getCurrentVisObjects,
   setCurrentView,
   getCurrentView,
   saveCurrentScrollPosition,
   getSavedScrollPosition,
-} from "../globals.js";
+} from "../state/view.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");
