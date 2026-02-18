@@ -1,6 +1,6 @@
 import { getContainer } from "../draw/app.js";
 import { drawBezierLink } from "../draw/link.js";
-import { linkColors } from "../constants/styles.js";
+import { linkColors } from "../constants/vizStyles.js";
 
 export class Link {
   constructor(from, to) {
