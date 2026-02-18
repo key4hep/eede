@@ -1,8 +1,8 @@
-import { loadObjects } from "../../loaders/load.js";
+import { loadObjects } from "../loaders/load.js";
 import { copyObject } from "../lib/copy.js";
-import { objectTypes } from "../../viz/objects/objects.js";
+import { objectTypes } from "../viz/objects/objects.js";
 import { drawView } from "../views/views.js";
-import { getContainer } from "../../viz/draw/app.js";
+import { getContainer } from "../viz/draw/app.js";
 import { getFileData } from "./file.js";
 import {
   setCurrentEventIndex,

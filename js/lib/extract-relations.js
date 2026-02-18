@@ -1,4 +1,4 @@
-import { getSupportedEDM4hepTypes } from "../../loaders/loadObjects.js";
+import { getSupportedEDM4hepTypes } from "../loaders/loadObjects.js";
 
 export function getRelationsFromCollections(collections) {
   const datatypes = getSupportedEDM4hepTypes();

@@ -1,17 +1,17 @@
-import { getSupportedEDM4hepTypes } from "../../../loaders/loadObjects.js";
+import { getSupportedEDM4hepTypes } from "../../loaders/loadObjects.js";
 
 export function reconnectTree(viewCurrentObjects, ids) {
   const datatypes = getSupportedEDM4hepTypes();
 
   const tree = Object.entries(viewCurrentObjects.datatypes).filter(
-    ([, { collection }]) => collection.length !== 0
+    ([, { collection }]) => collection.length !== 0,
   )[0];
   const collectionName = tree[0];
   const { collection } = tree[1];
 
   // Assuming al trees are oneToManyRelations
   const relationName = datatypes[collectionName].oneToManyRelations.filter(
-    ({ type }) => type === collectionName
+    ({ type }) => type === collectionName,
   )[0].name;
 
   for (const object of collection) {

@@ -1,4 +1,4 @@
-import { linkTypes } from "../viz/types/links.js";
+import { linkTypes } from "../viz/constants/links.js";
 import { getSupportedEDM4hepTypes, loadPlainObject } from "./loadObjects.js";
 
 export function handleOldEvent(eventData) {

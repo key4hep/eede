@@ -15,8 +15,8 @@ import {
 import { vertexList, preFilterVertexList } from "./vertexlist.js";
 import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
 import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
-import { spanWithColor } from "../../viz/lib/html-string.js";
-import { scrollTopCenter, scrollTopLeft } from "../../viz/draw/scroll.js";
+import { spanWithColor } from "../viz/lib/html-string.js";
+import { scrollTopCenter, scrollTopLeft } from "../viz/draw/scroll.js";
 import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
 import { reconnectAssociation } from "../filters/reconnect/association.js";
 import { reconnectTree } from "../filters/reconnect/tree.js";
@@ -31,10 +31,10 @@ export const possibleViews = {
     collections: ["edm4hep::MCParticle"],
     description: `<p>A tree of Monte Carlo particles with their relationships:<ul><li>${spanWithColor(
       "Red",
-      "#AA0000"
+      "#AA0000",
     )} relations mean parent relation (from bottom to top)</li><li>${spanWithColor(
       "Green",
-      "#00AA00"
+      "#00AA00",
     )} relations mean daughter relation (from top to bottom).</li></ul></p>`,
   },
   "Reconstructed Particle Tree": {
@@ -45,7 +45,7 @@ export const possibleViews = {
     collections: ["edm4hep::ReconstructedParticle"],
     description: `<p>A tree of Reconstructed Particles with possible relationships:<ul><li>${spanWithColor(
       "Purple",
-      "#AA00AA"
+      "#AA00AA",
     )} relations mean relation between particles</li></ul></p>`,
   },
   "Track Tree": {
@@ -77,10 +77,10 @@ export const possibleViews = {
     ],
     description: `<p>Relations that a Reconstruced Particle has with other objects. ${spanWithColor(
       "Green",
-      "#AAAA00"
+      "#AAAA00",
     )} connections are towards Tracks, and ${spanWithColor(
       "sky blue",
-      "#00AAAA"
+      "#00AAAA",
     )} connections are towards Clusters.</p>`,
   },
   "Reconstructed Particle - MC Particle": {
@@ -111,7 +111,7 @@ export const possibleViews = {
     viewFunction: particleIDList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterParticleIDList,
-    reconnectFunction: () => { },
+    reconnectFunction: () => {},
     collections: ["edm4hep::ParticleID"],
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
@@ -119,7 +119,7 @@ export const possibleViews = {
     viewFunction: vertexList,
     scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterVertexList,
-    reconnectFunction: () => { },
+    reconnectFunction: () => {},
     collections: ["edm4hep::Vertex"],
     description: `<p>A list of Vertices found in the event.</p>`,
   },

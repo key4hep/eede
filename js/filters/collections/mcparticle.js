@@ -4,7 +4,7 @@ import {
   objectSatisfiesCheckbox,
 } from "../components/checkbox.js";
 import { RangeComponent, rangeLogic } from "../components/range.js";
-import { SimStatusBitFieldDisplayValues } from "../../../viz/constants/sim-status.js";
+import { SimStatusBitFieldDisplayValues } from "../../viz/constants/sim-status.js";
 import {
   addCollectionTitle,
   collectionFilterContainer,
