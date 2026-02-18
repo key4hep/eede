@@ -30,7 +30,12 @@ export class EDMObject {
     box.cullable = true;
     box.cullArea = new Rectangle(box.x, box.y, box.width, box.height);
 
-    showParticleDetails(box, this.objectModalLines());
+    showParticleDetails(
+      box,
+      this.objectModalLines(),
+      this.colorOnClick,
+      this.colorOnHover,
+    );
     return [box, nextY];
   }
 
