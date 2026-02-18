@@ -14,20 +14,19 @@ export function getPixiState() {
 
 export function isPixiRunning() {
   if (pixiState.app === null) {
-    return false
+    return false;
   } else {
-    return true
+    return true;
   }
 }
-
 
 /*
  * Datatypes
  */
-import { supportedEDM4hepTypes } from '../model/datatypes.js';
+import { supportedEDM4hepTypes } from "./model/datatypes.js";
 
 export function getSupportedEDM4hepTypes(schemaVersion) {
-  if (typeof schemaVersion === 'undefined') {
+  if (typeof schemaVersion === "undefined") {
     return supportedEDM4hepTypes[getCurrentSchemaVersion()];
   }
 
@@ -35,17 +34,17 @@ export function getSupportedEDM4hepTypes(schemaVersion) {
 }
 
 export function setCurrentSchemaVersion(schemaVersion) {
-  window.sessionStorage.setItem('current-schema-version', schemaVersion);
+  window.sessionStorage.setItem("current-schema-version", schemaVersion);
 }
 
 export function getCurrentSchemaVersion() {
-  return window.sessionStorage.getItem('current-schema-version');
+  return window.sessionStorage.getItem("current-schema-version");
 }
 
 export function schemaWithLinks() {
   const currentSchemaVersion = getCurrentSchemaVersion();
 
-  if (typeof currentSchemaVersion === 'undefined') {
+  if (typeof currentSchemaVersion === "undefined") {
     return false;
   }
 
@@ -59,13 +58,12 @@ export function schemaWithLinks() {
   return true;
 }
 
-
 /*
  * File
  */
 const fileData = {
   json: null,
-  name: null
+  name: null,
 };
 
 export function setFileName(fileName) {
@@ -80,25 +78,24 @@ export function setFileData(jsonData) {
   fileData.json = jsonData;
 
   const eventNumbers = Object.keys(fileData.json).map((event) =>
-    parseInt(event.replace("Event ", ""))
+    parseInt(event.replace("Event ", "")),
   );
 
   if (eventNumbers.length === 0) {
     return {
-      'err': true,
-      'mgs': 'ERROR: No events found in the provided EDM4hep JSON file!'
+      err: true,
+      mgs: "ERROR: No events found in the provided EDM4hep JSON file!",
     };
   }
 
   setEventNumbers(eventNumbers);
 
-  return { 'err': false }
+  return { err: false };
 }
 
 export function getFileData() {
   return fileData.json;
 }
-
 
 /*
  * Event
@@ -106,13 +103,12 @@ export function getFileData() {
 export const eventCollection = {}; // store all events info (gradually store data for each event)
 
 export function getEventNumbers() {
-  const eventNumbersString = window.sessionStorage.getItem('event-numbers');
+  const eventNumbersString = window.sessionStorage.getItem("event-numbers");
   return JSON.parse(eventNumbersString);
 }
 
 export function setEventNumbers(eventNumbers) {
-  window.sessionStorage.setItem('event-numbers',
-    JSON.stringify(eventNumbers));
+  window.sessionStorage.setItem("event-numbers", JSON.stringify(eventNumbers));
 }
 
 export function getEventIndex(eventNumber) {
@@ -121,11 +117,11 @@ export function getEventIndex(eventNumber) {
 }
 
 export function setCurrentEventIndex(index) {
-  return Number(window.sessionStorage.setItem('current-event-index', index));
+  return Number(window.sessionStorage.setItem("current-event-index", index));
 }
 
 export function getCurrentEventIndex() {
-  return Number(window.sessionStorage.getItem('current-event-index'));
+  return Number(window.sessionStorage.getItem("current-event-index"));
 }
 
 export function getCurrentEventNumber() {
@@ -138,7 +134,6 @@ export function getCurrentEventName() {
   return `Event ${getCurrentEventNumber()}`;
 }
 
-
 /*
  * Visual Objects
  */
@@ -148,18 +143,17 @@ export function getCurrentVisObjects() {
   return currentVisObjects;
 }
 
-
 /*
  * View
  */
 const scrollPositions = {};
 
 export function setCurrentView(viewName) {
-  window.sessionStorage.setItem('current-view', viewName);
+  window.sessionStorage.setItem("current-view", viewName);
 }
 
 export function getCurrentView() {
-  return window.sessionStorage.getItem('current-view');
+  return window.sessionStorage.getItem("current-view");
 }
 
 function getViewScrollIndex() {
@@ -193,7 +187,6 @@ export function clearScrollPositions() {
     delete scrollPositions[key];
   });
 }
-
 
 /*
  * Clearings
