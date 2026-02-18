@@ -3,11 +3,11 @@ import { getName } from "../lib/getName.js";
 import { parseCharge } from "../lib/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../lib/sim-status.js";
 import {
-  addLinesToBox,
   svgElementToPixiSprite,
   addImageToBox,
   removeImageFromBox,
 } from "../draw/box.js";
+import { addLinesToBox } from "../draw/font.js";
 import { textToSVG } from "../lib/generate-svg.js";
 import { objectColor } from "../constants/vizStyles.js";
 

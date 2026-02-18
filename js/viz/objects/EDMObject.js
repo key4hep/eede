@@ -1,9 +1,6 @@
-import {
-  buildBox,
-  addBox,
-  addTitleToBox,
-  showParticleDetails,
-} from "../draw/box.js";
+import { buildBox, addBox } from "../draw/box.js";
+import { showParticleDetails } from "../draw/details.js";
+import { addTitleToBox } from "../draw/font.js";
 import { dragStart } from "../draw/drag.js";
 import { getContainer } from "../draw/app.js";
 import { Rectangle } from "pixi.js";
