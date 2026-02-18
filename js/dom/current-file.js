@@ -1,21 +1,16 @@
-import {
-  getFileName,
-  clearAllEventData
-} from "./globals.js";
+import { getFileName, clearAllEventData } from "../globals.js";
 import {
   clearInputModal,
   showInputModal,
-  showInputModalCloseButton
+  showInputModalCloseButton,
 } from "./modals/input.js";
 
-document
-  .getElementById("change-file")
-  .addEventListener("click", () => {
-    clearInputModal();
-    showInputModalCloseButton();
-    clearAllEventData();
-    showInputModal();
-  });
+document.getElementById("change-file").addEventListener("click", () => {
+  clearInputModal();
+  showInputModalCloseButton();
+  clearAllEventData();
+  showInputModal();
+});
 
 export function updateFileName() {
   const fileName = getFileName();

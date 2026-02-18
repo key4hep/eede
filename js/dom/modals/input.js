@@ -12,10 +12,10 @@ import {
 import { startPixi } from "../draw/app.js";
 import { showEventSwitcher, showViewsMenu, showFilters } from "../../main.js";
 import { hideDeploySwitch } from "../switch-deploy.js";
-import { updateFileName, showFileNameMenu } from "../../current-file.js";
+import { updateFileName, showFileNameMenu } from "../current-file.js";
 import { renderEvent, updateEventSelectorMenu } from "../load-event.js";
 import { possibleViews } from "../views/views-dictionary.js";
-import { selectViewInformation } from "../../information.js";
+import { selectViewInformation } from "../information.js";
 
 export function hideInputModal() {
   document.getElementById("input-modal").style.display = "none";
