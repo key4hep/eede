@@ -1,4 +1,4 @@
-import { preFilterOneWay } from "../filters/pre-filter.js";
+import { preFilterOneWay } from "../../filters/pre-filter.js";
 import { oneWayView } from "./templates/onewayview.js";
 
 export function recoParticleID(viewObjects) {
@@ -11,6 +11,6 @@ export function preFilterRecoParticleID(currentObjects, viewObjects) {
     viewObjects,
     "particle",
     "edm4hep::ParticleID",
-    "edm4hep::ReconstructedParticle"
+    "edm4hep::ReconstructedParticle",
   );
 }
