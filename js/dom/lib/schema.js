@@ -1,4 +1,4 @@
-import { getCurrentSchemaVersion } from "../../globals.js";
+import { getCurrentSchemaVersion } from "../state/schema.js";
 
 export function schemaWithLinks() {
   const currentSchemaVersion = getCurrentSchemaVersion();

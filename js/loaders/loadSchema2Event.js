@@ -1,6 +1,5 @@
-import { linkTypes } from "../visualization/types/links.js";
-import { getSupportedEDM4hepTypes } from "../globals.js";
-import { loadPlainObject } from "./loadObjects.js";
+import { linkTypes } from "../viz/types/links.js";
+import { getSupportedEDM4hepTypes, loadPlainObject } from "./loadObjects.js";
 
 export function handleSchema2Event(eventData) {
   const objects = {

@@ -1,4 +1,4 @@
-import { setCurrentSchemaVersion } from "../globals.js";
+import { setCurrentSchemaVersion } from "../dom/state/schema.js";
 import { handleOldEvent } from "./loadOldSchemaEvent.js";
 import { handleSchema1Event } from "./loadSchema1Event.js";
 import { handleSchema2Event } from "./loadSchema2Event.js";

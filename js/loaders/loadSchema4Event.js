@@ -1,6 +1,5 @@
 import { linkTypes } from "../viz/constants/links.js";
-import { getSupportedEDM4hepTypes } from "../globals.js";
-import { loadPlainObject } from "./loadObjects.js";
+import { getSupportedEDM4hepTypes, loadPlainObject } from "./loadObjects.js";
 
 export function handleSchema4Event(eventData) {
   const visObjects = {

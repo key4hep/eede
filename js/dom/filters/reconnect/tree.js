@@ -1,4 +1,4 @@
-import { getSupportedEDM4hepTypes } from "../../../globals.js";
+import { getSupportedEDM4hepTypes } from "../../../loaders/loadObjects.js";
 
 export function reconnectTree(viewCurrentObjects, ids) {
   const datatypes = getSupportedEDM4hepTypes();
