@@ -5,26 +5,26 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  z-index: 3;
-  background-color: #fff;
+  z-index: var(--z-index-modal);
+  background-color: var(--color-neutral-50);
   padding: 5px;
-  border-radius: 5px;
-  border: 1px solid #000;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-neutral-950);
 }
 
 #switch-deploy-button {
   cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #000;
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-950);
   padding: 5px;
-  border-radius: 5px;
-  font-family: sans-serif;
+  border-radius: var(--border-radius);
+  font-family: var(--font-family-sans);
   font-size: 14px;
   cursor: pointer;
 }
 
 #switch-deploy-button:hover {
-  background-color: #c5c5c5;
+  background-color: var(--color-neutral-100);
 }
 
 #switch-deploy-text {

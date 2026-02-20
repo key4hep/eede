@@ -8,9 +8,9 @@
   padding-right: 12px;
 }
 
-/* 
+/*
 https://miladd3.github.io/clean-switch/
-MIT License 
+MIT License
 */
 .cl-switch input[type="checkbox"] {
   display: none;
@@ -46,17 +46,17 @@ MIT License
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin-right: 0;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
-  -ms-transition: all 0.2s;
-  -o-transition: all 0.2s;
-  transition: all 0.2s;
+  -webkit-transition: var(--transition-fast);
+  -moz-transition: var(--transition-fast);
+  -ms-transition: var(--transition-fast);
+  -o-transition: var(--transition-fast);
+  transition: var(--transition-fast);
 }
 .switcher:active:before {
   transition: all, 0.1s;
 }
 .toggle-label {
-  font-family: sans-serif;
+  font-family: var(--font-family-sans);
   font-size: 16px;
   vertical-align: middle;
 }
