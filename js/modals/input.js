@@ -4,7 +4,7 @@ import { setFileData, getFileData, setFileName } from "../state/file.js";
 import { getEventNumbers, setCurrentEventIndex } from "../state/event.js";
 import { setCurrentView, getCurrentView } from "../state/view.js";
 import { startPixi } from "../viz/draw/app.js";
-import { showEventSwitcher, showViewsMenu, showFilters } from "../main.js";
+import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } from "../main.js";
 import { hideDeploySwitch } from "../toggle/switch-deploy.js";
 import { updateFileName, showFileNameMenu } from "../state/current-file.js";
 import { renderEvent, updateEventSelectorMenu } from "../state/load-event.js";
@@ -134,6 +134,7 @@ document
     updateEventSelectorMenu();
     showFileNameMenu();
     showFilters();
+    showParticleDetails();
     selectViewInformation();
     renderEvent(eventIndex);
   });

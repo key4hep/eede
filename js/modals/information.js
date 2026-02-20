@@ -2,7 +2,7 @@ const infoIcon = document.getElementById("information-icon");
 const closeIcon = document.getElementById("close-information");
 const copyToClipboardButtons =
   document.getElementsByClassName("copy-email-button");
-const informationButton = document.getElementById("information-button");
+const informationButton = document.getElementById("about-information-button");
 const viewButton = document.getElementById("view-information-button");
 
 Array.from(copyToClipboardButtons).forEach((button) => {
@@ -83,7 +83,7 @@ function showOption(id) {
 }
 
 export function selectInformationSection() {
-  chooseButton("information-button");
+  chooseButton("about-information-button");
   showOption("information-content");
 }
 

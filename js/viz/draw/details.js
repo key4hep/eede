@@ -39,6 +39,7 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
       // Undo selection when selected particle is clicked again
       selectedBox.tint = 0xffffff;
       selectedBox = null;
+      particleDetails.classList.remove("selected");
       particleDetails.innerHTML = "";
     } else {
       // Change selection when a different particle is clicked
@@ -47,6 +48,7 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
       // Select particle
       box.tint = colorOnClick;
       selectedBox = box;
+      particleDetails.classList.add("selected");
       particleDetails.innerHTML = lines.join("");
     }
   });
