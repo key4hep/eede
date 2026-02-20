@@ -35,12 +35,16 @@ function copyEmailAddress(address) {
 
 const showModal = () => {
   const modal = document.getElementById("information-modal");
+  const backdrop = document.getElementById("modal-backdrop");
   modal.style.display = "flex";
+  backdrop.style.display = "block";
 };
 
 const hideModal = () => {
   const modal = document.getElementById("information-modal");
+  const backdrop = document.getElementById("modal-backdrop");
   modal.style.display = "none";
+  backdrop.style.display = "none";
 };
 
 infoIcon.addEventListener("click", showModal);
