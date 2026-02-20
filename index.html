@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>eede: EDM4hep EventData Explorer</title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="css/constants.css" />
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/logo.css" />
     <link rel="stylesheet" href="css/canvas.css" />
@@ -20,6 +21,7 @@
     <link rel="stylesheet" href="css/switch-deploy.css" />
     <link rel="stylesheet" href="css/current-file.css" />
     <link rel="stylesheet" href="css/clean-switch.css" />
+    <link rel="stylesheet" href="css/particle-details.css" />
   </head>
 
   <body>
@@ -191,13 +193,7 @@
       />
     </div>
 
-    <img
-      id="information-icon"
-      src="img/information.svg"
-      alt="Information"
-      width="35"
-      height="35"
-    />
+    <div id="modal-backdrop"></div>
 
     <div id="information-modal">
       <img
@@ -224,7 +220,7 @@
           <button id="view-information-button" class="information-button">
             This view
           </button>
-          <button id="information-button" class="information-button">
+          <button id="about-information-button" class="information-button">
             About eede
           </button>
         </div>
@@ -335,6 +331,8 @@
       </div>
     </div>
 
+    <div id="particle-details"></div>
+
     <div id="left-menu">
       <div id="toggles">
         <div id="pdg-toggle" class="toggle">
@@ -379,11 +377,20 @@
       <button id="switch-deploy-button">Release</button>
     </div>
 
-    <div id="current-file">
-      <span>Current file: <span id="current-file-name"></span></span>
-      <button id="change-file">
-        <img src="img/upload.svg" alt="Change file" width="23" height="23" />
-      </button>
+    <div id="bottom-right-bar">
+      <div id="current-file">
+        <span>Current file: <span id="current-file-name"></span></span>
+        <button id="change-file">
+          <img src="img/upload.svg" alt="Change file" width="23" height="23" />
+        </button>
+      </div>
+      <img
+        id="information-icon"
+        src="img/information.svg"
+        alt="Information"
+        width="35"
+        height="35"
+      />
     </div>
 
     <script
@@ -401,9 +408,9 @@
     <script type="module" src="js/main.js"></script>
     <script type="module" src="js/modals/welcome.js"></script>
     <script type="module" src="js/modals/input.js"></script>
-    <script type="module" src="js/information.js"></script>
+    <script type="module" src="js/modals/information.js"></script>
     <script type="module" src="js/views/views.js"></script>
-    <script type="module" src="js/current-file.js"></script>
-    <script type="module" src="js/switch-deploy.js"></script>
+    <script type="module" src="js/state/current-file.js"></script>
+    <script type="module" src="js/toggle/switch-deploy.js"></script>
   </body>
 </html>

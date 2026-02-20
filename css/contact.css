@@ -9,10 +9,10 @@ address {
 }
 
 .contact-element::before {
-  content: "•";
+  content: "\2022";
   margin-right: 10px;
   font-size: 1.2em;
-  color: black;
+  color: var(--color-neutral-950);
 }
 
 .copy-email-button img {
@@ -26,7 +26,8 @@ address {
 
 .copy-infobox {
   position: absolute;
-  background-color: #f1f1f1;
+  background-color: var(--color-neutral-50);
   padding: 5px;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-neutral-400);
 }

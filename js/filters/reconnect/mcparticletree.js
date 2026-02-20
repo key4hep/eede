@@ -1,4 +1,4 @@
-import { linkTypes } from "../../types/links.js";
+import { linkTypes } from "../../viz/constants/linkTypes.js";
 
 const findParticles = (otherObject, relationName, ids) => {
   let oneToManyRelations;
@@ -14,7 +14,7 @@ const findParticles = (otherObject, relationName, ids) => {
   if (relationObjects.length === 0) return [];
 
   const validObjects = relationObjects.filter((object) =>
-    ids.has(`${object.index}-${object.collectionId}`)
+    ids.has(`${object.index}-${object.collectionId}`),
   );
 
   return validObjects.length > 0
@@ -36,8 +36,8 @@ export function reconnectMCParticleTree(viewCurrentObjects, ids) {
     const daughterRelations = oneToManyRelations["daughters"];
 
     object.oneToManyRelations = {
-      "parents": [],
-      "daughters": [],
+      parents: [],
+      daughters: [],
     };
 
     for (const parentRelation of parentRelations) {

@@ -11,6 +11,6 @@ export function preFilterRecoParticleID(currentObjects, viewObjects) {
     viewObjects,
     "particle",
     "edm4hep::ParticleID",
-    "edm4hep::ReconstructedParticle"
+    "edm4hep::ReconstructedParticle",
   );
 }

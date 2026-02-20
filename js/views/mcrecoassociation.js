@@ -1,6 +1,6 @@
 import { preFilterAssociation } from "../filters/pre-filter.js";
 import { buildAssociationView } from "./templates/association-view.js";
-import { schemaWithLinks } from "../globals.js";
+import { schemaWithLinks } from "../lib/schema.js";
 
 export function mcRecoAssociation(visObjects) {
   let linkCollTypeName = "podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>";

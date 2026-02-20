@@ -4,7 +4,7 @@ import {
   objectSatisfiesCheckbox,
 } from "../components/checkbox.js";
 import { RangeComponent, rangeLogic } from "../components/range.js";
-import { SimStatusBitFieldDisplayValues } from "../../../mappings/sim-status.js";
+import { simStatusBitFieldDisplayValues } from "../../viz/constants/simStatus.js";
 import {
   addCollectionTitle,
   collectionFilterContainer,
@@ -45,7 +45,7 @@ function renderMCParticleFilters(viewObjects) {
   simStatusContainer.appendChild(simStatusTitle);
   const simStatusCheckboxesContainer = createCheckboxContainer();
 
-  Object.entries(SimStatusBitFieldDisplayValues).forEach(([value, status]) => {
+  Object.entries(simStatusBitFieldDisplayValues).forEach(([value, status]) => {
     const checkbox = new CheckboxComponent("simulatorStatus", status, value);
     checkboxes.simStatus.push(checkbox);
     simStatusCheckboxesContainer.appendChild(checkbox.render());
@@ -55,7 +55,7 @@ function renderMCParticleFilters(viewObjects) {
         if (bitfieldCheckboxLogic(value, mcparticle, "simulatorStatus")) {
           checkbox.checked(true);
         }
-      }
+      },
     );
   });
   simStatusContainer.appendChild(simStatusCheckboxesContainer);
@@ -67,7 +67,7 @@ function renderMCParticleFilters(viewObjects) {
 
   const generatorStatus = new Set();
   viewObjects.datatypes["edm4hep::MCParticle"].collection.forEach(
-    (mcparticle) => generatorStatus.add(mcparticle.generatorStatus)
+    (mcparticle) => generatorStatus.add(mcparticle.generatorStatus),
   );
 
   generatorStatus.forEach((status) => {
@@ -75,7 +75,7 @@ function renderMCParticleFilters(viewObjects) {
       "generatorStatus",
       status,
       status,
-      true
+      true,
     );
     checkboxes.generatorStatus.push(checkbox);
     genStatusCheckboxesContainer.appendChild(checkbox.render());
@@ -85,7 +85,7 @@ function renderMCParticleFilters(viewObjects) {
 
   const [collectionNamesContainer, collectionCheckboxes] =
     buildCollectionCheckboxes(
-      viewObjects.datatypes["edm4hep::MCParticle"].collection
+      viewObjects.datatypes["edm4hep::MCParticle"].collection,
     );
   checkboxes.collectionNames = collectionCheckboxes;
 
@@ -132,7 +132,7 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
       object,
       simStatus,
       "simulatorStatus",
-      bitfieldCheckboxLogic
+      bitfieldCheckboxLogic,
     );
     const normalCheckboxes = filterOutByNormalCheckboxes(object, [
       generatorStatus,

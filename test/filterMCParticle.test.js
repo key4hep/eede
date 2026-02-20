@@ -1,4 +1,4 @@
-import { loadObjects } from "../js/types/load.js";
+import { loadObjects } from "../js/loaders/load.js";
 import { filterOut } from "../js/filters/filter-out.js";
 import data from "./filter.json" with { type: "json" };
 

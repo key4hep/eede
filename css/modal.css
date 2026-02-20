@@ -2,24 +2,27 @@
   display: block;
   position: fixed;
   z-index: 2;
-  padding-top: 150px;
   left: 0;
   right: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(115, 115, 115, 0.5); /* --color-neutral-500 */
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: auto;
+  background-color: var(--color-neutral-50);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 20px;
-  border: 2px solid #888;
+  border: 1px solid var(--color-neutral-100);
   width: 50%;
-  border-radius: 15px;
-  font-family: Arial, sans-serif;
+  border-radius: var(--border-radius-large);
+  font-family: var(--font-family-sans);
 }
 
 .close-button {
@@ -31,7 +34,7 @@
 
 .close-button:hover,
 .close-button:focus {
-  color: #000;
+  color: var(--color-neutral-950);
   text-decoration: none;
   cursor: pointer;
 }
