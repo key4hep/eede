@@ -8,18 +8,17 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-neutral-400);
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--color-neutral-50);
   margin: auto;
   padding: 20px;
-  border: 2px solid #888;
+  border: 1px solid var(--color-neutral-950);
   width: 50%;
-  border-radius: 15px;
-  font-family: Arial, sans-serif;
+  border-radius: var(--border-radius-large);
+  font-family: var(--font-family-sans);
 }
 
 .close-button {
@@ -31,7 +30,7 @@
 
 .close-button:hover,
 .close-button:focus {
-  color: #000;
+  color: var(--color-neutral-950);
   text-decoration: none;
   cursor: pointer;
 }
