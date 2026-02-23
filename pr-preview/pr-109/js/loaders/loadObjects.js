@@ -1,4 +1,4 @@
-import { objectTypes } from "../viz/constants/objectTypes.js";
+import { objectTypes } from "../viz/types/objectTypes.js";
 import { supportedEDM4hepTypes } from "../../model/datatypes.js";
 
 export function getSupportedEDM4hepTypes(schemaVersion) {

@@ -1,4 +1,4 @@
-import { simStatusBitFieldDisplayValues } from "../constants/simStatus.js";
+import { simStatusBitFieldDisplayValues } from "../types/simStatus.js";
 
 export function parseBits(bit) {
   const bits = [];
