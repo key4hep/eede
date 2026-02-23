@@ -1,9 +1,30 @@
+import { getApp, getContainer } from "./app.js";
+
 const particleDetails = document.getElementById("particle-details");
 let selectedBox = null;
+let backgroundListener = false;
+
+function deselect() {
+  selectedBox.tint = 0xffffff;
+  selectedBox = null;
+  particleDetails.classList.remove("selected");
+  particleDetails.innerHTML = "";
+}
 
 export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
   let changeSelection = false;
   let clickPostion = null;
+
+  if (!backgroundListener) {
+    const app = getApp();
+
+    backgroundListener = true;
+
+    app.stage.on("pointerup", (event) => {
+      // Undo selection when backgroud is clicked
+      if (selectedBox !== null && event.target === getContainer()) deselect();
+    });
+  }
 
   box.on("pointerenter", () => {
     if (selectedBox !== box) {
@@ -35,12 +56,11 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
     // Do not change selection if particle was dragged
     if (!changeSelection) return;
 
+    console.log(selectedBox);
+
     if (selectedBox === box) {
       // Undo selection when selected particle is clicked again
-      selectedBox.tint = 0xffffff;
-      selectedBox = null;
-      particleDetails.classList.remove("selected");
-      particleDetails.innerHTML = "";
+      deselect();
     } else {
       // Change selection when a different particle is clicked
       if (selectedBox) selectedBox.tint = 0xffffff;
