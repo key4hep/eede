@@ -1,5 +1,5 @@
 import { emptyCopyObject } from "../../lib/copy.js";
-import { getCurrentSchemaVersion } from "../../state/schema.js";
+import { getCurrentSchemaVersion } from "../../globals.js";
 
 export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =
