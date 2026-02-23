@@ -1,7 +1,7 @@
-import { particlesMap } from "../types/particleMappings.js";
+import { particlesId } from "../types/particleMappings.js";
 
 export function getName(pdg) {
-  const particle = particlesMap.get(String(pdg));
+  const particle = particlesId.get(String(pdg));
 
   if (particle !== undefined) {
     // console.log("Name: " + particle);
