@@ -1,5 +1,4 @@
-import { getFileName } from "./file.js";
-import { clearAllEventData } from "./event.js";
+import { getFileName, clearAllEventData } from "../globals.js";
 import {
   clearInputModal,
   showInputModal,
