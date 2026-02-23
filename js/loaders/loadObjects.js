@@ -1,9 +1,5 @@
 import { objectTypes } from "../viz/objects/objectTypes.js";
-import { supportedEDM4hepTypes } from "../../model/datatypes.js";
-
-export function getSupportedEDM4hepTypes(schemaVersion) {
-  return supportedEDM4hepTypes[schemaVersion];
-}
+import { getSupportedEDM4hepTypes } from "../globals.js";
 
 function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {

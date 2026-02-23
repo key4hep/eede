@@ -19,13 +19,13 @@ import {
 import { setRenderable } from "../viz/draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
-import { getCurrentVisObjects } from "../state/event.js";
 import {
+  getCurrentVisObjects,
   setCurrentView,
   getCurrentView,
   saveCurrentScrollPosition,
   getSavedScrollPosition,
-} from "../state/view.js";
+} from "../globals.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");
