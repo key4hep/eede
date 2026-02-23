@@ -1,6 +1,6 @@
 import { EDMObject } from "./EDMObject.js";
 import { addLinesToBox } from "../draw/font.js";
-import { objectColor } from "../constants/vizStyles.js";
+import { objectColor } from "../types/vizStyles.js";
 
 class Vertex extends EDMObject {
   constructor() {

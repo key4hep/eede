@@ -9,7 +9,7 @@ import {
 } from "../draw/box.js";
 import { addLinesToBox } from "../draw/font.js";
 import { textToSVG } from "../lib/generate-svg.js";
-import { objectColor } from "../constants/vizStyles.js";
+import { objectColor } from "../types/vizStyles.js";
 
 export class MCParticle extends EDMObject {
   constructor() {

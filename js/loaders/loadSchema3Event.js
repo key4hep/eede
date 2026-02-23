@@ -1,4 +1,4 @@
-import { linkTypes } from "../viz/constants/linkTypes.js";
+import { linkTypes } from "../viz/types/linkTypes.js";
 import { getSupportedEDM4hepTypes, loadPlainObject } from "./loadObjects.js";
 
 export function handleSchema3Event(eventData) {
