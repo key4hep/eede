@@ -31,18 +31,18 @@
   --text-8xl: 6rem; /* (96px); */
   --text-9xl: 8rem; /* (128px); */
 
-  /* Color lime */
-  --color-lime-50: oklch(98.6% 0.031 120.757);
-  --color-lime-100: oklch(96.7% 0.067 122.328);
-  --color-lime-200: oklch(93.8% 0.127 124.321);
-  --color-lime-300: oklch(89.7% 0.196 126.665);
-  --color-lime-400: oklch(84.1% 0.238 128.85);
-  --color-lime-500: oklch(76.8% 0.233 130.85);
-  --color-lime-600: oklch(64.8% 0.2 131.684);
-  --color-lime-700: oklch(53.2% 0.157 131.589);
-  --color-lime-800: oklch(45.3% 0.124 130.933);
-  --color-lime-900: oklch(40.5% 0.101 131.063);
-  --color-lime-950: oklch(27.4% 0.072 132.109);
+  /* Color blue */
+  --color-blue-50: oklch(97% 0.014 254.604);
+  --color-blue-100: oklch(93.2% 0.032 255.585);
+  --color-blue-200: oklch(88.2% 0.059 254.128);
+  --color-blue-300: oklch(80.9% 0.105 251.813);
+  --color-blue-400: oklch(70.7% 0.165 254.624);
+  --color-blue-500: oklch(62.3% 0.214 259.815);
+  --color-blue-600: oklch(54.6% 0.245 262.881);
+  --color-blue-700: oklch(48.8% 0.243 264.376);
+  --color-blue-800: oklch(42.4% 0.199 265.638);
+  --color-blue-900: oklch(37.9% 0.146 265.522);
+  --color-blue-950: oklch(28.2% 0.091 267.935);
 
   /* Color natural */
   --color-neutral-50: oklch(98.5% 0 0); /* #fafafa */
