@@ -1,6 +1,6 @@
 import { loadObjects } from "../loaders/load.js";
 import { copyObject } from "../lib/copy.js";
-import { objectTypes } from "../viz/types/objectTypes.js";
+import { objectTypes } from "../viz/objects/objectTypes.js";
 import { drawView } from "../views/views.js";
 import { getViewportPosition } from "../viz/draw/app.js";
 import { getFileData } from "./file.js";
