@@ -1,6 +1,10 @@
 // Clear all possible stored state
 window.sessionStorage.clear();
 
+export function showParticleDetails() {
+  document.getElementById("particle-details").style.display = "block";
+}
+
 export function showEventSwitcher() {
   const eventSwitcher = document.getElementById("event-switcher");
 
@@ -9,7 +13,7 @@ export function showEventSwitcher() {
 
 export function showViewsMenu() {
   const viewsMenu = document.getElementById("left-menu");
-  const aboutButton = document.getElementById("information-button");
+  const aboutButton = document.getElementById("about-information-button");
 
   viewsMenu.style.display = "flex";
   aboutButton.style.display = "block";

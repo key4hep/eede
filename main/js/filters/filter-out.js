@@ -4,29 +4,29 @@ export function filterOut(
   viewObjects,
   viewCurrentObjects,
   criteriaFunctions,
-  inverted = false
+  inverted = false,
 ) {
   emptyCopyObject(viewObjects, viewCurrentObjects);
 
   const ids = new Set();
   for (const [collection, criteriaFunction] of Object.entries(
-    criteriaFunctions
+    criteriaFunctions,
   )) {
     const originalCollection = viewObjects.datatypes[collection].collection;
     let filteredCollection;
 
     if (inverted) {
       filteredCollection = originalCollection.filter(
-        (object) => !criteriaFunction(object)
+        (object) => !criteriaFunction(object),
       );
     } else {
       filteredCollection = originalCollection.filter((object) =>
-        criteriaFunction(object)
+        criteriaFunction(object),
       );
     }
 
     filteredCollection.forEach((object) =>
-      ids.add(`${object.index}-${object.collectionId}`)
+      ids.add(`${object.index}-${object.collectionId}`),
     );
     viewCurrentObjects.datatypes[collection].collection = filteredCollection;
   }

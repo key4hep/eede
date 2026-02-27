@@ -1,18 +1,20 @@
-import { loadObjects } from "./types/load.js";
-import { copyObject } from "./lib/copy.js";
-import { objectTypes } from "./types/objects.js";
-import { drawView } from "./views/views.js";
-import { getContainer } from "./draw/app.js";
-import { getFileData,
-         setCurrentEventIndex,
-         getCurrentEventIndex,
-         getCurrentEventNumber,
-         getCurrentEventName,
-         eventCollection,
-         currentVisObjects,
-         getEventNumbers,
-         getCurrentView,
-         saveCurrentScrollPosition } from "./globals.js";
+import { loadObjects } from "../loaders/load.js";
+import { copyObject } from "../lib/copy.js";
+import { objectTypes } from "../viz/objects/objectTypes.js";
+import { drawView } from "../views/views.js";
+import { getViewportPosition } from "../viz/draw/app.js";
+import {
+  getFileData,
+  getCurrentEventIndex,
+  setCurrentEventIndex,
+  getCurrentEventNumber,
+  getCurrentEventName,
+  eventCollection,
+  currentVisObjects,
+  getEventNumbers,
+  getCurrentView,
+  saveCurrentScrollPosition,
+} from "../globals.js";
 
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();
@@ -20,12 +22,11 @@ function loadSelectedEvent() {
     const objects = loadObjects(getFileData(), getCurrentEventNumber());
 
     eventCollection[currentEventIndex] = objects;
-    // console.log(`eventCollection[${currentEventIndex}]:`);
-    // console.log(eventCollection[currentEventIndex]);
 
     for (const datatype in eventCollection[currentEventIndex].datatypes) {
       const classType = objectTypes[datatype];
-      const collection = eventCollection[currentEventIndex].datatypes[datatype].collection;
+      const collection =
+        eventCollection[currentEventIndex].datatypes[datatype].collection;
       classType.setup(collection);
     }
     copyObject(objects, currentVisObjects);
@@ -49,16 +50,17 @@ export function updateEventSelectorMenu() {
   for (const [eventIndex, eventNumber] of eventNumbers.entries()) {
     const optionElementMenu = document.createElement("div");
     optionElementMenu.className = "event-option";
-    optionElementMenu.appendChild(document.createTextNode(`Event ${eventNumber}`));
+    optionElementMenu.appendChild(
+      document.createTextNode(`Event ${eventNumber}`),
+    );
     eventSelectorMenu.appendChild(optionElementMenu);
     optionElementMenu.addEventListener("click", () => {
-      saveCurrentScrollPosition(getContainer());
+      saveCurrentScrollPosition(getViewportPosition());
       renderEvent(eventIndex);
       eventSelectorMenu.style.display = "none";
     });
   }
 }
-
 
 // Page updates
 const eventNumber = document.getElementById("selected-event");
@@ -69,9 +71,7 @@ function updateEventNumber() {
   if (eventNumber.firstChild) {
     eventNumber.removeChild(eventNumber.firstChild);
   }
-  eventNumber.appendChild(
-    document.createTextNode(getCurrentEventName())
-  );
+  eventNumber.appendChild(document.createTextNode(getCurrentEventName()));
 }
 
 previousEvent.addEventListener("click", () => {
@@ -83,7 +83,7 @@ previousEvent.addEventListener("click", () => {
   }
 
   const newEventNum = `${eventNumbers[currentEventIndex - 1]}`;
-  saveCurrentScrollPosition(getContainer());
+  saveCurrentScrollPosition(getViewportPosition());
   renderEvent(newEventNum);
 });
 
@@ -91,12 +91,12 @@ nextEvent.addEventListener("click", () => {
   const eventNumbers = getEventNumbers();
   const currentEventIndex = getCurrentEventIndex();
 
-  if ((currentEventIndex + 1) >= eventNumbers.length) {
+  if (currentEventIndex + 1 >= eventNumbers.length) {
     return;
   }
 
   const newEventNum = `${eventNumbers[currentEventIndex + 1]}`;
-  saveCurrentScrollPosition(getContainer());
+  saveCurrentScrollPosition(getViewportPosition());
   renderEvent(newEventNum);
 });
 

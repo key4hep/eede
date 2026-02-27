@@ -2,14 +2,15 @@ import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
 import { setRenderable } from "./renderable.js";
-import { getPixiState } from "../globals.js";
+import { getPixiState } from "../../globals.js";
+import { objectColor } from "../types/vizStyles.js";
 
 const pixi = getPixiState();
 
 const createApp = async () => {
   const app = new Application();
   await app.init({
-    background: "#ffffff",
+    background: objectColor.neutral50,
     antialias: true,
     useContextAlpha: false,
     resizeTo: window,
@@ -85,6 +86,15 @@ export const getApp = () => {
 
 export const getContainer = () => {
   return pixi.container;
+};
+
+export const getViewportPosition = () => {
+  const center = pixi.container.center;
+  return { x: center.x, y: center.y };
+};
+
+export const setViewportPosition = (x, y) => {
+  pixi.container.moveCenter(x, y);
 };
 
 export const getContainerSize = () => {

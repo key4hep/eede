@@ -1,18 +1,6 @@
 import { getContainer } from "../draw/app.js";
 import { drawBezierLink } from "../draw/link.js";
-
-const colors = {
-  "parents": "#AA0000",
-  "daughters": "#00AA00",
-  "mcreco": "#0000AA",
-  "tracks": "#AAAA00",
-  "clusters": "#00AAAA",
-  "particles": "#AA00AA",
-  "mcclusters": "#D8F1A0",
-  "mctracks": "#fe5e41",
-  "vertex": "#593746",
-  "particle-id": "#00FF00",
-};
+import { linkColors } from "../types/vizStyles.js";
 
 export class Link {
   constructor(from, to) {
@@ -51,10 +39,10 @@ export class Link {
   }
 }
 
-class ParentLink extends Link {
+export class ParentLink extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["parents"];
+    this.color = linkColors["parents"];
     this.xShift = 3;
   }
 
@@ -63,18 +51,18 @@ class ParentLink extends Link {
   }
 }
 
-class DaughterLink extends Link {
+export class DaughterLink extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["daughters"];
+    this.color = linkColors["daughters"];
     this.xShift = -3;
   }
 }
 
-class MCRecoParticleAssociation extends Link {
+export class MCRecoParticleAssociation extends Link {
   constructor(from, to, weight) {
     super(from, to);
-    this.color = colors["mcreco"];
+    this.color = linkColors["mcreco"];
     this.weight = weight;
   }
 
@@ -83,45 +71,45 @@ class MCRecoParticleAssociation extends Link {
   // }
 }
 
-class Particles extends Link {
+export class Particles extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["particles"];
+    this.color = linkColors["particles"];
   }
 }
 
-class Clusters extends Link {
+export class Clusters extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["clusters"];
+    this.color = linkColors["clusters"];
   }
 }
 
-class Tracks extends Link {
+export class Tracks extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["tracks"];
+    this.color = linkColors["tracks"];
   }
 }
 
-class Vertex extends Link {
+export class Vertex extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["vertex"];
+    this.color = linkColors["vertex"];
   }
 }
 
-class ParticleIDLink extends Link {
+export class ParticleIDLink extends Link {
   constructor(from, to) {
     super(from, to);
-    this.color = colors["particle-id"];
+    this.color = linkColors["particle-id"];
   }
 }
 
-class MCRecoTrackParticleAssociation extends Link {
+export class MCRecoTrackParticleAssociation extends Link {
   constructor(from, to, weight) {
     super(from, to);
-    this.color = colors["mctracks"];
+    this.color = linkColors["mctracks"];
     this.weight = weight;
   }
 
@@ -130,10 +118,10 @@ class MCRecoTrackParticleAssociation extends Link {
   // }
 }
 
-class MCRecoClusterParticleAssociation extends Link {
+export class MCRecoClusterParticleAssociation extends Link {
   constructor(from, to, weight) {
     super(from, to);
-    this.color = colors["mcclusters"];
+    this.color = linkColors["mcclusters"];
     this.weight = weight;
   }
 
@@ -141,20 +129,3 @@ class MCRecoClusterParticleAssociation extends Link {
   //   drawStraightLink(ctx, this);
   // }
 }
-
-export const linkTypes = {
-  "parents": ParentLink,
-  "daughters": DaughterLink,
-  "edm4hep::MCRecoParticleAssociation": MCRecoParticleAssociation,
-  "podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>": MCRecoParticleAssociation,
-  "edm4hep::MCRecoClusterParticleAssociation": MCRecoClusterParticleAssociation,
-  "edm4hep::MCRecoTrackParticleAssociation": MCRecoTrackParticleAssociation,
-  "clusters": Clusters,
-  "tracks": Tracks,
-  "particles": Particles,
-  "particle": Particles,
-  "startVertex": Vertex,
-  "decayVertex": Vertex,
-  "associatedParticle": Vertex,
-  "particleIDs": ParticleIDLink,
-};
