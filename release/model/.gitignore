@@ -1,4 +1,4 @@
-*.json
-!datatypes.json
+*.js
+!datatypes.js
 *.yaml
 *.yml

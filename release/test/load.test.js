@@ -1,4 +1,4 @@
-import { loadObjects } from "../js/types/load.js";
+import { loadObjects } from "../js/loaders/load.js";
 import eventsData from "./load.json" with { type: "json" };
 
 test("load a json file with a collection of objects", () => {
@@ -13,38 +13,38 @@ test("load a json file with a collection of objects", () => {
 
   expect(datatypes["edm4hep::MCParticle"].collection.length).toEqual(3);
   expect(
-    datatypes["edm4hep::MCParticle"].collection.map((val) => val.index)
+    datatypes["edm4hep::MCParticle"].collection.map((val) => val.index),
   ).toEqual([0, 1, 2]);
   expect(datatypes["edm4hep::MCParticle"].oneToMany["daughters"]).toBeDefined();
   expect(datatypes["edm4hep::MCParticle"].oneToMany["parents"]).toBeDefined();
 
   expect(
-    datatypes["edm4hep::MCParticle"].oneToMany["daughters"][0].from.index
+    datatypes["edm4hep::MCParticle"].oneToMany["daughters"][0].from.index,
   ).toEqual(0);
   expect(
-    datatypes["edm4hep::MCParticle"].oneToMany["daughters"][0].to.index
+    datatypes["edm4hep::MCParticle"].oneToMany["daughters"][0].to.index,
   ).toEqual(2);
 
   expect(datatypes["edm4hep::ReconstructedParticle"].collection.length).toEqual(
-    2
+    2,
   );
   expect(
     datatypes["edm4hep::ReconstructedParticle"].collection.map(
-      (val) => val.index
-    )
+      (val) => val.index,
+    ),
   ).toEqual([0, 1]);
   expect(
-    datatypes["edm4hep::ReconstructedParticle"].oneToMany["particles"]
+    datatypes["edm4hep::ReconstructedParticle"].oneToMany["particles"],
   ).toBeDefined();
   expect(
-    datatypes["edm4hep::ReconstructedParticle"].oneToOne["startVertex"]
+    datatypes["edm4hep::ReconstructedParticle"].oneToOne["startVertex"],
   ).toBeDefined();
   expect(
     datatypes["edm4hep::ReconstructedParticle"].oneToMany["particles"][0].from
-      .index
+      .index,
   ).toEqual(0);
   expect(
     datatypes["edm4hep::ReconstructedParticle"].oneToMany["particles"][0].to
-      .index
+      .index,
   ).toEqual(1);
 });

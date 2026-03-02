@@ -6,18 +6,26 @@ import {
   hideEmptyViewMessage,
   showMessage,
 } from "../lib/messages.js";
-import { showViewInformation, hideViewInformation } from "../information.js";
-import { renderObjects } from "../draw/render.js";
-import { getContainer, saveSize } from "../draw/app.js";
-import { setRenderable } from "../draw/renderable.js";
+import {
+  showViewInformation,
+  hideViewInformation,
+} from "../modals/information.js";
+import { renderObjects } from "../viz/draw/render.js";
+import {
+  getViewportPosition,
+  setViewportPosition,
+  saveSize,
+} from "../viz/draw/app.js";
+import { setRenderable } from "../viz/draw/renderable.js";
 import { initFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
-import { setScrollBarsPosition } from "../draw/scroll.js";
-import { getCurrentVisObjects,
-         setCurrentView,
-         getCurrentView,
-         saveCurrentScrollPosition,
-         getSavedScrollPosition } from "../globals.js";
+import {
+  getCurrentVisObjects,
+  setCurrentView,
+  getCurrentView,
+  saveCurrentScrollPosition,
+  getSavedScrollPosition,
+} from "../globals.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");
@@ -35,7 +43,6 @@ closeViewsButton.addEventListener("click", () => {
   closeViewsButton.style.display = "none";
 });
 
-
 function paintButton(view) {
   for (const button of buttons) {
     if (button.innerText === view) {
@@ -46,17 +53,34 @@ function paintButton(view) {
   }
 }
 
-export function scroll() {
-  const container = getContainer();
+export function restoreScrollPosition() {
   const { x, y } = getSavedScrollPosition();
-
-  container.position.set(x, y);
-  setScrollBarsPosition();
+  setViewportPosition(x, y);
 }
 
 function setInfoButtonName(view) {
   const button = document.getElementById("view-information-button");
   button.innerText = view;
+}
+
+async function renderView(viewFunction, objects) {
+  const empty = checkEmptyObject(objects);
+
+  if (empty) {
+    showMessage("No objects satisfy the filter options");
+    return;
+  }
+
+  let [width, height] = viewFunction(objects);
+  if (width === 0 && height === 0) {
+    showMessage("No objects satisfy the filter options");
+    return;
+  }
+
+  width = Math.max(width, window.innerWidth);
+  height = Math.max(height, window.innerHeight);
+  saveSize(width, height);
+  await renderObjects(objects);
 }
 
 export const drawView = async (view) => {
@@ -89,36 +113,17 @@ export const drawView = async (view) => {
   const viewCurrentObjects = {};
   copyObject(viewObjects, viewCurrentObjects);
 
-  const render = async (objects) => {
-    const empty = checkEmptyObject(objects);
-
-    if (empty) {
-      showMessage("No objects satisfy the filter options");
-      return;
-    }
-
-    let [width, height] = viewFunction(objects);
-    if (width === 0 && height === 0) {
-      showMessage("No objects satisfy the filter options");
-      return;
-    }
-
-    if (width < window.innerWidth) {
-      width = window.innerWidth;
-    }
-    if (height < window.innerHeight) {
-      height = window.innerHeight;
-    }
-    saveSize(width, height);
-    await renderObjects(objects);
-  };
+  const render = (objects) => renderView(viewFunction, objects);
 
   await render(viewCurrentObjects);
 
-  if (getSavedScrollPosition() === undefined) {
-    saveCurrentScrollPosition(scrollFunction());
+  const savedPosition = getSavedScrollPosition();
+  if (savedPosition) {
+    setViewportPosition(savedPosition.x, savedPosition.y);
+  } else {
+    scrollFunction();
+    saveCurrentScrollPosition(getViewportPosition());
   }
-  scroll();
   setRenderable(viewCurrentObjects);
 
   initFilters(
@@ -128,9 +133,9 @@ export const drawView = async (view) => {
     {
       render,
       filterScroll: scrollFunction,
-      originalScroll: scroll,
+      originalScroll: restoreScrollPosition,
       setRenderable,
-    }
+    },
   );
 
   setupToggles(collections, viewCurrentObjects);
@@ -142,7 +147,7 @@ for (const key in possibleViews) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
   button.onclick = () => {
-    saveCurrentScrollPosition(getContainer());
+    saveCurrentScrollPosition(getViewportPosition());
     setCurrentView(key);
     drawView(getCurrentView());
   };

@@ -1,6 +1,6 @@
 #logo {
   font-size: 40px;
-  font-family: serif;
+  font-family: var(--font-family-serif);
 }
 
 #logo-background {
@@ -10,7 +10,7 @@
 .logo-letter {
   font-style: italic;
   font-size: 45px;
-  font-family: serif;
+  font-family: var(--font-family-serif);
 }
 
 .e1 {
