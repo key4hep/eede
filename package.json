@@ -1,7 +1,7 @@
 {
   "name": "eede",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "serve": "node ./bin/serve.js",
     "convert-model": "node ./bin/convert-yaml.cjs",
