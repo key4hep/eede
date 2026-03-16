@@ -72,7 +72,7 @@ export function initFilters(
   { viewObjects, viewCurrentObjects },
   collections,
   reconnectFunction,
-  { render, filterScroll, originalScroll, setRenderable },
+  { render, originalScroll, setRenderable },
 ) {
   const criteriaFunctions = {};
 

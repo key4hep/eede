@@ -87,7 +87,6 @@ export const drawView = async (view) => {
   const {
     preFilterFunction,
     viewFunction,
-    scrollFunction,
     collections,
     description,
     reconnectFunction,
@@ -121,7 +120,6 @@ export const drawView = async (view) => {
   if (savedPosition) {
     setViewportPosition(savedPosition.x, savedPosition.y);
   } else {
-    scrollFunction();
     saveCurrentScrollPosition(getViewportPosition());
   }
   setRenderable(viewCurrentObjects);
@@ -132,7 +130,6 @@ export const drawView = async (view) => {
     reconnectFunction,
     {
       render,
-      filterScroll: scrollFunction,
       originalScroll: restoreScrollPosition,
       setRenderable,
     },
