@@ -20,21 +20,10 @@ import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js"
 import { reconnectAssociation } from "../filters/reconnect/association.js";
 import { reconnectTree } from "../filters/reconnect/tree.js";
 import { reconnectMixedViews } from "../filters/reconnect/mixed.js";
-import { setViewportPosition, getContainerSize } from "../viz/draw/app.js";
-
-const scrollTopLeft = () => {
-  setViewportPosition(0, 0);
-};
-
-const scrollTopCenter = () => {
-  const { width } = getContainerSize();
-  setViewportPosition(width / 2, 500);
-};
 
 export const possibleViews = {
   "Monte Carlo Particle Tree": {
     viewFunction: mcParticleTree,
-    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTree,
     reconnectFunction: reconnectMCParticleTree,
     collections: ["edm4hep::MCParticle"],
@@ -48,7 +37,6 @@ export const possibleViews = {
   },
   "Reconstructed Particle Tree": {
     viewFunction: recoParticleTree,
-    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterRecoTree,
     reconnectFunction: reconnectTree,
     collections: ["edm4hep::ReconstructedParticle"],
@@ -59,7 +47,6 @@ export const possibleViews = {
   },
   "Track Tree": {
     viewFunction: trackTree,
-    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterTrackTree,
     reconnectFunction: reconnectTree,
     collections: ["edm4hep::Track"],
@@ -67,7 +54,6 @@ export const possibleViews = {
   },
   "Cluster Tree": {
     viewFunction: clusterTree,
-    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterClusterTree,
     reconnectFunction: reconnectTree,
     collections: ["edm4hep::Cluster"],
@@ -75,7 +61,6 @@ export const possibleViews = {
   },
   "RecoParticle-Cluster-Track-Vertex": {
     viewFunction: recoClusterTrackVertex,
-    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoClusterTrackVertex,
     reconnectFunction: reconnectMixedViews,
     collections: [
@@ -94,7 +79,6 @@ export const possibleViews = {
   },
   "Reconstructed Particle - MC Particle": {
     viewFunction: mcRecoAssociation,
-    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCReco,
     reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::ReconstructedParticle"],
@@ -102,7 +86,6 @@ export const possibleViews = {
   },
   "Track - MC Particle": {
     viewFunction: mcTrackAssociation,
-    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCTrack,
     reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::Track"],
@@ -110,7 +93,6 @@ export const possibleViews = {
   },
   "Cluster - MC Particle": {
     viewFunction: mcClusterAssociation,
-    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterMCCluster,
     reconnectFunction: reconnectAssociation,
     collections: ["edm4hep::MCParticle", "edm4hep::Cluster"],
@@ -118,7 +100,6 @@ export const possibleViews = {
   },
   "ParticleID List": {
     viewFunction: particleIDList,
-    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterParticleIDList,
     reconnectFunction: () => {},
     collections: ["edm4hep::ParticleID"],
@@ -126,7 +107,6 @@ export const possibleViews = {
   },
   "Vertex List": {
     viewFunction: vertexList,
-    scrollFunction: scrollTopLeft,
     preFilterFunction: preFilterVertexList,
     reconnectFunction: () => {},
     collections: ["edm4hep::Vertex"],
@@ -134,7 +114,6 @@ export const possibleViews = {
   },
   "ParticleID-Reconstructed Particle": {
     viewFunction: recoParticleID,
-    scrollFunction: scrollTopCenter,
     preFilterFunction: preFilterRecoParticleID,
     reconnectFunction: reconnectMixedViews,
     collections: ["edm4hep::ParticleID", "edm4hep::ReconstructedParticle"],
