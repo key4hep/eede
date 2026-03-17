@@ -46,12 +46,7 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
 
   Object.entries(simStatusBitFieldDisplayValues).forEach(([value, status]) => {
     const checkbox = new CheckboxComponent("simulatorStatus", status, value);
-
     simStatusCheckboxes.push(checkbox);
-    const isPresent = mcParticles.some((p) =>
-      bitfieldCheckboxLogic(value, p, "simulatorStatus"),
-    );
-    checkbox.checked(isPresent);
   });
 
   // Assemble DOM
@@ -59,6 +54,14 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
   simStatusCheckboxes.forEach((cb) =>
     simStatusCheckboxesContainer.appendChild(cb.render()),
   );
+
+  // Set checked state after render
+  simStatusCheckboxes.forEach((cb) => {
+    const isPresent = mcParticles.some((p) =>
+      bitfieldCheckboxLogic(cb.value, p, "simulatorStatus"),
+    );
+    cb.checked(isPresent);
+  });
   simStatusContainer.appendChild(simStatusCheckboxesContainer);
   container.appendChild(addCollectionTitle("MC Particle"));
   range.forEach((f) => container.appendChild(f.render()));
@@ -68,9 +71,9 @@ export function initMCParticleFilters(parentContainer, viewObjects) {
   parentContainer.appendChild(container);
 
   return (object) => {
-    const rangePass = range.every(({ propertyName, getValues }) => {
-      const { min, max } = getValues();
-      return rangeLogic(min, max, object, propertyName);
+    const rangePass = range.every((filter) => {
+      const { min, max } = filter.getValues();
+      return rangeLogic(min, max, object, filter.propertyName);
     });
     if (!rangePass) return false;
 

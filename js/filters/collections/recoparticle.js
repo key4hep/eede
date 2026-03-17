@@ -29,9 +29,9 @@ export function initRecoParticleFilters(parentContainer, viewObjects) {
   parentContainer.appendChild(container);
 
   return (object) => {
-    const scalarPass = scalarRange.every(({ propertyName, getValues }) => {
-      const { min, max } = getValues();
-      return rangeLogic(min, max, object, propertyName);
+    const scalarPass = scalarRange.every((filter) => {
+      const { min, max } = filter.getValues();
+      return rangeLogic(min, max, object, filter.propertyName);
     });
     if (!scalarPass) return false;
 
