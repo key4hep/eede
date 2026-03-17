@@ -1,6 +1,5 @@
-import { copyObject } from "../lib/copy.js";
 import { checkEmptyObject } from "../lib/empty-object.js";
-import { possibleViews } from "./views-dictionary.js";
+import { possibleViews } from "../viz/views/views-dictionary.js";
 import {
   emptyViewMessage,
   hideEmptyViewMessage,
@@ -84,58 +83,27 @@ async function renderView(viewFunction, objects) {
 }
 
 export const drawView = async (view) => {
-  const {
-    preFilterFunction,
-    viewFunction,
-    collections,
-    description,
-    reconnectFunction,
-  } = possibleViews[view];
-
   const allVisObjects = getCurrentVisObjects();
+  const isEmpty = checkEmptyObject(allVisObjects);
 
-  const viewObjects = {};
-  preFilterFunction(allVisObjects, viewObjects);
   paintButton(view);
-  const isEmpty = checkEmptyObject(viewObjects);
 
   if (isEmpty) {
     emptyViewMessage();
     hideViewInformation();
-    return;
-  }
-
-  showViewInformation(view, description);
-  setInfoButtonName(getCurrentView());
-  hideEmptyViewMessage();
-
-  const viewCurrentObjects = {};
-  copyObject(viewObjects, viewCurrentObjects);
-
-  const render = (objects) => renderView(viewFunction, objects);
-
-  await render(viewCurrentObjects);
-
-  const savedPosition = getSavedScrollPosition();
-  if (savedPosition) {
-    setViewportPosition(savedPosition.x, savedPosition.y);
   } else {
-    saveCurrentScrollPosition(getViewportPosition());
+    const { viewFunction, collections, description } = possibleViews[view];
+
+    showViewInformation(view, description);
+    setInfoButtonName(getCurrentView());
+    hideEmptyViewMessage();
+
+    await renderView(viewFunction, allVisObjects);
+
+    setRenderable(allVisObjects);
+    initFilters(allVisObjects, collections, setRenderable);
+    setupToggles(collections, allVisObjects);
   }
-  setRenderable(viewCurrentObjects);
-
-  initFilters(
-    { viewObjects, viewCurrentObjects },
-    collections,
-    reconnectFunction,
-    {
-      render,
-      originalScroll: restoreScrollPosition,
-      setRenderable,
-    },
-  );
-
-  setupToggles(collections, viewCurrentObjects);
 };
 
 const buttons = [];
