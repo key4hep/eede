@@ -1,4 +1,4 @@
-const createCheckboxContainer = () => {
+const createCheckboxItemContainer = () => {
   const container = document.createElement("div");
   container.classList.add("checkbox-title-container");
   return container;
@@ -22,7 +22,7 @@ export class CheckboxComponent {
   }
 
   render() {
-    const div = createCheckboxContainer();
+    const div = createCheckboxItemContainer();
     const checkbox = createCheckbox();
     this.checkbox = checkbox;
     const displayedName = document.createElement("label");
@@ -63,7 +63,7 @@ export function objectSatisfiesCheckbox(
   object,
   checkboxes,
   property,
-  logicFunction
+  logicFunction,
 ) {
   for (const checkbox of checkboxes) {
     const { checked, value } = checkbox.getValues();
@@ -74,4 +74,29 @@ export function objectSatisfiesCheckbox(
   }
 
   return false;
+}
+
+export function satisfiesCollectionFilter(object, collectionCheckboxes) {
+  return objectSatisfiesCheckbox(
+    object,
+    collectionCheckboxes,
+    "collectionName",
+    checkboxLogic,
+  );
+}
+
+export function filterOutByNormalCheckboxes(object, checkboxGroup) {
+  let satisfies = true;
+
+  checkboxGroup.forEach((checkboxes) => {
+    const res = objectSatisfiesCheckbox(
+      object,
+      checkboxes,
+      checkboxes[0].propertyName,
+      checkboxLogic,
+    );
+    satisfies = satisfies && res;
+  });
+
+  return satisfies;
 }
