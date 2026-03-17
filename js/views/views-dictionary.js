@@ -1,31 +1,15 @@
-import { mcParticleTree, preFilterMCTree } from "./templates/mcparticletree.js";
-import { mcRecoAssociation, preFilterMCReco } from "./mcrecoassociation.js";
-import { recoParticleTree, preFilterRecoTree } from "./recoparticletree.js";
-import { trackTree, preFilterTrackTree } from "./tracktree.js";
-import { clusterTree, preFilterClusterTree } from "./clustertree.js";
-import { preFilterMCTrack, mcTrackAssociation } from "./mctrackassociation.js";
-import {
-  preFilterMCCluster,
-  mcClusterAssociation,
-} from "./mcclusterassociation.js";
-import {
-  recoClusterTrackVertex,
-  preFilterRecoClusterTrackVertex,
-} from "./templates/recoclustertrack.js";
-import { vertexList, preFilterVertexList } from "./vertexlist.js";
-import { particleIDList, preFilterParticleIDList } from "./particleidlist.js";
-import { recoParticleID, preFilterRecoParticleID } from "./recoparticleid.js";
+import { mcParticleTree } from "./templates/mcparticletree.js";
+import { recoClusterTrackVertex } from "./templates/recoclustertrack.js";
+import { buildTree } from "./templates/tree.js";
+import { listView } from "./templates/list.js";
+import { buildAssociationView } from "./templates/association-view.js";
+import { oneWayView } from "./templates/onewayview.js";
+import { schemaWithLinks } from "../globals.js";
 import { spanWithColor } from "../viz/lib/html-string.js";
-import { reconnectMCParticleTree } from "../filters/reconnect/mcparticletree.js";
-import { reconnectAssociation } from "../filters/reconnect/association.js";
-import { reconnectTree } from "../filters/reconnect/tree.js";
-import { reconnectMixedViews } from "../filters/reconnect/mixed.js";
 
 export const possibleViews = {
   "Monte Carlo Particle Tree": {
     viewFunction: mcParticleTree,
-    preFilterFunction: preFilterMCTree,
-    reconnectFunction: reconnectMCParticleTree,
     collections: ["edm4hep::MCParticle"],
     description: `<p>A tree of Monte Carlo particles with their relationships:<ul><li>${spanWithColor(
       "Red",
@@ -36,9 +20,11 @@ export const possibleViews = {
     )} relations mean daughter relation (from top to bottom).</li></ul></p>`,
   },
   "Reconstructed Particle Tree": {
-    viewFunction: recoParticleTree,
-    preFilterFunction: preFilterRecoTree,
-    reconnectFunction: reconnectTree,
+    viewFunction: (viewCurrentObjects) =>
+      buildTree(
+        viewCurrentObjects.datatypes["edm4hep::ReconstructedParticle"].collection ?? [],
+        "particles",
+      ),
     collections: ["edm4hep::ReconstructedParticle"],
     description: `<p>A tree of Reconstructed Particles with possible relationships:<ul><li>${spanWithColor(
       "Purple",
@@ -46,23 +32,25 @@ export const possibleViews = {
     )} relations mean relation between particles</li></ul></p>`,
   },
   "Track Tree": {
-    viewFunction: trackTree,
-    preFilterFunction: preFilterTrackTree,
-    reconnectFunction: reconnectTree,
+    viewFunction: (viewCurrentObjects) =>
+      buildTree(
+        viewCurrentObjects.datatypes["edm4hep::Track"].collection ?? [],
+        "tracks",
+      ),
     collections: ["edm4hep::Track"],
     description: `<p>A tree of the Tracks.</p>`,
   },
   "Cluster Tree": {
-    viewFunction: clusterTree,
-    preFilterFunction: preFilterClusterTree,
-    reconnectFunction: reconnectTree,
+    viewFunction: (viewCurrentObjects) =>
+      buildTree(
+        viewCurrentObjects.datatypes["edm4hep::Cluster"].collection ?? [],
+        "clusters",
+      ),
     collections: ["edm4hep::Cluster"],
     description: `<p>A tree of the Clusters.</p>`,
   },
   "RecoParticle-Cluster-Track-Vertex": {
     viewFunction: recoClusterTrackVertex,
-    preFilterFunction: preFilterRecoClusterTrackVertex,
-    reconnectFunction: reconnectMixedViews,
     collections: [
       "edm4hep::ReconstructedParticle",
       "edm4hep::Cluster",
@@ -78,44 +66,43 @@ export const possibleViews = {
     )} connections are towards Clusters.</p>`,
   },
   "Reconstructed Particle - MC Particle": {
-    viewFunction: mcRecoAssociation,
-    preFilterFunction: preFilterMCReco,
-    reconnectFunction: reconnectAssociation,
+    viewFunction: (viewObjects) => {
+      const getTypeName = () =>
+        schemaWithLinks()
+          ? "podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>"
+          : "edm4hep::MCRecoParticleAssociation";
+      return buildAssociationView(viewObjects, getTypeName());
+    },
     collections: ["edm4hep::MCParticle", "edm4hep::ReconstructedParticle"],
     description: `<p>Links between Reconstructed Particles and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "Track - MC Particle": {
-    viewFunction: mcTrackAssociation,
-    preFilterFunction: preFilterMCTrack,
-    reconnectFunction: reconnectAssociation,
+    viewFunction: (viewObjects) =>
+      buildAssociationView(viewObjects, "edm4hep::MCRecoTrackParticleAssociation"),
     collections: ["edm4hep::MCParticle", "edm4hep::Track"],
     description: `<p>Link between Tracks and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "Cluster - MC Particle": {
-    viewFunction: mcClusterAssociation,
-    preFilterFunction: preFilterMCCluster,
-    reconnectFunction: reconnectAssociation,
+    viewFunction: (viewObjects) =>
+      buildAssociationView(viewObjects, "edm4hep::MCRecoClusterParticleAssociation"),
     collections: ["edm4hep::MCParticle", "edm4hep::Cluster"],
     description: `<p>Link between Clusters and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "ParticleID List": {
-    viewFunction: particleIDList,
-    preFilterFunction: preFilterParticleIDList,
-    reconnectFunction: () => {},
+    viewFunction: (viewCurrentObjects) =>
+      listView(viewCurrentObjects.datatypes["edm4hep::ParticleID"].collection ?? []),
     collections: ["edm4hep::ParticleID"],
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
   "Vertex List": {
-    viewFunction: vertexList,
-    preFilterFunction: preFilterVertexList,
-    reconnectFunction: () => {},
+    viewFunction: (viewCurrentObjects) =>
+      listView(viewCurrentObjects.datatypes["edm4hep::Vertex"].collection ?? []),
     collections: ["edm4hep::Vertex"],
     description: `<p>A list of Vertices found in the event.</p>`,
   },
   "ParticleID-Reconstructed Particle": {
-    viewFunction: recoParticleID,
-    preFilterFunction: preFilterRecoParticleID,
-    reconnectFunction: reconnectMixedViews,
+    viewFunction: (viewObjects) =>
+      oneWayView(viewObjects, "edm4hep::ParticleID", "particle"),
     collections: ["edm4hep::ParticleID", "edm4hep::ReconstructedParticle"],
     description: `<p>1:1 relation from ParticleID to Reconstructed Particle.</p>`,
   },
