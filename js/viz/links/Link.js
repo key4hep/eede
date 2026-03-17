@@ -12,7 +12,6 @@ export class Link {
   draw() {
     drawBezierLink(this);
   }
-
 }
 
 export class ParentLink extends Link {
@@ -41,10 +40,6 @@ export class MCRecoParticleAssociation extends Link {
     this.color = linkColors["mcreco"];
     this.weight = weight;
   }
-
-  // draw(ctx) {
-  //   drawStraightLink(ctx, this);
-  // }
 }
 
 export class Particles extends Link {
@@ -88,10 +83,6 @@ export class MCRecoTrackParticleAssociation extends Link {
     this.color = linkColors["mctracks"];
     this.weight = weight;
   }
-
-  // draw(ctx) {
-  //   drawStraightLink(ctx, this);
-  // }
 }
 
 export class MCRecoClusterParticleAssociation extends Link {
@@ -100,8 +91,4 @@ export class MCRecoClusterParticleAssociation extends Link {
     this.color = linkColors["mcclusters"];
     this.weight = weight;
   }
-
-  // draw(ctx) {
-  //   drawStraightLink(ctx, this);
-  // }
 }
