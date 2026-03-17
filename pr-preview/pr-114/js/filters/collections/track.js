@@ -1,64 +1,30 @@
-import {
-  checkboxLogic,
-  objectSatisfiesCheckbox,
-} from "../components/checkbox.js";
-import { buildCollectionCheckboxes } from "../components/common.js";
+import { satisfiesCollectionFilter } from "../components/checkbox.js";
 import {
   addCollectionTitle,
+  buildCheckboxes,
   collectionFilterContainer,
 } from "../components/lib.js";
 import { RangeComponent, rangeLogic } from "../components/range.js";
-
-function renderTrackFilters(viewObjects) {
-  const container = collectionFilterContainer();
-  const title = addCollectionTitle("Track");
-  container.appendChild(title);
-
-  const chiNdf = new RangeComponent("chiNdf", "chi^2/ndf", "");
-
-  container.appendChild(chiNdf.render());
-
-  const [collectionNamesContainer, collectionCheckboxes] =
-    buildCollectionCheckboxes(
-      viewObjects.datatypes["edm4hep::Track"].collection
-    );
-  container.appendChild(collectionNamesContainer);
-
-  return {
-    container,
-    filters: {
-      chiNdf,
-      collectionCheckboxes,
-    },
-  };
-}
+import { TRACK } from "./types.js";
 
 export function initTrackFilters(parentContainer, viewObjects) {
-  const { container, filters } = renderTrackFilters(viewObjects);
-  const { chiNdf, collectionCheckboxes } = filters;
+  const tracks = viewObjects.datatypes[TRACK].collection;
+  const chiNdf = new RangeComponent("chiNdf", "chi^2/ndf", "");
+  const container = collectionFilterContainer();
+  const [collContainer, collCheckboxes] = buildCheckboxes(tracks);
 
+  // Assemble DOM
+  container.appendChild(addCollectionTitle("Track"));
+  container.appendChild(chiNdf.render());
+  container.appendChild(collContainer);
   parentContainer.appendChild(container);
 
-  const criteriaFunction = (object) => {
-    const { min: minChiNdf, max: maxChiNdf } = chiNdf.getValues();
-
-    if (!rangeLogic(minChiNdf, maxChiNdf, object, "chiNdf")) {
+  return (object) => {
+    const { min, max } = chiNdf.getValues();
+    if (!rangeLogic(min, max, object, "chiNdf")) {
       return false;
     }
 
-    if (
-      !objectSatisfiesCheckbox(
-        object,
-        collectionCheckboxes,
-        "collectionName",
-        checkboxLogic
-      )
-    ) {
-      return false;
-    }
-
-    return true;
+    return satisfiesCollectionFilter(object, collCheckboxes);
   };
-
-  return criteriaFunction;
 }

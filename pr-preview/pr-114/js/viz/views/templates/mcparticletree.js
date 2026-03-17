@@ -1,5 +1,4 @@
-import { preFilterTree } from "../../filters/pre-filter.js";
-import { MCParticle } from "../../viz/objects/MCParticle.js";
+import { MCParticle } from "../../objects/MCParticle.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =
@@ -77,11 +76,4 @@ export function mcParticleTree(viewCurrentObjects) {
   }
 
   return [width, height];
-}
-
-export function preFilterMCTree(currentObjects, viewObjects) {
-  preFilterTree(currentObjects, viewObjects, "edm4hep::MCParticle", [
-    "parents",
-    "daughters",
-  ]);
 }
