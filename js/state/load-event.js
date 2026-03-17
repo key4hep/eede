@@ -1,5 +1,4 @@
 import { loadObjects } from "../loaders/load.js";
-import { copyObject } from "../lib/copy.js";
 import { objectTypes } from "../viz/objects/objectTypes.js";
 import { drawView } from "./view-selector.js";
 import { getViewportPosition } from "../viz/draw/app.js";
@@ -15,6 +14,12 @@ import {
   getCurrentView,
   saveCurrentScrollPosition,
 } from "../globals.js";
+
+function copyObject(source, destiny) {
+  for (const [key, value] of Object.entries(source)) {
+    destiny[key] = value;
+  }
+}
 
 function loadSelectedEvent() {
   const currentEventIndex = getCurrentEventIndex();
