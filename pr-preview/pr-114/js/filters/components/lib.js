@@ -1,4 +1,4 @@
-import { CheckboxComponent } from "./checkbox";
+import { CheckboxComponent } from "./checkbox.js";
 
 export function addCollectionTitle(name) {
   const title = document.createElement("span");
@@ -55,7 +55,7 @@ export function buildEnumCheckboxGroup(label, propertyName, values) {
   return { groupContainer, checkboxes };
 }
 
-export function buildCollectionCheckboxes(collection) {
+export function buildCheckboxes(collection) {
   const container = createSubContainer();
   const div = document.createElement("div");
   div.classList.add("collection-checkboxes-handler");

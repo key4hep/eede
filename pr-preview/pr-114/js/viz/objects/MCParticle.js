@@ -5,7 +5,6 @@ import { getSimStatusDisplayValuesFromBit } from "../lib/sim-status.js";
 import {
   svgElementToPixiSprite,
   addImageToBox,
-  removeImageFromBox,
 } from "../draw/box.js";
 import { addLinesToBox } from "../draw/font.js";
 import { textToSVG } from "../lib/generate-svg.js";
@@ -52,8 +51,6 @@ export class MCParticle extends EDMObject {
     nextY = addLinesToBox([topLine], box, nextY);
 
     const imageY = nextY + this.imageMargin;
-    this.imageY = imageY;
-    this.hasImage = false;
 
     nextY += this.imageSize + this.imageMargin;
 
@@ -74,6 +71,7 @@ export class MCParticle extends EDMObject {
     </div>`.replace(/\n\s+/g, "");
 
     addLinesToBox([bottomLine], box, nextY);
+    this.drawImage(this.textToRender, imageY);
   }
 
   objectModalLines() {
@@ -115,25 +113,6 @@ export class MCParticle extends EDMObject {
     addImageToBox(sprite, this.renderedBox, imageY);
   }
 
-  isVisible() {
-    const isVisible = super.isVisible();
-
-    if (isVisible) {
-      if (!this.hasImage) {
-        this.hasImage = true;
-        this.drawImage(this.textToRender, this.imageY);
-      }
-    } else {
-      if (this.image) {
-        removeImageFromBox(this.image, this.renderedBox);
-        this.image.destroy();
-        this.image = null;
-        this.hasImage = false;
-      }
-    }
-
-    return isVisible;
-  }
 
   static setRows(mcCollection) {
     mcCollection.forEach((mcParticle) => {

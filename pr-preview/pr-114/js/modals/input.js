@@ -14,7 +14,7 @@ import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } fr
 import { hideDeploySwitch } from "../toggle/switch-deploy.js";
 import { updateFileName, showFileNameMenu } from "../state/current-file.js";
 import { renderEvent, updateEventSelectorMenu } from "../state/load-event.js";
-import { possibleViews } from "../views/views-dictionary.js";
+import { possibleViews } from "../viz/views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
 
 export function hideInputModal() {

@@ -96,7 +96,6 @@ export function drawBezierLink(link, reverse = false) {
         color: link.color,
       });
       link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
       container.addChild(curve);
     };
 
@@ -129,7 +128,6 @@ export function drawBezierLink(link, reverse = false) {
         color: link.color,
       });
       link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
       container.addChild(curve);
     };
 
@@ -187,7 +185,6 @@ export function drawBezierLink(link, reverse = false) {
         color: link.color,
       });
       link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
       container.addChild(curve);
     };
 
@@ -220,7 +217,6 @@ export function drawBezierLink(link, reverse = false) {
         color: link.color,
       });
       link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
       container.addChild(curve);
     };
 
