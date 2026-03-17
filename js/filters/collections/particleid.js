@@ -1,112 +1,46 @@
-import {
-  CheckboxComponent,
-  checkboxLogic,
-  objectSatisfiesCheckbox,
-} from "../components/checkbox.js";
-import {
-  buildCollectionCheckboxes,
-  filterOutByNormalCheckboxes,
-} from "../components/common.js";
+import { filterOutByNormalCheckboxes } from "../components/checkbox.js";
 import {
   addCollectionTitle,
+  buildCheckboxes,
+  buildEnumCheckboxGroup,
   collectionFilterContainer,
-  createCheckboxContainer,
-  createCollectionSubtitle,
-  createSubContainer,
 } from "../components/lib.js";
+import { PARTICLEID } from "./types.js";
 
-function renderParticleIdFilters(viewObjects) {
+export function initParticleIdFilters(parentContainer, viewObjects) {
+  const particleIds = viewObjects.datatypes[PARTICLEID].collection;
   const container = collectionFilterContainer();
-  const title = addCollectionTitle("Particle ID");
-  container.appendChild(title);
+  const typeValues = new Set(particleIds.map((p) => p.type));
+  const pdgValues = new Set(particleIds.map((p) => p.PDG));
+  const algorithmTypeValues = new Set(particleIds.map((p) => p.algorithmType));
 
-  const checkboxes = {
-    type: [],
-    pdg: [],
-    algorithmType: [],
-  };
-
-  const typeContainer = createSubContainer();
-  const typeTitle = createCollectionSubtitle("Type");
-  typeContainer.appendChild(typeTitle);
-  const typeCheckboxesContainer = createCheckboxContainer();
-  const typeSet = new Set();
-  viewObjects.datatypes["edm4hep::ParticleID"].collection.forEach(
-    (particleId) => typeSet.add(particleId.type)
+  const { groupContainer: typeContainer, checkboxes: typeCheckboxes } =
+    buildEnumCheckboxGroup("Type", "type", typeValues);
+  const { groupContainer: pdgContainer, checkboxes: pdgCheckboxes } =
+    buildEnumCheckboxGroup("PDG", "PDG", pdgValues);
+  const {
+    groupContainer: algorithmTypeContainer,
+    checkboxes: algorithmTypeCheckboxes,
+  } = buildEnumCheckboxGroup(
+    "Algorithm Type",
+    "algorithmType",
+    algorithmTypeValues,
   );
-  typeSet.forEach((type) => {
-    const checkbox = new CheckboxComponent("type", type, type, true);
-    checkboxes.type.push(checkbox);
-    typeCheckboxesContainer.appendChild(checkbox.render());
-    checkbox.checked(true);
-  });
-  typeContainer.appendChild(typeCheckboxesContainer);
+  const [collContainer, collCheckboxes] = buildCheckboxes(particleIds);
 
-  const pdgContainer = createSubContainer();
-  const pdgTitle = createCollectionSubtitle("PDG");
-  pdgContainer.appendChild(pdgTitle);
-  const pdgCheckboxesContainer = createCheckboxContainer();
-  const pdgSet = new Set();
-  viewObjects.datatypes["edm4hep::ParticleID"].collection.forEach(
-    (particleId) => pdgSet.add(particleId.PDG)
-  );
-  pdgSet.forEach((pdg) => {
-    const checkbox = new CheckboxComponent("PDG", pdg, pdg, true);
-    checkboxes.pdg.push(checkbox);
-    pdgCheckboxesContainer.appendChild(checkbox.render());
-    checkbox.checked(true);
-  });
-  pdgContainer.appendChild(pdgCheckboxesContainer);
-
-  const algorithmTypeContainer = createSubContainer();
-  const algorithmTypeTitle = createCollectionSubtitle("Algorithm Type");
-  algorithmTypeContainer.appendChild(algorithmTypeTitle);
-  const algorithmTypeCheckboxesContainer = createCheckboxContainer();
-  const algorithmTypeSet = new Set();
-  viewObjects.datatypes["edm4hep::ParticleID"].collection.forEach(
-    (particleId) => algorithmTypeSet.add(particleId.algorithmType)
-  );
-  algorithmTypeSet.forEach((algorithmType) => {
-    const checkbox = new CheckboxComponent(
-      "algorithmType",
-      algorithmType,
-      algorithmType,
-      true
-    );
-    checkboxes.algorithmType.push(checkbox);
-    algorithmTypeCheckboxesContainer.appendChild(checkbox.render());
-    checkbox.checked(true);
-  });
-  algorithmTypeContainer.appendChild(algorithmTypeCheckboxesContainer);
-
-  const [collectionNamesContainer, collectionCheckboxes] =
-    buildCollectionCheckboxes(
-      viewObjects.datatypes["edm4hep::ParticleID"].collection
-    );
-  checkboxes.collectionNames = collectionCheckboxes;
-
+  //  Assemble DOM
+  container.appendChild(addCollectionTitle("Particle ID"));
   container.appendChild(typeContainer);
   container.appendChild(pdgContainer);
   container.appendChild(algorithmTypeContainer);
-  container.appendChild(collectionNamesContainer);
-
-  return {
-    container,
-    filters: {
-      checkboxes,
-    },
-  };
-}
-
-export function initParticleIdFilters(parentContainer, viewObjects) {
-  const { container, filters } = renderParticleIdFilters(viewObjects);
-  const { checkboxes } = filters;
-
+  container.appendChild(collContainer);
   parentContainer.appendChild(container);
 
-  const criteriaFunction = (particleId) => {
-    return filterOutByNormalCheckboxes(particleId, Object.values(checkboxes));
-  };
-
-  return criteriaFunction;
+  return (object) =>
+    filterOutByNormalCheckboxes(object, [
+      typeCheckboxes,
+      pdgCheckboxes,
+      algorithmTypeCheckboxes,
+      collCheckboxes,
+    ]);
 }

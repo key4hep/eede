@@ -1,64 +1,30 @@
-import {
-  checkboxLogic,
-  objectSatisfiesCheckbox,
-} from "../components/checkbox.js";
-import { buildCollectionCheckboxes } from "../components/common.js";
+import { satisfiesCollectionFilter } from "../components/checkbox.js";
 import {
   addCollectionTitle,
+  buildCheckboxes,
   collectionFilterContainer,
 } from "../components/lib.js";
 import { magnitudeRangeLogic, RangeComponent } from "../components/range.js";
-
-function renderVertexFilters(viewObjects) {
-  const container = collectionFilterContainer();
-  const title = addCollectionTitle("Vertex");
-  container.appendChild(title);
-
-  const position = new RangeComponent("position", "position", "mm");
-
-  container.appendChild(position.render());
-
-  const [collectionNamesContainer, collectionCheckboxes] =
-    buildCollectionCheckboxes(
-      viewObjects.datatypes["edm4hep::Vertex"].collection
-    );
-  container.appendChild(collectionNamesContainer);
-
-  return {
-    container,
-    filters: {
-      position,
-      collectionCheckboxes,
-    },
-  };
-}
+import { VERTEX } from "./types.js";
 
 export function initVertexFilters(parentContainer, viewObjects) {
-  const { container, filters } = renderVertexFilters(viewObjects);
-  const { position, collectionCheckboxes } = filters;
+  const vertices = viewObjects.datatypes[VERTEX].collection;
+  const position = new RangeComponent("position", "position", "mm");
+  const [collContainer, collCheckboxes] = buildCheckboxes(vertices);
+  const container = collectionFilterContainer();
 
+  // Assemble DOM
+  container.appendChild(addCollectionTitle("Vertex"));
+  container.appendChild(position.render());
+  container.appendChild(collContainer);
   parentContainer.appendChild(container);
 
-  const criteriaFunction = (object) => {
-    const { min: minPosition, max: maxPosition } = position.getValues();
-
-    if (!magnitudeRangeLogic(minPosition, maxPosition, object, "position")) {
+  return (object) => {
+    const { min, max } = position.getValues();
+    if (!magnitudeRangeLogic(min, max, object, "position")) {
       return false;
     }
 
-    if (
-      !objectSatisfiesCheckbox(
-        object,
-        collectionCheckboxes,
-        "collectionName",
-        checkboxLogic
-      )
-    ) {
-      return false;
-    }
-
-    return true;
+    return satisfiesCollectionFilter(object, collCheckboxes);
   };
-
-  return criteriaFunction;
 }

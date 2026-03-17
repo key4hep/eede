@@ -1,82 +1,45 @@
-import {
-  checkboxLogic,
-  objectSatisfiesCheckbox,
-} from "../components/checkbox.js";
-import { buildCollectionCheckboxes } from "../components/common.js";
+import { satisfiesCollectionFilter } from "../components/checkbox.js";
 import {
   addCollectionTitle,
+  buildCheckboxes,
   collectionFilterContainer,
 } from "../components/lib.js";
-import { magnitudeRangeLogic, RangeComponent } from "../components/range.js";
-import { rangeLogic } from "../components/range.js";
-
-function renderRecoParticleFilters(viewObjects) {
-  const container = collectionFilterContainer();
-  const title = addCollectionTitle("Reconstructed Particle");
-  container.appendChild(title);
-
-  const energy = new RangeComponent("energy", "energy", "GeV");
-  const charge = new RangeComponent("charge", "charge", "e");
-  const momentum = new RangeComponent("momentum", "momentum", "GeV");
-
-  const range = [energy, charge];
-
-  range.forEach((rangeFilter) => {
-    container.appendChild(rangeFilter.render());
-  });
-
-  container.appendChild(momentum.render());
-
-  const [collectionNamesContainer, collectionCheckboxes] =
-    buildCollectionCheckboxes(
-      viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection
-    );
-
-  container.appendChild(collectionNamesContainer);
-
-  return {
-    container,
-    filters: {
-      range,
-      collectionCheckboxes,
-      momentum,
-    },
-  };
-}
+import {
+  magnitudeRangeLogic,
+  RangeComponent,
+  rangeLogic,
+} from "../components/range.js";
+import { RECOPARTICLE } from "./types.js";
 
 export function initRecoParticleFilters(parentContainer, viewObjects) {
-  const { container, filters } = renderRecoParticleFilters(viewObjects);
-  const { range, collectionCheckboxes, momentum } = filters;
+  const recoParticles = viewObjects.datatypes[RECOPARTICLE].collection;
+  const container = collectionFilterContainer();
+  const momentum = new RangeComponent("momentum", "momentum", "GeV");
+  const [collContainer, collCheckboxes] = buildCheckboxes(recoParticles);
+  const scalarRange = [
+    new RangeComponent("energy", "energy", "GeV"),
+    new RangeComponent("charge", "charge", "e"),
+  ];
 
+  // Assemble DOM
+  container.appendChild(addCollectionTitle("Reconstructed Particle"));
+  scalarRange.forEach((f) => container.appendChild(f.render()));
+  container.appendChild(momentum.render());
+  container.appendChild(collContainer);
   parentContainer.appendChild(container);
 
-  const criteriaFunction = (object) => {
-    for (const filter of range) {
-      const { min, max } = filter.getValues();
+  return (object) => {
+    const scalarPass = scalarRange.every(({ propertyName, getValues }) => {
+      const { min, max } = getValues();
+      return rangeLogic(min, max, object, propertyName);
+    });
+    if (!scalarPass) return false;
 
-      if (!rangeLogic(min, max, object, filter.propertyName)) {
-        return false;
-      }
-    }
-
-    const { min, max } = momentum.getValues();
-    if (!magnitudeRangeLogic(min, max, object, "momentum")) {
+    const { min: minMomentum, max: maxMomentum } = momentum.getValues();
+    if (!magnitudeRangeLogic(minMomentum, maxMomentum, object, "momentum")) {
       return false;
     }
 
-    if (
-      !objectSatisfiesCheckbox(
-        object,
-        collectionCheckboxes,
-        "collectionName",
-        checkboxLogic
-      )
-    ) {
-      return false;
-    }
-
-    return true;
+    return satisfiesCollectionFilter(object, collCheckboxes);
   };
-
-  return criteriaFunction;
 }
