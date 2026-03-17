@@ -1,14 +1,9 @@
-import { copyObject } from "../lib/copy.js";
-import { checkEmptyObject } from "../lib/empty-object.js";
-import { showMessage } from "../lib/messages.js";
 import { initClusterFilters } from "./collections/cluster.js";
 import { initMCParticleFilters } from "./collections/mcparticle.js";
 import { initParticleIdFilters } from "./collections/particleid.js";
 import { initRecoParticleFilters } from "./collections/recoparticle.js";
 import { initTrackFilters } from "./collections/track.js";
 import { initVertexFilters } from "./collections/vertex.js";
-import { filterOut } from "./filter-out.js";
-import { restoreRelations } from "./relations.js";
 
 const map = {
   "edm4hep::MCParticle": initMCParticleFilters,
@@ -22,6 +17,8 @@ const map = {
 const openFiltersButton = document.getElementById("open-filter");
 const closeFiltersButton = document.getElementById("close-filter");
 const filtersBody = document.getElementById("filters-body");
+const filtersContent = document.getElementById("filters-content");
+const resetButton = document.getElementById("filter-reset");
 
 openFiltersButton.addEventListener("click", () => {
   filtersBody.style.display = "flex";
@@ -35,61 +32,47 @@ closeFiltersButton.addEventListener("click", () => {
   closeFiltersButton.style.display = "none";
 });
 
-const filters = {
-  apply: null,
-  reset: null,
-};
-
-const filterOptionsChanged = (initialValues) => {
-  const allCheckboxes = document.getElementsByClassName(
-    "filter-input-checkbox",
-  );
-
-  for (let i = 0; i < allCheckboxes.length; i++) {
-    const checked = allCheckboxes[i].checked;
-    const initialValue = initialValues.checkboxes[i];
-
-    if (checked !== initialValue) {
-      return true;
-    }
-  }
-
-  const allInputs = document.getElementsByClassName("filter-input-range");
-
-  for (let i = 0; i < allInputs.length; i++) {
-    const input = allInputs[i].value;
-    const initialInput = initialValues.range[i];
-
-    if (input !== initialInput) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
-export function initFilters(
-  { viewObjects, viewCurrentObjects },
-  collections,
-  reconnectFunction,
-  { render, originalScroll, setRenderable },
-) {
+export function initFilters(viewObjects, collections, setRenderable) {
   const criteriaFunctions = {};
 
-  const initialValues = {
-    range: [],
-    checkboxes: [],
+  const apply = () => {
+    hideFilteredOut(
+      viewObjects,
+      criteriaFunctions,
+      document.getElementById("invert-filter").checked,
+    );
+    setRenderable(viewObjects);
+  };
+
+  const hideFilteredOut = (
+    viewObjects,
+    criteriaFunctions,
+    inverted = false,
+  ) => {
+    for (const { collection } of Object.values(viewObjects.datatypes)) {
+      for (const object of collection) {
+        object.filteredOut = false;
+      }
+    }
+
+    for (const [collectionName, criteriaFunction] of Object.entries(
+      criteriaFunctions,
+    )) {
+      for (const object of viewObjects.datatypes[collectionName].collection) {
+        const passes = criteriaFunction(object);
+        object.filteredOut = inverted ? passes : !passes;
+      }
+    }
   };
 
   const resetFiltersContent = () => {
-    const content = document.getElementById("filters-content");
-    content.replaceChildren();
+    filtersContent.replaceChildren();
 
     for (const collection of collections) {
       delete criteriaFunctions[collection];
       const init = map[collection];
       if (init) {
-        const criteriaFunction = init(content, viewObjects);
+        const criteriaFunction = init(filtersContent, viewObjects);
         criteriaFunctions[collection] = criteriaFunction;
       }
     }
@@ -101,80 +84,19 @@ export function initFilters(
       filters.style.display = "block";
     }
 
-    const filterOutCheckbox = document.getElementById("invert-filter");
-    filterOutCheckbox.checked = false;
-
-    const allCheckboxes = document.getElementsByClassName(
-      "filter-input-checkbox",
-    );
-
-    initialValues.checkboxes = [];
-
-    for (const input of allCheckboxes) {
-      const checked = input.checked;
-      initialValues.checkboxes.push(checked);
-    }
-
-    const allInputs = document.getElementsByClassName("filter-input-range");
-
-    initialValues.range = [];
-
-    for (const input of allInputs) {
-      const value = input.value;
-      initialValues.range.push(value);
-    }
+    document.getElementById("invert-filter").checked = false;
   };
 
   resetFiltersContent();
 
-  filters.apply = async () => {
-    const filtersChanged = filterOptionsChanged(initialValues);
+  filtersContent.addEventListener("change", apply);
+  filtersContent.addEventListener("input", apply);
 
-    if (!filtersChanged) {
-      return;
-    }
-
-    const filterOutValue = document.getElementById("invert-filter").checked;
-    const ids = filterOut(
-      viewObjects,
-      viewCurrentObjects,
-      criteriaFunctions,
-      filterOutValue,
-    );
-
-    const isEmpty = checkEmptyObject(viewCurrentObjects);
-
-    if (isEmpty) {
-      showMessage("No objects satisfy the filter options");
-      return;
-    }
-
-    reconnectFunction(viewCurrentObjects, ids, collections);
-    await render(viewCurrentObjects);
-    filterScroll(); // Calls scrollFunction (sets new scroll position)
-    setRenderable(viewCurrentObjects);
-  };
-  filters.reset = async () => {
-    restoreRelations(viewObjects);
+  const reset = () => {
     resetFiltersContent();
-    copyObject(viewObjects, viewCurrentObjects);
-    await render(viewCurrentObjects);
-    originalScroll();
-    setRenderable(viewCurrentObjects);
+    hideFilteredOut(viewObjects, {}, false);
+    setRenderable(viewObjects);
   };
+
+  resetButton.onclick = reset;
 }
-
-const applyButton = document.getElementById("filter-apply");
-applyButton.addEventListener("click", () => {
-  filters.apply();
-});
-applyButton.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    filters.apply();
-  }
-});
-
-const resetButton = document.getElementById("filter-reset");
-resetButton.addEventListener("click", () => {
-  filters.reset();
-});
