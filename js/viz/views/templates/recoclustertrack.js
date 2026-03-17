@@ -1,4 +1,4 @@
-import { getCurrentSchemaVersion } from "../../globals.js";
+import { getCurrentSchemaVersion } from "../../../globals.js";
 
 export function recoClusterTrackVertex(viewObjects) {
   const recoParticles =

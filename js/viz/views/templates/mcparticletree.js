@@ -1,4 +1,4 @@
-import { MCParticle } from "../../viz/objects/MCParticle.js";
+import { MCParticle } from "../../objects/MCParticle.js";
 
 export function mcParticleTree(viewCurrentObjects) {
   const mcCollection =

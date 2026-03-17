@@ -4,8 +4,8 @@ import { buildTree } from "./templates/tree.js";
 import { listView } from "./templates/list.js";
 import { buildAssociationView } from "./templates/association-view.js";
 import { oneWayView } from "./templates/onewayview.js";
-import { schemaWithLinks } from "../globals.js";
-import { spanWithColor } from "../viz/lib/html-string.js";
+import { schemaWithLinks } from "../../globals.js";
+import { spanWithColor } from "../lib/html-string.js";
 
 export const possibleViews = {
   "Monte Carlo Particle Tree": {
