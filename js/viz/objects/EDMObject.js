@@ -2,7 +2,6 @@ import { buildBox, addBox } from "../draw/box.js";
 import { showParticleDetails } from "../draw/details.js";
 import { addTitleToBox } from "../draw/font.js";
 import { dragStart } from "../draw/drag.js";
-import { getContainer } from "../draw/app.js";
 import { Rectangle } from "pixi.js";
 
 export class EDMObject {
@@ -44,35 +43,4 @@ export class EDMObject {
     return [collectionName];
   }
 
-  isVisible() {
-    const viewport = getContainer();
-
-    return (
-      viewport.right > this.x &&
-      viewport.left < this.x + this.width &&
-      viewport.bottom > this.y &&
-      viewport.top < this.y + this.height
-    );
-  }
-
-  saveRelations() {
-    const relations = {};
-
-    if (!this.relations) {
-      relations.oneToManyRelations = this.oneToManyRelations;
-      relations.oneToOneRelations = this.oneToOneRelations;
-      this.relations = relations;
-
-      this.oneToManyRelations = {};
-      this.oneToOneRelations = {};
-    }
-  }
-
-  restoreRelations() {
-    if (this.relations) {
-      this.oneToManyRelations = this.relations.oneToManyRelations;
-      this.oneToOneRelations = this.relations.oneToOneRelations;
-    }
-    this.relations = null;
-  }
 }
