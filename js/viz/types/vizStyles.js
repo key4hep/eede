@@ -110,6 +110,14 @@ export const objectColor = {
   rose400: "#ff637e",
 };
 
+export const filteredOut = {
+  color: objectColor.neutral200,
+  lineColor: objectColor.neutral400,
+  colorOnHover: objectColor.neutral300,
+  colorOnClick: objectColor.neutral400,
+  linkColor: objectColor.neutral400,
+};
+
 export const size = {
   textXs: 12,
   textSm: 14,
