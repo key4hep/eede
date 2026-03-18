@@ -22,7 +22,8 @@ export function recoClusterTrackVertex(viewObjects) {
     return object;
   };
 
-  const vertexRelStr = getCurrentSchemaVersion() < 2 ? "startVertex" : "decayVertex";
+  const vertexRelStr =
+    getCurrentSchemaVersion() < 2 ? "startVertex" : "decayVertex";
 
   const firstRecoParticle = recoParticles[0];
   const recoHeight = firstRecoParticle.height;
@@ -82,7 +83,7 @@ export function recoClusterTrackVertex(viewObjects) {
     const relationsHeight = parseInt(
       clusterRelations.length * (clusterHeight + clusterVerticalGap) +
         trackRelations.length * (trackHeight + trackVerticalGap) +
-        (vertexRelation !== undefined ? vertexHeight + vertexVerticalGap : 0)
+        (vertexRelation !== undefined ? vertexHeight + vertexVerticalGap : 0),
     );
 
     const height =

@@ -12,7 +12,7 @@ export function buildTree(collection, relationOfReference) {
 
   for (const object of collection) {
     const childObjects = object.oneToManyRelations[relationOfReference].map(
-      (link) => link.to
+      (link) => link.to,
     );
     const objectId = `${object.index}-${object.collectionId}`;
     nodes.add(objectId);
@@ -29,7 +29,7 @@ export function buildTree(collection, relationOfReference) {
   const rootNodesIds = nodes.difference(children);
   const childlessRootNodesIds = rootNodesIds.intersection(childless);
   const rootNodesWithChildrenIds = rootNodesIds.difference(
-    childlessRootNodesIds
+    childlessRootNodesIds,
   );
   const rootNodesWithChildren = [];
   const childlessRootNodes = [];
