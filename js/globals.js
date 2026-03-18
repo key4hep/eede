@@ -33,18 +33,18 @@ export function getSupportedEDM4hepTypes(schemaVersion) {
   return supportedEDM4hepTypes[schemaVersion];
 }
 
+let currentSchemaVersion = null;
+
 export function setCurrentSchemaVersion(schemaVersion) {
-  window.sessionStorage.setItem("current-schema-version", schemaVersion);
+  currentSchemaVersion = schemaVersion;
 }
 
 export function getCurrentSchemaVersion() {
-  return window.sessionStorage.getItem("current-schema-version");
+  return currentSchemaVersion;
 }
 
 export function schemaWithLinks() {
-  const currentSchemaVersion = getCurrentSchemaVersion();
-
-  if (typeof currentSchemaVersion === "undefined") {
+  if (currentSchemaVersion === null) {
     return false;
   }
 
@@ -102,31 +102,31 @@ export function getFileData() {
  */
 export const eventCollection = {}; // store all events info (gradually store data for each event)
 
+let eventNumbers = null;
+
 export function getEventNumbers() {
-  const eventNumbersString = window.sessionStorage.getItem("event-numbers");
-  return JSON.parse(eventNumbersString);
+  return eventNumbers;
 }
 
-export function setEventNumbers(eventNumbers) {
-  window.sessionStorage.setItem("event-numbers", JSON.stringify(eventNumbers));
+export function setEventNumbers(numbers) {
+  eventNumbers = numbers;
 }
 
 export function getEventIndex(eventNumber) {
-  const eventNumbers = getEventNumbers();
   return eventNumbers.findIndex((elem) => elem === Number(eventNumber));
 }
 
+let currentEventIndex = 0;
+
 export function setCurrentEventIndex(index) {
-  return Number(window.sessionStorage.setItem("current-event-index", index));
+  currentEventIndex = index;
 }
 
 export function getCurrentEventIndex() {
-  return Number(window.sessionStorage.getItem("current-event-index"));
+  return currentEventIndex;
 }
 
 export function getCurrentEventNumber() {
-  const currentEventIndex = getCurrentEventIndex();
-  const eventNumbers = getEventNumbers();
   return eventNumbers[currentEventIndex];
 }
 
@@ -148,12 +148,14 @@ export function getCurrentVisObjects() {
  */
 const scrollPositions = {};
 
+let currentView = null;
+
 export function setCurrentView(viewName) {
-  window.sessionStorage.setItem("current-view", viewName);
+  currentView = viewName;
 }
 
 export function getCurrentView() {
-  return window.sessionStorage.getItem("current-view");
+  return currentView;
 }
 
 function getViewScrollIndex() {
@@ -192,7 +194,10 @@ export function clearScrollPositions() {
  * Clearings
  */
 export function clearAllEventData() {
-  window.sessionStorage.clear();
+  currentSchemaVersion = null;
+  eventNumbers = null;
+  currentEventIndex = 0;
+  currentView = null;
 
   Object.keys(eventCollection).forEach((key) => {
     delete eventCollection[key];

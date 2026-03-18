@@ -1,6 +1,3 @@
-// Clear all possible stored state
-window.sessionStorage.clear();
-
 export function showParticleDetails() {
   document.getElementById("particle-details").style.display = "block";
 }
