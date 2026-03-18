@@ -23,6 +23,8 @@ const createApp = async () => {
   return app;
 };
 
+let currentWheelHandler = null;
+
 export const createContainer = (app, objects) => {
   const viewport = new Viewport({
     screenWidth: window.innerWidth,
@@ -44,27 +46,31 @@ export const createContainer = (app, objects) => {
 
   viewport.scale.set(1);
 
-  app.canvas.addEventListener(
-    "wheel",
-    (e) => {
-      e.preventDefault();
+  if (currentWheelHandler) {
+    app.canvas.removeEventListener("wheel", currentWheelHandler);
+  }
 
-      if (e.ctrlKey) {
-        const newScale = Math.max(
-          0.1,
-          Math.min(2, viewport.scaled * (1 - e.deltaY * 0.005)),
-        );
+  currentWheelHandler = (e) => {
+    e.preventDefault();
 
-        viewport.setZoom(newScale, true);
-      } else {
-        viewport.x -= e.deltaX;
-        viewport.y -= e.deltaY;
-      }
+    if (e.ctrlKey) {
+      const newScale = Math.max(
+        0.1,
+        Math.min(2, viewport.scaled * (1 - e.deltaY * 0.005)),
+      );
 
-      setRenderable(objects);
-    },
-    { passive: false }, // Override default listener behaviour
-  );
+      viewport.setZoom(newScale, true);
+    } else {
+      viewport.x -= e.deltaX;
+      viewport.y -= e.deltaY;
+    }
+
+    setRenderable(objects);
+  };
+
+  app.canvas.addEventListener("wheel", currentWheelHandler, {
+    passive: false, // Override default listener behaviour
+  });
 
   app.stage.eventMode = "static";
   app.stage.hitArea = app.screen;

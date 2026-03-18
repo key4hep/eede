@@ -83,27 +83,31 @@ async function renderView(viewFunction, objects) {
 }
 
 export const drawView = async (view) => {
-  const allVisObjects = getCurrentVisObjects();
-  const isEmpty = checkEmptyObject(allVisObjects);
+  const { preFilterFunction, viewFunction, collections, description } =
+    possibleViews[view];
 
+  const allVisObjects = getCurrentVisObjects();
+
+  const viewObjects = {};
+  preFilterFunction(allVisObjects, viewObjects);
   paintButton(view);
+  const isEmpty = checkEmptyObject(viewObjects);
 
   if (isEmpty) {
     emptyViewMessage();
     hideViewInformation();
-  } else {
-    const { viewFunction, collections, description } = possibleViews[view];
-
-    showViewInformation(view, description);
-    setInfoButtonName(getCurrentView());
-    hideEmptyViewMessage();
-
-    await renderView(viewFunction, allVisObjects);
-
-    setRenderable(allVisObjects);
-    handleFilters(allVisObjects, collections, setRenderable);
-    setupToggles(collections, allVisObjects);
+    return;
   }
+
+  showViewInformation(view, description);
+  setInfoButtonName(getCurrentView());
+  hideEmptyViewMessage();
+
+  await renderView(viewFunction, viewObjects);
+
+  setRenderable(viewObjects);
+  handleFilters(viewObjects, collections, setRenderable);
+  setupToggles(collections, viewObjects);
 };
 
 const buttons = [];
