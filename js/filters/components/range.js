@@ -57,7 +57,7 @@ export class RangeComponent {
   }
 }
 
-export function rangeLogic(min, max, object, property) {
+export function scalarRangeLogic(min, max, object, property) {
   const minVal = parseFloat(min);
   const maxVal = parseFloat(max);
 
@@ -76,7 +76,7 @@ export function magnitudeRangeLogic(min, max, object, property) {
   const maxVal = parseFloat(max);
 
   const objectMagnitude = Math.sqrt(
-    Object.values(object[property]).reduce((acc, val) => acc + val ** 2, 0)
+    Object.values(object[property]).reduce((acc, val) => acc + val ** 2, 0),
   );
 
   if (minVal && maxVal) {

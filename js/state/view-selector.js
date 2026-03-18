@@ -16,7 +16,7 @@ import {
   saveSize,
 } from "../viz/draw/app.js";
 import { setRenderable } from "../viz/draw/renderable.js";
-import { initFilters } from "../filters/filter.js";
+import { handleFilters } from "../filters/filter.js";
 import { setupToggles } from "../toggle/toggle.js";
 import {
   getCurrentVisObjects,
@@ -101,7 +101,7 @@ export const drawView = async (view) => {
     await renderView(viewFunction, allVisObjects);
 
     setRenderable(allVisObjects);
-    initFilters(allVisObjects, collections, setRenderable);
+    handleFilters(allVisObjects, collections, setRenderable);
     setupToggles(collections, allVisObjects);
   }
 };
