@@ -61,11 +61,11 @@ export function scalarRangeLogic(min, max, object, property) {
   const minVal = parseFloat(min);
   const maxVal = parseFloat(max);
 
-  if (minVal && maxVal) {
+  if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
     return object[property] >= minVal && object[property] <= maxVal;
-  } else if (minVal) {
+  } else if (Number.isFinite(minVal)) {
     return object[property] >= minVal;
-  } else if (maxVal) {
+  } else if (Number.isFinite(maxVal)) {
     return object[property] <= maxVal;
   }
   return true;
@@ -79,11 +79,11 @@ export function magnitudeRangeLogic(min, max, object, property) {
     Object.values(object[property]).reduce((acc, val) => acc + val ** 2, 0),
   );
 
-  if (minVal && maxVal) {
+  if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
     return objectMagnitude >= minVal && objectMagnitude <= maxVal;
-  } else if (minVal) {
+  } else if (Number.isFinite(minVal)) {
     return objectMagnitude >= minVal;
-  } else if (maxVal) {
+  } else if (Number.isFinite(maxVal)) {
     return objectMagnitude <= maxVal;
   }
   return true;
