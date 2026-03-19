@@ -111,11 +111,11 @@ export const objectColor = {
 };
 
 export const filteredOut = {
-  color: objectColor.neutral200,
+  color: objectColor.neutral100,
+  colorOnHover: objectColor.neutral200,
+  colorOnClick: objectColor.neutral300,
   lineColor: objectColor.neutral400,
-  colorOnHover: objectColor.neutral300,
-  colorOnClick: objectColor.neutral400,
-  linkColor: objectColor.neutral400,
+  linkColor: objectColor.neutral300,
 };
 
 export const size = {

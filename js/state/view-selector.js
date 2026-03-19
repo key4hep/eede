@@ -83,8 +83,13 @@ async function renderView(viewFunction, objects) {
 }
 
 export const drawView = async (view) => {
-  const { preFilterFunction, viewFunction, collections, description } =
-    possibleViews[view];
+  const {
+    preFilterFunction,
+    viewFunction,
+    scrollFunction,
+    collections,
+    description,
+  } = possibleViews[view];
 
   const allVisObjects = getCurrentVisObjects();
 
@@ -104,6 +109,14 @@ export const drawView = async (view) => {
   hideEmptyViewMessage();
 
   await renderView(viewFunction, viewObjects);
+
+  const savedPosition = getSavedScrollPosition();
+  if (savedPosition) {
+    setViewportPosition(savedPosition.x, savedPosition.y);
+  } else {
+    scrollFunction();
+    saveCurrentScrollPosition(getViewportPosition());
+  }
 
   setRenderable(viewObjects);
   handleFilters(viewObjects, collections, setRenderable);

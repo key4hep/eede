@@ -7,14 +7,10 @@ function updateLinkColor(link) {
   const filtered = link.from.filteredOut || link.to.filteredOut;
   const color = filtered ? filteredOut.linkColor : link.color;
 
-  link.renderedLink.alpha = filtered ? 0.5 : 1;
-
   redrawLink(link, color);
 }
 
 function updateBoxColors(object) {
-  object.renderedBox.alpha = object.filteredOut ? 0.5 : 1;
-
   if (object.filteredOut) {
     redrawBox(object, filteredOut.color, filteredOut.lineColor);
   } else {
