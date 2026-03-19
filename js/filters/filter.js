@@ -125,13 +125,13 @@ function buildCollectionFilters(typeName, parentContainer, viewObjects) {
   return (object) => {
     for (const filter of scalarRangeFilters) {
       const { min, max } = filter.getValues();
-      if (!scalarRangeLogic(min, max, object, filter.propertyName))
+      if (!scalarRangeLogic(min, max, object[filter.propertyName]))
         return false;
     }
 
     for (const filter of magnitudeRangeFilters) {
       const { min, max } = filter.getValues();
-      if (!magnitudeRangeLogic(min, max, object, filter.propertyName))
+      if (!magnitudeRangeLogic(min, max, object[filter.propertyName]))
         return false;
     }
 
