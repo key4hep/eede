@@ -1,5 +1,5 @@
 import { loadObjects } from "../js/loaders/load.js";
-import { filterOut } from "../js/filters/filter-out.js";
+import { filterOut } from "../js/ui/filters/filter-out.js";
 import data from "./filter.json" with { type: "json" };
 
 let objects = {};

@@ -3,7 +3,7 @@ import {
   clearInputModal,
   showInputModal,
   showInputModalCloseButton,
-} from "../modals/input.js";
+} from "../ui/modals/input.js";
 
 document.getElementById("change-file").addEventListener("click", () => {
   clearInputModal();

@@ -1,4 +1,4 @@
-import { warningMsg, errorMsg } from "../lib/messages.js";
+import { warningMsg, errorMsg } from "../../lib/messages.js";
 import {
   isPixiRunning,
   setFileData,
@@ -8,13 +8,13 @@ import {
   setCurrentEventIndex,
   setCurrentView,
   getCurrentView,
-} from "../state/globals.js";
-import { startPixi } from "../viz/draw/app.js";
-import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } from "../state/main.js";
+} from "../../state/globals.js";
+import { startPixi } from "../../viz/draw/app.js";
+import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } from "../../state/main.js";
 import { hideDeploySwitch } from "../toggle/switch-deploy.js";
-import { updateFileName, showFileNameMenu } from "../state/current-file.js";
-import { renderEvent, updateEventSelectorMenu } from "../state/load-event.js";
-import { possibleViews } from "../viz/views/views-dictionary.js";
+import { updateFileName, showFileNameMenu } from "../../state/current-file.js";
+import { renderEvent, updateEventSelectorMenu } from "../../state/load-event.js";
+import { possibleViews } from "../../viz/views/views-dictionary.js";
 import { selectViewInformation } from "./information.js";
 
 export function hideInputModal() {

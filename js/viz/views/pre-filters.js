@@ -3,7 +3,7 @@ import {
   preFilterAssociation,
   preFilterList,
   preFilterOneWay,
-} from "../../filters/pre-filter.js";
+} from "../../ui/filters/pre-filter.js";
 import { emptyCopyObject } from "../../lib/copy.js";
 import { getCurrentSchemaVersion, schemaWithLinks } from "../../state/globals.js";
 

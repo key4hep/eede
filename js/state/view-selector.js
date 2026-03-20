@@ -8,7 +8,7 @@ import {
 import {
   showViewInformation,
   hideViewInformation,
-} from "../modals/information.js";
+} from "../ui/modals/information.js";
 import { renderObjects } from "../viz/draw/render.js";
 import {
   getViewportPosition,
@@ -16,8 +16,8 @@ import {
   saveSize,
 } from "../viz/draw/app.js";
 import { setRenderable } from "../viz/draw/renderable.js";
-import { handleFilters } from "../filters/filter.js";
-import { setupToggles } from "../toggle/toggle.js";
+import { handleFilters } from "../ui/filters/filter.js";
+import { setupToggles } from "../ui/toggle/toggle.js";
 import {
   getCurrentVisObjects,
   setCurrentView,

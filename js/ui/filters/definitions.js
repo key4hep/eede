@@ -1,4 +1,4 @@
-import { simStatusBitFieldDisplayValues } from "../viz/types/simStatus.js";
+import { simStatusBitFieldDisplayValues } from "../../viz/types/simStatus.js";
 
 export const filterDefinitions = {
   "edm4hep::MCParticle": {
