@@ -1,29 +1,7 @@
-import { layoutList } from "./layoutList.js";
-
-export function layoutReco(viewCurrentObjects) {
-  return layoutTree(
-    viewCurrentObjects.datatypes["edm4hep::ReconstructedParticle"].collection ??
-      [],
-    "particles",
-  );
-}
-
-export function layoutTrack(viewCurrentObjects) {
-  return layoutTree(
-    viewCurrentObjects.datatypes["edm4hep::Track"].collection ?? [],
-    "tracks",
-  );
-}
-
-export function layoutCluster(viewCurrentObjects) {
-  return layoutTree(
-    viewCurrentObjects.datatypes["edm4hep::Cluster"].collection ?? [],
-    "clusters",
-  );
-}
+import { positionList } from "./positionList.js";
 
 // All particles that are related to itself have an one to many relation
-function layoutTree(collection, relationOfReference) {
+export function positionTree(collection, relationOfReference) {
   collection.forEach((object) => {
     object.row = null;
   });
@@ -71,7 +49,7 @@ function layoutTree(collection, relationOfReference) {
   const boxWidth = collection[0].width;
   const boxHeight = collection[0].height;
 
-  const [, listHeight] = layoutList(childlessRootNodes);
+  const [, listHeight] = positionList(childlessRootNodes);
 
   let cols = (window.innerWidth - horizontalGap) / (boxWidth + horizontalGap);
   const decimal = cols % 1;

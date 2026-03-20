@@ -1,20 +1,16 @@
-import { layoutMonteCarlo } from "./layoutFunctions/layoutMCParticleTreeTree.js";
-import { layoutRecoClusterTrackVertex } from "./layoutFunctions/layoutRecoClusterTrackVertex.js";
 import {
+  layoutMonteCarlo,
+  layoutRecoClusterTrackVertex,
   layoutReco,
   layoutTrack,
   layoutCluster,
-} from "./layoutFunctions/layoutTree.js";
-import {
   layoutParticleId,
   layoutVertex,
-} from "./layoutFunctions/layoutList.js";
-import {
   layoutMonteCarloReco,
   layoutMonteCarloTrack,
   layoutMonteCarloCluster,
-} from "./layoutFunctions/layoutAssociation.js";
-import { layoutRecoParticleId } from "./layoutFunctions/layoutOneWay.js";
+  layoutRecoParticleId,
+} from "./layoutFunctions.js";
 import {
   selectMonteCarlo,
   selectReco,

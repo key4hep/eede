@@ -1,16 +1,4 @@
-export function layoutParticleId(viewCurrentObjects) {
-  return layoutList(
-    viewCurrentObjects.datatypes["edm4hep::ParticleID"].collection ?? [],
-  );
-}
-
-export function layoutVertex(viewCurrentObjects) {
-  return layoutList(
-    viewCurrentObjects.datatypes["edm4hep::Vertex"].collection ?? [],
-  );
-}
-
-function layoutList(collection) {
+export function positionList(collection) {
   if (collection.length < 1) {
     return [0, 0];
   }

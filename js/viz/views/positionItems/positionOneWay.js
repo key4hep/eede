@@ -1,8 +1,4 @@
-export function layoutRecoParticleId(viewObjects) {
-  return layoutOneWay(viewObjects, "edm4hep::ParticleID", "particle");
-}
-
-function layoutOneWay(viewObjects, fromCollectionName, relationName) {
+export function positionOneWay(viewObjects, fromCollectionName, relationName) {
   const relations =
     viewObjects.datatypes[fromCollectionName].oneToOne[relationName];
 
