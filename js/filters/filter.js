@@ -120,6 +120,7 @@ function buildCollectionFilters(typeName, parentContainer, viewObjects) {
 
   const [collContainer, collCheckboxes] = buildBitfieldCheckboxes(collection);
   container.appendChild(collContainer);
+
   parentContainer.appendChild(container);
 
   return (object) => {
@@ -220,6 +221,7 @@ export function handleFilters(viewObjects, collections, setRenderable) {
 
   filtersContent.addEventListener("change", apply);
   filtersContent.addEventListener("input", apply);
+  document.getElementById("invert-filter").addEventListener("change", apply);
 
   const reset = () => {
     initFilters();
