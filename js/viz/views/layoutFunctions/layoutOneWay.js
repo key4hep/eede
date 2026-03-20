@@ -1,7 +1,8 @@
-const topMargin = 50;
-const horizontalGapPercentage = 0.5;
+export function layoutRecoParticleId(viewObjects) {
+  return layoutOneWay(viewObjects, "edm4hep::ParticleID", "particle");
+}
 
-export function layoutOneWay(viewObjects, fromCollectionName, relationName) {
+function layoutOneWay(viewObjects, fromCollectionName, relationName) {
   const relations =
     viewObjects.datatypes[fromCollectionName].oneToOne[relationName];
 
@@ -11,6 +12,9 @@ export function layoutOneWay(viewObjects, fromCollectionName, relationName) {
   if (fromCollection.length === 0 || toCollection.length === 0) {
     return [0, 0];
   }
+
+  const topMargin = 50;
+  const horizontalGapPercentage = 0.5;
 
   const fromWidth = fromCollection[0].width;
   const toWidth = toCollection[0].width;
@@ -30,11 +34,9 @@ export function layoutOneWay(viewObjects, fromCollectionName, relationName) {
   const totalHeight =
     fromCollection.length * (height + verticalGap) + verticalGap;
 
-  let accHeight = 0;
-
   const fromX = width / 2 - fromWidth - fromHorizontalGap;
-
   const toX = width / 2 + toHorizontalGap;
+  let accHeight = 0;
 
   for (let i = 0; i < fromCollection.length; i++) {
     fromCollection[i].x = fromX;

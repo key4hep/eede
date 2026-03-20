@@ -1,6 +1,6 @@
 import { MCParticle } from "../../objects/MCParticle.js";
 
-export function layoutMCParticleTree(viewCurrentObjects) {
+export function layoutMonteCarlo(viewCurrentObjects) {
   const mcCollection =
     viewCurrentObjects.datatypes["edm4hep::MCParticle"].collection ?? [];
 
