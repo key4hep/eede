@@ -5,26 +5,29 @@ import {
   selectOneWay,
 } from "./generic.js";
 import { emptyCopyObject } from "../../../lib/utils/copy.js";
-import { getCurrentSchemaVersion, schemaWithLinks } from "../../../state/globals.js";
+import {
+  getCurrentSchemaVersion,
+  schemaWithLinks,
+} from "../../../state/globals.js";
 
-export function selectMCTree(currentObjects, viewObjects) {
+export function selectMonteCarlo(currentObjects, viewObjects) {
   selectTree(currentObjects, viewObjects, "edm4hep::MCParticle", [
     "parents",
     "daughters",
   ]);
 }
 
-export function selectRecoTree(currentObjects, viewObjects) {
+export function selectReco(currentObjects, viewObjects) {
   selectTree(currentObjects, viewObjects, "edm4hep::ReconstructedParticle", [
     "particles",
   ]);
 }
 
-export function selectTrackTree(currentObjects, viewObjects) {
+export function selectTrack(currentObjects, viewObjects) {
   selectTree(currentObjects, viewObjects, "edm4hep::Track", ["tracks"]);
 }
 
-export function selectClusterTree(currentObjects, viewObjects) {
+export function selectCluster(currentObjects, viewObjects) {
   selectTree(currentObjects, viewObjects, "edm4hep::Cluster", ["clusters"]);
 }
 
@@ -122,7 +125,7 @@ export function selectRecoClusterTrackVertex(currentObjects, viewObjects) {
   viewObjects.datatypes["edm4hep::Vertex"].collection = vertexCollection;
 }
 
-export function selectMCReco(currentVisObjects, viewObjects) {
+export function selectMonteCarloReco(currentVisObjects, viewObjects) {
   let linkCollTypeName =
     "podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>";
   if (!schemaWithLinks()) {
@@ -137,7 +140,7 @@ export function selectMCReco(currentVisObjects, viewObjects) {
   );
 }
 
-export function selectMCTrack(currentObjects, viewObjects) {
+export function selectMonteCarloTrack(currentObjects, viewObjects) {
   selectAssociation(
     currentObjects,
     viewObjects,
@@ -147,7 +150,7 @@ export function selectMCTrack(currentObjects, viewObjects) {
   );
 }
 
-export function selectMCCluster(currentObjects, viewObjects) {
+export function selectMonteCarloCluster(currentObjects, viewObjects) {
   selectAssociation(
     currentObjects,
     viewObjects,
@@ -157,15 +160,15 @@ export function selectMCCluster(currentObjects, viewObjects) {
   );
 }
 
-export function selectVertexList(currentObjects, viewObjects) {
+export function selectVertex(currentObjects, viewObjects) {
   selectList(currentObjects, viewObjects, "edm4hep::Vertex");
 }
 
-export function selectParticleIDList(currentObjects, viewObjects) {
+export function selectParticleId(currentObjects, viewObjects) {
   selectList(currentObjects, viewObjects, "edm4hep::ParticleID");
 }
 
-export function selectRecoParticleID(currentObjects, viewObjects) {
+export function selectRecoParticleId(currentObjects, viewObjects) {
   selectOneWay(
     currentObjects,
     viewObjects,

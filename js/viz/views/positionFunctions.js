@@ -1,4 +1,7 @@
-import { setViewportPosition, getContainerSize } from "../draw/app.js";
+import {
+  setViewportPosition,
+  getContainerSize,
+} from "../../state/pixi-state.js";
 
 export const positionTopLeft = () => {
   setViewportPosition(0, 0);
