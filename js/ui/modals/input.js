@@ -9,15 +9,38 @@ import {
   setCurrentEventIndex,
   setCurrentView,
   getCurrentView,
+  getCurrentEventIndex,
+  getCurrentEventNumber,
+  getCurrentEventName,
+  eventCollection,
+  currentVisObjects,
+  getCurrentVisObjects,
+  saveCurrentScrollPosition,
+  getSavedScrollPosition,
 } from "../../state/globals.js";
-import { startPixi } from "../../state/pixi-state.js";
-import { hideDeploySwitch } from "../toggle/switch-deploy.js";
 import {
-  renderEvent,
-  updateEventSelectorMenu,
-} from "../../state/load-event.js";
+  startPixi,
+  getViewportPosition,
+  setViewportPosition,
+  saveSize,
+} from "../../state/pixi-state.js";
+import { hideDeploySwitch } from "../toggle/switch-deploy.js";
 import { possibleViews } from "../../viz/views/viewsDictionary.js";
 import { selectViewInformation } from "./information.js";
+import { loadObjects } from "../../loaders/load.js";
+import { objectTypes } from "../../lib/constants/objectTypes.js";
+import { copyObject } from "../../lib/utils/copy.js";
+import { checkEmptyObject } from "../../lib/utils/empty-object.js";
+import {
+  emptyViewMessage,
+  hideEmptyViewMessage,
+  showMessage,
+} from "../../lib/utils/messages.js";
+import { showViewInformation, hideViewInformation } from "./information.js";
+import { renderObjects } from "../../viz/draw/render.js";
+import { setRenderable } from "../../viz/draw/renderable.js";
+import { handleFilters } from "../filters/filter.js";
+import { setupToggles } from "../toggle/toggle.js";
 
 export function hideInputModal() {
   document.getElementById("input-modal").style.display = "none";
@@ -46,6 +69,151 @@ export function clearInputModal() {
   document.getElementById("available-views").replaceChildren();
   document.getElementById("input-modal-view-selector").style.display = "none";
 }
+
+function renderEvent(eventIndex) {
+  setCurrentEventIndex(eventIndex);
+
+  // load selected event
+  const currentEventIndex = getCurrentEventIndex();
+  if (eventCollection[currentEventIndex] === undefined) {
+    const objects = loadObjects(getFileData(), getCurrentEventNumber());
+
+    eventCollection[currentEventIndex] = objects;
+
+    for (const datatype in eventCollection[currentEventIndex].datatypes) {
+      const classType = objectTypes[datatype];
+      const collection =
+        eventCollection[currentEventIndex].datatypes[datatype].collection;
+      classType.setup(collection);
+    }
+    copyObject(objects, currentVisObjects);
+  } else {
+    copyObject(eventCollection[currentEventIndex], currentVisObjects);
+  }
+
+  // update event number
+  if (eventNumberElem.firstChild) {
+    eventNumberElem.removeChild(eventNumberElem.firstChild);
+  }
+  eventNumberElem.appendChild(document.createTextNode(getCurrentEventName()));
+
+  drawView(getCurrentView());
+}
+
+async function renderView(layoutFunction, objects) {
+  const empty = checkEmptyObject(objects);
+
+  if (empty) {
+    showMessage("No objects satisfy the filter options");
+    return;
+  }
+
+  let [width, height] = layoutFunction(objects);
+  if (width === 0 && height === 0) {
+    showMessage("No objects satisfy the filter options");
+    return;
+  }
+
+  width = Math.max(width, window.innerWidth);
+  height = Math.max(height, window.innerHeight);
+  saveSize(width, height);
+  await renderObjects(objects);
+}
+
+export const drawView = async (view) => {
+  const {
+    selectorFunction,
+    layoutFunction,
+    positionFunction,
+    collections,
+    description,
+  } = possibleViews[view];
+
+  const allVisObjects = getCurrentVisObjects();
+
+  const viewObjects = {};
+  selectorFunction(allVisObjects, viewObjects);
+
+  // paint buttons
+  const buttons = document.querySelectorAll("#view-selector .view-button");
+  for (const button of buttons) {
+    if (button.innerText === view) {
+      button.style.backgroundColor = "#c5c5c5";
+    } else {
+      button.style.backgroundColor = "#f1f1f1";
+    }
+  }
+
+  const isEmpty = checkEmptyObject(viewObjects);
+
+  if (isEmpty) {
+    emptyViewMessage();
+    hideViewInformation();
+    return;
+  }
+
+  showViewInformation(view, description);
+
+  // set info button name
+  const button = document.getElementById("view-information-button");
+  button.innerText = getCurrentView();
+
+  hideEmptyViewMessage();
+
+  await renderView(layoutFunction, viewObjects);
+
+  const savedPosition = getSavedScrollPosition();
+  if (savedPosition) {
+    setViewportPosition(savedPosition.x, savedPosition.y);
+  } else {
+    positionFunction();
+    saveCurrentScrollPosition(getViewportPosition());
+  }
+
+  setRenderable(viewObjects);
+  handleFilters(viewObjects, collections, setRenderable);
+  setupToggles(collections, viewObjects);
+};
+
+// Page updates
+const eventNumberElem = document.getElementById("selected-event");
+const previousEvent = document.getElementById("previous-event");
+const nextEvent = document.getElementById("next-event");
+
+previousEvent.addEventListener("click", () => {
+  const eventNumbers = getEventNumbers();
+  const currentEventIndex = getCurrentEventIndex();
+
+  if (currentEventIndex <= 0) {
+    return;
+  }
+
+  const newEventNum = `${eventNumbers[currentEventIndex - 1]}`;
+  saveCurrentScrollPosition(getViewportPosition());
+  renderEvent(newEventNum);
+});
+
+nextEvent.addEventListener("click", () => {
+  const eventNumbers = getEventNumbers();
+  const currentEventIndex = getCurrentEventIndex();
+
+  if (currentEventIndex + 1 >= eventNumbers.length) {
+    return;
+  }
+
+  const newEventNum = `${eventNumbers[currentEventIndex + 1]}`;
+  saveCurrentScrollPosition(getViewportPosition());
+  renderEvent(newEventNum);
+});
+
+eventNumberElem.addEventListener("click", () => {
+  const eventSelectorMenu = document.getElementById("event-selector-menu");
+  if (eventSelectorMenu.style.display === "flex") {
+    eventSelectorMenu.style.display = "none";
+  } else {
+    eventSelectorMenu.style.display = "flex";
+  }
+});
 
 document
   .getElementById("input-modal-file-input")
@@ -152,8 +320,24 @@ document
     const fileNameElem = document.getElementById("current-file-name");
     fileNameElem.textContent = fileName;
 
-    updateEventSelectorMenu();
+    // update event selector menu;
+    const eventSelectorMenu = document.getElementById("event-selector-menu");
+    eventSelectorMenu.replaceChildren();
 
+    const eventNumbers = getEventNumbers();
+    for (const [eventIndex, eventNumber] of eventNumbers.entries()) {
+      const optionElementMenu = document.createElement("div");
+      optionElementMenu.className = "event-option";
+      optionElementMenu.appendChild(
+        document.createTextNode(`Event ${eventNumber}`),
+      );
+      eventSelectorMenu.appendChild(optionElementMenu);
+      optionElementMenu.addEventListener("click", () => {
+        saveCurrentScrollPosition(getViewportPosition());
+        renderEvent(eventIndex);
+        eventSelectorMenu.style.display = "none";
+      });
+    }
     // show file name menu
     const fileNameMenu = document.getElementById("current-file");
     fileNameMenu.style.display = "flex";

@@ -1,3 +1,9 @@
+export function copyObject(source, destiny) {
+  for (const [key, value] of Object.entries(source)) {
+    destiny[key] = value;
+  }
+}
+
 export function emptyCopyObject(source, destiny) {
   destiny.datatypes = {};
 
