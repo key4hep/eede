@@ -1,5 +1,5 @@
 import { Graphics } from "pixi.js";
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainer } from "../../state/pixi-state.js";
 
 function fromPoints(box) {
   return [box.x + box.width / 2, box.y + box.height];
@@ -70,9 +70,7 @@ export function redrawLink(link, color) {
   if (link.renderedLink?.parent) {
     container.removeChild(link.renderedLink);
   }
-  const [from, to] = link.reverse
-    ? [link.to, link.from]
-    : [link.from, link.to];
+  const [from, to] = link.reverse ? [link.to, link.from] : [link.from, link.to];
   link.renderedLink = computeCurve(link, from, to, color);
   container.addChild(link.renderedLink);
 }

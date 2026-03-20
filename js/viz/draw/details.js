@@ -1,4 +1,4 @@
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainer } from "../../state/pixi-state.js";
 import { filteredOut } from "../../lib/constants/vizStyles.js";
 
 const particleDetails = document.getElementById("particle-details");

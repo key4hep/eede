@@ -1,5 +1,5 @@
 import { Graphics, Assets, Sprite, Cache } from "pixi.js";
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainer } from "../../state/pixi-state.js";
 
 export { addTitleToBox, addLinesToBox } from "./font.js";
 

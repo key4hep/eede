@@ -1,4 +1,5 @@
 import { warningMsg, errorMsg } from "../../lib/utils/messages.js";
+import { getFileName, clearAllEventData } from "./globals.js";
 import {
   isPixiRunning,
   setFileData,
@@ -9,12 +10,13 @@ import {
   setCurrentView,
   getCurrentView,
 } from "../../state/globals.js";
-import { startPixi } from "../../viz/draw/app.js";
-import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } from "../../state/main.js";
+import { startPixi } from "../../state/pixi-state.js";
 import { hideDeploySwitch } from "../toggle/switch-deploy.js";
-import { updateFileName, showFileNameMenu } from "../../state/current-file.js";
-import { renderEvent, updateEventSelectorMenu } from "../../state/load-event.js";
-import { possibleViews } from "../../viz/views/views-dictionary.js";
+import {
+  renderEvent,
+  updateEventSelectorMenu,
+} from "../../state/load-event.js";
+import { possibleViews } from "../../viz/views/viewsDictionary.js";
 import { selectViewInformation } from "./information.js";
 
 export function hideInputModal() {
@@ -134,13 +136,35 @@ document
     }
     hideInputModal();
     hideDeploySwitch();
-    showEventSwitcher();
-    showViewsMenu();
-    updateFileName();
+
+    // show event switcher();
+    const eventSwitcher = document.getElementById("event-switcher");
+    eventSwitcher.style.display = "flex";
+
+    // show views menu();
+    const viewsMenu = document.getElementById("left-menu");
+    const aboutButton = document.getElementById("about-information-button");
+    viewsMenu.style.display = "flex";
+    aboutButton.style.display = "block";
+
+    // update file name
+    const fileName = getFileName();
+    const fileNameElem = document.getElementById("current-file-name");
+    fileNameElem.textContent = fileName;
+
     updateEventSelectorMenu();
-    showFileNameMenu();
-    showFilters();
-    showParticleDetails();
+
+    // show file name menu
+    const fileNameMenu = document.getElementById("current-file");
+    fileNameMenu.style.display = "flex";
+
+    // show filters
+    const filters = document.getElementById("filters");
+    filters.style.display = "block";
+
+    // show particle details();
+    document.getElementById("particle-details").style.display = "block";
+
     selectViewInformation();
     renderEvent(eventIndex);
   });
@@ -148,3 +172,10 @@ document
 document
   .getElementById("input-modal-close-button")
   .addEventListener("click", hideInputModal);
+
+document.getElementById("change-file").addEventListener("click", () => {
+  clearInputModal();
+  showInputModalCloseButton();
+  clearAllEventData();
+  showInputModal();
+});

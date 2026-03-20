@@ -1,4 +1,4 @@
-import { getApp, createContainer } from "./app.js";
+import { getApp, createContainer } from "../../state/pixi-state.js";
 
 export async function renderObjects(objects) {
   const app = getApp();
