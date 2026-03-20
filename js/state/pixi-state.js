@@ -2,7 +2,7 @@ import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { dragEnd } from "../viz/draw/drag.js";
 import { setRenderable } from "../viz/draw/renderable.js";
-import { objectColor } from "../types/vizStyles.js";
+import { objectColor } from "../lib/constants/vizStyles.js";
 
 const pixi = {
   app: null,

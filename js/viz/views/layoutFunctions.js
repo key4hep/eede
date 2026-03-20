@@ -6,7 +6,10 @@ import { positionMonteCarlo } from "./positionItems/positionMCParticleTree.js";
 import { positionRecoClusterTrackVertex } from "./positionItems/positionRecoClusterTrackVertex.js";
 import { schemaWithLinks } from "../../state/globals.js";
 
-export { positionMonteCarlo as layoutMonteCarlo, positionRecoClusterTrackVertex as layoutRecoClusterTrackVertex };
+export {
+  positionMonteCarlo as layoutMonteCarlo,
+  positionRecoClusterTrackVertex as layoutRecoClusterTrackVertex,
+};
 
 export function layoutReco(viewCurrentObjects) {
   return positionTree(

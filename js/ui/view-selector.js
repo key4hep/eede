@@ -5,7 +5,7 @@ import {
   saveCurrentScrollPosition,
 } from "../state/globals.js";
 import { getViewportPosition } from "../state/pixi-state.js";
-import { drawView } from "./modals/input.js";
+import { drawView } from "../viz/renderView.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");

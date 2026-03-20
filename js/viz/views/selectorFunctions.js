@@ -3,7 +3,7 @@ import { buildAssociation } from "./buildStructures/buildAssociation.js";
 import { buildList } from "./buildStructures/buildList.js";
 import { buildOneWay } from "./buildStructures/buildOneWay.js";
 import { buildRecoClusterTrackVertex } from "./buildStructures/buildRecoClusterTrackVertex.js";
-import { schemaWithLinks } from "../../../state/globals.js";
+import { schemaWithLinks } from "../../state/globals.js";
 
 export function selectMonteCarlo(currentObjects, viewObjects) {
   buildTree(currentObjects, viewObjects, "edm4hep::MCParticle", [
