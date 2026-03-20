@@ -1,11 +1,13 @@
 import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
-import { dragEnd } from "./drag.js";
-import { setRenderable } from "./renderable.js";
-import { getPixiState } from "../../state/globals.js";
-import { objectColor } from "../../lib/constants/vizStyles.js";
+import { dragEnd } from "../viz/draw/drag.js";
+import { setRenderable } from "../viz/draw/renderable.js";
+import { getPixiState } from "./globals.js";
+import { objectColor } from "../types/vizStyles.js";
 
 const pixi = getPixiState();
+
+let currentWheelHandler = null;
 
 const createApp = async () => {
   const app = new Application();
@@ -22,8 +24,6 @@ const createApp = async () => {
   document.body.appendChild(app.canvas);
   return app;
 };
-
-let currentWheelHandler = null;
 
 export const createContainer = (app, objects) => {
   const viewport = new Viewport({
@@ -106,5 +106,6 @@ export const getContainerSize = () => {
 
 export const startPixi = async () => {
   const app = await createApp();
+
   pixi.app = app;
 };
