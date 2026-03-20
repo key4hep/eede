@@ -1,11 +1,8 @@
-import { EDMObject } from "./EDMObject.js";
+import { EDMObject } from "./itemEDMObject.js";
 import { getName } from "../../lib/utils/getName.js";
 import { parseCharge } from "../../lib/utils/parseCharge.js";
 import { getSimStatusDisplayValuesFromBit } from "../../lib/utils/sim-status.js";
-import {
-  svgElementToPixiSprite,
-  addImageToBox,
-} from "../draw/box.js";
+import { svgElementToPixiSprite, addImageToBox } from "../draw/box.js";
 import { addLinesToBox } from "../draw/font.js";
 import { textToSVG } from "../../lib/utils/generate-svg.js";
 import { objectColor } from "../../lib/constants/vizStyles.js";
@@ -112,7 +109,6 @@ export class MCParticle extends EDMObject {
     this.image = sprite;
     addImageToBox(sprite, this.renderedBox, imageY);
   }
-
 
   static setRows(mcCollection) {
     mcCollection.forEach((mcParticle) => {

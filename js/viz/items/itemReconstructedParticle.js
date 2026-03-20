@@ -1,4 +1,4 @@
-import { EDMObject } from "./EDMObject.js";
+import { EDMObject } from "./itemEDMObject.js";
 import { parseCharge } from "../../lib/utils/parseCharge.js";
 import { addLinesToBox } from "../draw/font.js";
 import { objectColor } from "../../lib/constants/vizStyles.js";
