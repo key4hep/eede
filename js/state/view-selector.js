@@ -1,5 +1,5 @@
 import { checkEmptyObject } from "../lib/utils/empty-object.js";
-import { possibleViews } from "../viz/views/views-dictionary.js";
+import { possibleViews } from "../viz/views/viewsDictionary.js";
 import {
   emptyViewMessage,
   hideEmptyViewMessage,
@@ -14,7 +14,7 @@ import {
   getViewportPosition,
   setViewportPosition,
   saveSize,
-} from "../viz/draw/app.js";
+} from "./pixi-state.js";
 import { setRenderable } from "../viz/draw/renderable.js";
 import { handleFilters } from "../ui/filters/filter.js";
 import { setupToggles } from "../ui/toggle/toggle.js";

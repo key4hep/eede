@@ -1,7 +1,7 @@
 import { loadObjects } from "../loaders/load.js";
-import { objectTypes } from "../viz/objects/objectTypes.js";
+import { objectTypes } from "../lib/constants/objectTypes.js";
 import { drawView } from "./view-selector.js";
-import { getViewportPosition } from "../viz/draw/app.js";
+import { getViewportPosition } from "./pixi-state.js";
 import {
   getFileData,
   getCurrentEventIndex,
