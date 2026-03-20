@@ -213,17 +213,25 @@ export function handleSchema3Event(eventData) {
           const fromObject = fromCollection[associationElement[fromName].index];
           const toObject = toCollection[associationElement[toName].index];
 
+          /** linkTypes[association] receives:
+           * - podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>
+           * - @todo not supported - podio::LinkCollection<edm4hep::Cluster,edm4hep::MCParticle>
+           * - @todo not supported - podio::LinkCollection<edm4hep::Track,edm4hep::MCParticle>
+           */
           const linkType = linkTypes[association];
-          const link = new linkType(
-            fromObject,
-            toObject,
-            associationElement.weight,
-          );
-          objects.associations[association].push(link);
-          fromObject.associations = {};
-          fromObject.associations[association] = link;
-          toObject.associations = {};
-          toObject.associations[association] = link;
+
+          if (linkType) {
+            const link = new linkType(
+              fromObject,
+              toObject,
+              associationElement.weight,
+            );
+            objects.associations[association].push(link);
+            fromObject.associations = {};
+            fromObject.associations[association] = link;
+            toObject.associations = {};
+            toObject.associations[association] = link;
+          }
         }
       }
     });
