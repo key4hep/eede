@@ -8,9 +8,9 @@ import {
   setCurrentEventIndex,
   setCurrentView,
   getCurrentView,
-} from "../globals.js";
+} from "../state/globals.js";
 import { startPixi } from "../viz/draw/app.js";
-import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } from "../main.js";
+import { showEventSwitcher, showViewsMenu, showFilters, showParticleDetails } from "../state/main.js";
 import { hideDeploySwitch } from "../toggle/switch-deploy.js";
 import { updateFileName, showFileNameMenu } from "../state/current-file.js";
 import { renderEvent, updateEventSelectorMenu } from "../state/load-event.js";

@@ -5,7 +5,7 @@ import {
   preFilterOneWay,
 } from "../../filters/pre-filter.js";
 import { emptyCopyObject } from "../../lib/copy.js";
-import { getCurrentSchemaVersion, schemaWithLinks } from "../../globals.js";
+import { getCurrentSchemaVersion, schemaWithLinks } from "../../state/globals.js";
 
 export function preFilterMCTree(currentObjects, viewObjects) {
   preFilterTree(currentObjects, viewObjects, "edm4hep::MCParticle", [

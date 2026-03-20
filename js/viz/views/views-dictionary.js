@@ -17,7 +17,7 @@ import {
   preFilterParticleIDList,
   preFilterRecoParticleID,
 } from "./pre-filters.js";
-import { schemaWithLinks } from "../../globals.js";
+import { schemaWithLinks } from "../../state/globals.js";
 import { spanWithColor } from "../lib/html-string.js";
 import { setViewportPosition, getContainerSize } from "../draw/app.js";
 

@@ -24,7 +24,7 @@ import {
   getCurrentView,
   saveCurrentScrollPosition,
   getSavedScrollPosition,
-} from "../globals.js";
+} from "./globals.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");

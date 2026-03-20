@@ -13,7 +13,7 @@ import {
   getEventNumbers,
   getCurrentView,
   saveCurrentScrollPosition,
-} from "../globals.js";
+} from "./globals.js";
 
 function copyObject(source, destiny) {
   for (const [key, value] of Object.entries(source)) {
