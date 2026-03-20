@@ -1,34 +1,34 @@
 import {
-  preFilterTree,
-  preFilterAssociation,
-  preFilterList,
-  preFilterOneWay,
-} from "../../ui/filters/pre-filter.js";
-import { emptyCopyObject } from "../../lib/copy.js";
-import { getCurrentSchemaVersion, schemaWithLinks } from "../../state/globals.js";
+  selectTree,
+  selectAssociation,
+  selectList,
+  selectOneWay,
+} from "./generic.js";
+import { emptyCopyObject } from "../../../lib/utils/copy.js";
+import { getCurrentSchemaVersion, schemaWithLinks } from "../../../state/globals.js";
 
-export function preFilterMCTree(currentObjects, viewObjects) {
-  preFilterTree(currentObjects, viewObjects, "edm4hep::MCParticle", [
+export function selectMCTree(currentObjects, viewObjects) {
+  selectTree(currentObjects, viewObjects, "edm4hep::MCParticle", [
     "parents",
     "daughters",
   ]);
 }
 
-export function preFilterRecoTree(currentObjects, viewObjects) {
-  preFilterTree(currentObjects, viewObjects, "edm4hep::ReconstructedParticle", [
+export function selectRecoTree(currentObjects, viewObjects) {
+  selectTree(currentObjects, viewObjects, "edm4hep::ReconstructedParticle", [
     "particles",
   ]);
 }
 
-export function preFilterTrackTree(currentObjects, viewObjects) {
-  preFilterTree(currentObjects, viewObjects, "edm4hep::Track", ["tracks"]);
+export function selectTrackTree(currentObjects, viewObjects) {
+  selectTree(currentObjects, viewObjects, "edm4hep::Track", ["tracks"]);
 }
 
-export function preFilterClusterTree(currentObjects, viewObjects) {
-  preFilterTree(currentObjects, viewObjects, "edm4hep::Cluster", ["clusters"]);
+export function selectClusterTree(currentObjects, viewObjects) {
+  selectTree(currentObjects, viewObjects, "edm4hep::Cluster", ["clusters"]);
 }
 
-export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
+export function selectRecoClusterTrackVertex(currentObjects, viewObjects) {
   emptyCopyObject(currentObjects, viewObjects);
 
   const fromDatatype =
@@ -122,13 +122,13 @@ export function preFilterRecoClusterTrackVertex(currentObjects, viewObjects) {
   viewObjects.datatypes["edm4hep::Vertex"].collection = vertexCollection;
 }
 
-export function preFilterMCReco(currentVisObjects, viewObjects) {
+export function selectMCReco(currentVisObjects, viewObjects) {
   let linkCollTypeName =
     "podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>";
   if (!schemaWithLinks()) {
     linkCollTypeName = "edm4hep::MCRecoParticleAssociation";
   }
-  preFilterAssociation(
+  selectAssociation(
     currentVisObjects,
     viewObjects,
     linkCollTypeName,
@@ -137,8 +137,8 @@ export function preFilterMCReco(currentVisObjects, viewObjects) {
   );
 }
 
-export function preFilterMCTrack(currentObjects, viewObjects) {
-  preFilterAssociation(
+export function selectMCTrack(currentObjects, viewObjects) {
+  selectAssociation(
     currentObjects,
     viewObjects,
     "edm4hep::MCRecoTrackParticleAssociation",
@@ -147,8 +147,8 @@ export function preFilterMCTrack(currentObjects, viewObjects) {
   );
 }
 
-export function preFilterMCCluster(currentObjects, viewObjects) {
-  preFilterAssociation(
+export function selectMCCluster(currentObjects, viewObjects) {
+  selectAssociation(
     currentObjects,
     viewObjects,
     "edm4hep::MCRecoClusterParticleAssociation",
@@ -157,16 +157,16 @@ export function preFilterMCCluster(currentObjects, viewObjects) {
   );
 }
 
-export function preFilterVertexList(currentObjects, viewObjects) {
-  preFilterList(currentObjects, viewObjects, "edm4hep::Vertex");
+export function selectVertexList(currentObjects, viewObjects) {
+  selectList(currentObjects, viewObjects, "edm4hep::Vertex");
 }
 
-export function preFilterParticleIDList(currentObjects, viewObjects) {
-  preFilterList(currentObjects, viewObjects, "edm4hep::ParticleID");
+export function selectParticleIDList(currentObjects, viewObjects) {
+  selectList(currentObjects, viewObjects, "edm4hep::ParticleID");
 }
 
-export function preFilterRecoParticleID(currentObjects, viewObjects) {
-  preFilterOneWay(
+export function selectRecoParticleID(currentObjects, viewObjects) {
+  selectOneWay(
     currentObjects,
     viewObjects,
     "particle",
