@@ -1,7 +1,7 @@
-import { listView } from "./list.js";
+import { listView } from "./layoutList.js";
 
 // All particles that are related to itself have an one to many relation
-export function buildTree(collection, relationOfReference) {
+export function layoutTree(collection, relationOfReference) {
   collection.forEach((object) => {
     object.row = null;
   });

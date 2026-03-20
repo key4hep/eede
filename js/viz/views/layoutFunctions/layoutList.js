@@ -17,7 +17,7 @@ const bestHorizontalFit = (windowWidth, objectWidth) => {
   return [columns - 1, prevPercentage];
 };
 
-export function listView(collection) {
+export function layoutList(collection) {
   if (collection.length < 1) {
     return [0, 0];
   }

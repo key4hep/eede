@@ -1,6 +1,6 @@
 import { getCurrentSchemaVersion } from "../../../state/globals.js";
 
-export function recoClusterTrackVertex(viewObjects) {
+export function layoutRecoClusterTrackVertex(viewObjects) {
   const recoParticles =
     viewObjects.datatypes["edm4hep::ReconstructedParticle"].collection;
 

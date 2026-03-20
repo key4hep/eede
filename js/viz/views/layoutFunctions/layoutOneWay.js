@@ -1,7 +1,7 @@
 const topMargin = 50;
 const horizontalGapPercentage = 0.5;
 
-export function oneWayView(viewObjects, fromCollectionName, relationName) {
+export function layoutOneWay(viewObjects, fromCollectionName, relationName) {
   const relations =
     viewObjects.datatypes[fromCollectionName].oneToOne[relationName];
 

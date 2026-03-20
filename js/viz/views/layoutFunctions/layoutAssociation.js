@@ -1,5 +1,5 @@
 // List 1:1 association in a vertical list
-export function buildAssociationView(viewObjects, associationName) {
+export function layoutAssociation(viewObjects, associationName) {
   const associations = viewObjects.associations[associationName];
   const length = associations.length;
 
