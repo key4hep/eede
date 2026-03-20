@@ -23,18 +23,14 @@ export function loadObjects(fileData, eventNum) {
 
   switch (schemaVersion) {
     case "old":
-      handleOldEvent(eventData);
-      break;
+      return handleOldEvent(eventData);
     case 1:
-      handleSchema1Event(eventData);
-      break;
+      return handleSchema1Event(eventData);
     case 2:
-      handleSchema2Event(eventData);
-      break;
+      return handleSchema2Event(eventData);
     case 3:
     case 6:
-      handleSchema3Event(eventData);
-      break;
+      return handleSchema3Event(eventData);
   }
 }
 
