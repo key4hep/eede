@@ -1,5 +1,5 @@
 import { getApp, getContainer } from "./app.js";
-import { filteredOut } from "../types/vizStyles.js";
+import { filteredOut } from "../../lib/constants/vizStyles.js";
 
 const particleDetails = document.getElementById("particle-details");
 let selectedBox = null;

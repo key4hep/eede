@@ -3,7 +3,7 @@ import { Viewport } from "pixi-viewport";
 import { dragEnd } from "./drag.js";
 import { setRenderable } from "./renderable.js";
 import { getPixiState } from "../../state/globals.js";
-import { objectColor } from "../types/vizStyles.js";
+import { objectColor } from "../../lib/constants/vizStyles.js";
 
 const pixi = getPixiState();
 

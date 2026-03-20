@@ -1,7 +1,7 @@
 import { EDMObject } from "./EDMObject.js";
-import { parseCharge } from "../lib/parseCharge.js";
+import { parseCharge } from "../../lib/utils/parseCharge.js";
 import { addLinesToBox } from "../draw/font.js";
-import { objectColor } from "../types/vizStyles.js";
+import { objectColor } from "../../lib/constants/vizStyles.js";
 
 class ReconstructedParticle extends EDMObject {
   constructor() {

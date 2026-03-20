@@ -1,7 +1,7 @@
 import { Rectangle } from "pixi.js";
 import { redrawBox } from "./box.js";
 import { redrawLink } from "./link.js";
-import { filteredOut } from "../types/vizStyles.js";
+import { filteredOut } from "../../lib/constants/vizStyles.js";
 
 function updateLinkColor(link) {
   const filtered = link.from.filteredOut || link.to.filteredOut;

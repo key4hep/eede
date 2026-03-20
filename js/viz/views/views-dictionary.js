@@ -1,40 +1,31 @@
-import { mcParticleTree } from "./templates/mcparticletree.js";
-import { recoClusterTrackVertex } from "./templates/recoclustertrack.js";
-import { buildTree } from "./templates/tree.js";
-import { listView } from "./templates/list.js";
-import { buildAssociationView } from "./templates/association-view.js";
-import { oneWayView } from "./templates/onewayview.js";
+import { layoutMCParticleTree } from "./layoutFunctions/layoutMCParticleTreeTree.js";
+import { recoClusterTrackVertex } from "./layoutFunctions/layoutRecoClusterTrackVertex.js";
+import { layoutTree } from "./layoutFunctions/layoutTree.js";
+import { layoutList } from "./layoutFunctions/layoutList.js";
+import { layoutAssociation } from "./layoutFunctions/layoutAssociation.js";
+import { layoutOneWay } from "./layoutFunctions/layoutOneWay.js";
 import {
-  preFilterMCTree,
-  preFilterRecoTree,
-  preFilterTrackTree,
-  preFilterClusterTree,
-  preFilterRecoClusterTrackVertex,
-  preFilterMCReco,
-  preFilterMCTrack,
-  preFilterMCCluster,
-  preFilterVertexList,
-  preFilterParticleIDList,
-  preFilterRecoParticleID,
-} from "./pre-filters.js";
+  selectMCTree,
+  selectRecoTree,
+  selectTrackTree,
+  selectClusterTree,
+  selectRecoClusterTrackVertex,
+  selectMCReco,
+  selectMCTrack,
+  selectMCCluster,
+  selectVertexList,
+  selectParticleIDList,
+  selectRecoParticleID,
+} from "./selectorFunctions.js";
 import { schemaWithLinks } from "../../state/globals.js";
-import { spanWithColor } from "../lib/html-string.js";
-import { setViewportPosition, getContainerSize } from "../draw/app.js";
-
-const scrollTopLeft = () => {
-  setViewportPosition(0, 0);
-};
-
-const scrollTopCenter = () => {
-  const { width } = getContainerSize();
-  setViewportPosition(width / 2, 500);
-};
+import { spanWithColor } from "../../lib/utils/html-string.js";
+import { positionTopLeft, positionTopCenter } from "./positionFunctions.js";
 
 export const possibleViews = {
   "Monte Carlo Particle Tree": {
-    preFilterFunction: preFilterMCTree,
-    viewFunction: mcParticleTree,
-    scrollFunction: scrollTopCenter,
+    selectorFunction: selectMCTree,
+    layoutFunction: layoutMCParticleTree,
+    positionFunction: positionTopCenter,
     collections: ["edm4hep::MCParticle"],
     description: `<p>A tree of Monte Carlo particles with their relationships:<ul><li>${spanWithColor(
       "Red",
@@ -45,14 +36,14 @@ export const possibleViews = {
     )} relations mean daughter relation (from top to bottom).</li></ul></p>`,
   },
   "Reconstructed Particle Tree": {
-    preFilterFunction: preFilterRecoTree,
-    viewFunction: (viewCurrentObjects) =>
-      buildTree(
+    selectorFunction: selectRecoTree,
+    layoutFunction: (viewCurrentObjects) =>
+      layoutTree(
         viewCurrentObjects.datatypes["edm4hep::ReconstructedParticle"]
           .collection ?? [],
         "particles",
       ),
-    scrollFunction: scrollTopLeft,
+    positionFunction: positionTopLeft,
     collections: ["edm4hep::ReconstructedParticle"],
     description: `<p>A tree of Reconstructed Particles with possible relationships:<ul><li>${spanWithColor(
       "Purple",
@@ -60,31 +51,31 @@ export const possibleViews = {
     )} relations mean relation between particles</li></ul></p>`,
   },
   "Track Tree": {
-    preFilterFunction: preFilterTrackTree,
-    viewFunction: (viewCurrentObjects) =>
-      buildTree(
+    selectorFunction: selectTrackTree,
+    layoutFunction: (viewCurrentObjects) =>
+      layoutTree(
         viewCurrentObjects.datatypes["edm4hep::Track"].collection ?? [],
         "tracks",
       ),
-    scrollFunction: scrollTopLeft,
+    positionFunction: positionTopLeft,
     collections: ["edm4hep::Track"],
     description: `<p>A tree of the Tracks.</p>`,
   },
   "Cluster Tree": {
-    preFilterFunction: preFilterClusterTree,
-    viewFunction: (viewCurrentObjects) =>
-      buildTree(
+    selectorFunction: selectClusterTree,
+    layoutFunction: (viewCurrentObjects) =>
+      layoutTree(
         viewCurrentObjects.datatypes["edm4hep::Cluster"].collection ?? [],
         "clusters",
       ),
-    scrollFunction: scrollTopLeft,
+    positionFunction: positionTopLeft,
     collections: ["edm4hep::Cluster"],
     description: `<p>A tree of the Clusters.</p>`,
   },
   "RecoParticle-Cluster-Track-Vertex": {
-    preFilterFunction: preFilterRecoClusterTrackVertex,
-    viewFunction: recoClusterTrackVertex,
-    scrollFunction: scrollTopCenter,
+    selectorFunction: selectRecoClusterTrackVertex,
+    layoutFunction: recoClusterTrackVertex,
+    positionFunction: positionTopCenter,
     collections: [
       "edm4hep::ReconstructedParticle",
       "edm4hep::Cluster",
@@ -100,65 +91,62 @@ export const possibleViews = {
     )} connections are towards Clusters.</p>`,
   },
   "Reconstructed Particle - MC Particle": {
-    preFilterFunction: preFilterMCReco,
-    scrollFunction: scrollTopCenter,
-    viewFunction: (viewObjects) => {
+    selectorFunction: selectMCReco,
+    positionFunction: positionTopCenter,
+    layoutFunction: (viewObjects) => {
       const getTypeName = () =>
         schemaWithLinks()
           ? "podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>"
           : "edm4hep::MCRecoParticleAssociation";
-      return buildAssociationView(viewObjects, getTypeName());
+      return layoutAssociation(viewObjects, getTypeName());
     },
     collections: ["edm4hep::MCParticle", "edm4hep::ReconstructedParticle"],
     description: `<p>Links between Reconstructed Particles and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "Track - MC Particle": {
-    preFilterFunction: preFilterMCTrack,
-    viewFunction: (viewObjects) =>
-      buildAssociationView(
-        viewObjects,
-        "edm4hep::MCRecoTrackParticleAssociation",
-      ),
-    scrollFunction: scrollTopCenter,
+    selectorFunction: selectMCTrack,
+    layoutFunction: (viewObjects) =>
+      layoutAssociation(viewObjects, "edm4hep::MCRecoTrackParticleAssociation"),
+    positionFunction: positionTopCenter,
     collections: ["edm4hep::MCParticle", "edm4hep::Track"],
     description: `<p>Link between Tracks and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "Cluster - MC Particle": {
-    preFilterFunction: preFilterMCCluster,
-    viewFunction: (viewObjects) =>
-      buildAssociationView(
+    selectorFunction: selectMCCluster,
+    layoutFunction: (viewObjects) =>
+      layoutAssociation(
         viewObjects,
         "edm4hep::MCRecoClusterParticleAssociation",
       ),
-    scrollFunction: scrollTopCenter,
+    positionFunction: positionTopCenter,
     collections: ["edm4hep::MCParticle", "edm4hep::Cluster"],
     description: `<p>Link between Clusters and Monte Carlo Particles, 1:1 relation.</p>`,
   },
   "ParticleID List": {
-    preFilterFunction: preFilterParticleIDList,
-    viewFunction: (viewCurrentObjects) =>
-      listView(
+    selectorFunction: selectParticleIDList,
+    layoutFunction: (viewCurrentObjects) =>
+      layoutList(
         viewCurrentObjects.datatypes["edm4hep::ParticleID"].collection ?? [],
       ),
-    scrollFunction: scrollTopLeft,
+    positionFunction: positionTopLeft,
     collections: ["edm4hep::ParticleID"],
     description: `<p>A list of ParticleIDs found in the event.</p>`,
   },
   "Vertex List": {
-    preFilterFunction: preFilterVertexList,
-    viewFunction: (viewCurrentObjects) =>
-      listView(
+    selectorFunction: selectVertexList,
+    layoutFunction: (viewCurrentObjects) =>
+      layoutList(
         viewCurrentObjects.datatypes["edm4hep::Vertex"].collection ?? [],
       ),
-    scrollFunction: scrollTopLeft,
+    positionFunction: positionTopLeft,
     collections: ["edm4hep::Vertex"],
     description: `<p>A list of Vertices found in the event.</p>`,
   },
   "ParticleID-Reconstructed Particle": {
-    preFilterFunction: preFilterRecoParticleID,
-    viewFunction: (viewObjects) =>
-      oneWayView(viewObjects, "edm4hep::ParticleID", "particle"),
-    scrollFunction: scrollTopCenter,
+    selectorFunction: selectRecoParticleID,
+    layoutFunction: (viewObjects) =>
+      layoutOneWay(viewObjects, "edm4hep::ParticleID", "particle"),
+    positionFunction: positionTopCenter,
     collections: ["edm4hep::ParticleID", "edm4hep::ReconstructedParticle"],
     description: `<p>1:1 relation from ParticleID to Reconstructed Particle.</p>`,
   },

@@ -1,5 +1,5 @@
 import { drawBezierLink } from "../draw/link.js";
-import { linkColors } from "../types/vizStyles.js";
+import { linkColors } from "../../lib/constants/vizStyles.js";
 
 export class Link {
   constructor(from, to) {

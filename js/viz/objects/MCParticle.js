@@ -1,14 +1,14 @@
 import { EDMObject } from "./EDMObject.js";
-import { getName } from "../lib/getName.js";
-import { parseCharge } from "../lib/parseCharge.js";
-import { getSimStatusDisplayValuesFromBit } from "../lib/sim-status.js";
+import { getName } from "../../lib/utils/getName.js";
+import { parseCharge } from "../../lib/utils/parseCharge.js";
+import { getSimStatusDisplayValuesFromBit } from "../../lib/utils/sim-status.js";
 import {
   svgElementToPixiSprite,
   addImageToBox,
 } from "../draw/box.js";
 import { addLinesToBox } from "../draw/font.js";
-import { textToSVG } from "../lib/generate-svg.js";
-import { objectColor } from "../types/vizStyles.js";
+import { textToSVG } from "../../lib/utils/generate-svg.js";
+import { objectColor } from "../../lib/constants/vizStyles.js";
 
 export class MCParticle extends EDMObject {
   constructor() {

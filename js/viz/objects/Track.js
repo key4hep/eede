@@ -1,6 +1,6 @@
 import { EDMObject } from "./EDMObject.js";
 import { addLinesToBox } from "../draw/font.js";
-import { objectColor } from "../types/vizStyles.js";
+import { objectColor } from "../../lib/constants/vizStyles.js";
 
 class Track extends EDMObject {
   constructor() {

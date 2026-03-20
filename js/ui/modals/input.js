@@ -1,4 +1,4 @@
-import { warningMsg, errorMsg } from "../../lib/messages.js";
+import { warningMsg, errorMsg } from "../../lib/utils/messages.js";
 import {
   isPixiRunning,
   setFileData,

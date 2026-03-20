@@ -1,10 +1,10 @@
-import { checkEmptyObject } from "../lib/empty-object.js";
+import { checkEmptyObject } from "../lib/utils/empty-object.js";
 import { possibleViews } from "../viz/views/views-dictionary.js";
 import {
   emptyViewMessage,
   hideEmptyViewMessage,
   showMessage,
-} from "../lib/messages.js";
+} from "../lib/utils/messages.js";
 import {
   showViewInformation,
   hideViewInformation,
@@ -62,7 +62,7 @@ function setInfoButtonName(view) {
   button.innerText = view;
 }
 
-async function renderView(viewFunction, objects) {
+async function renderView(layoutFunction, objects) {
   const empty = checkEmptyObject(objects);
 
   if (empty) {
@@ -70,7 +70,7 @@ async function renderView(viewFunction, objects) {
     return;
   }
 
-  let [width, height] = viewFunction(objects);
+  let [width, height] = layoutFunction(objects);
   if (width === 0 && height === 0) {
     showMessage("No objects satisfy the filter options");
     return;
@@ -84,9 +84,9 @@ async function renderView(viewFunction, objects) {
 
 export const drawView = async (view) => {
   const {
-    preFilterFunction,
-    viewFunction,
-    scrollFunction,
+    selectorFunction,
+    layoutFunction,
+    positionFunction,
     collections,
     description,
   } = possibleViews[view];
@@ -94,7 +94,7 @@ export const drawView = async (view) => {
   const allVisObjects = getCurrentVisObjects();
 
   const viewObjects = {};
-  preFilterFunction(allVisObjects, viewObjects);
+  selectorFunction(allVisObjects, viewObjects);
   paintButton(view);
   const isEmpty = checkEmptyObject(viewObjects);
 
@@ -108,13 +108,13 @@ export const drawView = async (view) => {
   setInfoButtonName(getCurrentView());
   hideEmptyViewMessage();
 
-  await renderView(viewFunction, viewObjects);
+  await renderView(layoutFunction, viewObjects);
 
   const savedPosition = getSavedScrollPosition();
   if (savedPosition) {
     setViewportPosition(savedPosition.x, savedPosition.y);
   } else {
-    scrollFunction();
+    positionFunction();
     saveCurrentScrollPosition(getViewportPosition());
   }
 
