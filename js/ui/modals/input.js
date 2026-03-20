@@ -1,7 +1,6 @@
 import { warningMsg, errorMsg } from "../../lib/utils/messages.js";
 import { getFileName, clearAllEventData } from "./globals.js";
 import {
-  isPixiRunning,
   setFileData,
   getFileData,
   setFileName,
@@ -20,6 +19,7 @@ import {
 } from "../../state/globals.js";
 import {
   startPixi,
+  isPixiRunning,
   getViewportPosition,
   setViewportPosition,
   saveSize,

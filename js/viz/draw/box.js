@@ -1,5 +1,9 @@
 import { Graphics, Assets, Sprite, Cache } from "pixi.js";
-import { getApp, getContainer } from "../../state/pixi-state.js";
+import {
+  getApp,
+  getContainer,
+  getTextureCache,
+} from "../../state/pixi-state.js";
 
 export { addTitleToBox, addLinesToBox } from "./font.js";
 
@@ -8,9 +12,8 @@ export function addBox(box) {
   container.addChild(box);
 }
 
-const boxes = {};
-
 export function buildBox(object) {
+  const boxes = getTextureCache();
   const key = `${object.width}-${object.height}-${object.color}-${object.lineColor}-${object.radius}`;
 
   if (boxes[key] === undefined) {
@@ -27,6 +30,7 @@ export function buildBox(object) {
 }
 
 export function redrawBox(object, color, lineColor) {
+  const boxes = getTextureCache();
   const key = `${object.width}-${object.height}-${color}-${lineColor}-${object.radius}`;
 
   if (boxes[key] === undefined) {

@@ -2,10 +2,15 @@ import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { dragEnd } from "../viz/draw/drag.js";
 import { setRenderable } from "../viz/draw/renderable.js";
-import { getPixiState } from "./globals.js";
 import { objectColor } from "../types/vizStyles.js";
 
-const pixi = getPixiState();
+const pixi = {
+  app: null,
+  container: null,
+  width: NaN,
+  height: NaN,
+  textureCache: {},
+};
 
 let currentWheelHandler = null;
 
@@ -104,8 +109,17 @@ export const getContainerSize = () => {
   return { width: pixi.width, height: pixi.height };
 };
 
+export const getTextureCache = () => {
+  return pixi.textureCache;
+};
+
+export const isPixiRunning = () => {
+  return pixi.app !== null;
+};
+
 export const startPixi = async () => {
   const app = await createApp();
 
   pixi.app = app;
+  pixi.textureCache = {};
 };
