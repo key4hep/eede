@@ -1,4 +1,4 @@
-import { objectTypes } from "../viz/objects/objectTypes.js";
+import { objectTypes } from "../lib/constants/objectTypes.js";
 import { getSupportedEDM4hepTypes } from "../state/globals.js";
 
 function loadMembers(object, data, membersToLoad) {
