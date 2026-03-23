@@ -1,5 +1,6 @@
 import { Graphics } from "pixi.js";
 import { getApp, getContainer } from "../../state/pixi-state.js";
+import { getLinkColor } from "../../lib/utils/getLinkColor.js";
 
 function fromPoints(box) {
   return [box.x + box.width / 2, box.y + box.height];
@@ -90,7 +91,7 @@ export function drawBezierLink(link, reverse = false) {
 
   const boxFromOnMove = () => {
     container.removeChild(link.renderedLink);
-    link.renderedLink = computeCurve(link, from, to, link.color);
+    link.renderedLink = computeCurve(link, from, to, getLinkColor(link));
     container.addChild(link.renderedLink);
   };
 
@@ -106,7 +107,7 @@ export function drawBezierLink(link, reverse = false) {
 
   const boxToOnMove = () => {
     container.removeChild(link.renderedLink);
-    link.renderedLink = computeCurve(link, from, to, link.color);
+    link.renderedLink = computeCurve(link, from, to, getLinkColor(link));
     container.addChild(link.renderedLink);
   };
 

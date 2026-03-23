@@ -2,13 +2,7 @@ import { Rectangle } from "pixi.js";
 import { redrawBox } from "./box.js";
 import { redrawLink } from "./link.js";
 import { filteredOut } from "../../lib/constants/vizStyles.js";
-
-function updateLinkColor(link) {
-  const filtered = link.from.filteredOut || link.to.filteredOut;
-  const color = filtered ? filteredOut.linkColor : link.color;
-
-  redrawLink(link, color);
-}
+import { getLinkColor } from "../../lib/utils/getLinkColor.js";
 
 function updateBoxColors(object) {
   if (object.filteredOut) {
@@ -37,20 +31,20 @@ export function setRenderable(objects) {
 
     for (const links of Object.values(oneToMany)) {
       for (const link of links) {
-        updateLinkColor(link);
+        redrawLink(link, getLinkColor(link));
       }
     }
 
     for (const links of Object.values(oneToOne)) {
       for (const link of links) {
-        updateLinkColor(link);
+        redrawLink(link, getLinkColor(link));
       }
     }
   }
 
   for (const associations of Object.values(objects.associations)) {
     for (const association of associations) {
-      updateLinkColor(association);
+      redrawLink(association, getLinkColor(association));
     }
   }
 }
