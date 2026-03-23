@@ -1,38 +1,8 @@
 import { setCurrentSchemaVersion } from "../state/globals.js";
-import { handleOldEvent } from "./loadOldSchemaEvent.js";
-import { handleSchema1Event } from "./loadSchema1Event.js";
-import { handleSchema2Event } from "./loadSchema2Event.js";
-import { handleSchema3Event } from "./loadSchema3Event.js";
-
-export function loadObjects(fileData, eventNum) {
-  const eventData = fileData["Event " + eventNum];
-
-  if (typeof eventData === "undefined") {
-    return;
-  }
-
-  const schemaVersion = determineSchemaVersion(eventData);
-
-  if (typeof schemaVersion === "undefined") {
-    return;
-  }
-
-  setCurrentSchemaVersion(schemaVersion);
-
-  console.log(`Info: schemaVersion = ${schemaVersion}`);
-
-  switch (schemaVersion) {
-    case "old":
-      return handleOldEvent(eventData);
-    case 1:
-      return handleSchema1Event(eventData);
-    case 2:
-      return handleSchema2Event(eventData);
-    case 3:
-    case 6:
-      return handleSchema3Event(eventData);
-  }
-}
+import { handleOldEvent } from "./schemas/loadOldSchemaEvent.js";
+import { handleSchema1Event } from "./schemas/loadSchema1Event.js";
+import { handleSchema2Event } from "./schemas/loadSchema2Event.js";
+import { handleSchema3Event } from "./schemas/loadSchema3Event.js";
 
 function determineSchemaVersion(eventData) {
   // Find schema version from the collection properties
@@ -75,5 +45,35 @@ function determineSchemaVersion(eventData) {
         ? "old"
         : undefined;
     }
+  }
+}
+
+export function formatEventData(fileData, eventNum) {
+  const eventData = fileData["Event " + eventNum];
+
+  if (typeof eventData === "undefined") {
+    return;
+  }
+
+  const schemaVersion = determineSchemaVersion(eventData);
+
+  if (typeof schemaVersion === "undefined") {
+    return;
+  }
+
+  setCurrentSchemaVersion(schemaVersion);
+
+  console.log(`Info: schemaVersion = ${schemaVersion}`);
+
+  switch (schemaVersion) {
+    case "old":
+      return handleOldEvent(eventData);
+    case 1:
+      return handleSchema1Event(eventData);
+    case 2:
+      return handleSchema2Event(eventData);
+    case 3:
+    case 6:
+      return handleSchema3Event(eventData);
   }
 }

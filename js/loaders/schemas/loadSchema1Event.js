@@ -1,14 +1,14 @@
-import { linkTypes } from "../lib/constants/linkTypes.js";
-import { getSupportedEDM4hepTypes } from "../state/globals.js";
+import { linkTypes } from "../../lib/constants/linkTypes.js";
+import { getSupportedEDM4hepTypes } from "../../state/globals.js";
 import { loadPlainObject } from "./loadObjects.js";
 
-export function handleOldEvent(eventData) {
+export function handleSchema1Event(eventData) {
   const objects = {
     datatypes: {},
     associations: {},
   };
 
-  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("old");
+  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("1");
 
   // Select only Datatype collections
   const supportedDataTypes = Object.keys(supportedEDM4hepTypes).filter(
@@ -69,7 +69,7 @@ export function handleOldEvent(eventData) {
         supportedDataType,
         collectionId,
         collName,
-        "old",
+        "1",
       );
       objects.datatypes[supportedDataType].collection.push(...objectCollection);
     }

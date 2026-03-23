@@ -1,14 +1,14 @@
-import { linkTypes } from "../lib/constants/linkTypes.js";
-import { getSupportedEDM4hepTypes } from "../state/globals.js";
+import { linkTypes } from "../../lib/constants/linkTypes.js";
+import { getSupportedEDM4hepTypes } from "../../state/globals.js";
 import { loadPlainObject } from "./loadObjects.js";
 
-export function handleSchema2Event(eventData) {
+export function handleOldEvent(eventData) {
   const objects = {
     datatypes: {},
     associations: {},
   };
 
-  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("2");
+  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("old");
 
   // Select only Datatype collections
   const supportedDataTypes = Object.keys(supportedEDM4hepTypes).filter(
@@ -26,7 +26,7 @@ export function handleSchema2Event(eventData) {
 
   // Select only Link collections
   const supportedAssociations = Object.keys(supportedEDM4hepTypes).filter(
-    (object) => object.includes("Link"),
+    (object) => object.includes("Association"),
   );
 
   supportedDataTypes.forEach((typeName) => {
@@ -69,7 +69,7 @@ export function handleSchema2Event(eventData) {
         supportedDataType,
         collectionId,
         collName,
-        "2",
+        "old",
       );
       objects.datatypes[supportedDataType].collection.push(...objectCollection);
     }
@@ -100,8 +100,7 @@ export function handleSchema2Event(eventData) {
           if (objects.datatypes?.[type] === undefined) continue;
           const oneToOneRelationData = element.collection
             .map((object) => object[name])
-            .filter((object) => object !== undefined)
-            .map((object) => object[0]);
+            .filter((object) => object !== undefined);
 
           if (oneToOneRelationData.length === 0) continue;
 
@@ -185,8 +184,8 @@ export function handleSchema2Event(eventData) {
   // Currently, all associations are one-to-one
   for (const association of supportedAssociations) {
     Object.values(eventData).forEach((element) => {
-      // const collectionName = `${association}Collection`;
-      if (element.collType === association) {
+      const collectionName = `${association}Collection`;
+      if (element.collType === collectionName) {
         const collection = element.collection;
         if (collection.length === 0) return;
 

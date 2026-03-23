@@ -1,18 +1,21 @@
-import { linkTypes } from "../lib/constants/linkTypes.js";
-import { getSupportedEDM4hepTypes } from "../state/globals.js";
+import { linkTypes } from "../../lib/constants/linkTypes.js";
+import { getSupportedEDM4hepTypes } from "../../state/globals.js";
 import { loadPlainObject } from "./loadObjects.js";
 
-export function handleSchema3Event(eventData) {
+export function handleSchema2Event(eventData) {
   const objects = {
     datatypes: {},
     associations: {},
   };
 
-  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("3");
+  const supportedEDM4hepTypes = getSupportedEDM4hepTypes("2");
 
   // Select only Datatype collections
   const supportedDataTypes = Object.keys(supportedEDM4hepTypes).filter(
     (type) => {
+      if (type.includes("Association")) {
+        return false;
+      }
       if (type.includes("Link")) {
         return false;
       }
@@ -66,7 +69,7 @@ export function handleSchema3Event(eventData) {
         supportedDataType,
         collectionId,
         collName,
-        "3",
+        "2",
       );
       objects.datatypes[supportedDataType].collection.push(...objectCollection);
     }
@@ -213,25 +216,17 @@ export function handleSchema3Event(eventData) {
           const fromObject = fromCollection[associationElement[fromName].index];
           const toObject = toCollection[associationElement[toName].index];
 
-          /** linkTypes[association] receives:
-           * - podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>
-           * - @todo not supported - podio::LinkCollection<edm4hep::Cluster,edm4hep::MCParticle>
-           * - @todo not supported - podio::LinkCollection<edm4hep::Track,edm4hep::MCParticle>
-           */
           const linkType = linkTypes[association];
-
-          if (linkType) {
-            const link = new linkType(
-              fromObject,
-              toObject,
-              associationElement.weight,
-            );
-            objects.associations[association].push(link);
-            fromObject.associations = {};
-            fromObject.associations[association] = link;
-            toObject.associations = {};
-            toObject.associations[association] = link;
-          }
+          const link = new linkType(
+            fromObject,
+            toObject,
+            associationElement.weight,
+          );
+          objects.associations[association].push(link);
+          fromObject.associations = {};
+          fromObject.associations[association] = link;
+          toObject.associations = {};
+          toObject.associations[association] = link;
         }
       }
     });
