@@ -1,37 +1,9 @@
+// Handles information modal visibility, tab switching and content
+
 const infoIcon = document.getElementById("information-icon");
 const closeIcon = document.getElementById("close-information");
-const copyToClipboardButtons =
-  document.getElementsByClassName("copy-email-button");
 const informationButton = document.getElementById("about-information-button");
 const viewButton = document.getElementById("view-information-button");
-
-Array.from(copyToClipboardButtons).forEach((button) => {
-  button.addEventListener("click", () => {
-    const email = button.getAttribute("data-email");
-    copyEmailAddress(email)
-      .then(() => {
-        showCopyInfo(button, "Copied!");
-      })
-      .catch((error) => {
-        showCopyInfo(button, "Error!");
-        console.error("Failed to copy email address: ", error);
-      });
-  });
-});
-
-function showCopyInfo(button, message) {
-  const copyDiv = document.createElement("div");
-  copyDiv.className = "copy-infobox";
-  copyDiv.appendChild(document.createTextNode(message));
-  button.appendChild(copyDiv);
-  setTimeout(() => {
-    button.removeChild(copyDiv);
-  }, 500);
-}
-
-function copyEmailAddress(address) {
-  return navigator.clipboard.writeText(address);
-}
 
 const showModal = () => {
   const modal = document.getElementById("information-modal");
@@ -99,6 +71,10 @@ export function selectViewInformation() {
 informationButton.addEventListener("click", selectInformationSection);
 
 viewButton.addEventListener("click", selectViewInformation);
+
+export function updateViewInfoButton(name) {
+  viewButton.innerText = name;
+}
 
 export function showViewInformation(title, description) {
   if (viewButton.style.display !== "block") {
