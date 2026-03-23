@@ -26,6 +26,13 @@ export const drawView = async (view) => {
   const isEmpty = checkEmptyObject(viewObjects);
   if (isEmpty) return null;
 
+  // Reset filter state when changing views
+  for (const { collection } of Object.values(viewObjects.datatypes)) {
+    for (const object of collection) {
+      object.filteredOut = false;
+    }
+  }
+
   let [width, height] = layoutFunction(viewObjects);
   if (width === 0 && height === 0) {
     showMessage("No objects satisfy the filter options");
