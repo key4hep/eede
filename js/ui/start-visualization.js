@@ -1,4 +1,4 @@
-// Handles the "visualize" button click, initializing pixi and rendering the first view.
+// Handles the click on "visualize" button
 
 // Globals
 import {

@@ -10,7 +10,8 @@ import {
 } from "../lib/utils/messages.js";
 
 // Visualization logic
-import { drawView, setRenderable } from "../viz/renderView.js";
+import { drawView } from "../viz/renderView.js";
+import { setRenderable } from "../viz/draw/renderable.js";
 import { possibleViews } from "../viz/views/viewsDictionary.js";
 
 // UI logic

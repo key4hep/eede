@@ -1,6 +1,6 @@
-// Handles JSON file ingestion, validation, and file replacement.
+// Handles JSON file formatting and replacement.
 
-import { warningMsg, errorMsg } from "../lib/utils/messages.js";
+// Globals
 import {
   clearAllEventData,
   setFileData,
@@ -9,7 +9,14 @@ import {
   setCurrentEventIndex,
   setCurrentView,
 } from "../state/globals.js";
+
+// Utils
+import { warningMsg, errorMsg } from "../lib/utils/messages.js";
+
+// Visualization code
 import { possibleViews } from "../viz/views/viewsDictionary.js";
+
+// UI logic
 import {
   hideInputModalCloseButton,
   showInputModalCloseButton,

@@ -25,6 +25,9 @@ const closeFiltersButton = document.getElementById("close-filter");
 const filtersBody = document.getElementById("filters-body");
 const filtersContent = document.getElementById("filters-content");
 const resetButton = document.getElementById("filter-reset");
+const invertFilter = document.getElementById("invert-filter");
+
+let currentApplyHandler = null;
 
 openFiltersButton.addEventListener("click", () => {
   filtersBody.style.display = "flex";
@@ -164,11 +167,7 @@ export function handleFilters(viewObjects, collections, setRenderable) {
   const criteriaFunctions = {};
 
   const apply = () => {
-    hideFilteredOut(
-      viewObjects,
-      criteriaFunctions,
-      document.getElementById("invert-filter").checked,
-    );
+    hideFilteredOut(viewObjects, criteriaFunctions, invertFilter.checked);
     setRenderable(viewObjects);
   };
 
@@ -214,14 +213,22 @@ export function handleFilters(viewObjects, collections, setRenderable) {
       filters.style.display = "block";
     }
 
-    document.getElementById("invert-filter").checked = false;
+    invertFilter.checked = false;
   };
 
   initFilters();
 
+  if (currentApplyHandler) {
+    filtersContent.removeEventListener("change", currentApplyHandler);
+    filtersContent.removeEventListener("input", currentApplyHandler);
+    invertFilter.removeEventListener("change", currentApplyHandler);
+  }
+
+  currentApplyHandler = apply;
+
   filtersContent.addEventListener("change", apply);
   filtersContent.addEventListener("input", apply);
-  document.getElementById("invert-filter").addEventListener("change", apply);
+  invertFilter.addEventListener("change", apply);
 
   const reset = () => {
     initFilters();

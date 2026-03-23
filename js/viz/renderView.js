@@ -15,8 +15,6 @@ import { showMessage } from "../lib/utils/messages.js";
 import { renderObjects } from "./draw/render.js";
 import { setRenderable } from "./draw/renderable.js";
 
-export { setRenderable };
-
 async function renderView(layoutFunction, objects) {
   const empty = checkEmptyObject(objects);
 

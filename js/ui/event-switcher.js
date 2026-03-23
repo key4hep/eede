@@ -1,13 +1,20 @@
 // Handles navigation between the different events
 
+// Globals
 import {
   getEventNumbers,
   getCurrentEventIndex,
   saveCurrentScrollPosition,
 } from "../state/globals.js";
 import { getViewportPosition } from "../state/pixi-state.js";
+
+// Loader
 import { loadEvent } from "../loaders/loadEvent.js";
+
+// Utils
 import { updateEventDisplay } from "../lib/utils/event-display.js";
+
+// UI logic
 import { activateView } from "./activate-view.js";
 
 const previousEvent = document.getElementById("previous-event");

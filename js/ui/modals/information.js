@@ -1,4 +1,4 @@
-// Handles information modal visibility, tab switching and content
+// Handles information modal visibility
 
 const infoIcon = document.getElementById("information-icon");
 const closeIcon = document.getElementById("close-information");

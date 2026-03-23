@@ -1,11 +1,13 @@
 // Handles navigation between different visualization views
 
-import { possibleViews } from "../viz/views/viewsDictionary.js";
-import {
-  setCurrentView,
-  saveCurrentScrollPosition,
-} from "../state/globals.js";
+// Globals
+import { setCurrentView, saveCurrentScrollPosition } from "../state/globals.js";
 import { getViewportPosition } from "../state/pixi-state.js";
+
+// Visualization
+import { possibleViews } from "../viz/views/viewsDictionary.js";
+
+// UI logic
 import { activateView } from "./activate-view.js";
 
 const viewOptions = document.getElementById("view-selector");
