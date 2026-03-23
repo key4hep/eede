@@ -15,39 +15,27 @@ import { showMessage } from "../lib/utils/messages.js";
 import { renderObjects } from "./draw/render.js";
 import { setRenderable } from "./draw/renderable.js";
 
-async function renderView(layoutFunction, objects) {
-  const empty = checkEmptyObject(objects);
-
-  if (empty) {
-    showMessage("No objects satisfy the filter options");
-    return;
-  }
-
-  let [width, height] = layoutFunction(objects);
-  if (width === 0 && height === 0) {
-    showMessage("No objects satisfy the filter options");
-    return;
-  }
-
-  width = Math.max(width, window.innerWidth);
-  height = Math.max(height, window.innerHeight);
-  saveSize(width, height);
-  await renderObjects(objects);
-}
-
 export const drawView = async (view) => {
   const { selectorFunction, layoutFunction, positionFunction } =
     possibleViews[view];
-
   const allVisObjects = getCurrentVisObjects();
-
   const viewObjects = {};
+
   selectorFunction(allVisObjects, viewObjects);
 
   const isEmpty = checkEmptyObject(viewObjects);
   if (isEmpty) return null;
 
-  await renderView(layoutFunction, viewObjects);
+  let [width, height] = layoutFunction(viewObjects);
+  if (width === 0 && height === 0) {
+    showMessage("No objects satisfy the filter options");
+    return null;
+  }
+
+  width = Math.max(width, window.innerWidth);
+  height = Math.max(height, window.innerHeight);
+  saveSize(width, height);
+  await renderObjects(viewObjects);
 
   const savedPosition = getSavedScrollPosition();
   if (savedPosition) {
