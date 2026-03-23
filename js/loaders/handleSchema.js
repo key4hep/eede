@@ -15,11 +15,11 @@ function determineSchemaVersion(eventData) {
   }
 
   // Find schema version from the EDM4hep version
-  const edm4hepVersion = String(eventData.edm4hepVersion);
+  const edm4hepVersion = eventData.edm4hepVersion;
+
+  if (edm4hepVersion === undefined) return "old";
 
   console.log(`Info: EDM4hep version = ${edm4hepVersion}`);
-
-  if (!edm4hepVersion) return undefined;
 
   switch (edm4hepVersion) {
     case "0.9.0":
