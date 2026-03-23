@@ -1,11 +1,12 @@
+// Handles navigation between different visualization views
+
 import { possibleViews } from "../viz/views/viewsDictionary.js";
 import {
   setCurrentView,
-  getCurrentView,
   saveCurrentScrollPosition,
 } from "../state/globals.js";
 import { getViewportPosition } from "../state/pixi-state.js";
-import { drawView } from "../viz/renderView.js";
+import { activateView } from "./activate-view.js";
 
 const viewOptions = document.getElementById("view-selector");
 const openViewsButton = document.getElementById("open-views");
@@ -26,10 +27,10 @@ closeViewsButton.addEventListener("click", () => {
 for (const key in possibleViews) {
   const button = document.createElement("button");
   button.appendChild(document.createTextNode(key));
-  button.onclick = () => {
+  button.onclick = async () => {
     saveCurrentScrollPosition(getViewportPosition());
     setCurrentView(key);
-    drawView(getCurrentView());
+    await activateView();
   };
   button.className = "view-button";
   viewOptions.appendChild(button);
