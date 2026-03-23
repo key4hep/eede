@@ -1,5 +1,5 @@
-import { objectTypes } from "../lib/constants/objectTypes.js";
-import { getSupportedEDM4hepTypes } from "../state/globals.js";
+import { objectTypes } from "../../lib/constants/objectTypes.js";
+import { getSupportedEDM4hepTypes } from "../../state/globals.js";
 
 function loadMembers(object, data, membersToLoad) {
   for (const member of membersToLoad) {
