@@ -12,7 +12,7 @@ const server = app.listen(8008, "127.0.0.1", function () {
   const addr = server.address();
   if (!addr) {
     throw new Error(
-      "Port 8008 might be in use already, try running 'kill -9 $(lsof -t -i:8008)'",
+      "Port 8008 might be in use already, try running 'kill -9 $(lsof -t -i:8008) if there no other users'",
     );
   } else {
     var host = server.address().address;
