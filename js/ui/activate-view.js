@@ -1,20 +1,26 @@
 // Renders the current view with its respective UI
 
+// Globals
 import { getCurrentView } from "../state/globals.js";
+
+// Utils
+import {
+  emptyViewMessage,
+  hideEmptyViewMessage,
+} from "../lib/utils/messages.js";
+
+// Visualization logic
 import { drawView, setRenderable } from "../viz/renderView.js";
 import { possibleViews } from "../viz/views/viewsDictionary.js";
 
+// UI logic
+import { handleFilters } from "./filters/filter.js";
+import { setupToggles } from "./toggle/toggle.js";
 import {
   showViewInformation,
   hideViewInformation,
   updateViewInfoButton,
 } from "./modals/information.js";
-import {
-  emptyViewMessage,
-  hideEmptyViewMessage,
-} from "../lib/utils/messages.js";
-import { handleFilters } from "./filters/filter.js";
-import { setupToggles } from "./toggle/toggle.js";
 
 export async function activateView() {
   const view = getCurrentView();
