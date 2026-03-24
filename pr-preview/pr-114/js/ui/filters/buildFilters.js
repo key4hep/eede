@@ -1,5 +1,6 @@
 // Build filters and logic based on input type
 
+// UI logic
 import {
   CheckboxComponent,
   buildEnumCheckboxes,
@@ -14,6 +15,9 @@ import {
   createSubContainer,
 } from "./components/lib.js";
 import { filterDefinitions } from "./defineFilters.js";
+
+// Constants
+import { simStatusBitFieldDisplayValues } from "../../lib/constants/simStatus.js";
 
 export function buildFilters(typeName, parentContainer, viewObjects) {
   const definition = filterDefinitions[typeName];
@@ -31,8 +35,6 @@ export function buildFilters(typeName, parentContainer, viewObjects) {
       const { min, max } = range.getValues();
       const minVal = parseFloat(min);
       const maxVal = parseFloat(max);
-
-      console.log(min, max);
 
       let cur = object[range.propertyName];
       if (f.type === "magnitudeRange") {
@@ -75,7 +77,9 @@ export function buildFilters(typeName, parentContainer, viewObjects) {
     subContainer.appendChild(createCollectionSubtitle(f.label));
     const checkboxesContainer = createCheckboxContainer();
     const checkboxes = [];
-    for (const [value, displayName] of Object.entries(f.options)) {
+    for (const [value, displayName] of Object.entries(
+      simStatusBitFieldDisplayValues,
+    )) {
       const checkbox = new CheckboxComponent(f.property, displayName, value);
       checkboxes.push(checkbox);
       checkboxesContainer.appendChild(checkbox.render());
@@ -90,6 +94,8 @@ export function buildFilters(typeName, parentContainer, viewObjects) {
 
     // Return a function that passes when the object matches at least one checked bit or when any bit is checked
     return (object) => {
+      if (parseInt(object[f.property]) === 0) return true;
+
       for (const cb of checkboxes) {
         const { checked, value } = cb.getValues();
         if (!checked) continue;

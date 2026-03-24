@@ -1,7 +1,5 @@
 // Dynamically assign filters based on collection
 
-import { simStatusBitFieldDisplayValues } from "../../lib/constants/simStatus.js";
-
 export const filterDefinitions = {
   "edm4hep::MCParticle": {
     label: "MC Particle",
@@ -26,7 +24,6 @@ export const filterDefinitions = {
         type: "bitfieldCheckbox",
         property: "simulatorStatus",
         label: "Simulator Status",
-        options: simStatusBitFieldDisplayValues,
       },
       {
         type: "enumCheckbox",
