@@ -1,3 +1,5 @@
+// Dynamically assign filters based on collection
+
 import { simStatusBitFieldDisplayValues } from "../../lib/constants/simStatus.js";
 
 export const filterDefinitions = {
