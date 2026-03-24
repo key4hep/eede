@@ -9,7 +9,7 @@ import {
   hideEmptyViewMessage,
 } from "../lib/utils/messages.js";
 
-// Visualization logic
+// Visualization code
 import { drawView } from "../viz/renderView.js";
 import { setRenderable } from "../viz/draw/renderable.js";
 import { possibleViews } from "../viz/views/viewsDictionary.js";
