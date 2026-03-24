@@ -15,7 +15,7 @@ import { setRenderable } from "../viz/draw/renderable.js";
 import { possibleViews } from "../viz/views/viewsDictionary.js";
 
 // UI logic
-import { handleFilters } from "./filters/filter.js";
+import { handleFilters } from "./filters/handleFilters.js";
 import { setupToggles } from "./toggle/toggle.js";
 import {
   showViewInformation,

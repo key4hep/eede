@@ -56,35 +56,3 @@ export class RangeComponent {
     };
   }
 }
-
-export function scalarRangeLogic(min, max, cur) {
-  const minVal = parseFloat(min);
-  const maxVal = parseFloat(max);
-
-  if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
-    return cur >= minVal && cur <= maxVal;
-  } else if (Number.isFinite(minVal)) {
-    return cur >= minVal;
-  } else if (Number.isFinite(maxVal)) {
-    return cur <= maxVal;
-  }
-  return true;
-}
-
-export function magnitudeRangeLogic(min, max, cur) {
-  const minVal = parseFloat(min);
-  const maxVal = parseFloat(max);
-
-  const objectMagnitude = Math.sqrt(
-    Object.values(cur).reduce((acc, val) => acc + val ** 2, 0),
-  );
-
-  if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
-    return objectMagnitude >= minVal && objectMagnitude <= maxVal;
-  } else if (Number.isFinite(minVal)) {
-    return objectMagnitude >= minVal;
-  } else if (Number.isFinite(maxVal)) {
-    return objectMagnitude <= maxVal;
-  }
-  return true;
-}
