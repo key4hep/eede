@@ -53,56 +53,6 @@ export class CheckboxComponent {
   }
 }
 
-export function checkboxLogic(value, object, property) {
-  return object[property] === value;
-}
-
-export function bitfieldCheckboxLogic(value, object, property) {
-  return (parseInt(object[property]) & (1 << parseInt(value))) !== 0;
-}
-
-export function objectSatisfiesCheckbox(
-  object,
-  checkboxes,
-  property,
-  logicFunction,
-) {
-  for (const checkbox of checkboxes) {
-    const { checked, value } = checkbox.getValues();
-
-    if (checked && logicFunction(value, object, property)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-export function satisfiesCollectionFilter(object, collectionCheckboxes) {
-  return objectSatisfiesCheckbox(
-    object,
-    collectionCheckboxes,
-    "collectionName",
-    checkboxLogic,
-  );
-}
-
-export function filterOutByNormalCheckboxes(object, checkboxGroup) {
-  let satisfies = true;
-
-  checkboxGroup.forEach((checkboxes) => {
-    const res = objectSatisfiesCheckbox(
-      object,
-      checkboxes,
-      checkboxes[0].propertyName,
-      checkboxLogic,
-    );
-    satisfies = satisfies && res;
-  });
-
-  return satisfies;
-}
-
 export function createCheckboxContainer() {
   const container = document.createElement("div");
   container.classList.add("filter-checkbox-container");
