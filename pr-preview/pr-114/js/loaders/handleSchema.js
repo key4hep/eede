@@ -3,6 +3,7 @@ import { handleOldEvent } from "./schemas/loadOldSchemaEvent.js";
 import { handleSchema1Event } from "./schemas/loadSchema1Event.js";
 import { handleSchema2Event } from "./schemas/loadSchema2Event.js";
 import { handleSchema3Event } from "./schemas/loadSchema3Event.js";
+import { handleSchema4Event } from "./schemas/loadSchema4Event.js";
 
 function determineSchemaVersion(eventData) {
   // Find schema version from the collection properties
@@ -21,31 +22,19 @@ function determineSchemaVersion(eventData) {
 
   console.log(`Info: EDM4hep version = ${edm4hepVersion}`);
 
-  switch (edm4hepVersion) {
-    case "0.9.0":
-    case "0.10.0":
-    case "0.10.1":
-    case "0.10.2":
-    case "0.10.3":
-    case "0.10.4":
-    case "0.10.5":
-    case "0.10.99":
-      return 1;
-    case "0.99.0":
-    case "0.99.1":
-      return 2;
-    case "0.99.2":
-      return 3;
-    case "1.0.0":
-      return 6;
-    default: {
-      const version = edm4hepVersion.split(".");
+  const schema1 = ["0.9.", "0.10."];
+  const schema2 = ["0.99.0", "0.99.1"];
+  const schema3 = ["0.99.2"];
+  const schema4 = ["0.99.99"]; // From nightly
+  const schema6 = ["1.0."];
 
-      return Number(version[0]) === 0 && Number(version[1]) < 9
-        ? "old"
-        : undefined;
-    }
-  }
+  if (schema1.some((v) => edm4hepVersion.startsWith(v))) return 1;
+  if (schema2.some((v) => edm4hepVersion.startsWith(v))) return 2;
+  if (schema3.some((v) => edm4hepVersion.startsWith(v))) return 3;
+  if (schema4.some((v) => edm4hepVersion.startsWith(v))) return 4;
+  if (schema6.some((v) => edm4hepVersion.startsWith(v))) return 6;
+
+  return "old";
 }
 
 export function formatEventData(fileData, eventNum) {
@@ -73,7 +62,9 @@ export function formatEventData(fileData, eventNum) {
     case 2:
       return handleSchema2Event(eventData);
     case 3:
-    case 6:
       return handleSchema3Event(eventData);
+    case 4:
+    case 6:
+      return handleSchema4Event(eventData);
   }
 }
