@@ -4,7 +4,7 @@
 import { setCurrentView, saveCurrentScrollPosition } from "../state/globals.js";
 import { getViewportPosition } from "../state/pixi-state.js";
 
-// Visualization
+// Visualization code
 import { possibleViews } from "../viz/views/viewsDictionary.js";
 
 // UI logic

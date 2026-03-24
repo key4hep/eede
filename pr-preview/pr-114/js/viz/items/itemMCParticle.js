@@ -51,6 +51,11 @@ export class MCParticle extends EDMObject {
 
     nextY += this.imageSize + this.imageMargin;
 
+    const roundedMomentum =
+      this.momentum.toString().split("").length > 5
+        ? Math.round(this.momentum * 10) / 10 // Round one decimal place
+        : this.momentum;
+
     const bottomLine =
       `<div style="display: flex; flex-direction: row; gap: 4px; width: ${this.width}px;">
       <div>
@@ -62,7 +67,7 @@ export class MCParticle extends EDMObject {
       <div>
         <div>= ${this.transverseMomentum} GeV<sub></sub></div>
         <div>= ${this.cosTheta}</div>
-        <div>= ${this.momentum} GeV</div>
+        <div>= ${roundedMomentum} GeV</div>
         <div>= ${this.vertex} mm</div>
       </div>
     </div>`.replace(/\n\s+/g, "");
