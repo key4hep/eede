@@ -76,6 +76,16 @@ export function buildFilters(typeName, parentContainer, viewObjects) {
     const subContainer = createSubContainer();
     subContainer.appendChild(createCollectionSubtitle(f.label));
     const checkboxesContainer = createCheckboxContainer();
+
+    // Create no status checkbox
+    const noStatusCheckbox = new CheckboxComponent(f.property, "No status", 0);
+    checkboxesContainer.appendChild(noStatusCheckbox.render());
+    const hasNoStatus = collection.some(
+      (obj) => parseInt(obj[f.property]) === 0,
+    );
+    noStatusCheckbox.checked(hasNoStatus);
+
+    // Create the other checkboxes
     const checkboxes = [];
     for (const [value, displayName] of Object.entries(
       simStatusBitFieldDisplayValues,
@@ -89,12 +99,14 @@ export function buildFilters(typeName, parentContainer, viewObjects) {
       );
       checkbox.checked(isPresent);
     }
+
     subContainer.appendChild(checkboxesContainer);
     container.appendChild(subContainer);
 
-    // Return a function that passes when the object matches at least one checked bit or when any bit is checked
+    // Return a function that passes when the object matches at least one checked bit, has no status, or no checkboxes are checked
     return (object) => {
-      if (parseInt(object[f.property]) === 0) return true;
+      if (parseInt(object[f.property]) === 0)
+        return noStatusCheckbox.getValues().checked;
 
       for (const cb of checkboxes) {
         const { checked, value } = cb.getValues();
