@@ -14,12 +14,11 @@ export const filterDefinitions = {
       },
       {
         type: "scalarRange",
-        property: "position",
-        label: "position",
+        property: "vertex",
+        label: "vertex",
         unit: "mm",
       },
       { type: "scalarRange", property: "time", label: "time", unit: "ns" },
-      { type: "scalarRange", property: "vertex", label: "vertex", unit: "mm" },
       {
         type: "bitfieldCheckbox",
         property: "simulatorStatus",
