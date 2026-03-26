@@ -217,16 +217,19 @@ export function handleSchema2Event(eventData) {
           const toObject = toCollection[associationElement[toName].index];
 
           const linkType = linkTypes[association];
-          const link = new linkType(
-            fromObject,
-            toObject,
-            associationElement.weight,
-          );
-          objects.associations[association].push(link);
-          fromObject.associations = {};
-          fromObject.associations[association] = link;
-          toObject.associations = {};
-          toObject.associations[association] = link;
+
+          if (linkType) {
+            const link = new linkType(
+              fromObject,
+              toObject,
+              associationElement.weight,
+            );
+            objects.associations[association].push(link);
+            fromObject.associations = {};
+            fromObject.associations[association] = link;
+            toObject.associations = {};
+            toObject.associations[association] = link;
+          }
         }
       }
     });
