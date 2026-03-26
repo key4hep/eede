@@ -249,16 +249,19 @@ export function handleSchema4Event(eventData) {
           const toObject = toCollection[associationElement[toName].index];
 
           const linkType = linkTypes[linkCollectionName];
-          const link = new linkType(
-            fromObject,
-            toObject,
-            associationElement.weight,
-          );
-          visObjects.associations[linkCollectionName].push(link);
-          fromObject.associations = {};
-          fromObject.associations[linkCollectionName] = link;
-          toObject.associations = {};
-          toObject.associations[linkCollectionName] = link;
+
+          if (linkType) {
+            const link = new linkType(
+              fromObject,
+              toObject,
+              associationElement.weight,
+            );
+            visObjects.associations[linkCollectionName].push(link);
+            fromObject.associations = {};
+            fromObject.associations[linkCollectionName] = link;
+            toObject.associations = {};
+            toObject.associations[linkCollectionName] = link;
+          }
         }
       }
     });
