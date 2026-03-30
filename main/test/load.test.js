@@ -1,8 +1,8 @@
-import { loadObjects } from "../js/loaders/load.js";
+import { formatEventData } from "../js/loaders/handleSchema.js";
 import eventsData from "./load.json" with { type: "json" };
 
 test("load a json file with a collection of objects", () => {
-  const objects = loadObjects(eventsData, 1);
+  const objects = formatEventData(eventsData, 1);
 
   const datatypes = objects.datatypes;
 

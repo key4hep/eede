@@ -1,4 +1,5 @@
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainer } from "../../state/pixi-state.js";
+import { filteredOut } from "../../lib/constants/vizStyles.js";
 
 const particleDetails = document.getElementById("particle-details");
 let selectedBox = null;
@@ -11,9 +12,12 @@ function deselect() {
   particleDetails.innerHTML = "";
 }
 
-export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
-  let changeSelection = false;
-  let clickPostion = null;
+export function showParticleDetails(object) {
+  const box = object.renderedBox;
+  const hoverColor = () =>
+    object.filteredOut ? filteredOut.colorOnHover : object.colorOnHover;
+  const clickColor = () =>
+    object.filteredOut ? filteredOut.colorOnClick : object.colorOnClick;
 
   if (!backgroundListener) {
     const app = getApp();
@@ -28,7 +32,7 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
 
   box.on("pointerenter", () => {
     if (selectedBox !== box) {
-      box.tint = colorOnHover;
+      box.tint = hoverColor();
     }
   });
 
@@ -37,6 +41,9 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
       box.tint = 0xffffff;
     }
   });
+
+  let changeSelection = false;
+  let clickPostion = null;
 
   box.on("pointerdown", (event) => {
     changeSelection = true;
@@ -56,8 +63,6 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
     // Do not change selection if particle was dragged
     if (!changeSelection) return;
 
-    console.log(selectedBox);
-
     if (selectedBox === box) {
       // Undo selection when selected particle is clicked again
       deselect();
@@ -66,10 +71,10 @@ export function showParticleDetails(box, lines, colorOnClick, colorOnHover) {
       if (selectedBox) selectedBox.tint = 0xffffff;
 
       // Select particle
-      box.tint = colorOnClick;
+      box.tint = clickColor();
       selectedBox = box;
       particleDetails.classList.add("selected");
-      particleDetails.innerHTML = lines.join("");
+      particleDetails.innerHTML = object.objectModalLines().join("");
     }
   });
 }
