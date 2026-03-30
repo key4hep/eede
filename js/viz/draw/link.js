@@ -1,8 +1,9 @@
 import { Graphics } from "pixi.js";
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainer } from "../../state/pixi-state.js";
+import { getLinkColor } from "../../lib/utils/getLinkColor.js";
 
-function fromPoints(boxFrom) {
-  return [boxFrom.x + boxFrom.width / 2, boxFrom.y + boxFrom.height];
+function fromPoints(box) {
+  return [box.x + box.width / 2, box.y + box.height];
 }
 
 function toPoints(boxFrom, boxTo) {
@@ -49,192 +50,76 @@ function bezierCurve({
   return curve;
 }
 
+function computeCurve(link, from, to, color) {
+  const [fromX, fromY] = fromPoints(from);
+  const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(from, to);
+  return bezierCurve({
+    fromX: fromX + link.xShift,
+    fromY,
+    cpFromX: cpFromX + link.xShift,
+    cpFromY,
+    cpToX: cpToX + link.xShift,
+    cpToY,
+    toX: toX + link.xShift,
+    toY,
+    color,
+  });
+}
+
+export function redrawLink(link, color) {
+  const container = getContainer();
+  if (link.renderedLink?.parent) {
+    container.removeChild(link.renderedLink);
+  }
+  const [from, to] = link.reverse ? [link.to, link.from] : [link.from, link.to];
+  link.renderedLink = computeCurve(link, from, to, color);
+  container.addChild(link.renderedLink);
+}
+
 export function drawBezierLink(link, reverse = false) {
+  link.reverse = reverse;
+
   const app = getApp();
   const container = getContainer();
 
-  if (!reverse) {
-    const [fromX, fromY] = fromPoints(link.from);
-    const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-      link.from,
-      link.to
-    );
+  const [from, to] = reverse ? [link.to, link.from] : [link.from, link.to];
 
-    let curve = bezierCurve({
-      fromX: fromX + link.xShift,
-      fromY: fromY,
-      cpFromX: cpFromX + link.xShift,
-      cpFromY: cpFromY,
-      cpToX: cpToX + link.xShift,
-      cpToY: cpToY,
-      toX: toX + link.xShift,
-      toY: toY,
-      color: link.color,
-    });
+  link.renderedLink = computeCurve(link, from, to, link.color);
 
-    link.renderedLink = curve;
+  const boxFrom = from.renderedBox;
+  const boxTo = to.renderedBox;
 
-    const boxFrom = link.from.renderedBox;
-    const boxTo = link.to.renderedBox;
+  const boxFromOnMove = () => {
+    container.removeChild(link.renderedLink);
+    link.renderedLink = computeCurve(link, from, to, getLinkColor(link));
+    container.addChild(link.renderedLink);
+  };
 
-    const boxFromOnMove = () => {
-      container.removeChild(curve);
-      const [fromX, fromY] = fromPoints(link.from);
-      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-        link.from,
-        link.to
-      );
-      curve = bezierCurve({
-        fromX: fromX + link.xShift,
-        fromY: fromY,
-        cpFromX: cpFromX + link.xShift,
-        cpFromY: cpFromY,
-        cpToX: cpToX + link.xShift,
-        cpToY: cpToY,
-        toX: toX + link.xShift,
-        toY: toY,
-        color: link.color,
-      });
-      link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
-      container.addChild(curve);
-    };
+  boxFrom.on("pointerdown", () => {
+    app.stage.on("pointermove", boxFromOnMove);
+  });
+  app.stage.on("pointerup", () => {
+    app.stage.off("pointermove", boxFromOnMove);
+  });
+  app.stage.on("pointerupoutside", () => {
+    app.stage.off("pointermove", boxFromOnMove);
+  });
 
-    boxFrom.on("pointerdown", () => {
-      app.stage.on("pointermove", boxFromOnMove);
-    });
-    app.stage.on("pointerup", () => {
-      app.stage.off("pointermove", boxFromOnMove);
-    });
-    app.stage.on("pointerupoutside", () => {
-      app.stage.off("pointermove", boxFromOnMove);
-    });
+  const boxToOnMove = () => {
+    container.removeChild(link.renderedLink);
+    link.renderedLink = computeCurve(link, from, to, getLinkColor(link));
+    container.addChild(link.renderedLink);
+  };
 
-    const boxToOnMove = () => {
-      container.removeChild(curve);
-      const [fromX, fromY] = fromPoints(link.from);
-      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-        link.from,
-        link.to
-      );
-      curve = bezierCurve({
-        fromX: fromX + link.xShift,
-        fromY: fromY,
-        cpFromX: cpFromX + link.xShift,
-        cpFromY: cpFromY,
-        cpToX: cpToX + link.xShift,
-        cpToY: cpToY,
-        toX: toX + link.xShift,
-        toY: toY,
-        color: link.color,
-      });
-      link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
-      container.addChild(curve);
-    };
+  boxTo.on("pointerdown", () => {
+    app.stage.on("pointermove", boxToOnMove);
+  });
+  app.stage.on("pointerup", () => {
+    app.stage.off("pointermove", boxToOnMove);
+  });
+  app.stage.on("pointerupoutside", () => {
+    app.stage.off("pointermove", boxToOnMove);
+  });
 
-    boxTo.on("pointerdown", () => {
-      app.stage.on("pointermove", boxToOnMove);
-    });
-    app.stage.on("pointerup", () => {
-      app.stage.off("pointermove", boxToOnMove);
-    });
-    app.stage.on("pointerupoutside", () => {
-      app.stage.off("pointermove", boxToOnMove);
-    });
-
-    container.addChild(curve);
-  } else {
-    const [fromX, fromY] = fromPoints(link.to);
-    const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-      link.to,
-      link.from
-    );
-
-    let curve = bezierCurve({
-      fromX: fromX + link.xShift,
-      fromY: fromY,
-      cpFromX: cpFromX + link.xShift,
-      cpFromY: cpFromY,
-      cpToX: cpToX + link.xShift,
-      cpToY: cpToY,
-      toX: toX + link.xShift,
-      toY: toY,
-      color: link.color,
-    });
-
-    link.renderedLink = curve;
-
-    const boxFrom = link.to.renderedBox;
-    const boxTo = link.from.renderedBox;
-
-    const boxFromOnMove = () => {
-      container.removeChild(curve);
-      const [fromX, fromY] = fromPoints(link.to);
-      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-        link.to,
-        link.from
-      );
-      curve = bezierCurve({
-        fromX: fromX + link.xShift,
-        fromY: fromY,
-        cpFromX: cpFromX + link.xShift,
-        cpFromY: cpFromY,
-        cpToX: cpToX + link.xShift,
-        cpToY: cpToY,
-        toX: toX + link.xShift,
-        toY: toY,
-        color: link.color,
-      });
-      link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
-      container.addChild(curve);
-    };
-
-    boxFrom.on("pointerdown", () => {
-      app.stage.on("pointermove", boxFromOnMove);
-    });
-    app.stage.on("pointerup", () => {
-      app.stage.off("pointermove", boxFromOnMove);
-    });
-    app.stage.on("pointerupoutside", () => {
-      app.stage.off("pointermove", boxFromOnMove);
-    });
-
-    const boxToOnMove = () => {
-      container.removeChild(curve);
-      const [fromX, fromY] = fromPoints(link.to);
-      const [cpFromX, cpFromY, cpToX, cpToY, toX, toY] = toPoints(
-        link.to,
-        link.from
-      );
-      curve = bezierCurve({
-        fromX: fromX + link.xShift,
-        fromY: fromY,
-        cpFromX: cpFromX + link.xShift,
-        cpFromY: cpFromY,
-        cpToX: cpToX + link.xShift,
-        cpToY: cpToY,
-        toX: toX + link.xShift,
-        toY: toY,
-        color: link.color,
-      });
-      link.renderedLink = curve;
-      link.renderedLink.renderable = link.isVisible();
-      container.addChild(curve);
-    };
-
-    boxTo.on("pointerdown", () => {
-      app.stage.on("pointermove", boxToOnMove);
-    });
-
-    app.stage.on("pointerup", () => {
-      app.stage.off("pointermove", boxToOnMove);
-    });
-    app.stage.on("pointerupoutside", () => {
-      app.stage.off("pointermove", boxToOnMove);
-    });
-
-    container.addChild(curve);
-  }
+  container.addChild(link.renderedLink);
 }
