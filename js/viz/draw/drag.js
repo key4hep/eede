@@ -5,6 +5,8 @@ let currentObject;
 let prevX, prevY;
 
 export function dragStart(event) {
+  event.stopPropagation(); // Prevents pressDrag from affecting the viewport
+
   const app = getApp();
   const container = getContainer();
 
