@@ -43,7 +43,7 @@ export const createContainer = (app, objects) => {
   app.stage.addChild(viewport);
   viewport
     .drag({
-      pressDrag: false, // disables click to drag
+      pressDrag: true, // allow moving around the viewport when clicking on the background
       wheel: false, // prevents the drag method from handling wheel events
     })
     .pinch()
