@@ -10,8 +10,8 @@ import { objectColor } from "../../lib/constants/vizStyles.js";
 export class MCParticle extends EDMObject {
   constructor() {
     super();
-    this.width = 174; // 2:3 format
-    this.height = 261;
+    this.width = 195; // 3:4 format
+    this.height = 260;
     this.titleName = "MCParticle";
     this.color = objectColor.sky100;
     this.colorOnHover = objectColor.sky200;
