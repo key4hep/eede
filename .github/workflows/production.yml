@@ -1,7 +1,8 @@
-name: Deploy eede to GitHub Pages
+name: Deploy eede to GitHub Pages as prod
 on:
-    push:
-        branches: [main]
+    release:
+        types: [published]
+    workflow_dispatch:
 
 permissions:
     contents: write
@@ -10,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Deploy
               uses: JamesIves/github-pages-deploy-action@v4
@@ -18,6 +19,5 @@ jobs:
                   folder: .
                   clean-exclude: |
                       pr-preview/
-                      beta/
-                  target-folder: main/
-                  force: false
+                      main/
+                  target-folder: release/
