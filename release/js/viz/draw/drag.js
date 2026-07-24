@@ -1,10 +1,12 @@
 import { Rectangle } from "pixi.js";
-import { getApp, getContainer } from "./app.js";
+import { getApp, getContainer } from "../../state/pixi-state.js";
 
 let currentObject;
 let prevX, prevY;
 
 export function dragStart(event) {
+  event.stopPropagation(); // Prevents pressDrag from affecting the viewport
+
   const app = getApp();
   const container = getContainer();
 
@@ -38,7 +40,7 @@ export function dragMove(event) {
     renderedBox.position.x,
     renderedBox.position.y,
     renderedBox.width,
-    renderedBox.height
+    renderedBox.height,
   );
 
   prevX = eventX;

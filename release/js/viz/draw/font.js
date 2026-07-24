@@ -1,5 +1,5 @@
 import { HTMLText, TextStyle } from "pixi.js";
-import { objectColor, size } from "../types/vizStyles.js";
+import { objectColor, size } from "../../lib/constants/vizStyles.js";
 
 const MARGIN = 16;
 const PADDING = 8;
