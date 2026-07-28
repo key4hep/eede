@@ -47,7 +47,7 @@ export class MCParticle extends EDMObject {
 
     nextY = addLinesToBox([topLine], box, nextY);
 
-    const imageY = nextY + this.imageMargin;
+    this.imageY = nextY + this.imageMargin;
 
     nextY += this.imageSize + this.imageMargin;
 
@@ -73,7 +73,7 @@ export class MCParticle extends EDMObject {
     </div>`.replace(/\n\s+/g, "");
 
     addLinesToBox([bottomLine], box, nextY);
-    this.drawImage(this.textToRender, imageY);
+    this.drawImage(this.textToRender, this.imageY);
   }
 
   objectModalLines() {
