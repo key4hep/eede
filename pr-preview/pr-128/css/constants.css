@@ -1,0 +1,59 @@
+:root {
+  /* Border radius */
+  --border-radius: 4px;
+  --border-radius-large: 16px;
+
+  /* Z-index */
+  --z-index-ui: 1;
+  --z-index-modal-backdrop: 2;
+  --z-index-modal: 3;
+
+  /* Font families */
+  --font-family-sans: sans-serif;
+  --font-family-serif: serif;
+
+  /* Transitions */
+  --transition-duration: 0.4s;
+  --transition-fast: all 0.2s;
+
+  /* Font size */
+  --text-xs: 0.75rem; /* (12px) */
+  --text-sm: 0.875rem; /* (14px) */
+  --text-base: 1rem; /* (16px) */
+  --text-lg: 1.125rem; /* (18px) */
+  --text-xl: 1.25rem; /* (20px) */
+  --text-2xl: 1.5rem; /* (24px) */
+  --text-3xl: 1.875rem; /* (30px) */
+  --text-4xl: 2.25rem; /* (36px); */
+  --text-5xl: 3rem; /* (48px); */
+  --text-6xl: 3.75rem; /* (60px); */
+  --text-7xl: 4.5rem; /* (72px); */
+  --text-8xl: 6rem; /* (96px); */
+  --text-9xl: 8rem; /* (128px); */
+
+  /* Color blue */
+  --color-blue-50: oklch(97% 0.014 254.604);
+  --color-blue-100: oklch(93.2% 0.032 255.585);
+  --color-blue-200: oklch(88.2% 0.059 254.128);
+  --color-blue-300: oklch(80.9% 0.105 251.813);
+  --color-blue-400: oklch(70.7% 0.165 254.624);
+  --color-blue-500: oklch(62.3% 0.214 259.815);
+  --color-blue-600: oklch(54.6% 0.245 262.881);
+  --color-blue-700: oklch(48.8% 0.243 264.376);
+  --color-blue-800: oklch(42.4% 0.199 265.638);
+  --color-blue-900: oklch(37.9% 0.146 265.522);
+  --color-blue-950: oklch(28.2% 0.091 267.935);
+
+  /* Color natural */
+  --color-neutral-50: oklch(98.5% 0 0); /* #fafafa */
+  --color-neutral-100: oklch(97% 0 0); /* #f6f6f6 */
+  --color-neutral-200: oklch(92.2% 0 0); /* #e5e5e5 */
+  --color-neutral-300: oklch(87% 0 0); /* #d4d4d4 */
+  --color-neutral-400: oklch(70.8% 0 0); /* #a1a1a1 */
+  --color-neutral-500: oklch(55.6% 0 0); /* #737373 */
+  --color-neutral-600: oklch(43.9% 0 0); /* #525252 */
+  --color-neutral-700: oklch(37.1% 0 0); /* #404040 */
+  --color-neutral-800: oklch(26.9% 0 0); /* #262626 */
+  --color-neutral-900: oklch(20.5% 0 0); /* #171717 */
+  --color-neutral-950: oklch(14.5% 0 0); /* #0a0a0a */
+}
