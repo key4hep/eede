@@ -28,6 +28,7 @@ function createText(
       wordWrapWidth: maxWidth,
       lineHeight,
     }),
+    resolution: window.devicePixelRatio * 2, // Resolution according to predefined zoom "maxScale: 2"
   });
 }
 
