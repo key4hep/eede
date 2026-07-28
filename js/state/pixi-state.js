@@ -122,4 +122,10 @@ export const startPixi = async () => {
 
   pixi.app = app;
   pixi.textureCache = {};
+
+  window.addEventListener("resize", () => {
+    if (pixi.container) {
+      pixi.container.resize(window.innerWidth, window.innerHeight);
+    }
+  });
 };
