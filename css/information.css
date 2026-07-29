@@ -34,7 +34,7 @@
   z-index: var(--z-index-modal);
   display: none;
   width: 500px;
-  height: 500px;
+  min-height: 500px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
