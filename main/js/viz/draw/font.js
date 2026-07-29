@@ -34,7 +34,7 @@ function createText(
 
 export function addTitleToBox(title, box) {
   const boxTitle = createText(title, {
-    fontFamily: "sans-serif",
+    fontFamily: '"Open Sans", sans-serif',
     fontWeight: "bold",
     fontSize: size.textXl,
     fill: objectColor.neutral950,
@@ -48,7 +48,7 @@ export function addTitleToBox(title, box) {
 
 export function addLinesToBox(lines, box, y) {
   const text = createText(lines.join("\n"), {
-    fontFamily: "sans-serif",
+    fontFamily: '"Open Sans", sans-serif',
     fontWeight: "normal",
     fontSize: size.textBase,
     fill: objectColor.neutral950,
