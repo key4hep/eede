@@ -79,6 +79,14 @@ export class MCParticle extends EDMObject {
   objectModalLines() {
     const modalLines = [];
 
+    const simulatorStatus = getSimStatusDisplayValuesFromBit(
+      this.simulatorStatus,
+    );
+
+    const parsedStatus = simulatorStatus.map((status) =>
+      status.split(/(?=[A-Z])/).join(" "),
+    );
+
     modalLines.push(
       `
       <div>Collection: ${this.collectionName}</div>
@@ -97,14 +105,15 @@ export class MCParticle extends EDMObject {
           <div>= ${parseCharge(this.charge)}</div>
         </div>
       </div>
+      ${
+        parsedStatus.length !== 0
+          ? `<div style="margin-top: 8px">Status: ${parsedStatus.join(", ")}</div>`
+          : ""
+      }
       `.replace(/\n\s+/g, ""),
     );
 
-    const simulatorStatus = getSimStatusDisplayValuesFromBit(
-      this.simulatorStatus,
-    );
-
-    return [...modalLines, ...simulatorStatus];
+    return [...modalLines];
   }
 
   async drawImage(text, imageY) {
