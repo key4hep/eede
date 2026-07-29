@@ -9,7 +9,7 @@
   --z-index-modal: 3;
 
   /* Font families */
-  --font-family-sans: sans-serif;
+  --font-family-sans: "Open Sans", sans-serif;
   --font-family-serif: serif;
 
   /* Transitions */
