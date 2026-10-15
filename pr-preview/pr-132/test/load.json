@@ -1,0 +1,247 @@
+{
+    "Event 0": {},
+    "Event 1": {
+        "Particle": {
+            "collID": 11,
+            "collType": "edm4hep::MCParticleCollection",
+            "collection": [
+                {
+                    "PDG": 11,
+                    "charge": -1.0,
+                    "colorFlow": {
+                        "a": 0,
+                        "b": 0
+                    },
+                    "daughters": [
+                        {
+                            "collectionID": 11,
+                            "index": 2
+                        }
+                    ],
+                    "endpoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "generatorStatus": 4,
+                    "mass": 0.0005109999910928309,
+                    "momentum": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 120.0
+                    },
+                    "momentumAtEndpoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "parents": [],
+                    "simulatorStatus": 0,
+                    "spin": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "time": 0.0,
+                    "vertex": {
+                        "x": -0.01184066478163004,
+                        "y": -2.074451003863942e-06,
+                        "z": -0.08278788626194
+                    }
+                },
+                {
+                    "PDG": -11,
+                    "charge": 1.0,
+                    "colorFlow": {
+                        "a": 0,
+                        "b": 0
+                    },
+                    "daughters": [],
+                    "endpoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "generatorStatus": 4,
+                    "mass": 0.0005109999910928309,
+                    "momentum": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -120.0
+                    },
+                    "momentumAtEndpoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "parents": [],
+                    "simulatorStatus": 0,
+                    "spin": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "time": 0.0,
+                    "vertex": {
+                        "x": -0.01184066478163004,
+                        "y": -2.074451003863942e-06,
+                        "z": -0.08278788626194
+                    }
+                },
+                {
+                    "PDG": 11,
+                    "charge": -1.0,
+                    "colorFlow": {
+                        "a": 0,
+                        "b": 0
+                    },
+                    "daughters": [],
+                    "endpoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "generatorStatus": 21,
+                    "mass": 0.0,
+                    "momentum": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 120.0
+                    },
+                    "momentumAtEndpoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "parents": [
+                        {
+                            "collectionID": 11,
+                            "index": 0
+                        }
+                    ],
+                    "simulatorStatus": 0,
+                    "spin": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "time": 0.0,
+                    "vertex": {
+                        "x": -0.01184066478163004,
+                        "y": -2.074451003863942e-06,
+                        "z": -0.08278788626194
+                    }
+                }
+            ]
+        },
+        "AllMuon": {
+            "collID": 12,
+            "collType": "edm4hep::ReconstructedParticleCollection",
+            "collection": []
+        },
+        "Jet": {
+            "collID": 13,
+            "collType": "edm4hep::ReconstructedParticleCollection",
+            "collection": [
+                {
+                    "charge": 1.0,
+                    "clusters": [],
+                    "covMatrix": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "energy": 12.062528610229492,
+                    "goodnessOfPID": 0.0,
+                    "mass": 2.315242290496826,
+                    "momentum": {
+                        "x": 11.738886833190918,
+                        "y": 1.2114704847335815,
+                        "z": 0.9354811906814575
+                    },
+                    "particleIDUsed": {
+                        "collectionID": -2,
+                        "index": -2
+                    },
+                    "particleIDs": [
+                        {
+                            "collectionID": 4,
+                            "index": 45
+                        }
+                    ],
+                    "particles": [
+                        {
+                            "collectionID": 13,
+                            "index": 1
+                        }
+                    ],
+                    "referencePoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "startVertex": {
+                        "collectionID": -2,
+                        "index": -2
+                    },
+                    "tracks": [],
+                    "type": 0
+                },
+                {
+                    "charge": 1.0,
+                    "clusters": [],
+                    "covMatrix": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "energy": 7.181974411010742,
+                    "goodnessOfPID": 0.0,
+                    "mass": 2.346627712249756,
+                    "momentum": {
+                        "x": 1.1801066398620605,
+                        "y": -4.268080234527588,
+                        "z": -5.144407749176025
+                    },
+                    "particleIDUsed": {
+                        "collectionID": -2,
+                        "index": -2
+                    },
+                    "particleIDs": [
+                        {
+                            "collectionID": 4,
+                            "index": 46
+                        }
+                    ],
+                    "particles": [],
+                    "referencePoint": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "startVertex": {
+                        "collectionID": -2,
+                        "index": -2
+                    },
+                    "tracks": [],
+                    "type": 0
+                }
+            ]
+        }
+    },
+    "Event 2": {}
+}

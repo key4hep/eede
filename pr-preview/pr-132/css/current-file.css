@@ -1,0 +1,29 @@
+#bottom-right-bar {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  z-index: var(--z-index-modal);
+}
+
+#current-file {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(229, 229, 229, 0.5); /* --color-neutral-100 */
+  border: 1px solid rgba(161, 161, 161, 0.5); /* --color-neutral-200 */
+  border-radius: var(--border-radius);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  padding: 8px 10px;
+  font-size: var(--font-size-medium);
+}
+
+#change-file {
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+}

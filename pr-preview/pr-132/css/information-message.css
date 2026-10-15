@@ -1,0 +1,18 @@
+#information-message-modal {
+  display: none;
+  align-items: center;
+  background-color: var(--color-neutral-50);
+  padding: 10px;
+  position: fixed;
+  z-index: 1;
+  height: 30px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-neutral-400);
+}
+
+#information-message-modal p {
+  margin-left: 10px;
+}

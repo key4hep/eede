@@ -1,0 +1,19 @@
+#start-button {
+  border: 1px solid var(--color-blue-500);
+  border-radius: var(--border-radius-large);
+  color: var(--color-blue-500);
+  font-weight: bold;
+  background-color: var(--color-neutral-50);
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: var(--transition-duration);
+  cursor: pointer;
+}
+
+#start-button:hover,
+#start-button:focus {
+  background-color: var(--color-blue-500);
+  color: var(--color-neutral-50);
+}
