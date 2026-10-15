@@ -55,9 +55,9 @@ export function getFileName() {
 export function setFileData(jsonData) {
   fileData.json = jsonData;
 
-  const eventNumbers = Object.keys(fileData.json).map((event) =>
-    parseInt(event.replace("Event ", "")),
-  );
+  const eventNumbers = Object.keys(fileData.json)
+    .map((eventKey) => parseInt(eventKey.replace("Event ", ""))) // i.e. "Event 4"
+    .sort((a, b) => a - b);
 
   if (eventNumbers.length === 0) {
     return {
@@ -91,13 +91,13 @@ export function setEventNumbers(numbers) {
 }
 
 export function getEventIndex(eventNumber) {
-  return eventNumbers.findIndex((elem) => elem === Number(eventNumber));
+  return eventNumbers.findIndex((elem) => elem === parseInt(eventNumber));
 }
 
 let currentEventIndex = 0;
 
 export function setCurrentEventIndex(index) {
-  currentEventIndex = index;
+  currentEventIndex = parseInt(index);
 }
 
 export function getCurrentEventIndex() {
