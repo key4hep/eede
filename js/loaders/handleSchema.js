@@ -18,23 +18,21 @@ function determineSchemaVersion(eventData) {
   // Find schema version from the EDM4hep version
   const edm4hepVersion = eventData.edm4hepVersion;
 
-  if (edm4hepVersion === undefined) return "old";
+  if (edm4hepVersion === undefined) return 0;
 
   console.log(`Info: EDM4hep version = ${edm4hepVersion}`);
 
-  const schema1 = ["0.9.", "0.10."];
-  const schema2 = ["0.99.0", "0.99.1"];
-  const schema3 = ["0.99.2"];
-  const schema4 = ["0.99.99"]; // From nightly
-  const schema6 = ["1.0."];
+  const [major = 0, minor = 0, patch = 0] = edm4hepVersion
+    .split(".")
+    .map((n) => parseInt(n, 10) || 0);
 
-  if (schema1.some((v) => edm4hepVersion.startsWith(v))) return 1;
-  if (schema2.some((v) => edm4hepVersion.startsWith(v))) return 2;
-  if (schema3.some((v) => edm4hepVersion.startsWith(v))) return 3;
-  if (schema4.some((v) => edm4hepVersion.startsWith(v))) return 4;
-  if (schema6.some((v) => edm4hepVersion.startsWith(v))) return 6;
+  if (major === 0) {
+    if (minor < 99) return 1; // Schema 1 < 0.99.0
+    if (patch < 2) return 2; // Schema 2 < 0.99.2
+    if (patch === 2) return 3; // Schema 3 === 0.99.2
+  }
 
-  return "old";
+  return 4; // Schema 4 > 0.99.2
 }
 
 export function formatEventData(fileData, eventNum) {
@@ -55,7 +53,7 @@ export function formatEventData(fileData, eventNum) {
   console.log(`Info: schemaVersion = ${schemaVersion}`);
 
   switch (schemaVersion) {
-    case "old":
+    case 0: // fallback for undefined schemas
       return handleOldEvent(eventData);
     case 1:
       return handleSchema1Event(eventData);
@@ -63,8 +61,8 @@ export function formatEventData(fileData, eventNum) {
       return handleSchema2Event(eventData);
     case 3:
       return handleSchema3Event(eventData);
-    case 4:
-    case 6:
+    case 4: // fallback for future schemas
+    default:
       return handleSchema4Event(eventData);
   }
 }
