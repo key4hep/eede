@@ -11,11 +11,12 @@ function determineSchemaVersion(eventData) {
     (c) => c.collSchemaVersion,
   );
 
+  // Return the highest one
   if (!schemaVersions.every((v) => v === undefined)) {
     return Math.max(...schemaVersions.filter((v) => v !== undefined));
   }
 
-  // Find schema version from the EDM4hep version
+  // If there is none, approximate schema version from EDM4hep
   const edm4hepVersion = eventData.edm4hepVersion;
 
   if (edm4hepVersion === undefined) return 0;
