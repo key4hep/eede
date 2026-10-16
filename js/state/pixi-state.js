@@ -23,7 +23,7 @@ const createApp = async () => {
     resizeTo: window,
     resolution: window.devicePixelRatio,
     autoDensity: true,
-    preference: "webgl",
+    preference: "webgpu",
   });
 
   document.body.appendChild(app.canvas);
